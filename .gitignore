@@ -1,6 +1,4 @@
-*.i
-*.ii
-*.gpu
-*.ptx
-*.cubin
-*.fatbin
+appunti.txt
+gemm/gemm_benchmark
+vino_c/models
+vino_c/test_npu
