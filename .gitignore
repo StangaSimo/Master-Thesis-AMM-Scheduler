@@ -1,4 +1,5 @@
 appunti.txt
-gemm/gemm_benchmark
+gpu_benchmark/benchmark
+gpu_benchmark/build
 vino_c/models
 vino_c/test_npu
