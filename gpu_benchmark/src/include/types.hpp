@@ -6,4 +6,15 @@ struct TestResult {
     double gflops;
 };
 
+enum class KernelType {
+    NAIVE,
+    TILED, 
+    DENSE,
+    COPY,
+    ADD,
+    SCALE,
+    TRIAD,
+    CUBLAS,
+};
+
 #endif

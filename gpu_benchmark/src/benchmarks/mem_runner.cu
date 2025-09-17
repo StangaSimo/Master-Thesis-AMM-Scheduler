@@ -1,75 +1,84 @@
 #include "../include/benchmark/mem_runner.hpp"
 
-TestResult run_mem(const std::string& name, size_t bytes_per_elem, int n, dim3 blockSize, dim3 gridSize, float alpha) {
+TestResult run_mem(KernelType kernel, size_t bytes_per_elem, const int N, dim3 blockSize, dim3 gridSize, float alpha) {
     float *d_A, *d_B, *d_C;
-    cudaMalloc(&d_A, n * sizeof(float));
-    cudaMalloc(&d_B, n * sizeof(float));
-    cudaMalloc(&d_C, n * sizeof(float));
+    CHECK_CUDA(cudaMalloc(&d_A, N * sizeof(float)));
+    CHECK_CUDA(cudaMalloc(&d_B, N * sizeof(float)));
+    CHECK_CUDA(cudaMalloc(&d_C, N * sizeof(float)));
 
     cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
+    CHECK_CUDA(cudaEventCreate(&start));
+    CHECK_CUDA(cudaEventCreate(&stop));
 
-    if (name == "Copy"){
-        copy_kernel<<<gridSize, blockSize>>>(d_C, d_B, n);
+    switch(kernel) {
+        case KernelType::COPY:
+            copy_kernel<<<gridSize, blockSize>>>(d_C, d_B, N);
+            CHECK_CUDA(cudaDeviceSynchronize());
 
-        cudaDeviceSynchronize();
-        cudaEventRecord(start);
-        copy_kernel<<<gridSize, blockSize>>>(d_C, d_B, n);
-        cudaEventRecord(stop);
-        cudaDeviceSynchronize();
-    } else if (name == "Scale"){
-        scale_kernel<<<gridSize, blockSize>>>(d_C, d_B, alpha, n);
+            CHECK_CUDA(cudaEventRecord(start));
+            copy_kernel<<<gridSize, blockSize>>>(d_C, d_B, N);
+            CHECK_CUDA(cudaEventRecord(stop));
+            CHECK_CUDA(cudaDeviceSynchronize());
+            break;
+        case KernelType::SCALE:
+            scale_kernel<<<gridSize, blockSize>>>(d_C, d_B, alpha, N);
+            CHECK_CUDA(cudaDeviceSynchronize());
 
-        cudaDeviceSynchronize();
-        cudaEventRecord(start);
-        scale_kernel<<<gridSize, blockSize>>>(d_C, d_B, alpha ,n);
-        cudaEventRecord(stop);
-        cudaDeviceSynchronize();
-    } else if (name == "Add") {
-        add_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, n);
+            CHECK_CUDA(cudaEventRecord(start));
+            scale_kernel<<<gridSize, blockSize>>>(d_C, d_B, alpha ,N);
+            CHECK_CUDA(cudaEventRecord(stop));
+            CHECK_CUDA(cudaDeviceSynchronize());
+            break;
+            
+        case KernelType::TRIAD:
+            triad_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, alpha, N);
+            CHECK_CUDA(cudaDeviceSynchronize());
 
-        cudaDeviceSynchronize();
-        cudaEventRecord(start);
-        add_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, n);
-        cudaEventRecord(stop);
-        cudaDeviceSynchronize();
-    } else if (name == "Triad") {
-        triad_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, alpha, n);
+            CHECK_CUDA(cudaEventRecord(start));
+            triad_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, alpha, N);
+            CHECK_CUDA(cudaEventRecord(stop));
+            CHECK_CUDA(cudaDeviceSynchronize());
+            break;
+        case KernelType::ADD:
+            add_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, N);
+            CHECK_CUDA(cudaDeviceSynchronize());
 
-        cudaDeviceSynchronize();
-        cudaEventRecord(start);
-        triad_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, alpha, n);
-        cudaEventRecord(stop);
-        cudaDeviceSynchronize();
+            CHECK_CUDA(cudaEventRecord(start));
+            add_kernel<<<gridSize, blockSize>>>(d_C, d_B, d_A, N);
+            CHECK_CUDA(cudaEventRecord(stop));
+            CHECK_CUDA(cudaDeviceSynchronize());
+            break;
+        default:
+            throw std::invalid_argument("Unknown kernel type: " +  std::to_string(static_cast<int>(kernel)));
+            break;
     }
 
     float ms;
-    cudaEventElapsedTime(&ms, start, stop);
+    CHECK_CUDA(cudaEventElapsedTime(&ms, start, stop));
 
-    double GBs = (bytes_per_elem * (double)n) / (ms * 1e6);
+    double GBs = (bytes_per_elem * (double)N) / (ms * 1e6);
 
-    cudaFree(d_A);
-    cudaFree(d_B);
-    cudaFree(d_C);
-    cudaEventDestroy(start);
-    cudaEventDestroy(stop);
+    CHECK_CUDA(cudaFree(d_A));
+    CHECK_CUDA(cudaFree(d_B));
+    CHECK_CUDA(cudaFree(d_C));
+    CHECK_CUDA(cudaEventDestroy(start));
+    CHECK_CUDA(cudaEventDestroy(stop));
 
     return {ms, GBs};
 }
 
-void benchmark_mem(const std::string& name, size_t bytes_per_elem, int n, dim3 blockSize, dim3 gridSize , float alpha, int runs) {
-    std::cout << "Benchmark: " << name << " | "
-              << n << " elements, " << runs << " runs\n";
+void benchmark_mem(KernelType kernel, size_t bytes_per_elem, const int N, dim3 blockSize, dim3 gridSize , float alpha, const int runs) {
+    std::cout << "Benchmark: " << getKernelName(kernel) << " | "
+              << N << " elements, " << runs << " runs\n";
 
     double sum_ms = 0.0, sum_gbs = 0.0;
     for (int i = 0; i < runs; i++) {
-        TestResult r = run_mem(name, bytes_per_elem, n, blockSize, gridSize, alpha);
+        TestResult r = run_mem(kernel, bytes_per_elem, N, blockSize, gridSize, alpha);
         sum_ms += r.ms;
         sum_gbs += r.gflops;
-        std::cout << "Run " << i+1 << ": "
-                  << r.ms << " ms, "
-                  << r.gflops << " GB/s\n";
+#ifdef DEBUG
+        std::cout << "[DEBUG]: Run " << i+1 << ": " << r.ms << " ms, " << r.gflops << " GB/s\n";
+#endif
     }
     std::cout << "Average time: " << sum_ms / runs << " ms\n";
     std::cout << "Average Bandwidth: " << sum_gbs / runs << " GB/s\n\n";

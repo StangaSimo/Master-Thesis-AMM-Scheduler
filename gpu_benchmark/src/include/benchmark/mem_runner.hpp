@@ -1,6 +1,11 @@
 #ifndef MEM_RUNNER_HPP
 #define MEM_RUNNER_HPP
 
+#include "../kernels/simple_mem.hpp"
+#include "../types.hpp"
+#include "../help_func.hpp"
+#include "../config.hpp"
+
 #include <string>
 #include <cuda_runtime.h>
 #include <iostream>
@@ -8,11 +13,7 @@
 #include <vector>
 #include <functional>
 
-#include "../kernels/simple_mem.hpp"
-#include "../types.hpp"
-#include "../help_func.hpp"
-
-void benchmark_mem(const std::string& name, size_t bytes_per_elem, int n, 
-                   dim3 blockSize, dim3 gridSize, float alpha, int runs);
+void benchmark_mem(KernelType kernel, size_t bytes_per_elem, const int N, 
+                   dim3 blockSize, dim3 gridSize, float alpha, const int runs);
 
 #endif

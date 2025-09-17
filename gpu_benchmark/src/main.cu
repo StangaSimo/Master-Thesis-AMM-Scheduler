@@ -1,36 +1,33 @@
-#include <cuda_runtime.h>
-#include <iostream>
-#include <random>
-#include <vector>
-#include <functional>
-
 #include "include/benchmark/gem_runner.hpp"
 #include "include/benchmark/mem_runner.hpp"
 
-#define DEBUG
-#define GEM
-#define MEM
-
-#define TILE 16
-#define RUNS 5
-#define M_m 4096
-#define N_m 4096
-#define K_m 2048
-
 int main() {
+
+    /* TODO: auto tuning block and grid? for naive and tiled? */
+    printGPUInfo(getGPUInfo(0));
 
 #ifdef GEM
     dim3 blockNaive(16, 16);
+    dim3 gridNaive((N_SIZE + blockNaive.x - 1) / blockNaive.x, (M_SIZE + blockNaive.y - 1) / blockNaive.y);
 
-    dim3 gridNaive((N_m + blockNaive.x - 1) / blockNaive.x,
-                   (M_m + blockNaive.y - 1) / blockNaive.y);
+    benchmark_gem(KernelType::NAIVE, M_SIZE, N_SIZE, K_SIZE, blockNaive, gridNaive, RUNS);
 
-    dim3 blockTiled(TILE, TILE);
-    dim3 gridTiled((N_m + TILE - 1) / TILE,
-                   (M_m + TILE - 1) / TILE);
+    dim3 blockTiled(TILE_SIZE, TILE_SIZE);
+    dim3 gridTiled((N_SIZE + TILE_SIZE - 1) / TILE_SIZE, (M_SIZE + TILE_SIZE - 1) / TILE_SIZE);
 
-    benchmark_gem("Naive", M_m, N_m, K_m, blockNaive, gridNaive, RUNS);
-    benchmark_gem("Tiled", M_m, N_m, K_m, blockTiled, gridTiled, RUNS);
+    benchmark_gem(KernelType::TILED, M_SIZE, N_SIZE, K_SIZE, blockTiled, gridTiled, RUNS);
+
+    dim3 blockDense(DENSE_BLOCK_N / DENSE_THREAD_X, DENSE_BLOCK_M / DENSE_THREAD_Y);
+    dim3 gridDense(N_SIZE/ DENSE_BLOCK_N, M_SIZE / DENSE_BLOCK_M);
+
+    if (N_SIZE % DENSE_BLOCK_N != 0)
+        gridDense.x++;
+    if (M_SIZE % DENSE_BLOCK_M != 0)
+        gridDense.y++;
+
+    benchmark_gem(KernelType::DENSE, M_SIZE, N_SIZE, K_SIZE, blockDense, gridDense, RUNS);
+
+    benchmark_gem(KernelType::CUBLAS, M_SIZE, N_SIZE, K_SIZE, NULL, NULL, RUNS);
 #endif 
 
 #ifdef MEM
@@ -39,10 +36,10 @@ int main() {
 
     float alpha = 2.5f;
 
-    benchmark_mem("Copy", 2*sizeof(float), N, block, grid, alpha, RUNS);
-    benchmark_mem("Scale", 2*sizeof(float), N, block, grid, alpha, RUNS);
-    benchmark_mem("Add", 3*sizeof(float), N, block, grid, alpha, RUNS);
-    benchmark_mem("Triad", 3*sizeof(float), N, block, grid, alpha, RUNS);
+    benchmark_mem(KernelType::COPY, 2*sizeof(float), N, block, grid, alpha, RUNS);
+    benchmark_mem(KernelType::SCALE, 2*sizeof(float), N, block, grid, alpha, RUNS);
+    benchmark_mem(KernelType::ADD, 3*sizeof(float), N, block, grid, alpha, RUNS);
+    benchmark_mem(KernelType::TRIAD, 3*sizeof(float), N, block, grid, alpha, RUNS);
     
 #endif 
 

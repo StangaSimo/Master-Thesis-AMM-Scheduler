@@ -1,4 +1,9 @@
-#include "../include/kernels/dense_gem.hpp"
+#ifndef DENSE_GEM_HPP
+#define DENSE_GEM_HPP
+
+#include <cuda_runtime.h>
+
+#define OFFSET(row, col, ld) ((row) * (ld) + (col))
 
 // transfer float4
 template <
@@ -9,12 +14,12 @@ template <
     const int THREAD_SIZE_X  // width of block of C that each thread calculate
     > 
 __global__ void dense_gem_kernel( 
-    float * __restrict__ A,
-    float * __restrict__ B,
+    const float * __restrict__ A,
+    const float * __restrict__ B,
     float * __restrict__ C, 
     const int M,
-    const int K,
     const int N,
+    const int K,
     float alpha,
     float beta
     ) {
@@ -110,3 +115,5 @@ __global__ void dense_gem_kernel(
         }
     }
 }
+
+#endif

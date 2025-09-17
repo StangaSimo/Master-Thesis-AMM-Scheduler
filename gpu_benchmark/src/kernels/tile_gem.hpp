@@ -1,12 +1,13 @@
-#include "../include/kernels/title_gem.hpp"
+#ifndef TILE_GEM_HPP
+#define TILE_GEM_HPP
 
-template <
-    const int TILE
-    >
-__global__ void title_gem_kernel(const float* __restrict__ A,
-                                  const float* __restrict__ B,
-                                  float* __restrict__ C,
-                                  int M, int N, int K) {
+#include <cuda_runtime.h>
+
+template <const int TILE>
+__global__ void tile_gem_kernel(const float* __restrict__ A,
+                                 const float* __restrict__ B,
+                                 float* __restrict__ C,
+                                 const int M, const int N, const int K) {
     int row = blockIdx.y * TILE + threadIdx.y;
     int col = blockIdx.x * TILE + threadIdx.x;
 
@@ -40,3 +41,5 @@ __global__ void title_gem_kernel(const float* __restrict__ A,
         C[row * N + col] = acc;
     }
 }
+
+#endif
