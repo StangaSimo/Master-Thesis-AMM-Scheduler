@@ -3,7 +3,14 @@
 
 int main() {
 
-    /* TODO: auto tuning block and grid? for naive and tiled? */
+    /* TODO: GPU consumption and efficiency?  SIIIII*/
+    /* TODO: Sparse gem?  SIIII */ 
+    /* TODO: more than one precision? solo double e float */
+
+    /* Open vino on windoows for gem? with efficency and gflops SIIIIIIIII */
+
+    /* init: TENSORE CORE */
+
     printGPUInfo(getGPUInfo(0));
 
 #ifdef GEM

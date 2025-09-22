@@ -61,22 +61,22 @@ TestResult run_gem(KernelType kernel, const int M, const int N, const int K, dim
                 float alpha = 1.0f;            
                 float beta = 0.0f;
                 cublasHandle_t blas_handle;  
-                //CHECK_CUBLAS(cublasCreate(&blas_handle));
+                CHECK_CUBLAS(cublasCreate(&blas_handle));
 
-                //cublasSgemm (blas_handle, CUBLAS_OP_N, CUBLAS_OP_N, 
-                //    N, M, K, &alpha, 
-                //    d_B, N, d_A, K, &beta, d_C, N
-                //);
+                cublasSgemm (blas_handle, CUBLAS_OP_N, CUBLAS_OP_N, 
+                    N, M, K, &alpha, 
+                    d_B, N, d_A, K, &beta, d_C, N
+                );
 
-                //CHECK_CUDA(cudaDeviceSynchronize()); 
-                //CHECK_CUDA(cudaEventRecord(start));
-                //cublasSgemm (blas_handle, CUBLAS_OP_N, CUBLAS_OP_N, 
-                //    N, M, K, &alpha, 
-                //    d_B, N, d_A, K, &beta, d_C, N
-                //);
-                //CHECK_CUDA(cudaEventRecord(stop));
-                //CHECK_CUDA(cudaDeviceSynchronize());
-                //cublasDestroy(blas_handle); 
+                CHECK_CUDA(cudaDeviceSynchronize()); 
+                CHECK_CUDA(cudaEventRecord(start));
+                cublasSgemm (blas_handle, CUBLAS_OP_N, CUBLAS_OP_N, 
+                    N, M, K, &alpha, 
+                    d_B, N, d_A, K, &beta, d_C, N
+                );
+                CHECK_CUDA(cudaEventRecord(stop));
+                CHECK_CUDA(cudaDeviceSynchronize());
+                CHECK_CUBLAS(cublasDestroy(blas_handle)); 
             }
             break;
         default:

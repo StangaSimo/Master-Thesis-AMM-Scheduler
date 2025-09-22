@@ -5,7 +5,8 @@ TARGET = benchmark
 SRC_DIR = src
 BUILD_DIR = build
 INCLUDE_DIRS = -I$(SRC_DIR)/include
-LIBRARIES = -lcudart -lcublas 
+# LIBRARIES = -lcudart -lcublas 
+LIBRARIES = -lcublas 
 
 SRC = $(SRC_DIR)/main.cu \
       $(SRC_DIR)/benchmarks/gem_runner.cu \

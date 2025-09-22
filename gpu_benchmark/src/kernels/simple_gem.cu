@@ -1,5 +1,6 @@
 #include "../include/kernels/simple_gem.hpp"
 
+/* no cache optimization and K access to global memory */
 __global__ void simple_gemm_kernel(const float* __restrict__ A,
                                    const float* __restrict__ B,
                                    float* __restrict__ C,

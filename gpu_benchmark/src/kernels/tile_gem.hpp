@@ -1,8 +1,7 @@
 #ifndef TILE_GEM_HPP
 #define TILE_GEM_HPP
 
-#include <cuda_runtime.h>
-
+/* every thread block work with 1 TILE, every block thread reuse the TILE portion , K/TILE memory access */
 template <const int TILE>
 __global__ void tile_gem_kernel(const float* __restrict__ A,
                                  const float* __restrict__ B,
