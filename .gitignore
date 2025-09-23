@@ -3,3 +3,5 @@ gpu_benchmark/benchmark
 gpu_benchmark/build
 vino_c/models
 vino_c/test_npu
+.vscode
+npu_benchmark/benchmark

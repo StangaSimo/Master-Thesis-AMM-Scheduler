@@ -4,6 +4,7 @@
         "typeinfo": "cpp",
         "chrono": "cpp",
         "random": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "algorithm": "cpp"
     }
 }
