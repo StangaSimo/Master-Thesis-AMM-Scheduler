@@ -11,6 +11,9 @@
 #include <thread>
 #include <atomic>
 
+#include <cstdio>
+#include <cstdlib> 
+
 //#define CHECK_RESULT  
 
 struct TestResult {
@@ -133,123 +136,73 @@ void benchmark_device(const std::string& device_name, int M, int N, int K, int r
     std::cout << "\n";
 }
 
-std::atomic<bool> stop_gpu_monitor(false);
-
-// legge l'energia totale in microjoule dal file RAPL
-double read_energy_uj(const std::string& path) {
-    std::ifstream file(path);
-    double val = 0.0;
-    if (file.is_open()) file >> val;
-    return val;
-}
-
-// thread di monitoraggio: legge energia ogni interval_ms e calcola potenza istantanea
-void monitor_gpu_power(const std::string& path, int interval_ms, std::vector<double>& powers) {
-    double last_energy = read_energy_uj(path);
-    auto last_time = std::chrono::high_resolution_clock::now();
-
-    while (!stop_gpu_monitor) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
-
-        double current_energy = read_energy_uj(path);
-        auto current_time = std::chrono::high_resolution_clock::now();
-
-        double delta_energy_j = (current_energy - last_energy) / 1e6; // µJ -> J
-        double delta_time_s = std::chrono::duration<double>(current_time - last_time).count();
-
-        double power_w = delta_energy_j / delta_time_s;
-        powers.push_back(power_w);
-
-        std::cout << "[GPU Power] " << power_w << " W\n";
-
-        last_energy = current_energy;
-        last_time = current_time;
-    }
-}
-
 int main() {
+
+
+    // TODO: gpu power assolutamente
+    // TODO: NPU power assolutamente
+    // TODO: cpu power assolutamente
+
+
     const int RUNS = 10;
-
-    std::vector<double> gpu_powers;
-    std::string gpu_energy_path = "/sys/class/powercap/intel-rapl/intel-rapl:0:1/energy_uj";
-
-    std::thread gpu_monitor(monitor_gpu_power, gpu_energy_path, 500, std::ref(gpu_powers));
-
     const int M = 2048, N = 2048, K = 1024;
-    std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
 
-    benchmark_device("GPU", M, N, K, RUNS);
+    // Piccolo (low-latency / batch ridotto)
+    {
+        const int M = 16, N = 128, K = 512;
+        std::cout << "Benchmark OpenVINO MatMul FP16 (Piccolo)\n";
+        std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
 
-    stop_gpu_monitor = true;
-    gpu_monitor.join();
+        benchmark_device("CPU", M, N, K, RUNS);
+        benchmark_device("GPU", M, N, K, RUNS);
+        benchmark_device("NPU", M, N, K, RUNS);
+    }
 
-    std::cout << "Potenza GPU registrata su " << gpu_powers.size() << " intervalli.\n";
+    // Medio (tipico layer fully connected)
+    {
+        const int M = 1024, N = 1024, K = 512;
+        std::cout << "Benchmark OpenVINO MatMul FP16 (Medio)\n";
+        std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
+
+        benchmark_device("CPU", M, N, K, RUNS);
+        benchmark_device("GPU", M, N, K, RUNS);
+        benchmark_device("NPU", M, N, K, RUNS);
+    }
+
+    // Grande (peak compute / stress memoria)
+    {
+        const int M = 2048, N = 2048, K = 1024;
+        std::cout << "Benchmark OpenVINO MatMul FP16 (Grande)\n";
+        std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
+
+        benchmark_device("CPU", M, N, K, RUNS);
+        benchmark_device("GPU", M, N, K, RUNS);
+        benchmark_device("NPU", M, N, K, RUNS);
+    }
+
+    // Alta e stretta (stress memoria e cache)
+    {
+        const int M = 4096, N = 512, K = 1024;
+        std::cout << "Benchmark OpenVINO MatMul FP16 (Alta e stretta)\n";
+        std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
+
+        benchmark_device("CPU", M, N, K, RUNS);
+        benchmark_device("GPU", M, N, K, RUNS);
+        benchmark_device("NPU", M, N, K, RUNS);
+    }
+
+    // Lunga e bassa (stress memoria e cache)
+    {
+        const int M = 512, N = 4096, K = 1024;
+        std::cout << "Benchmark OpenVINO MatMul FP16 (Lunga e bassa)\n";
+        std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
+
+        benchmark_device("CPU", M, N, K, RUNS);
+        benchmark_device("GPU", M, N, K, RUNS);
+        benchmark_device("NPU", M, N, K, RUNS);
+    }
+
 
     return 0;
 }
-
-    // -------------------------
-    // Piccolo (low-latency / batch ridotto)
-    // -------------------------
-    //{
-    //    const int M = 16, N = 128, K = 512;
-    //    std::cout << "Benchmark OpenVINO MatMul FP16 (Piccolo)\n";
-    //    std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
-
-    //    benchmark_device("CPU", M, N, K, RUNS);
-    //    benchmark_device("GPU", M, N, K, RUNS);
-    //    benchmark_device("NPU", M, N, K, RUNS);
-    //}
-
-    // -------------------------
-    // Medio (tipico layer fully connected)
-    // -------------------------
-    //{
-    //    const int M = 1024, N = 1024, K = 512;
-    //    std::cout << "Benchmark OpenVINO MatMul FP16 (Medio)\n";
-    //    std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
-
-    //    benchmark_device("CPU", M, N, K, RUNS);
-    //    benchmark_device("GPU", M, N, K, RUNS);
-    //    benchmark_device("NPU", M, N, K, RUNS);
-    //}
-
-    // -------------------------
-    // Grande (peak compute / stress memoria)
-    // -------------------------
-    //{
-    //    const int M = 2048, N = 2048, K = 1024;
-    //    std::cout << "Benchmark OpenVINO MatMul FP16 (Grande)\n";
-    //    std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
-
-    //    benchmark_device("CPU", M, N, K, RUNS);
-    //    benchmark_device("GPU", M, N, K, RUNS);
-    //    benchmark_device("NPU", M, N, K, RUNS);
-    //}
-
-    // -------------------------
-    // Alta e stretta (stress memoria e cache)
-    // -------------------------
-    //{
-    //    const int M = 4096, N = 512, K = 1024;
-    //    std::cout << "Benchmark OpenVINO MatMul FP16 (Alta e stretta)\n";
-    //    std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
-
-    //    benchmark_device("CPU", M, N, K, RUNS);
-    //    benchmark_device("GPU", M, N, K, RUNS);
-    //    benchmark_device("NPU", M, N, K, RUNS);
-    //}
-
-    // -------------------------
-    // Lunga e bassa (stress memoria e cache)
-    // -------------------------
-    //{
-    //    const int M = 512, N = 4096, K = 1024;
-    //    std::cout << "Benchmark OpenVINO MatMul FP16 (Lunga e bassa)\n";
-    //    std::cout << "Ops totali: " << (2.0 * M * N * K / 1e9) << " GFLOPs\n\n";
-
-    //    benchmark_device("CPU", M, N, K, RUNS);
-    //    benchmark_device("GPU", M, N, K, RUNS);
-    //    benchmark_device("NPU", M, N, K, RUNS);
-    //}
 
