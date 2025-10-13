@@ -5,8 +5,10 @@ TARGET = benchmark
 SRC_DIR = src
 BUILD_DIR = build
 INCLUDE_DIRS = -I$(SRC_DIR)/include
-# LIBRARIES = -lcudart -lcublas 
-LIBRARIES = -lcublas 
+
+LIB_DIRS = -L/usr/lib/x86_64-linux-gnu
+
+LIBRARIES = -lcublas -lnvidia-ml
 
 SRC = $(SRC_DIR)/main.cu \
       $(SRC_DIR)/benchmarks/gem_runner.cu \
@@ -17,10 +19,10 @@ SRC = $(SRC_DIR)/main.cu \
 OBJ = $(SRC:$(SRC_DIR)/%.cu=$(BUILD_DIR)/%.o)
 
 $(TARGET): $(OBJ)
-	$(NVCC) $(NVCC_FLAGS) $(INCLUDE_DIRS) -o $@ $(OBJ) $(LIBRARIES)
+	$(NVCC) $(NVCC_FLAGS) $(INCLUDE_DIRS) $(LIB_DIRS) -o $@ $(OBJ) $(LIBRARIES)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cu
-	@mkdir -p $(@D)  
+	@mkdir -p $(@D)
 	$(NVCC) $(NVCC_FLAGS) $(INCLUDE_DIRS) -c $< -o $@
 
 run: $(TARGET)

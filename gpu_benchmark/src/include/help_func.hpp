@@ -110,6 +110,8 @@ inline bool compare_matrix(const float* gpu_C, const float* cpu_C,
     }
     return true;
 }
+
+
 #endif
 
 #endif

@@ -16,6 +16,11 @@
 #include <random>
 #include <vector>
 #include <functional>
+#include <nvml.h>
+#include <thread>
+#include <fstream>
+#include <iomanip>
+
 
 void benchmark_gem(KernelType kernel, const int M, const int N, const int K, 
                    dim3 blockSize, dim3 gridSize, const int runs);

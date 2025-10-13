@@ -5,9 +5,6 @@ int main() {
 
     /* TODO: GPU consumption and efficiency?  SIIIII*/
     /* TODO: Sparse gem?  SIIII */ 
-    /* TODO: more than one precision? solo double e float */
-    /* TODO: GPU POWER */
-
 
     /* init: TENSORE CORE */
 
