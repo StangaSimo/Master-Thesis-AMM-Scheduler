@@ -181,7 +181,7 @@ void write_result_csv(const std::string &filename,
 
     file.close();
 
-    std::cout << "\n=== Benchmark results (" << kernelName << ") ===\n";
+    std::cout << "\nResults (" << kernelName << ")\n";
     std::cout << "Matrix: " << M << "x" << N << "x" << K << "\n";
     std::cout << runs << " run(s)\n";
     std::cout << "Timestamp: " << timestamp << "\n\n";
@@ -192,7 +192,10 @@ void write_result_csv(const std::string &filename,
 }
                         
 void benchmark_gem(KernelType kernel, const int M, const int N, const int K, dim3 blockSize, dim3 gridSize, const int runs) {
-    std::cout << "Benchmark: " << getKernelName(kernel) << " | " << M << "x" << N << " (K=" << K << "), " << runs << " runs\n";
+    std::cout << "=========== Benchmark: " << getKernelName(kernel) 
+              << " | " << M << "x" << N 
+              << " (K=" << K << "), " 
+              << runs << " runs\n";
 
     double avg_power = 0.0,
         min_power = 0.0,

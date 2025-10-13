@@ -10,8 +10,8 @@
 #define DENSE_BETA 0.0f
 
 /* Debug mode */
-#define DEBUG
-#define CHECK_RESULT
+//#define DEBUG
+//#define CHECK_RESULT
 #define GEM
 #define MEM
 

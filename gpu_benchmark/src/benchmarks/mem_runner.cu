@@ -68,41 +68,106 @@ TestResult run_mem(KernelType kernel, size_t bytes_per_elem, const int N, dim3 b
     return {ms, GBs};
 }
 
+void write_result_csv(const std::string &filename,
+                      const std::string &kernelName,
+                      int runs, 
+                      std::vector<RunData> &results)
+{
+    if (results.empty()) {
+        std::cerr << "[ERROR] results empty\n";
+        return;
+    }
+
+    auto [min_ms_it, max_ms_it] = std::minmax_element(results.begin(), results.end(),
+                                                      [](const RunData &a, const RunData &b) { return a.ms < b.ms; });
+    auto [min_bw_it, max_bw_it] = std::minmax_element(results.begin(), results.end(),
+                                                      [](const RunData &a, const RunData &b) { return a.gflops < b.gflops; });
+
+    double avg_ms = 0.0, avg_bw = 0.0, avg_power = 0.0;
+    double min_power = results.front().min_power;
+    double max_power = results.front().max_power;
+
+    for (const auto &r : results) {
+        avg_ms += r.ms;
+        avg_bw += r.gflops;
+        avg_power += r.avg_power;
+        min_power = std::min(min_power, r.min_power);
+        max_power = std::max(max_power, r.max_power);
+    }
+
+    avg_ms /= results.size();
+    avg_bw /= results.size();
+    avg_power /= results.size();
+
+    auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+    std::ofstream file(filename, std::ios::app);
+    if (!file.is_open()) {
+        std::cerr << "[ERROR]: can't open " << filename << "\n";
+        return;
+    }
+
+    file.seekp(0, std::ios::end);
+    if (file.tellp() == 0) {
+        file << "Timestamp,Kernel,Size,Runs,"
+                "Avg_Time_ms,Min_Time_ms,Max_Time_ms,"
+                "Avg_Bandwidth_GBs,Min_Bandwidth_GBs,Max_Bandwidth_GBs,"
+                "Avg_Power_W,Min_Power_W,Max_Power_W\n";
+    }
+
+    file << timestamp << ","
+         << kernelName << ","
+         << runs << ","
+         << std::fixed << std::setprecision(3)
+         << avg_ms << "," << min_ms_it->ms << "," << max_ms_it->ms << ","
+         << avg_bw << "," << min_bw_it->gflops << "," << max_bw_it->gflops << ","
+         << avg_power << "," << min_power << "," << max_power
+         << "\n";
+
+    file.close();
+
+    std::cout << "\nResults (" << kernelName << ")\n";
+    std::cout << runs << " run(s)\n";
+    std::cout << "Timestamp: " << timestamp << "\n\n";
+    std::cout << "avg ms: " << avg_ms << " (min " << min_ms_it->ms << ", max " << max_ms_it->ms << ")\n";
+    std::cout << "avg Bandwith : " << avg_bw << " GB/s (min " << min_bw_it->gflops << ", max " << max_bw_it->gflops << ")\n";
+    std::cout << "avg Power : " << avg_power << " W (min " << min_power << ", max " << max_power << ")\n";
+    std::cout << "--------------------------------------------\n";
+}
+
 void benchmark_mem(KernelType kernel, size_t bytes_per_elem, const int N, dim3 blockSize, dim3 gridSize , float alpha, const int runs) {
-    std::cout << "Benchmark: " << getKernelName(kernel) << " | "
-              << N << " elements, " << runs << " runs\n";
+    std::cout << "=========== Benchmark: " << getKernelName(kernel) 
+              << " | " << N << " elements, " << runs << " runs\n";
 
-    double sum_ms = 0.0, sum_gbs = 0.0, sum_power = 0.0;
+    GpuPowerSampler sampler(0, 100);
 
-    nvmlInit();
-    nvmlDevice_t device;
-    nvmlDeviceGetHandleByIndex(0, &device);
+    std::vector<RunData> results;
+    results.reserve(runs);
 
     for (int i = 0; i < runs; i++) {
         unsigned int power_before, power_after;
 
-        nvmlDeviceGetPowerUsage(device, &power_before);
+        sampler.start();
         TestResult r = run_mem(kernel, bytes_per_elem, N, blockSize, gridSize, alpha);
-        nvmlDeviceGetPowerUsage(device, &power_after);
 
-        double avg_power_W = ((power_before + power_after) / 2.0) / 1000.0;
+        sampler.stop();
 
-        sum_ms += r.ms;
-        sum_gbs += r.gflops;
-        sum_power += avg_power_W;
+        double avg_power = sampler.averagePower();
+        double min_power = sampler.minPower();
+        double max_power = sampler.maxPower();
+
+        results.push_back({r.ms, r.gflops, avg_power, min_power, max_power});
+
 
 #ifdef DEBUG
-        std::cout << "[DEBUG]: Run " << i+1 
-                  << ": " << r.ms 
-                  << " ms, " << r.gflops << " GB/s "
-                  << avg_power_W << " W\n";
+        std::cout << "[DEBUG]: Run " << i + 1 << ": "
+                  << r.ms << " ms, "
+                  << r.gflops << " GB/s, "
+                  << " | Power (avg/min/max): "
+                  << avg_power << "/" << min_power << "/" << max_power << " W\n";
 #endif
     }
 
-    nvmlShutdown();
-
-    std::cout << "Average time: " << sum_ms / runs << " ms\n";
-    std::cout << "Average Bandwidth: " << sum_gbs / runs << " GB/s\n";
-    std::cout << "Average Power: " << sum_power / runs << " W\n\n";
+    write_result_csv("mem_benchmark_results.csv", getKernelName(kernel), runs, results);
 }
 
