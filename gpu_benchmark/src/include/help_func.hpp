@@ -24,8 +24,9 @@ inline const char* getKernelName(KernelType type) {
         case KernelType::ADD:       return "Add";
         case KernelType::TRIAD:     return "Triad";
         case KernelType::SCALE:     return "Scale";
-        case KernelType::COPY:      return "COPY";
-        case KernelType::CUBLAS:    return "CUBLAS";
+        case KernelType::COPY:      return "Copy";
+        case KernelType::CUBLAS:    return "Cublas";
+        case KernelType::TENSOR:    return "Tensor";
         default:                    return "Unknown";
     }
 }

@@ -32,10 +32,12 @@ int main() {
     benchmark_gem(KernelType::DENSE, M_SIZE, N_SIZE, K_SIZE, blockDense, gridDense, RUNS);
 
     benchmark_gem(KernelType::CUBLAS, M_SIZE, N_SIZE, K_SIZE, NULL, NULL, RUNS);
+
+    benchmark_gem(KernelType::TENSOR, M_SIZE, N_SIZE, K_SIZE, NULL, NULL, RUNS);
 #endif 
 
 #ifdef MEM
-    int N = 1<<24; // ~16M elements
+    int N = 1<<24; /* 16 milioni circ */
     dim3 block(256), grid((N+255)/256);
 
     float alpha = 2.5f;

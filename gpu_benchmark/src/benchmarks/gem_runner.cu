@@ -59,31 +59,71 @@ TestResult run_gem(KernelType kernel, const int M, const int N, const int K, dim
             break;
         case KernelType::CUBLAS:
             {
-                float alpha = 1.0f;            
-                float beta = 0.0f;
-                cublasHandle_t blas_handle;  
-                CHECK_CUBLAS(cublasCreate(&blas_handle));
+                float alpha = 1.0f, beta = 0.0f;
+                cublasHandle_t handle;  
+                CHECK_CUBLAS(cublasCreate(&handle));
 
-                cublasSgemm (blas_handle, CUBLAS_OP_N, CUBLAS_OP_N, 
+                cublasSgemm (handle, CUBLAS_OP_N, CUBLAS_OP_N, 
                     N, M, K, &alpha, 
                     d_B, N, d_A, K, &beta, d_C, N
                 );
 
                 CHECK_CUDA(cudaDeviceSynchronize()); 
                 CHECK_CUDA(cudaEventRecord(start));
-                cublasSgemm (blas_handle, CUBLAS_OP_N, CUBLAS_OP_N, 
+                cublasSgemm (handle, CUBLAS_OP_N, CUBLAS_OP_N, 
                     N, M, K, &alpha, 
                     d_B, N, d_A, K, &beta, d_C, N
                 );
                 CHECK_CUDA(cudaEventRecord(stop));
                 CHECK_CUDA(cudaDeviceSynchronize());
-                CHECK_CUBLAS(cublasDestroy(blas_handle)); 
+                CHECK_CUBLAS(cublasDestroy(handle)); 
+                break;
             }
-            break;
-        default:
-            throw std::invalid_argument("Unknown kernel type: " +  std::to_string(static_cast<int>(kernel)));
-            break;
-    }
+        case KernelType::TENSOR:
+            {
+                half *d_A16, *d_B16;
+
+                /* 16 bit matrix for input */
+                CHECK_CUDA(cudaMalloc(&d_A16, M * K * sizeof(half)));
+                CHECK_CUDA(cudaMalloc(&d_B16, K * N * sizeof(half)));
+
+                /* converto from 32 to 16 */
+                cudaDeviceSynchronize();
+                cudaMemcpy(d_A16, d_A, M * K * sizeof(half), cudaMemcpyDeviceToDevice);
+                cudaMemcpy(d_B16, d_B, K * N * sizeof(half), cudaMemcpyDeviceToDevice);
+                cublasHandle_t handle;
+                CHECK_CUBLAS(cublasCreate(&handle));
+
+                /* enable tensor core */
+                CHECK_CUBLAS(cublasSetMathMode(handle, CUBLAS_TENSOR_OP_MATH));
+                const float alpha = 1.0f, beta = 0.0f;
+
+                cudaDeviceSynchronize();
+                CHECK_CUDA(cudaEventRecord(start));
+                CHECK_CUBLAS(cublasGemmEx(handle,
+                                          CUBLAS_OP_N, CUBLAS_OP_N,
+                                          N, M, K,
+                                          &alpha,
+                                          d_B16, CUDA_R_16F, N,
+                                          d_A16, CUDA_R_16F, K,
+                                          &beta,
+                                          d_C, CUDA_R_32F, N,
+                                          CUDA_R_32F,
+                                          /* force tensor core */
+                                          CUBLAS_GEMM_DEFAULT_TENSOR_OP));
+                cublasDestroy(handle);
+                CHECK_CUDA(cudaEventRecord(stop));
+                cudaDeviceSynchronize();
+
+                cudaFree(d_A16);
+                cudaFree(d_B16);
+                // TODO check result
+                break;
+            }
+            default:
+                throw std::invalid_argument("Unknown kernel type: " + std::to_string(static_cast<int>(kernel)));
+                break;
+            }
 
     float ms = 0.0;
     CHECK_CUDA(cudaEventElapsedTime(&ms, start, stop));
@@ -186,7 +226,7 @@ void write_result_csv(const std::string &filename,
     std::cout << runs << " run(s)\n";
     std::cout << "Timestamp: " << timestamp << "\n\n";
     std::cout << "avg ms: " << avg_ms << " ms (min " << min_ms_it->ms << ", max " << max_ms_it->ms << ")\n";
-    std::cout << "avg GFLOPS : " << avg_gflops << " (min " << min_gflops_it->gflops << ", max " << max_gflops_it->gflops << ")\n";
+    std::cout << "avg GFLOPS : " << avg_gflops << " GF (min " << min_gflops_it->gflops << ", max " << max_gflops_it->gflops << ")\n";
     std::cout << "avg Power : " << avg_power << " W (min " << min_power << ", max " << max_power << ")\n";
     std::cout << "--------------------------------------------\n";
 }
@@ -212,8 +252,10 @@ void benchmark_gem(KernelType kernel, const int M, const int N, const int K, dim
     for (int i = 0; i < runs; i++) {
 
         sampler.start();
+
         /* running kernel */
         TestResult r = run_gem(kernel, M, N, K, blockSize, gridSize);
+
         sampler.stop();
 
         avg_power = sampler.averagePower();
