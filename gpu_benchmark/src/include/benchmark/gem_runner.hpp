@@ -20,6 +20,7 @@
 #include <thread>
 #include <fstream>
 #include <iomanip>
+#include <algorithm>
 
 
 void benchmark_gem(KernelType kernel, const int M, const int N, const int K, 

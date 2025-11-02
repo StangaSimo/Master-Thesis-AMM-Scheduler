@@ -68,15 +68,14 @@ TestResult run_gem(KernelType kernel, const int M, const int N, const int K, dim
                     d_B, N, d_A, K, &beta, d_C, N
                 );
 
-                CHECK_CUDA(cudaDeviceSynchronize()); 
+                CHECK_CUDA(cudaDeviceSynchronize());
                 CHECK_CUDA(cudaEventRecord(start));
-                cublasSgemm (handle, CUBLAS_OP_N, CUBLAS_OP_N, 
-                    N, M, K, &alpha, 
-                    d_B, N, d_A, K, &beta, d_C, N
-                );
+                cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+                            N, M, K, &alpha,
+                            d_B, N, d_A, K, &beta, d_C, N);
                 CHECK_CUDA(cudaEventRecord(stop));
                 CHECK_CUDA(cudaDeviceSynchronize());
-                CHECK_CUBLAS(cublasDestroy(handle)); 
+                CHECK_CUBLAS(cublasDestroy(handle));
                 break;
             }
         case KernelType::TENSOR:
@@ -87,7 +86,7 @@ TestResult run_gem(KernelType kernel, const int M, const int N, const int K, dim
                 CHECK_CUDA(cudaMalloc(&d_A16, M * K * sizeof(half)));
                 CHECK_CUDA(cudaMalloc(&d_B16, K * N * sizeof(half)));
 
-                /* converto from 32 to 16 */
+                /* converto da 32 to 16 */
                 cudaDeviceSynchronize();
                 cudaMemcpy(d_A16, d_A, M * K * sizeof(half), cudaMemcpyDeviceToDevice);
                 cudaMemcpy(d_B16, d_B, K * N * sizeof(half), cudaMemcpyDeviceToDevice);
@@ -98,8 +97,6 @@ TestResult run_gem(KernelType kernel, const int M, const int N, const int K, dim
                 CHECK_CUBLAS(cublasSetMathMode(handle, CUBLAS_TENSOR_OP_MATH));
                 const float alpha = 1.0f, beta = 0.0f;
 
-                cudaDeviceSynchronize();
-                CHECK_CUDA(cudaEventRecord(start));
                 CHECK_CUBLAS(cublasGemmEx(handle,
                                           CUBLAS_OP_N, CUBLAS_OP_N,
                                           N, M, K,
@@ -111,10 +108,23 @@ TestResult run_gem(KernelType kernel, const int M, const int N, const int K, dim
                                           CUDA_R_32F,
                                           /* force tensor core */
                                           CUBLAS_GEMM_DEFAULT_TENSOR_OP));
-                cublasDestroy(handle);
+
+                cudaDeviceSynchronize();
+                CHECK_CUDA(cudaEventRecord(start)); //TODO: stream for cudaeventrecord
+                CHECK_CUBLAS(cublasGemmEx(handle,
+                                          CUBLAS_OP_N, CUBLAS_OP_N,
+                                          N, M, K,
+                                          &alpha,
+                                          d_B16, CUDA_R_16F, N,
+                                          d_A16, CUDA_R_16F, K,
+                                          &beta,
+                                          d_C, CUDA_R_32F, N,
+                                          CUDA_R_32F,
+                                          CUBLAS_GEMM_DEFAULT_TENSOR_OP));
                 CHECK_CUDA(cudaEventRecord(stop));
                 cudaDeviceSynchronize();
 
+                cublasDestroy(handle);
                 cudaFree(d_A16);
                 cudaFree(d_B16);
                 // TODO check result

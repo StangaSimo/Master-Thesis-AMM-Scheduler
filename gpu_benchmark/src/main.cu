@@ -3,10 +3,11 @@
 
 int main() {
 
-    /* TODO: GPU consumption and efficiency?  SIIIII*/
-    /* TODO: Sparse gem?  SIIII */ 
-
-    /* init: TENSORE CORE */
+    /* TODO: Sparse gem  */ 
+    /* TODO: provare il codice sul server  */ 
+    /* TODO: scheduler asimmetrico, con stream di matrici non uguali, e vedere sei */
+    /* divisione a blocchi di una matrice , strassen, diviisione in 4 blocchi */
+    /* trovare una bella applicazione per uno stream di matrice o una matrice molto grande */
 
     printGPUInfo(getGPUInfo(0));
 
