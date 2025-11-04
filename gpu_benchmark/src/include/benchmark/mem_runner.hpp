@@ -16,6 +16,7 @@
 #include <thread>
 #include <fstream>
 #include <iomanip>
+#include <algorithm>
 
 void benchmark_mem(KernelType kernel, size_t bytes_per_elem, const int N, 
                    dim3 blockSize, dim3 gridSize, float alpha, const int runs);
