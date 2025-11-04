@@ -15,7 +15,7 @@
 #define GEM
 #define MEM
 
-#define RUNS 5
+#define RUNS 20 
 #define TILE_SIZE 16
 #define M_SIZE 2048
 #define N_SIZE 2048
