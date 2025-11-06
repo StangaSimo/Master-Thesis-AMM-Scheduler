@@ -1,18 +1,19 @@
 #ifndef MEM_RUNNER_HPP
 #define MEM_RUNNER_HPP
 
+#include <cuda_runtime.h>
+#include <nvml.h>
+
 #include "../kernels/simple_mem.hpp"
 #include "../types.hpp"
 #include "../help_func.hpp"
 #include "../config.hpp"
 
 #include <string>
-#include <cuda_runtime.h>
 #include <iostream>
 #include <random>
 #include <vector>
 #include <functional>
-#include <nvml.h>
 #include <thread>
 #include <fstream>
 #include <iomanip>

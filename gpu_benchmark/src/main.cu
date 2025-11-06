@@ -3,52 +3,81 @@
 
 int main() {
 
-    /* TODO: Sparse gem  */ 
-    /* TODO: provare il codice sul server  */ 
-    /* TODO: scheduler asimmetrico, con stream di matrici non uguali, e vedere sei */
-    /* divisione a blocchi di una matrice , strassen, diviisione in 4 blocchi */
-    /* trovare una bella applicazione per uno stream di matrice o una matrice molto grande */
+  /* TODO: Sparse gem  */
+  /* TODO: provare il codice sul server  */
+  /* TODO: scheduler asimmetrico, con stream di matrici non uguali, e vedere sei
+   */
+  /* divisione a blocchi di una matrice , strassen, diviisione in 4 blocchi */
+  /* trovare una bella applicazione per uno stream di matrice o una matrice
+   * molto grande */
 
-    printGPUInfo(getGPUInfo(0));
+  /*
+
+     TUTTO 16 bit va bene??? 8 bit per le coral ancora peggio, si converte? si
+     mette come decisione?
+
+      json per i dati,
+
+      regressione o altro) per fallback.
+      hashmap per capire a chi fare la query, predictive model (modello di
+
+      scheduler greedy o window,
+
+      dag con ready queue per le matrici? (quindi matrici connesse?)
+
+      pipeline di elaborazione immagini e video.
+  */
+
+  printGPUInfo(getGPUInfo(0));
 
 #ifdef GEM
-    dim3 blockNaive(16, 16);
-    dim3 gridNaive((N_SIZE + blockNaive.x - 1) / blockNaive.x, (M_SIZE + blockNaive.y - 1) / blockNaive.y);
+  dim3 blockNaive(16, 16);
+  dim3 gridNaive((N_SIZE + blockNaive.x - 1) / blockNaive.x,
+                 (M_SIZE + blockNaive.y - 1) / blockNaive.y);
 
-    benchmark_gem(KernelType::NAIVE, M_SIZE, N_SIZE, K_SIZE, blockNaive, gridNaive, RUNS);
+  benchmark_gem(KernelType::NAIVE, M_SIZE, N_SIZE, K_SIZE, blockNaive,
+                gridNaive, RUNS);
 
-    dim3 blockTiled(TILE_SIZE, TILE_SIZE);
-    dim3 gridTiled((N_SIZE + TILE_SIZE - 1) / TILE_SIZE, (M_SIZE + TILE_SIZE - 1) / TILE_SIZE);
+  dim3 blockTiled(TILE_SIZE, TILE_SIZE);
+  dim3 gridTiled((N_SIZE + TILE_SIZE - 1) / TILE_SIZE,
+                 (M_SIZE + TILE_SIZE - 1) / TILE_SIZE);
 
-    benchmark_gem(KernelType::TILED, M_SIZE, N_SIZE, K_SIZE, blockTiled, gridTiled, RUNS);
+  benchmark_gem(KernelType::TILED, M_SIZE, N_SIZE, K_SIZE, blockTiled,
+                gridTiled, RUNS);
 
-    dim3 blockDense(DENSE_BLOCK_N / DENSE_THREAD_X, DENSE_BLOCK_M / DENSE_THREAD_Y);
-    dim3 gridDense(N_SIZE/ DENSE_BLOCK_N, M_SIZE / DENSE_BLOCK_M);
+  dim3 blockDense(DENSE_BLOCK_N / DENSE_THREAD_X,
+                  DENSE_BLOCK_M / DENSE_THREAD_Y);
+  dim3 gridDense(N_SIZE / DENSE_BLOCK_N, M_SIZE / DENSE_BLOCK_M);
 
-    if (N_SIZE % DENSE_BLOCK_N != 0)
-        gridDense.x++;
-    if (M_SIZE % DENSE_BLOCK_M != 0)
-        gridDense.y++;
+  if (N_SIZE % DENSE_BLOCK_N != 0)
+    gridDense.x++;
+  if (M_SIZE % DENSE_BLOCK_M != 0)
+    gridDense.y++;
 
-    benchmark_gem(KernelType::DENSE, M_SIZE, N_SIZE, K_SIZE, blockDense, gridDense, RUNS);
+  benchmark_gem(KernelType::DENSE, M_SIZE, N_SIZE, K_SIZE, blockDense,
+                gridDense, RUNS);
 
-    benchmark_gem(KernelType::CUBLAS, M_SIZE, N_SIZE, K_SIZE, NULL, NULL, RUNS);
+  benchmark_gem(KernelType::CUBLAS, M_SIZE, N_SIZE, K_SIZE, NULL, NULL, RUNS);
 
-    benchmark_gem(KernelType::TENSOR, M_SIZE, N_SIZE, K_SIZE, NULL, NULL, RUNS);
-#endif 
+  benchmark_gem(KernelType::TENSOR, M_SIZE, N_SIZE, K_SIZE, NULL, NULL, RUNS);
+#endif
 
 #ifdef MEM
-    int N = 1<<24; /* 16 milioni circ */
-    dim3 block(256), grid((N+255)/256);
+  int N = 1 << 24; /* 16 milioni circ */
+  dim3 block(256), grid((N + 255) / 256);
 
-    float alpha = 2.5f;
+  float alpha = 2.5f;
 
-    benchmark_mem(KernelType::COPY, 2*sizeof(float), N, block, grid, alpha, RUNS);
-    benchmark_mem(KernelType::SCALE, 2*sizeof(float), N, block, grid, alpha, RUNS);
-    benchmark_mem(KernelType::ADD, 3*sizeof(float), N, block, grid, alpha, RUNS);
-    benchmark_mem(KernelType::TRIAD, 3*sizeof(float), N, block, grid, alpha, RUNS);
-    
-#endif 
+  benchmark_mem(KernelType::COPY, 2 * sizeof(float), N, block, grid, alpha,
+                RUNS);
+  benchmark_mem(KernelType::SCALE, 2 * sizeof(float), N, block, grid, alpha,
+                RUNS);
+  benchmark_mem(KernelType::ADD, 3 * sizeof(float), N, block, grid, alpha,
+                RUNS);
+  benchmark_mem(KernelType::TRIAD, 3 * sizeof(float), N, block, grid, alpha,
+                RUNS);
 
-    return 0;
+#endif
+
+  return 0;
 }

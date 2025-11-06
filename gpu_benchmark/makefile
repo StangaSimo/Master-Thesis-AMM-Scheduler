@@ -1,12 +1,12 @@
 NVCC = nvcc
-NVCC_FLAGS = -O3 -std=c++17
+NVCC_FLAGS = -O3 -std=c++17 -ccbin g++-13 
 TARGET = benchmark
 
 SRC_DIR = src
 BUILD_DIR = build
 INCLUDE_DIRS = -I$(SRC_DIR)/include
 
-LIB_DIRS = -L/usr/lib/x86_64-linux-gnu
+LIB_DIRS = -L/usr/lib/x85_64-linux-gnu
 
 LIBRARIES = -lcublas -lnvidia-ml
 

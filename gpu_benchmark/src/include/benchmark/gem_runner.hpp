@@ -1,6 +1,10 @@
 #ifndef GEM_RUNNER_HPP
 #define GEM_RUNNER_HPP
 
+#include <cublas_v2.h>
+#include <cuda_runtime.h>
+#include <nvml.h>
+
 #include "../kernels/simple_gem.hpp"
 #include "../../kernels/tile_gem.hpp" 
 #include "../../kernels/dense_gem.hpp"
@@ -10,13 +14,10 @@
 #include "../config.hpp"
 
 #include <string>
-#include <cublas_v2.h>
-#include <cuda_runtime.h>
 #include <iostream>
 #include <random>
 #include <vector>
 #include <functional>
-#include <nvml.h>
 #include <thread>
 #include <fstream>
 #include <iomanip>

@@ -5,3 +5,4 @@ vino_c/models
 vino_c/test_npu
 .vscode
 npu_benchmark/benchmark
+amp_scheduler/build

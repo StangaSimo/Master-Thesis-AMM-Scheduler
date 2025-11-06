@@ -79,8 +79,8 @@ inline void printGPUInfo(const GPUInfo& info) {
 }
 
 #ifdef CHECK_RESULT
-#include <cmath>
-#include <algorithm>
+//#include <cmath>
+//#include <algorithm>
 
 inline void cpu_gemm(const float* A, const float* B, float* C, 
                     int M, int N, int K) {
