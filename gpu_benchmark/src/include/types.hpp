@@ -3,13 +3,15 @@
 
 /* single run results*/
 struct TestResult {
-    double ms;
+    double ms_compute;
     double gflops;
+    float ms_memcpy;
 };
 
 /* runs results */
 struct RunData {
-    double ms;
+    double ms_compute;
+    double ms_memcpy;
     double gflops;
     double avg_power;
     double min_power;

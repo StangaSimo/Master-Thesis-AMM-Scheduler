@@ -1,4 +1,4 @@
-#include "cuda_hello.h"
+#include "amp_scheduler/cuda_hello.hpp"
 #include <iostream>
 #include <cuda_runtime.h>
 

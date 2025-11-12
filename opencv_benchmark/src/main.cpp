@@ -5,16 +5,17 @@
 #include <random>
 #include <string>
 #include <chrono>
-#include <cmath>     // Per std::pow
-#include <iomanip>   // Per std::setprecision
+#include <cmath>     
+#include <iomanip>  
 #include <sstream>
 #include <algorithm>
-#include <cctype>    // Per ::tolower
+#include <cctype>
 
 // Definiamo DEBUG anche qui per stampare i risultati
-#define DEBUG 1
+#define DEBUG 
+#define INTEL 
 
-void benchmark_device_opencv(const std::string &device_name, int M, int N, int K, int runs) {
+void benchmark_cpu(const std::string &device_name, int M, int N, int K, int runs) {
     
 #ifdef DEBUG
     std::cout << "\n=== Benchmark: " << device_name << " ===\n";
@@ -23,11 +24,8 @@ void benchmark_device_opencv(const std::string &device_name, int M, int N, int K
 
     cv::Mat h_A(M, K, CV_32F);
     cv::Mat h_B(K, N, CV_32F);
-    cv::Mat h_C(M, N, CV_32F); // Matrice risultato
-
-    // Inizializzazione con numeri casuali (simile al tuo codice)
-    // Usiamo il generatore di OpenCV per riempire le matrici
-    cv::RNG rng(42); // 42 è il seed, come nel tuo mt19937
+    cv::Mat h_C(M, N, CV_32F); 
+    cv::RNG rng(42); 
     rng.fill(h_A, cv::RNG::UNIFORM, -1.0f, 1.0f);
     rng.fill(h_B, cv::RNG::UNIFORM, -1.0f, 1.0f);
 
@@ -35,14 +33,14 @@ void benchmark_device_opencv(const std::string &device_name, int M, int N, int K
     double sum_gflops = 0.0;
 
     cv::gemm(h_A, h_B, 1.0, cv::Mat(), 0.0, h_C);
+    cv::ocl::finish();
 
-    // 4. Ciclo di benchmark
     for (int i = 0; i < runs; i++) {
         auto start = std::chrono::high_resolution_clock::now();
-        
-        /* Mat for umat */
+
         cv::gemm(h_A, h_B, 1.0, cv::Mat(), 0.0, h_C);
-        
+        cv::ocl::finish();
+
         auto end = std::chrono::high_resolution_clock::now();
 
         double ms = std::chrono::duration<double, std::milli>(end - start).count();
@@ -63,7 +61,7 @@ void benchmark_device_opencv(const std::string &device_name, int M, int N, int K
 #endif
 }
 
-void benchmark_device_opencv_gpu(const std::string &device_name, int M, int N, int K, int runs) {
+void benchmark_gpu(const std::string &device_name, int M, int N, int K, int runs) {
     
     /* activate openCL */
     if (!cv::ocl::haveOpenCL()) {
@@ -99,18 +97,19 @@ void benchmark_device_opencv_gpu(const std::string &device_name, int M, int N, i
 
     /* warmup */
     cv::gemm(u_A, u_B, 1.0, cv::UMat(), 0.0, u_C);
+    cv::ocl::finish();
     //cv::Mat warmup_result = u_C.getMat(cv::ACCESS_READ);
 
 
     for (int i = 0; i < runs; i++) {
         auto start = std::chrono::high_resolution_clock::now();
-        
         /* umat for GPU */
         cv::gemm(u_A, u_B, 1.0, cv::UMat(), 0.0, u_C);
+        cv::ocl::finish();
+        auto end = std::chrono::high_resolution_clock::now();
         
         cv::Mat result_sync = u_C.getMat(cv::ACCESS_READ);
         
-        auto end = std::chrono::high_resolution_clock::now();
 
         double ms = std::chrono::duration<double, std::milli>(end - start).count();
         double gflops = (2.0 * M * N * K) / (ms * 1e6);
@@ -209,10 +208,8 @@ bool createOpenCLContext(const std::string& platform_substr) {
 
     std::cout << "[INFO] Context created successfully\n";
     
-    // Enable OpenCL usage
     cv::ocl::setUseOpenCL(true);
 
-    // Verify what device is being used
     cv::ocl::Device currentDevice = cv::ocl::Device::getDefault();
     std::cout << "[INFO] OpenCV is now using: " << currentDevice.name() << "\n";
     std::cout << "[INFO] OpenCL enabled: " << (cv::ocl::useOpenCL() ? "YES" : "NO") << "\n";
@@ -221,26 +218,26 @@ bool createOpenCLContext(const std::string& platform_substr) {
 }
 
 int main() {
-    // Dimensioni e run (come nel tuo esempio)
     int M = 1024; 
     int N = 1024; 
     int K = 512;
     int runs = 5;
 
+#ifdef DEBUG 
+    /* Lapack */
+    std::cout << cv::getBuildInformation() << std::endl;
+#endif  
+
+#ifdef INTEL
     if (!createOpenCLContext("intel")) {
         std::cerr << "[WARNING] Failed to set Intel GPU context, using default device\n";
     }
-    benchmark_device_opencv_gpu("GPU (OpenCV/OpenCL)", M, N, K, runs);
+#endif
 
-    // NOTA: cv::gemm standard gira su CPU. 
-    // Anche se OpenCV può usare la GPU (tramite UMat), la logica
-    // di default `cv::Mat` è basata su CPU.
-    benchmark_device_opencv("CPU (OpenCV)", M, N, K, runs);
-    benchmark_device_opencv_gpu("GPU (OpenCV/OpenCL)", M, N, K, runs);
-    
-    // Le chiamate a "GPU" e "NPU" non sono direttamente applicabili
-    // a cv::gemm nello stesso modo di OpenVINO, quindi le omettiamo.
-    // std::cout << "Benchmark per GPU/NPU non applicabile direttamente con cv::Mat\n";
-
+    benchmark_gpu("GPU (OpenCV/OpenCL)", M, N, K, runs);
+    benchmark_cpu("CPU (OpenCV)", M, N, K, runs);
+    benchmark_gpu("GPU (OpenCV/OpenCL)", 2048, 2048, 1024, runs);
+    benchmark_cpu("CPU (OpenCV)", 2048, 2048, 1024, runs);
+    //TODO: aggiungere TLB, MKL e non so la roba di amd che veramente non usare e non potrò manco far funzionare, comunque sia aggiungere a tutto questo anche il fatto del consumo di watt e tutte le statistiche maronne 
     return 0;
 }

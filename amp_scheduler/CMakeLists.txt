@@ -1,41 +1,59 @@
 cmake_minimum_required(VERSION 3.18)
 
-#set(CMAKE_CXX_COMPILER "g++-15")
-#set(CMAKE_C_COMPILER "gcc-15")
-#set(CMAKE_CXX_COMPILER "g++-13")
-#set(CMAKE_C_COMPILER "gcc-13")
+option(ENABLE_CUDA "Enable CUDA support" ON)
+option(ENABLE_OPENVINO "Enable OpenVINO support" ON)
+
+set(PROJECT_LANGUAGES CXX)
+if(ENABLE_CUDA)
+    list(APPEND PROJECT_LANGUAGES CUDA)
+endif()
+
+project(HybridHello LANGUAGES ${PROJECT_LANGUAGES})
+
+configure_file(
+    ${CMAKE_SOURCE_DIR}/config.hpp.in
+    ${CMAKE_BINARY_DIR}/config.hpp
+)
+
+if (ENABLE_OPENVINO)
+    set(CMAKE_CXX_COMPILER "g++-15")
+    set(CMAKE_C_COMPILER "gcc-15")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-message(STATUS "Compilatore C++ forzato a: ${CMAKE_CXX_COMPILER}")
-message(STATUS "Compilatore C forzato a: ${CMAKE_C_COMPILER}")
+message(STATUS "CUDA support: ${ENABLE_CUDA}")
+message(STATUS "OpenVINO support: ${BUILD_WITH_OPENVINO}")
+message(STATUS "File config.hpp generated at: ${CMAKE_BINARY_DIR}/config.hpp")
 
-project(HybridHello LANGUAGES CXX CUDA)
-
-#find_package(OpenVINO REQUIRED)
-#find_package(Threads REQUIRED)
-#find_package(CUDA REQUIRED)
-
-add_executable(mio_eseguibile
-    main.cpp
-    cuda_hello.cu
-    openvino_hello.cpp
+set(MY_SOURCES
+    src/main.cpp
 )
 
-#target_include_directories(mio_eseguibile PRIVATE 
-#    ${OpenVINO_INCLUDE_DIRS}
-#    ${CUDA_INCLUDE_DIRS}
-#)
+if(ENABLE_CUDA)
+    list(APPEND MY_SOURCES src/cuda_hello.cu)
+endif()
 
-#target_include_directories(mio_eseguibile PRIVATE ${CUDA_INCLUDE_DIRS})
+if(ENABLE_OPENVINO)
+    list(APPEND MY_SOURCES src/openvino_hello.cpp)
+endif()
 
-target_link_libraries(mio_eseguibile PRIVATE
-    openvino
+add_executable(amp_scheduler ${MY_SOURCES})
 
-    cublas 
-
-    nvidia-ml
-
-    cudart
+target_include_directories(amp_scheduler PUBLIC
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/include
 )
+
+if(ENABLE_CUDA)
+    target_link_libraries(amp_scheduler PRIVATE
+        cublas
+        nvidia-ml
+        cudart
+    )
+endif()
+
+if(ENABLE_OPENVINO)
+    target_link_libraries(amp_scheduler PRIVATE openvino)
+endif()

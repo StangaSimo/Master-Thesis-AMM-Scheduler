@@ -2,42 +2,49 @@
 TARGET = benchmark
 
 # --- Sorgenti ---
-# Come hai richiesto, il main è in 'src'
 SRC_DIR = src
 SRC = $(SRC_DIR)/main.cpp
 
 # --- Compilatore e Flag ---
 CXX = g++
+CXXFLAGS = -std=c++17 -O3 -pthread
 
-# Flag di base: C++17 e Ottimizzazione -O3 (fondamentale per i benchmark)
-CXXFLAGS = -std=c++17 -O3
-
-# Flag per OpenCV:
-# $(shell ...) esegue il comando pkg-config e ne inserisce l'output
-# CXXFLAGS ottiene i percorsi -I (include)
-# LDFLAGS ottiene i percorsi -L e le librerie -l (link)
+# --- Flag di OpenCV ---
 CXXFLAGS += $(shell pkg-config opencv4 --cflags)
 LDFLAGS   = $(shell pkg-config opencv4 --libs)
 
+# --- Flag di TBB (Sappiamo che questo funziona) ---
+# pkg-config tbb --cflags non restituisce nulla, va bene
+CXXFLAGS += $(shell pkg-config tbb --cflags)
+# pkg-config tbb --libs aggiunge -ltbb
+LDFLAGS  += $(shell pkg-config tbb --libs)
+
+# --- Flag di oneMKL (Link MANUALE) ---
+#
+# Visto che 'pkg-config mkl-...' non funziona,
+# linkiamo manualmente le librerie TBB-threaded di MKL.
+# L'ordine è importante!
+#
+# -lmkl_intel_lp64:   Interfaccia LP64 (interi a 64-bit)
+# -lmkl_tbb_thread:   Layer di threading basato su TBB
+# -lmkl_core:         Il "cuore" computazionale di MKL
+#
+LDFLAGS  += -lmkl_intel_lp64 -lmkl_tbb_thread -lmkl_core
+
+# Librerie di supporto standard (già presenti, ma per sicurezza)
+LDFLAGS  += -lpthread -lm -ldl
 
 # --- Regole (Targets) ---
 
-# .PHONY dice a 'make' che queste non sono nomi di file
-# 'all' è il target di default
 .PHONY: all clean run
 
 all: $(TARGET)
 
-# Regola per costruire il target
-# Nota: Ho aggiunto $(CXXFLAGS) alla regola di compilazione,
-# che mancava nel tuo esempio ma è essenziale per usare gli include.
 $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
 
-# 'make clean' - Pulisce i file compilati
 clean:
 	rm -f $(TARGET)
 
-# 'make run' - Compila (se necessario) ed esegue
 run: all
 	./$(TARGET)

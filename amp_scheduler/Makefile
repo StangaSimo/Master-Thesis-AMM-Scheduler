@@ -1,4 +1,4 @@
-TARGET = mio_eseguibile
+TARGET = amp_scheduler
 
 BUILD_DIR = build
 
@@ -6,7 +6,7 @@ EXECUTABLE = $(BUILD_DIR)/$(TARGET)
 
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): CMakeLists.txt main.cpp cuda_hello.cu
+$(EXECUTABLE): CMakeLists.txt src/*
 	@echo "--- [BUILD] Configurazione CMake in corso... ---"
 	# Crea la cartella di build e lancia cmake
 	mkdir -p $(BUILD_DIR)

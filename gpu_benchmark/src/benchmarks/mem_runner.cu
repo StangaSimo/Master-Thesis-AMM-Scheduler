@@ -79,7 +79,7 @@ void write_result_csv(const std::string &filename,
     }
 
     auto [min_ms_it, max_ms_it] = std::minmax_element(results.begin(), results.end(),
-                                                      [](const RunData &a, const RunData &b) { return a.ms < b.ms; });
+                                                      [](const RunData &a, const RunData &b) { return a.ms_compute < b.ms_compute; });
     auto [min_bw_it, max_bw_it] = std::minmax_element(results.begin(), results.end(),
                                                       [](const RunData &a, const RunData &b) { return a.gflops < b.gflops; });
 
@@ -88,7 +88,7 @@ void write_result_csv(const std::string &filename,
     double max_power = results.front().max_power;
 
     for (const auto &r : results) {
-        avg_ms += r.ms;
+        avg_ms += r.ms_compute;
         avg_bw += r.gflops;
         avg_power += r.avg_power;
         min_power = std::min(min_power, r.min_power);
@@ -119,7 +119,7 @@ void write_result_csv(const std::string &filename,
          << kernelName << ","
          << runs << ","
          << std::fixed << std::setprecision(3)
-         << avg_ms << "," << min_ms_it->ms << "," << max_ms_it->ms << ","
+         << avg_ms << "," << min_ms_it->ms_compute << "," << max_ms_it->ms_compute << ","
          << avg_bw << "," << min_bw_it->gflops << "," << max_bw_it->gflops << ","
          << avg_power << "," << min_power << "," << max_power
          << "\n";
@@ -129,7 +129,7 @@ void write_result_csv(const std::string &filename,
     std::cout << "\nResults (" << kernelName << ")\n";
     std::cout << runs << " run(s)\n";
     std::cout << "Timestamp: " << timestamp << "\n\n";
-    std::cout << "avg ms: " << avg_ms << " (min " << min_ms_it->ms << ", max " << max_ms_it->ms << ")\n";
+    std::cout << "avg ms: " << avg_ms << " (min " << min_ms_it->ms_compute << ", max " << max_ms_it->ms_compute << ")\n";
     std::cout << "avg Bandwith : " << avg_bw << " GB/s (min " << min_bw_it->gflops << ", max " << max_bw_it->gflops << ")\n";
     std::cout << "avg Power : " << avg_power << " W (min " << min_power << ", max " << max_power << ")\n";
     std::cout << "--------------------------------------------\n";
@@ -156,12 +156,12 @@ void benchmark_mem(KernelType kernel, size_t bytes_per_elem, const int N, dim3 b
         double min_power = sampler.minPower();
         double max_power = sampler.maxPower();
 
-        results.push_back({r.ms, r.gflops, avg_power, min_power, max_power});
+        results.push_back({r.ms_compute, r.gflops, avg_power, min_power, max_power});
 
 
 #ifdef DEBUG
         std::cout << "[DEBUG]: Run " << i + 1 << ": "
-                  << r.ms << " ms, "
+                  << r.ms_compute << " ms, "
                   << r.gflops << " GB/s, "
                   << " | Power (avg/min/max): "
                   << avg_power << "/" << min_power << "/" << max_power << " W\n";

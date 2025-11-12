@@ -1,0 +1,16 @@
+// =================================================================
+//   File di Configurazione Auto-generato da CMake
+//   NON MODIFICARE QUESTO FILE MANUALMENTE!
+//
+//   Le modifiche vanno fatte in CMakeLists.txt o
+//   passate tramite la riga di comando di cmake.
+// =================================================================
+
+// Opzione per il supporto CUDA
+#define ENABLE_CUDA
+
+// Opzione per il supporto OpenVINO
+#define ENABLE_OPENVINO
+
+// Esempio di come passare una stringa (il nome del progetto)
+#define PROJECT_NAME "HybridHello"

@@ -1,4 +1,4 @@
-#include "openvino_hello.h"
+#include "amp_scheduler/openvino_hello.hpp"
 #include <openvino/openvino.hpp>
 #include <openvino/op/matmul.hpp>
 
