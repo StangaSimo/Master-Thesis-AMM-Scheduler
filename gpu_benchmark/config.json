@@ -1,0 +1,8 @@
+{
+  "CompileFlags": {
+    "Add": ["-xcuda", "-std=c++17"]
+  },
+  "Extensions": [
+    "cu"
+  ]
+}

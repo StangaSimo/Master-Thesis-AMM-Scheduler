@@ -1,8 +1,12 @@
 appunti.txt
 gpu_benchmark/benchmark
+npu_benchmark/benchmark
 gpu_benchmark/build
+amp_scheduler/build
+sycl_benchmark/build
+
 vino_c/models
 vino_c/test_npu
-.vscode
-npu_benchmark/benchmark
-amp_scheduler/build
+
+*/.cache
+.cache

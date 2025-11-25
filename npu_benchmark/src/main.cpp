@@ -5,7 +5,7 @@
 #include <random>
 #include <string>
 #include <chrono>
-#include <cmath>
+//#include <cmath>
 #include <fstream>
 #include <thread>
 #include <atomic>
@@ -99,7 +99,7 @@ void power_monitor_thread() {
         double timestamp = std::chrono::duration<double>(now.time_since_epoch()).count();
         samples.push_back({pkg_w, core_w, uncore_w, gpu_w, npu_w, timestamp});
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     if (fp)
@@ -148,12 +148,11 @@ void save_results_to_csv(const std::string &filename,
         return;
     }
 
-
-    // Timestamp numerico (epoch time)
     auto timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
-    // Se il file è vuoto, scrivi l'intestazione
     file.seekp(0, std::ios::end);
+
+    /* if the file is new, write the intestation */
     if (file.tellp() == 0) {
         file << "Timestamp,Device,M,N,K,Runs,"
                 "Avg_Compute_ms,Avg_MemCpy_ms,Avg_GFLOPS,"
@@ -162,7 +161,7 @@ void save_results_to_csv(const std::string &filename,
                 "Pkg_Max_W,Core_Max_W,Uncore_Max_W,GPU_Max_W,NPU_Max_W\n";
     }
 
-    // Scrivi i dati in formato CSV
+    /* csv format */
     file << timestamp << ","
          << device << ","
          << M << "," << N << "," << K << ","
@@ -178,13 +177,10 @@ void save_results_to_csv(const std::string &filename,
 
     file.close();
 
-    // Stampa anche a schermo ciò che è stato scritto
 #ifdef DEBUG
     std::cout << "\n=== Results ===\n";
-    // ...
     std::cout << "Device: " << device << "\n";
     std::cout << "Matrix: " << M << "x" << N << "x" << K << " | Runs: " << runs << "\n";
-    // Modificata la riga seguente
     std::cout << "Avg Compute Time: " << avg_time_compute << " ms | Avg MemCpy Time: " << avg_time_memcpy << " ms | Avg GFLOPS: " << avg_gflops << "\n";
     std::cout << "Power (W):\n"
               << "  Package: " << summary.pkg.avg << " (min " << summary.pkg.min << ", max " << summary.pkg.max << ")\n"
@@ -220,17 +216,17 @@ TestResult run_matmul(ov::Core &core, const std::string &device_name,
     ov::Tensor tensor_A(ov::element::f16, ov::Shape{(u_long)M, (u_long)K}, const_cast<ov::float16 *>(h_A.data()));
     ov::Tensor tensor_B(ov::element::f16, ov::Shape{(u_long)K, (u_long)N}, const_cast<ov::float16 *>(h_B.data()));
 
-    // --- 1. Misura il tempo di "MemCpy" (impostazione dei tensori) ---
+    /* memcpy or wrapper timing */
     auto start_memcpy = std::chrono::high_resolution_clock::now();
     infer_request.set_input_tensor(0, tensor_A);
     infer_request.set_input_tensor(1, tensor_B);
     auto end_memcpy = std::chrono::high_resolution_clock::now();
     double ms_memcpy = std::chrono::duration<double, std::milli>(end_memcpy - start_memcpy).count();
 
-    // --- 2. Warm-up (invariato) ---
-    infer_request.infer(); // warm-up
+    /* warmup */
+    infer_request.infer();
 
-    // --- 3. Misura il tempo di "Compute" (inferenza) ---
+    /* computing timing */
     auto start_compute = std::chrono::high_resolution_clock::now();
     infer_request.infer();
     auto end_compute = std::chrono::high_resolution_clock::now();
@@ -238,7 +234,6 @@ TestResult run_matmul(ov::Core &core, const std::string &device_name,
     double ms_compute = std::chrono::duration<double, std::milli>(end_compute - start_compute).count();
     double gflops = (2.0 * M * N * K) / (ms_compute * 1e6);
 
-    // Restituisci tutti i valori
     return {ms_compute, ms_memcpy, gflops, true};
 }
 
@@ -282,8 +277,8 @@ void benchmark_device(const std::string &device_name, int M, int N, int K, int r
     sampling = false;
     mon.join();
 
-    double avg_time_compute = sum_ms_compute / runs; // Modificato
-    double avg_time_memcpy = sum_ms_memcpy / runs;   // Aggiunto
+    double avg_time_compute = sum_ms_compute / runs;
+    double avg_time_memcpy = sum_ms_memcpy / runs;
     double avg_gflops = sum_gflops / runs;
     auto summary = compute_power_summary();
 

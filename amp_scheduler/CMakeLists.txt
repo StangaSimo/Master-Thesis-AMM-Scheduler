@@ -16,8 +16,8 @@ configure_file(
 )
 
 if (ENABLE_OPENVINO)
-    set(CMAKE_CXX_COMPILER "g++-15")
-    set(CMAKE_C_COMPILER "gcc-15")
+    set(CMAKE_CXX_COMPILER "clang++")
+    set(CMAKE_C_COMPILER "clang")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)

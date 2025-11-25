@@ -1,0 +1,45 @@
+# Nome dell'eseguibile di output
+TARGET = main.out
+
+# Nome del file sorgente principale
+SOURCE = main.cpp
+
+# Compilatore SYCL/C++ di Intel
+CXX = icpx
+
+# Flag di Compilazione
+CXXFLAGS = -fsycl -fsycl-device-code-split=per_kernel
+
+# Flag di Inclusione (include di MKL)
+INCLUDE_FLAGS = -I${MKLROOT}/include
+
+# Librerie MKL e di Sistema
+# Si assume che le variabili d'ambiente ${MKLROOT} siano impostate.
+MKL_LIBS = \
+	"${MKLROOT}/lib/intel64"/libmkl_sycl.a \
+	-Wl,-export-dynamic \
+	-Wl,--start-group \
+	"${MKLROOT}/lib/intel64"/libmkl_intel_ilp64.a \
+	"${MKLROOT}/lib/intel64"/libmkl_sequential.a \
+	"${MKLROOT}/lib/intel64"/libmkl_core.a \
+	-Wl,--end-group
+
+# Librerie di sistema e SYCL
+SYSTEM_LIBS = -lsycl -lOpenCL -lpthread -lm -ldl
+
+# Regola predefinita: compila l'eseguibile
+.PHONY: all
+all: $(TARGET)
+
+# Regola per la compilazione e il linking
+$(TARGET): $(SOURCE)
+	@echo "Compilazione di $< con SYCL e MKL..."
+	$(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS) $< $(MKL_LIBS) $(SYSTEM_LIBS) -o $@
+	@echo "Compilazione completata. Eseguibile creato: $@"
+
+# Regola per la pulizia dei file generati
+.PHONY: clean
+clean:
+	@echo "Pulizia file eseguibili..."
+	rm -f $(TARGET)
+	@echo "Pulizia completata."
