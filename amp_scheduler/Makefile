@@ -6,7 +6,7 @@ EXECUTABLE = $(BUILD_DIR)/$(TARGET)
 
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): CMakeLists.txt src/*
+$(EXECUTABLE): CMakeLists.txt scheduler/* cuda/* 
 	@echo "--- [BUILD] Configurazione CMake in corso... ---"
 	# Crea la cartella di build e lancia cmake
 	mkdir -p $(BUILD_DIR)
