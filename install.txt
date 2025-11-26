@@ -1,0 +1,24 @@
+
+nvidia-cuda-toolkit
+
+
+
+---------- openvino:
+https://docs.openvino.ai/2025/get-started/install-openvino/install-openvino-apt.html
+
+---------- npu driver and level zero :
+https://github.com/intel/linux-npu-driver/releases
+
+---------- gpu driver:
+sudo apt install -y intel-opencl-icd clinfo
+
+intel-gpu-tool
+
+---------- oneapi base kit :
+# download the key to system keyring
+wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
+| gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+
+# add signed entry to apt sources and configure the APT client to use Intel repository:
+echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+sudo apt install intel-basekit
