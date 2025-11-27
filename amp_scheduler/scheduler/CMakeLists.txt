@@ -1,27 +1,39 @@
 cmake_minimum_required(VERSION 3.15)
-project(SchedulerPart LANGUAGES C) # Solo C!
+project(Scheduler LANGUAGES C)
 
-# Recuperiamo variabili passate dal Boss
+# variable from the main CmakeList
 if(NOT DEFINED LIBS_DIR)
     message(FATAL_ERROR "LIBS_DIR non definita!")
 endif()
 
-# Header: dove trovare wrapper.h
+if(NOT DEFINED ENABLE_CUDA)
+    set(ENABLE_CUDA OFF)
+endif()
+
+# cuda_wrapper.h
 include_directories(${CUDA_SRC_DIR})
 
-# Librerie: dove trovare i .so
+# where to find the .so
 link_directories(${LIBS_DIR}/lib)
 
-add_executable(my_scheduler main.c)
+# executable name
+add_executable(scheduler main.c)
 
-# Linkiamo la nostra lib cuda E la lib standard C++ (necessaria perché cuda usa C++)
-target_link_libraries(my_scheduler my_cuda_lib stdc++)
+if(ENABLE_CUDA)
+    # Equivale a scrivere: #define ENABLE_CUDA 1 nel codice
+    target_compile_definitions(scheduler PRIVATE ENABLE_CUDA=1)
+    # Linkiamo la nostra lib cuda E la lib standard C++ (necessaria perché cuda usa C++)
+    target_link_libraries(scheduler cuda_lib stdc++)
 
-# RPATH: dice all'eseguibile di cercare le .so nella cartella ./lib vicino a se stesso
-set_target_properties(my_scheduler PROPERTIES 
-    INSTALL_RPATH "$ORIGIN/lib"
-    BUILD_WITH_INSTALL_RPATH TRUE
-)
+    # RPATH for libraries path, ORIGIN = exe path, so bin
+    set_target_properties(scheduler PROPERTIES 
+        INSTALL_RPATH "$ORIGIN/lib"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+else()
+    # Equivale a: #define ENABLE_CUDA 0
+    target_compile_definitions(scheduler PRIVATE ENABLE_CUDA=0)
+endif()
 
 # Installa l'eseguibile nella root di /libs
-install(TARGETS my_scheduler DESTINATION .)
+install(TARGETS scheduler DESTINATION .)

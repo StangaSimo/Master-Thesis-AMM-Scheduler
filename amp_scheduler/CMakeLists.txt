@@ -1,28 +1,47 @@
 cmake_minimum_required(VERSION 3.15)
-project(SuperGasseProject)
+project(amp_scheduler)
 
 include(ExternalProject)
 
-set(LIB_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/libs)
+set(LIB_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/bin)
 file(MAKE_DIRECTORY ${LIB_OUTPUT_DIR})
 
-ExternalProject_Add(build_cuda
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/cuda
-    CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR} # Installa in /libs
-        -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-    BUILD_ALWAYS 1
-)
+option(USE_CUDA "Abilita il backend CUDA" OFF) 
+#option(USE_SYCL "Abilita il backend SYCL" OFF)
 
+# cuda
+if(USE_CUDA)
+    message(STATUS "CUDA Backend ON")
+    ExternalProject_Add(build_cuda
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/cuda
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
+            -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        BUILD_ALWAYS 1
+    )
+else()
+    message(STATUS "CUDA Backend OFF")
+endif()
+
+# scheduler
 ExternalProject_Add(build_scheduler
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/scheduler
     CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR} # Mettiamo anche l'exe in /libs? Facciamo di sì
+        -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR} # exe in libs
         -DCMAKE_BUILD_TYPE=Release
-        -DLIBS_DIR=${LIB_OUTPUT_DIR}             # Gli diciamo dove trovare le lib
-        -DCUDA_SRC_DIR=${CMAKE_SOURCE_DIR}/cuda  # Per trovare l'header .h
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        -DLIBS_DIR=${LIB_OUTPUT_DIR} # folder for the libs 
+        -DCUDA_SRC_DIR=${CMAKE_SOURCE_DIR}/cuda
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON # for clangd
+        -DENABLE_CUDA=${USE_CUDA} # USE_CUDA
     DEPENDS build_cuda
     BUILD_ALWAYS 1
+)
+
+add_custom_target(UpdateLSP
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E echo "update LSP..."
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/merge_clangd.py
+    COMMENT "merge compile_commands.json for clangd"
+    DEPENDS build_scheduler 
 )
