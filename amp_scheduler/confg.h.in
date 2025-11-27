@@ -1,9 +1,0 @@
-#ifndef PROJECT_CONFIG_H
-#define PROJECT_CONFIG_H
-
-// CMake sostituirà queste variabili con 0 o 1
-#cmakedefine01 ENABLE_CUDA
-#cmakedefine01 ENABLE_SYCL
-#cmakedefine01 ENABLE_OPENVINO
-
-#endif

@@ -9,6 +9,8 @@ file(MAKE_DIRECTORY ${LIB_OUTPUT_DIR})
 option(USE_CUDA "Abilita il backend CUDA" OFF) 
 #option(USE_SYCL "Abilita il backend SYCL" OFF)
 
+set(SCHEDULER_DEPS "") # depends variable 
+
 # cuda
 if(USE_CUDA)
     message(STATUS "CUDA Backend ON")
@@ -20,6 +22,8 @@ if(USE_CUDA)
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         BUILD_ALWAYS 1
     )
+
+    list(APPEND SCHEDULER_DEPS build_cuda)
 else()
     message(STATUS "CUDA Backend OFF")
 endif()
@@ -33,8 +37,10 @@ ExternalProject_Add(build_scheduler
         -DLIBS_DIR=${LIB_OUTPUT_DIR} # folder for the libs 
         -DCUDA_SRC_DIR=${CMAKE_SOURCE_DIR}/cuda
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON # for clangd
+
         -DENABLE_CUDA=${USE_CUDA} # USE_CUDA
-    DEPENDS build_cuda
+
+    DEPENDS ${SCHEDULER_DEPS}
     BUILD_ALWAYS 1
 )
 

@@ -3,6 +3,7 @@
 
 #include <iostream> 
 #include "config.hpp"
+#include "types.hpp"
 
 #define CHECK_CUDA(func) {				    \
     cudaError_t e = (func);			        \

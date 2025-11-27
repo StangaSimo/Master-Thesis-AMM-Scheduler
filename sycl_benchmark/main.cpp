@@ -12,9 +12,37 @@
 #include <numeric>
 #include <cmath>
 #include <cstdio>
+#include <cstdint> // Per uint16_t
 
-// Usa 'float' o 'sycl::half' a seconda della precisione desiderata
-using data_t = float; 
+// ==========================================
+// CONFIGURAZIONE
+// ==========================================
+
+// De-commenta per Zero-Copy
+// #define ZEROCOPY
+
+// 1. CAMBIO TIPO: Usiamo sycl::half invece di float
+using data_t = sycl::half; 
+
+// ==========================================
+// EXTERN "C" ESEMPIO
+// ==========================================
+
+// Esempio di funzione C pura che riceve i dati.
+// Siccome il C non conosce "sycl::half", li passiamo come void* // o uint16_t* (bit grezzi).
+extern "C" {
+    void processa_dati_c(void* raw_data, int n) {
+        // Qui dentro siamo in "C". 
+        // raw_data punta all'array di sycl::half.
+        // Esempio: cast a uint16_t per leggere i bit
+        uint16_t* ptr = (uint16_t*)raw_data;
+        
+        // Esempio fittizio: leggiamo il primo valore come intero (bit pattern)
+        if (n > 0) {
+            // printf("C Function: Received %d elements. First block bits: 0x%x\n", n, ptr[0]);
+        }
+    }
+}
 
 // ==========================================
 // STRUTTURE DATI
@@ -50,14 +78,25 @@ void save_results_to_csv(const std::string& filename,
 
     file.seekp(0, std::ios::end);
     if (file.tellp() == 0) {
-        file << "Timestamp,Device,M,N,K,Runs,Avg_Compute_ms,Avg_Memcpy_ms,GFLOPS,"
+        file << "Timestamp,Device,Mode,Precision,M,N,K,Runs,Avg_Compute_ms,Avg_Memcpy_ms,GFLOPS,"
              << "GPU_Avg_W,GPU_Max_W\n";
     }
 
     auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     
+    #ifdef ZEROCOPY
+    std::string mode = "ZeroCopy";
+    #else
+    std::string mode = "Explicit";
+    #endif
+
+    // Identifichiamo la precisione
+    std::string prec = (sizeof(data_t) == 2) ? "FP16" : "FP32";
+
     file << std::put_time(std::localtime(&now), "%Y-%m-%d %H:%M:%S") << ","
          << device << ","
+         << mode << ","
+         << prec << ","
          << M << "," << N << "," << K << "," 
          << runs << ","
          << std::fixed << std::setprecision(3)
@@ -71,7 +110,7 @@ void save_results_to_csv(const std::string& filename,
 }
 
 // ==========================================
-// MONITORAGGIO GPU (intel_gpu_top)
+// MONITORAGGIO GPU
 // ==========================================
 
 class GpuPowerMonitor {
@@ -81,7 +120,6 @@ private:
     std::thread monitor_thread;
 
     void thread_loop() {
-        // Nota: Assicurati di eseguire con 'sudo'
         FILE* fp = popen("sudo intel_gpu_top -c -s 100", "r");
         if (!fp) return;
 
@@ -95,7 +133,6 @@ private:
                 } else {
                     std::stringstream ss(buffer);
                     std::string token;
-                    // Intel GPU Top CSV: solitamente la potenza è nelle prime colonne
                     for (int i = 0; i <= 4; i++) std::getline(ss, token, ',');
                     try { 
                         double val = std::stod(token);
@@ -128,42 +165,63 @@ public:
 };
 
 // ==========================================
-// BENCHMARK CON USM (Unified Shared Memory)
+// BENCHMARK USM
 // ==========================================
 
 namespace mkl = oneapi::mkl;
 
 void esegui_benchmark(sycl::queue& q, int M, int N, int K, int runs) {
-    std::cout << "\n=== Benchmark USM (Compute + Memcpy): " << M << "x" << N << "x" << K << " ===" << "\n";
+    #ifdef ZEROCOPY
+    std::cout << "\n=== Benchmark FP16 [ZERO-COPY]: " << M << "x" << N << "x" << K << " ===" << "\n";
+    #else
+    std::cout << "\n=== Benchmark FP16 [EXPLICIT]: " << M << "x" << N << "x" << K << " ===" << "\n";
+    #endif
 
-    // 1. Dati Host
-    std::vector<data_t> h_A(M * K, 1.0f);
-    std::vector<data_t> h_B(K * N, 2.0f);
-    std::vector<data_t> h_C(M * N, 0.0f);
+    // 2. CASTING: Inizializzazione richiede cast esplicito a sycl::half (data_t)
+    std::vector<data_t> h_A(M * K, data_t(1.0f));
+    std::vector<data_t> h_B(K * N, data_t(2.0f));
+    std::vector<data_t> h_C(M * N, data_t(0.0f));
+
+    // 3. ESEMPIO CHIAMATA C: Passiamo il puntatore raw dei dati host
+    // Il C non sa cos'è un std::vector o sycl::half, passiamo l'indirizzo dei dati raw.
+    processa_dati_c(static_cast<void*>(h_A.data()), h_A.size());
 
     try {
-        // 2. Allocazione Device (USM Explicit)
-        // Allocare memoria direttamente sulla GPU ci permette di controllare le copie
-        data_t* d_A = sycl::malloc_device<data_t>(M * K, q);
-        data_t* d_B = sycl::malloc_device<data_t>(K * N, q);
-        data_t* d_C = sycl::malloc_device<data_t>(M * N, q);
+        data_t *d_A, *d_B, *d_C;
+
+        #ifdef ZEROCOPY
+            d_A = sycl::malloc_shared<data_t>(M * K, q);
+            d_B = sycl::malloc_shared<data_t>(K * N, q);
+            d_C = sycl::malloc_shared<data_t>(M * N, q);
+        #else
+            d_A = sycl::malloc_device<data_t>(M * K, q);
+            d_B = sycl::malloc_device<data_t>(K * N, q);
+            d_C = sycl::malloc_device<data_t>(M * N, q);
+        #endif
 
         if (!d_A || !d_B || !d_C) {
             std::cerr << "Errore allocazione memoria GPU!\n";
             return;
         }
 
-        mkl::transpose trans = mkl::transpose::nontrans;
-        data_t alpha = 1.0f, beta = 0.0f;
+        #ifdef ZEROCOPY
+            std::copy(h_A.begin(), h_A.end(), d_A);
+            std::copy(h_B.begin(), h_B.end(), d_B);
+        #else
+            q.memcpy(d_A, h_A.data(), M * K * sizeof(data_t));
+            q.memcpy(d_B, h_B.data(), K * N * sizeof(data_t));
+        #endif
+        q.wait();
 
-        // 3. Warmup
-        // Copia e calcolo a vuoto
-        q.memcpy(d_A, h_A.data(), M * K * sizeof(data_t));
-        q.memcpy(d_B, h_B.data(), K * N * sizeof(data_t));
+        mkl::transpose trans = mkl::transpose::nontrans;
+        // 4. PARAMETRI FP16: Anche alpha e beta devono essere sycl::half
+        data_t alpha = data_t(1.0f); 
+        data_t beta = data_t(0.0f);
+
+        // Warmup
         mkl::blas::row_major::gemm(q, trans, trans, M, N, K, alpha, d_A, K, d_B, N, beta, d_C, N);
         q.wait();
 
-        // 4. Inizio Benchmark
         GpuPowerMonitor monitor;
         monitor.start();
 
@@ -171,22 +229,23 @@ void esegui_benchmark(sycl::queue& q, int M, int N, int K, int runs) {
         double total_memcpy_ms = 0.0;
 
         for (int i = 0; i < runs; ++i) {
-            // A. Misura Memcpy Host -> Device
+            
+            #ifndef ZEROCOPY
             auto t_copy_start = std::chrono::high_resolution_clock::now();
             
             auto e1 = q.memcpy(d_A, h_A.data(), M * K * sizeof(data_t));
             auto e2 = q.memcpy(d_B, h_B.data(), K * N * sizeof(data_t));
-            // Aspettiamo che la copia finisca per misurarla
-            sycl::event::wait({e1, e2}); 
+            sycl::event::wait({e1, e2});
             
             auto t_copy_end = std::chrono::high_resolution_clock::now();
             total_memcpy_ms += std::chrono::duration<double, std::milli>(t_copy_end - t_copy_start).count();
+            #endif
 
-            // B. Misura Compute (GEMM)
             auto t_compute_start = std::chrono::high_resolution_clock::now();
             
+            // GEMM usa data_t (sycl::half)
             auto e_gemm = mkl::blas::row_major::gemm(q, trans, trans, M, N, K, alpha, d_A, K, d_B, N, beta, d_C, N);
-            e_gemm.wait(); // Aspettiamo che il calcolo finisca
+            e_gemm.wait();
             
             auto t_compute_end = std::chrono::high_resolution_clock::now();
             total_compute_ms += std::chrono::duration<double, std::milli>(t_compute_end - t_compute_start).count();
@@ -194,25 +253,22 @@ void esegui_benchmark(sycl::queue& q, int M, int N, int K, int runs) {
 
         monitor.stop();
 
-        // 5. Cleanup
         sycl::free(d_A, q);
         sycl::free(d_B, q);
         sycl::free(d_C, q);
 
-        // 6. Statistiche
         double avg_compute = total_compute_ms / runs;
         double avg_memcpy = total_memcpy_ms / runs;
         double gflops = (2.0 * static_cast<double>(M) * N * K) / (avg_compute * 1e6);
         PowerStats p_stats = monitor.get_stats();
 
-        std::cout << ">> Avg Compute Time: " << avg_compute << " ms\n";
-        std::cout << ">> Avg Memcpy Time:  " << avg_memcpy << " ms (Host->Device)\n";
-        std::cout << ">> GFLOPS:           " << gflops << "\n";
-        std::cout << ">> Power Avg:        " << p_stats.avg << " W\n";
+        std::cout << ">> Avg Compute: " << avg_compute << " ms\n";
+        std::cout << ">> Avg Memcpy:  " << avg_memcpy << " ms\n";
+        std::cout << ">> GFLOPS:      " << gflops << "\n";
+        std::cout << ">> Power:       " << p_stats.avg << " W\n";
 
-        // 7. Salvataggio
         std::string dev_name = q.get_device().get_info<sycl::info::device::name>();
-        save_results_to_csv("benchmark_usm.csv", dev_name, M, N, K, runs, avg_compute, avg_memcpy, gflops, p_stats);
+        save_results_to_csv("benchmark_usm_fp16.csv", dev_name, M, N, K, runs, avg_compute, avg_memcpy, gflops, p_stats);
 
     } catch (sycl::exception const& e) {
         std::cerr << "[SYCL ERROR]: " << e.what() << "\n";
@@ -222,7 +278,14 @@ void esegui_benchmark(sycl::queue& q, int M, int N, int K, int runs) {
 int main() {
     try {
         sycl::queue q(sycl::gpu_selector_v);
-        std::cout << "Device: " << q.get_device().get_info<sycl::info::device::name>() << "\n";
+        auto dev = q.get_device();
+        std::cout << "Device: " << dev.get_info<sycl::info::device::name>() << "\n";
+        
+        // 5. CHECK SUPPORTO FP16
+        if (!dev.has(sycl::aspect::fp16)) {
+            std::cerr << "[ERRORE CRITICO] Il dispositivo non supporta FP16 (half precision)!\n";
+            return 1;
+        }
         
         esegui_benchmark(q, 4096, 4096, 4096, 10);
         
