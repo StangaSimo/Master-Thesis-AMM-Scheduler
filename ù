@@ -5,8 +5,11 @@
 extern "C" {
 #endif
 
+    // Inizializza la GPU
     void gpu_init();
 
+    // Fa i calcoli
+    // input/output sono array float standard
     void run_cuda_32bit(float* A, float* B, float* C, int M, int N, int K);
 
 #ifdef __cplusplus

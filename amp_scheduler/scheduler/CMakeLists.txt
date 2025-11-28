@@ -7,16 +7,19 @@ if(NOT DEFINED LIBS_DIR)
     message(FATAL_ERROR "LIBS_DIR non definita!")
 endif()
 
+# CUDA
 if(NOT DEFINED ENABLE_CUDA)
     message("[SCHEDULER] CUDA off on scheduler")
     set(ENABLE_CUDA OFF)
 endif()
 
+# SYCL 
 if(NOT DEFINED ENABLE_SYCL) 
     message("[SCHEDULER] SYCL off on scheduler")
     set(ENABLE_SYCL OFF) 
 endif()
 
+# OPENVINO 
 if(NOT DEFINED ENABLE_OPENVINO) 
     set(ENABLE_OPENVINO OFF) 
 endif()
@@ -31,13 +34,15 @@ include_directories(${OPEN_SRC_DIR})
 # where to find the .so
 link_directories(${LIBS_DIR}/lib)
 
-add_executable(scheduler main.c)
+add_executable(scheduler main.c scheduler.c)
 
+# CUDA 
 if(ENABLE_CUDA)
     target_compile_definitions(scheduler PRIVATE ENABLE_CUDA)
     target_link_libraries(scheduler cuda_lib stdc++)
 endif()
 
+# SYCL 
 if(ENABLE_SYCL)
     target_compile_definitions(scheduler PRIVATE ENABLE_SYCL)
     target_link_libraries(scheduler sycl_lib)

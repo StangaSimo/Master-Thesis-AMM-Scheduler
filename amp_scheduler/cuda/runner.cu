@@ -1,10 +1,18 @@
 #include "cuda_wrapper.h"
 #include <stdio.h>
 #include <cuda_runtime.h>
+#include <cublas_v2.h>
 
-__global__ void myKernel(const float* in, float* out, int size) {
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < size) out[i] = in[i] * 10.0f; // Moltiplica per 10
+#define CHECK_CUDA(func) {				    \
+    cudaError_t e = (func);			        \
+    if(e != cudaSuccess)			        \
+        printf ("%s %d CUDA ERROR: %s\n", __FILE__,  __LINE__, cudaGetErrorString(e)); \
+}
+
+#define CHECK_CUBLAS(func) {                      \
+    cublasStatus_t e = (func);                    \
+    if(e != CUBLAS_STATUS_SUCCESS)                \
+        printf ("%s %d CUBLAS ERROR: ", __FILE__, __LINE__); \
 }
 
 extern "C" {
@@ -12,20 +20,35 @@ extern "C" {
         printf("[CUDA-LIB] Inizializzazione device...\n");
     }
 
-    void gpu_do_work(const float* input, float* output, int size) {
-        float *d_in, *d_out;
-        size_t bytes = size * sizeof(float);
+    void run_cuda_32bit(float* A, float* B, float* C, int M, int N, int K) {
 
-        cudaMalloc(&d_in, bytes);
-        cudaMalloc(&d_out, bytes);
+        float *d_A, *d_B, *d_C;
 
-        cudaMemcpy(d_in, input, bytes, cudaMemcpyHostToDevice);
-        myKernel<<<(size+255)/256, 256>>>(d_in, d_out, size);
-        cudaMemcpy(output, d_out, bytes, cudaMemcpyDeviceToHost);
+        CHECK_CUDA(cudaMalloc(&d_A, M * K * sizeof(float)));
+        CHECK_CUDA(cudaMalloc(&d_B, K * N * sizeof(float)));
+        CHECK_CUDA(cudaMalloc(&d_C, M * N * sizeof(float)));
+        CHECK_CUDA(cudaMemcpy(d_A, A, M * K * sizeof(float), cudaMemcpyHostToDevice));
+        CHECK_CUDA(cudaMemcpy(d_B, B, K * N * sizeof(float), cudaMemcpyHostToDevice));
+        CHECK_CUDA(cudaMemcpy(d_C, C, M * N * sizeof(float), cudaMemcpyHostToDevice));
 
-        cudaFree(d_in);
-        cudaFree(d_out);
-        
-        printf("[CUDA-LIB] Calcolo finito sulla GPU.\n");
+        CHECK_CUDA(cudaDeviceSynchronize());
+
+        float alpha = 1.0f, beta = 0.0f;
+        cublasHandle_t handle;  
+        CHECK_CUBLAS(cublasCreate(&handle));
+
+        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+                    N, M, K, &alpha,
+                    d_B, N, d_A, K, &beta, d_C, N);
+
+        CHECK_CUBLAS(cublasDestroy(handle));
+ 
+        CHECK_CUDA(cudaDeviceSynchronize()); //TODO: maybe took them off
+                                           
+        CHECK_CUDA(cudaMemcpy(C, d_C, M * N * sizeof(float), cudaMemcpyDeviceToHost));
+
+        CHECK_CUDA(cudaFree(d_A));
+        CHECK_CUDA(cudaFree(d_B));
+        CHECK_CUDA(cudaFree(d_C));
     }
 }
