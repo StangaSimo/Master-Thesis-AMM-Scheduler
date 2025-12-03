@@ -1,0 +1,13 @@
+# Target labels
+ build_openvino
+# Source files and their labels
+/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_openvino
+/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_openvino.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_openvino-complete.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-build.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-configure.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-download.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-install.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-mkdir.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-patch.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-update.rule

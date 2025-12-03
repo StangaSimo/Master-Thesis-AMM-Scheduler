@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/scheduler.dir/link.d CMakeFiles/scheduler.dir/main.cpp.o -o scheduler   -L/home/simo/Documents/j/master-thesis/am_scheduler/bin/lib  -Wl,-rpath,"\$ORIGIN/lib" -lcuda_lib -lstdc++ -lsycl_lib -lov_lib

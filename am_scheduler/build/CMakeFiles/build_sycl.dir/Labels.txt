@@ -1,0 +1,13 @@
+# Target labels
+ build_sycl
+# Source files and their labels
+/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_sycl
+/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_sycl.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_sycl-complete.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-stamp/build_sycl-build.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-stamp/build_sycl-configure.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-stamp/build_sycl-download.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-stamp/build_sycl-install.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-stamp/build_sycl-mkdir.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-stamp/build_sycl-patch.rule
+/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-stamp/build_sycl-update.rule

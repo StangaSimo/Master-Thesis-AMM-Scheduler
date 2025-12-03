@@ -1,0 +1,14 @@
+#ifndef TEST_H
+#define TEST_H
+
+inline void tests() {
+#ifdef ENABLE_OPENVINO
+    test_openvino();
+#endif
+}
+
+inline void test_openvino() {
+             
+}
+
+#endif

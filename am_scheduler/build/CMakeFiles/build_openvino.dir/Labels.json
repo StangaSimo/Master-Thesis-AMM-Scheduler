@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_openvino"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_openvino.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/CMakeFiles/build_openvino-complete.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-build.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-configure.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-download.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-install.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-mkdir.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-patch.rule"
+		},
+		{
+			"file" : "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-stamp/build_openvino-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"build_openvino"
+		],
+		"name" : "build_openvino"
+	}
+}

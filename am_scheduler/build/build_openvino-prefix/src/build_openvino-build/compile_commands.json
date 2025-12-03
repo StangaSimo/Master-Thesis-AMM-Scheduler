@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-build",
+  "command": "/usr/bin/c++ -DOV_THREAD=OV_THREAD_TBB -D_GLIBCXX_USE_CXX11_ABI=1 -Dov_lib_EXPORTS  -O3 -DNDEBUG -fPIC -Wno-error=deprecated-declarations -o CMakeFiles/ov_lib.dir/runner.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/openvino/runner.cpp",
+  "file": "/home/simo/Documents/j/master-thesis/am_scheduler/openvino/runner.cpp",
+  "output": "CMakeFiles/ov_lib.dir/runner.cpp.o"
+}
+]

@@ -1,19 +1,29 @@
-#ifndef WRAPPER_H
-#define WRAPPER_H
+#include "scheduler.hpp"
+#include <iostream>
 
-#ifdef __cplusplus
-extern "C" {
+/* appunti:
+ * 
+ *
+ *  
+ * Multi threading, 
+ * 
+ *
+ *
+ *
+ *
+ * */
+
+
+int main() {
+#ifdef ENABLE_CUDA
 #endif
 
-    // Inizializza la GPU
-    void gpu_init();
+#ifdef ENABLE_SYCL
+#endif
 
-    // Fa i calcoli
-    // input/output sono array float standard
-    void run_cuda_32bit(float* A, float* B, float* C, int M, int N, int K);
+#ifdef ENABLE_OPENVINO
+#endif
 
-#ifdef __cplusplus
+    std::cout << "godo";
+    return 0;
 }
-#endif
-
-#endif
