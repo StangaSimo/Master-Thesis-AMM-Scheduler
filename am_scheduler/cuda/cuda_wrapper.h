@@ -9,6 +9,8 @@ extern "C" {
 
     void cuda_gemm_32bit(float* A, float* B, float* C, int M, int N, int K);
 
+    void cuda_destroy();
+
 #ifdef __cplusplus
 }
 #endif

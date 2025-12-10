@@ -15,13 +15,9 @@
         printf ("%s %d CUBLAS ERROR: ", __FILE__, __LINE__); \
 }
 
-extern "C" {
-    void gpu_init() {
-        printf("[CUDA-LIB] Inizializzazione device...\n");
-    }
+cublasHandle_t handle;  
 
-    void run_cuda_32bit(float* A, float* B, float* C, int M, int N, int K) {
-
+void gemm_32bit(float* A, float* B, float* C, int M, int N, int K) {
         float *d_A, *d_B, *d_C;
 
         CHECK_CUDA(cudaMalloc(&d_A, M * K * sizeof(float)));
@@ -34,21 +30,31 @@ extern "C" {
         CHECK_CUDA(cudaDeviceSynchronize());
 
         float alpha = 1.0f, beta = 0.0f;
-        cublasHandle_t handle;  
-        CHECK_CUBLAS(cublasCreate(&handle));
-
         cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
                     N, M, K, &alpha,
                     d_B, N, d_A, K, &beta, d_C, N);
 
-        CHECK_CUBLAS(cublasDestroy(handle));
  
-        CHECK_CUDA(cudaDeviceSynchronize()); //TODO: maybe took them off
+        CHECK_CUDA(cudaDeviceSynchronize()); 
                                            
         CHECK_CUDA(cudaMemcpy(C, d_C, M * N * sizeof(float), cudaMemcpyDeviceToHost));
 
         CHECK_CUDA(cudaFree(d_A));
         CHECK_CUDA(cudaFree(d_B));
         CHECK_CUDA(cudaFree(d_C));
+}
+
+extern "C" {
+    void cuda_init() {
+        CHECK_CUBLAS(cublasCreate(&handle));
+        printf("[CUDA-LIB] Inizializzazione device...\n");
+    }
+
+    void cuda_gemm_32bit(float* A, float* B, float* C, int M, int N, int K) {
+        gemm_32bit(A, B, C, M, N, K); 
+    }
+
+    void cuda_free() {
+        CHECK_CUBLAS(cublasDestroy(handle));
     }
 }

@@ -20,13 +20,16 @@
  * */
 
 int main() {
-    tests();
+    test_accellerators();
+
     std::cout << "[MAIN] Tests Done\n";
 
     std::cout << "[MAIN] Init Scheduler\n";
+
     {
         AMScheduler scheduler = AMScheduler();
     }
+
     std::cout << "[MAIN] Closed Scheduler\n";
 
     return 0;

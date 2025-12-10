@@ -97,6 +97,8 @@ inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K)
     return match;
 }
 
+//TODO 16 bit implementation and test
+//
 inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
     ov_init();  
     ov_gemm_32bit(A,B,C,M,N,K);
@@ -104,22 +106,22 @@ inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
 }
 
 inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
-             
-    //TODO CUDA TEST!!!
-    //TODO SYCL TEST
-    //TODO 16 bit implementation and test
-    return true;
+    cuda_init();  
+    cuda_gemm_32bit(A,B,C,M,N,K);
+    return compare_cpu_32bit(A,B,C,M,N,K);
 }
 
 inline bool test_sycl(float* A, float* B, float* C, int M, int N, int K) {
-             
-    return true;
+    sycl_init();  
+    sycl_gemm_32bit(A,B,C,M,N,K);
+    return compare_cpu_32bit(A,B,C,M,N,K);
 }
 
-inline void tests() {
+inline void test_accellerators() {
     int M = 1024;
     int N = 1024;
     int K = 512;
+    
     float *A = new float[M*K];
     float *B = new float[K*N];
     float *C = new float[M*N];

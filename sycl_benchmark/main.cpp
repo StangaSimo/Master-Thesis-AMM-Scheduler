@@ -170,7 +170,7 @@ public:
 
 namespace mkl = oneapi::mkl;
 
-void esegui_benchmark(sycl::queue& q, int M, int N, int K, int runs) {
+void benchmark(sycl::queue& q, int M, int N, int K, int runs) {
     #ifdef ZEROCOPY
     std::cout << "\n=== Benchmark FP16 [ZERO-COPY]: " << M << "x" << N << "x" << K << " ===" << "\n";
     #else
@@ -184,7 +184,7 @@ void esegui_benchmark(sycl::queue& q, int M, int N, int K, int runs) {
 
     // 3. ESEMPIO CHIAMATA C: Passiamo il puntatore raw dei dati host
     // Il C non sa cos'è un std::vector o sycl::half, passiamo l'indirizzo dei dati raw.
-    processa_dati_c(static_cast<void*>(h_A.data()), h_A.size());
+    //processa_dati_c(static_cast<void*>(h_A.data()), h_A.size());
 
     try {
         data_t *d_A, *d_B, *d_C;
@@ -287,7 +287,7 @@ int main() {
             return 1;
         }
         
-        esegui_benchmark(q, 4096, 4096, 4096, 10);
+        benchmark(q, 4096, 4096, 4096, 10);
         
     } catch (sycl::exception const& e) {
         std::cerr << "Errore inizializzazione SYCL.\n";

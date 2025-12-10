@@ -5,9 +5,10 @@
 extern "C" {
 #endif
 
-    //void sycl_init();
+    void sycl_init();
 
-    //void sycl_process(int N);
+
+    void sycl_gemm_32bit(float *A, float *B, float *C, int M, int N, int K); 
 
 #ifdef __cplusplus
 }
