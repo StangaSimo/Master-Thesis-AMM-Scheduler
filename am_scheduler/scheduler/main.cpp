@@ -6,6 +6,16 @@
 
 /* appunti:
  * 
+ * Fare implementazione di convoluzioni per ogni accelleratore,
+ * trovare matrici filtro e capire come funzionano, 
+ * implementare test per convoluzioni per vedere se funzionano,
+ * 
+ *
+ *
+ * finire fi fare la logica dello scheduer per streaming nudo e crudo di matrici, 
+ *
+ * implementazione di matrici con dag e logica dello scheduler per gestirle.
+ *
  *
  * blocking ring buffer, se è vuoto si fa busy spin per un po' poi ci si mette a dormire 
  * veniamo svegliati dal main comunque.
@@ -17,6 +27,9 @@
  * 
  * uint16_t per matrici a 16 bit, mentre float per 32.
  *
+ * scrivere mille test veri, benchmark veri, e anche benchmark per calcolo su dag, 
+ *
+
  * */
 
 int main() {
