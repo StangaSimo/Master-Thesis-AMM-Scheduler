@@ -228,8 +228,12 @@ libcuda_lib.so
  /usr/lib/gcc/x86_64-linux-gnu/13/libstdc++.so
  /usr/lib/x86_64-linux-gnu/libc.so
  /usr/lib/x86_64-linux-gnu/libc_nonshared.a
+ /usr/lib/x86_64-linux-gnu/libcublas.so
+ /usr/lib/x86_64-linux-gnu/libcublasLt.so
  /usr/lib/x86_64-linux-gnu/libcudadevrt.a
+ /usr/lib/x86_64-linux-gnu/libcudart.so
  /usr/lib/x86_64-linux-gnu/libcudart_static.a
+ /usr/lib/x86_64-linux-gnu/libculibos.a
  /usr/lib/x86_64-linux-gnu/libdl.a
  /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
  /usr/lib/x86_64-linux-gnu/libm.so

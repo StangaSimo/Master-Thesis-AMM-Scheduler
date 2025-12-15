@@ -2,6 +2,12 @@ libcuda_lib.so: \
   /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o \
   /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o \
   CMakeFiles/cuda_lib.dir/runner.cu.o \
+  /usr/lib/x86_64-linux-gnu/libcublas.so \
+  /usr/lib/x86_64-linux-gnu/libcudart.so \
+  /usr/lib/x86_64-linux-gnu/libcublasLt.so \
+  /usr/lib/x86_64-linux-gnu/libculibos.a \
+  /usr/lib/x86_64-linux-gnu/libdl.a \
+  /usr/lib/x86_64-linux-gnu/librt.a \
   /usr/lib/x86_64-linux-gnu/libcudadevrt.a \
   /usr/lib/x86_64-linux-gnu/libcudart_static.a \
   /usr/lib/x86_64-linux-gnu/librt.a \
@@ -37,6 +43,18 @@ libcuda_lib.so: \
 /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o:
 
 CMakeFiles/cuda_lib.dir/runner.cu.o:
+
+/usr/lib/x86_64-linux-gnu/libcublas.so:
+
+/usr/lib/x86_64-linux-gnu/libcudart.so:
+
+/usr/lib/x86_64-linux-gnu/libcublasLt.so:
+
+/usr/lib/x86_64-linux-gnu/libculibos.a:
+
+/usr/lib/x86_64-linux-gnu/libdl.a:
+
+/usr/lib/x86_64-linux-gnu/librt.a:
 
 /usr/lib/x86_64-linux-gnu/libcudadevrt.a:
 

@@ -226,8 +226,12 @@ libcuda_lib.so: /lib/x86_64-linux-gnu/libc.so.6 \
   /usr/lib/gcc/x86_64-linux-gnu/13/libstdc++.so \
   /usr/lib/x86_64-linux-gnu/libc.so \
   /usr/lib/x86_64-linux-gnu/libc_nonshared.a \
+  /usr/lib/x86_64-linux-gnu/libcublas.so \
+  /usr/lib/x86_64-linux-gnu/libcublasLt.so \
   /usr/lib/x86_64-linux-gnu/libcudadevrt.a \
+  /usr/lib/x86_64-linux-gnu/libcudart.so \
   /usr/lib/x86_64-linux-gnu/libcudart_static.a \
+  /usr/lib/x86_64-linux-gnu/libculibos.a \
   /usr/lib/x86_64-linux-gnu/libdl.a \
   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 \
   /usr/lib/x86_64-linux-gnu/libm.so \
@@ -243,6 +247,8 @@ libcuda_lib.so: /lib/x86_64-linux-gnu/libc.so.6 \
 /usr/lib/x86_64-linux-gnu/libgcc_s.so.1:
 
 /usr/lib/x86_64-linux-gnu/libdl.a:
+
+/usr/lib/x86_64-linux-gnu/libculibos.a:
 
 /usr/lib/x86_64-linux-gnu/libcudart_static.a:
 
@@ -277,6 +283,8 @@ libcuda_lib.so: /lib/x86_64-linux-gnu/libc.so.6 \
 /usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
+
+/usr/lib/x86_64-linux-gnu/libcublasLt.so:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/limits.h:
 
@@ -448,6 +456,8 @@ libcuda_lib.so: /lib/x86_64-linux-gnu/libc.so.6 \
 
 /usr/include/alloca.h:
 
+/usr/lib/x86_64-linux-gnu/libcudart.so:
+
 /usr/include/c++/13/bits/stl_iterator_base_funcs.h:
 
 /usr/include/builtin_types.h:
@@ -607,6 +617,8 @@ CMakeFiles/cuda_lib.dir/runner.cu.o:
 /usr/include/device_launch_parameters.h:
 
 /usr/include/endian.h:
+
+/usr/lib/x86_64-linux-gnu/libcublas.so:
 
 /usr/include/features-time64.h:
 

@@ -39,9 +39,8 @@ inline void init_32bit(float* A, float* B, float* C, int M, int N, int K) {
     for (int i = 0; i < K * N; ++i) 
         B[i] = dis(gen);
 
-    for (int i = 0; i < M * N; ++i) {
+    for (int i = 0; i < M * N; ++i) 
         C[i] = 0.0f;
-    }
 
     cout << "[TESTS] Init 32 bit Matrix Completed\n";
 }
@@ -98,9 +97,10 @@ inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K)
 }
 
 //TODO 16 bit implementation and test
-//
 inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
     ov_init();  
+
+    cout << "[TESTS] chiamo openvino\n";
     ov_gemm_32bit(A,B,C,M,N,K);
     return compare_cpu_32bit(A,B,C,M,N,K);
 }

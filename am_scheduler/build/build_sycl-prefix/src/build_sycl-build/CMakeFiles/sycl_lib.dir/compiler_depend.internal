@@ -3,11 +3,25 @@
 
 CMakeFiles/sycl_lib.dir/runner.cpp.o
  /home/simo/Documents/j/master-thesis/am_scheduler/sycl/runner.cpp
- /home/simo/Documents/j/master-thesis/am_scheduler/sycl/sycl_wrapper.h
  /opt/intel/oneapi/2025.3/include/CL/cl.h
  /opt/intel/oneapi/2025.3/include/CL/cl_ext.h
  /opt/intel/oneapi/2025.3/include/CL/cl_platform.h
  /opt/intel/oneapi/2025.3/include/CL/cl_version.h
+ /opt/intel/oneapi/2025.3/include/mkl_cblas.h
+ /opt/intel/oneapi/2025.3/include/mkl_cblas_64.h
+ /opt/intel/oneapi/2025.3/include/mkl_types.h
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/bfloat16.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/blas.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/blas/buffer.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/blas/buffer_decls.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/blas/spec.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/blas/types.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/blas/usm.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/blas/usm_decls.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/exceptions.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/export.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/spec.hpp
+ /opt/intel/oneapi/2025.3/include/oneapi/mkl/types.hpp
  /opt/intel/oneapi/2025.3/include/sycl/__spirv/spirv_ops.hpp
  /opt/intel/oneapi/2025.3/include/sycl/__spirv/spirv_types.hpp
  /opt/intel/oneapi/2025.3/include/sycl/__spirv/spirv_vars.hpp
@@ -286,6 +300,9 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o
  /opt/intel/oneapi/2025.3/include/ur_api_funcs.def
  /opt/intel/oneapi/compiler/2025.3/include/sycl/stl_wrappers/assert.h
  /opt/intel/oneapi/compiler/2025.3/include/sycl/stl_wrappers/cassert
+ /opt/intel/oneapi/compiler/2025.3/include/sycl/stl_wrappers/cmath
+ /opt/intel/oneapi/compiler/2025.3/include/sycl/stl_wrappers/complex
+ /opt/intel/oneapi/compiler/2025.3/opt/compiler/include/complex
  /opt/intel/oneapi/compiler/2025.3/opt/compiler/include/fenv.h
  /opt/intel/oneapi/compiler/2025.3/opt/compiler/include/limits.h
  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stdarg___gnuc_va_list.h
@@ -330,6 +347,7 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o
  /usr/include/linux/stddef.h
  /usr/include/linux/types.h
  /usr/include/locale.h
+ /usr/include/math.h
  /usr/include/pthread.h
  /usr/include/sched.h
  /usr/include/stdc-predef.h
@@ -355,10 +373,20 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o
  /usr/include/x86_64-linux-gnu/bits/fenv.h
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h
  /usr/include/x86_64-linux-gnu/bits/floatn.h
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h
  /usr/include/x86_64-linux-gnu/bits/local_lim.h
  /usr/include/x86_64-linux-gnu/bits/locale.h
  /usr/include/x86_64-linux-gnu/bits/long-double.h
+ /usr/include/x86_64-linux-gnu/bits/math-vector.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-macros.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h
  /usr/include/x86_64-linux-gnu/bits/posix1_lim.h
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h
  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h
@@ -500,6 +528,7 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o
  /usr/include/c++/15/bits/shared_ptr.h
  /usr/include/c++/15/bits/shared_ptr_atomic.h
  /usr/include/c++/15/bits/shared_ptr_base.h
+ /usr/include/c++/15/bits/specfun.h
  /usr/include/c++/15/bits/sstream.tcc
  /usr/include/c++/15/bits/std_abs.h
  /usr/include/c++/15/bits/std_function.h
@@ -541,8 +570,10 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o
  /usr/include/c++/15/cfenv
  /usr/include/c++/15/climits
  /usr/include/c++/15/clocale
+ /usr/include/c++/15/cmath
  /usr/include/c++/15/codecvt
  /usr/include/c++/15/compare
+ /usr/include/c++/15/complex
  /usr/include/c++/15/concepts
  /usr/include/c++/15/cstddef
  /usr/include/c++/15/cstdint
@@ -595,6 +626,18 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o
  /usr/include/c++/15/string
  /usr/include/c++/15/string_view
  /usr/include/c++/15/system_error
+ /usr/include/c++/15/tr1/bessel_function.tcc
+ /usr/include/c++/15/tr1/beta_function.tcc
+ /usr/include/c++/15/tr1/ell_integral.tcc
+ /usr/include/c++/15/tr1/exp_integral.tcc
+ /usr/include/c++/15/tr1/gamma.tcc
+ /usr/include/c++/15/tr1/hypergeometric.tcc
+ /usr/include/c++/15/tr1/legendre_function.tcc
+ /usr/include/c++/15/tr1/modified_bessel_func.tcc
+ /usr/include/c++/15/tr1/poly_hermite.tcc
+ /usr/include/c++/15/tr1/poly_laguerre.tcc
+ /usr/include/c++/15/tr1/riemann_zeta.tcc
+ /usr/include/c++/15/tr1/special_function_util.h
  /usr/include/c++/15/tuple
  /usr/include/c++/15/type_traits
  /usr/include/c++/15/typeinfo
@@ -652,8 +695,8 @@ libsycl_lib.so
  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_stats.so
  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_vm.so
  /opt/intel/oneapi/2025.3/lib/libmkl_tbb_thread.so
- /tmp/icpx-68f1e85f1b/libsycl_lib-b426b4.o
- /tmp/icpx-68f1e85f1b/runner-66f164.o
+ /tmp/icpx-906191a45b/libsycl_lib-935d39.o
+ /tmp/icpx-906191a45b/runner-16f53b.o
  /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o
  /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o
  /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a

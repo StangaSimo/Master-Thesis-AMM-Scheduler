@@ -7,7 +7,7 @@ events:
       - "/usr/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
       - "CMakeLists.txt:2 (project)"
     message: |
-      The system is: Linux - 6.17.0-7-generic - x86_64
+      The system is: Linux - 6.17.0-8-generic - x86_64
   -
     kind: "message-v1"
     backtrace:
@@ -39,8 +39,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM"
-      binary: "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM"
+      source: "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA"
+      binary: "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g -Rno-debug-disables-optimization"
@@ -50,14 +50,14 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM'
+        Change Dir: '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA'
         
-        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_d44b8/fast
-        gmake[3]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM'
-        /usr/bin/gmake  -f CMakeFiles/cmTC_d44b8.dir/build.make CMakeFiles/cmTC_d44b8.dir/build
-        gmake[4]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM'
-        Building CXX object CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o
-        /opt/intel/oneapi/2025.3/bin/icpx   -v -MD -MT CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_47574/fast
+        gmake[3]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA'
+        /usr/bin/gmake  -f CMakeFiles/cmTC_47574.dir/build.make CMakeFiles/cmTC_47574.dir/build
+        gmake[4]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA'
+        Building CXX object CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o
+        /opt/intel/oneapi/2025.3/bin/icpx   -v -MD -MT CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
         Intel(R) oneAPI DPC++/C++ Compiler 2025.3.1 (2025.3.1.20251023)
         Target: x86_64-unknown-linux-gnu
         Thread model: posix
@@ -70,7 +70,7 @@ events:
         Selected multilib: .;@m64
         Found CUDA installation: /usr/lib/cuda, version 12.4
          (in-process)
-         "/opt/intel/oneapi/compiler/2025.3/bin/compiler/clang" -cc1 -triple x86_64-unknown-linux-gnu -O2 -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model static -fveclib=SVML -faltmathlib=SVMLAltMathLibrary -mframe-pointer=none -fapprox-func -funsafe-math-optimizations -fno-signed-zeros -mreassociate -freciprocal-math -fdenormal-fp-math=preserve-sign,preserve-sign -ffp-contract=fast-honor-pragmas -fno-rounding-math -complex-range=promoted -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -mllvm -x86-enable-unaligned-vector-move=true -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM -v -fcoverage-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM -fclang-abi-compat=17 -resource-dir /opt/intel/oneapi/compiler/2025.3/lib/clang/21 -dependency-file CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -c-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include/dal -cxx-isystem /opt/intel/oneapi/2025.3/include -internal-isystem /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -vectorize-loops -vectorize-slp -mllvm -disable-hir-generate-mkl-call -mllvm -loopopt=1 -floopopt-pipeline=light -mllvm -intel-abi-compatible=true -D__GCC_HAVE_DWARF2_CFI_ASM=1 -fintel-compatibility -fintel-libirc-allowed -fintel-libimf-allowed -o CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
+         "/opt/intel/oneapi/compiler/2025.3/bin/compiler/clang" -cc1 -triple x86_64-unknown-linux-gnu -O2 -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model static -fveclib=SVML -faltmathlib=SVMLAltMathLibrary -mframe-pointer=none -fapprox-func -funsafe-math-optimizations -fno-signed-zeros -mreassociate -freciprocal-math -fdenormal-fp-math=preserve-sign,preserve-sign -ffp-contract=fast-honor-pragmas -fno-rounding-math -complex-range=promoted -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -mllvm -x86-enable-unaligned-vector-move=true -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA -v -fcoverage-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA -fclang-abi-compat=17 -resource-dir /opt/intel/oneapi/compiler/2025.3/lib/clang/21 -dependency-file CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -c-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include/dal -cxx-isystem /opt/intel/oneapi/2025.3/include -internal-isystem /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -vectorize-loops -vectorize-slp -mllvm -disable-hir-generate-mkl-call -mllvm -loopopt=1 -floopopt-pipeline=light -mllvm -intel-abi-compatible=true -D__GCC_HAVE_DWARF2_CFI_ASM=1 -fintel-compatibility -fintel-libirc-allowed -fintel-libimf-allowed -o CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp
         clang -cc1 version 21.1.1 based upon LLVM 21.1.1 default target x86_64-unknown-linux-gnu
         ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
         ignoring nonexistent directory "/include"
@@ -88,8 +88,8 @@ events:
          /usr/include/x86_64-linux-gnu
          /usr/include
         End of search list.
-        Linking CXX executable cmTC_d44b8
-        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d44b8.dir/link.txt --verbose=1
+        Linking CXX executable cmTC_47574
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_47574.dir/link.txt --verbose=1
         Intel(R) oneAPI DPC++/C++ Compiler 2025.3.1 (2025.3.1.20251023)
         Target: x86_64-unknown-linux-gnu
         Thread model: posix
@@ -101,10 +101,10 @@ events:
         Candidate multilib: .;@m64
         Selected multilib: .;@m64
         Found CUDA installation: /usr/lib/cuda, version 12.4
-         "/usr/bin/ld" -z relro --hash-style=gnu --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_d44b8 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/lib/clang/21/lib/x86_64-unknown-linux-gnu -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/lib -L/lib -L/usr/lib -L/opt/intel/oneapi/2025.3/lib CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -Bstatic -lsvml -Bdynamic -Bstatic -lirng -Bdynamic -lstdc++ -Bstatic -limf -Bdynamic -lm -lgcc_s -lgcc -Bstatic -lirc -Bdynamic -ldl -lgcc_s -lgcc -lc -lgcc_s -lgcc -Bstatic -lirc_s -Bdynamic /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o
-        /opt/intel/oneapi/2025.3/bin/icpx  -v CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_d44b8
-        gmake[4]: Leaving directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM'
-        gmake[3]: Leaving directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM'
+         "/usr/bin/ld" -z relro --hash-style=gnu --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_47574 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/lib/clang/21/lib/x86_64-unknown-linux-gnu -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/lib -L/lib -L/usr/lib -L/opt/intel/oneapi/2025.3/lib CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -Bstatic -lsvml -Bdynamic -Bstatic -lirng -Bdynamic -lstdc++ -Bstatic -limf -Bdynamic -lm -lgcc_s -lgcc -Bstatic -lirc -Bdynamic -ldl -lgcc_s -lgcc -lc -lgcc_s -lgcc -Bstatic -lirc_s -Bdynamic /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o
+        /opt/intel/oneapi/2025.3/bin/icpx  -v CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_47574
+        gmake[4]: Leaving directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA'
+        gmake[3]: Leaving directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA'
         
       exitCode: 0
   -
@@ -151,14 +151,14 @@ events:
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
-        ignore line: [Change Dir: '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM']
+        ignore line: [Change Dir: '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA']
         ignore line: []
-        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_d44b8/fast]
-        ignore line: [gmake[3]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM']
-        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_d44b8.dir/build.make CMakeFiles/cmTC_d44b8.dir/build]
-        ignore line: [gmake[4]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM']
-        ignore line: [Building CXX object CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o]
-        ignore line: [/opt/intel/oneapi/2025.3/bin/icpx   -v -MD -MT CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_47574/fast]
+        ignore line: [gmake[3]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA']
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_47574.dir/build.make CMakeFiles/cmTC_47574.dir/build]
+        ignore line: [gmake[4]: Entering directory '/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA']
+        ignore line: [Building CXX object CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/opt/intel/oneapi/2025.3/bin/icpx   -v -MD -MT CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Intel(R) oneAPI DPC++/C++ Compiler 2025.3.1 (2025.3.1.20251023)]
         ignore line: [Target: x86_64-unknown-linux-gnu]
         ignore line: [Thread model: posix]
@@ -173,7 +173,7 @@ events:
         ignore line: [@m64]
         ignore line: [Found CUDA installation: /usr/lib/cuda  version 12.4]
         ignore line: [ (in-process)]
-        ignore line: [ "/opt/intel/oneapi/compiler/2025.3/bin/compiler/clang" -cc1 -triple x86_64-unknown-linux-gnu -O2 -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model static -fveclib=SVML -faltmathlib=SVMLAltMathLibrary -mframe-pointer=none -fapprox-func -funsafe-math-optimizations -fno-signed-zeros -mreassociate -freciprocal-math -fdenormal-fp-math=preserve-sign preserve-sign -ffp-contract=fast-honor-pragmas -fno-rounding-math -complex-range=promoted -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -mllvm -x86-enable-unaligned-vector-move=true -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM -v -fcoverage-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-XDiuLM -fclang-abi-compat=17 -resource-dir /opt/intel/oneapi/compiler/2025.3/lib/clang/21 -dependency-file CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -c-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include/dal -cxx-isystem /opt/intel/oneapi/2025.3/include -internal-isystem /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -vectorize-loops -vectorize-slp -mllvm -disable-hir-generate-mkl-call -mllvm -loopopt=1 -floopopt-pipeline=light -mllvm -intel-abi-compatible=true -D__GCC_HAVE_DWARF2_CFI_ASM=1 -fintel-compatibility -fintel-libirc-allowed -fintel-libimf-allowed -o CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [ "/opt/intel/oneapi/compiler/2025.3/bin/compiler/clang" -cc1 -triple x86_64-unknown-linux-gnu -O2 -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model static -fveclib=SVML -faltmathlib=SVMLAltMathLibrary -mframe-pointer=none -fapprox-func -funsafe-math-optimizations -fno-signed-zeros -mreassociate -freciprocal-math -fdenormal-fp-math=preserve-sign preserve-sign -ffp-contract=fast-honor-pragmas -fno-rounding-math -complex-range=promoted -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -mllvm -x86-enable-unaligned-vector-move=true -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA -v -fcoverage-compilation-dir=/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/CMakeScratch/TryCompile-y9hvuA -fclang-abi-compat=17 -resource-dir /opt/intel/oneapi/compiler/2025.3/lib/clang/21 -dependency-file CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -c-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include -cxx-isystem /opt/intel/oneapi/2025.3/include/dal -cxx-isystem /opt/intel/oneapi/2025.3/include -internal-isystem /opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -vectorize-loops -vectorize-slp -mllvm -disable-hir-generate-mkl-call -mllvm -loopopt=1 -floopopt-pipeline=light -mllvm -intel-abi-compatible=true -D__GCC_HAVE_DWARF2_CFI_ASM=1 -fintel-compatibility -fintel-libirc-allowed -fintel-libimf-allowed -o CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/share/cmake-3.31/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [clang -cc1 version 21.1.1 based upon LLVM 21.1.1 default target x86_64-unknown-linux-gnu]
         ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"]
         ignore line: [ignoring nonexistent directory "/include"]
@@ -191,8 +191,8 @@ events:
         ignore line: [ /usr/include/x86_64-linux-gnu]
         ignore line: [ /usr/include]
         ignore line: [End of search list.]
-        ignore line: [Linking CXX executable cmTC_d44b8]
-        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d44b8.dir/link.txt --verbose=1]
+        ignore line: [Linking CXX executable cmTC_47574]
+        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_47574.dir/link.txt --verbose=1]
         ignore line: [Intel(R) oneAPI DPC++/C++ Compiler 2025.3.1 (2025.3.1.20251023)]
         ignore line: [Target: x86_64-unknown-linux-gnu]
         ignore line: [Thread model: posix]
@@ -206,7 +206,7 @@ events:
         ignore line: [Selected multilib: .]
         ignore line: [@m64]
         ignore line: [Found CUDA installation: /usr/lib/cuda  version 12.4]
-        link line: [ "/usr/bin/ld" -z relro --hash-style=gnu --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_d44b8 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/lib/clang/21/lib/x86_64-unknown-linux-gnu -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/lib -L/lib -L/usr/lib -L/opt/intel/oneapi/2025.3/lib CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o -Bstatic -lsvml -Bdynamic -Bstatic -lirng -Bdynamic -lstdc++ -Bstatic -limf -Bdynamic -lm -lgcc_s -lgcc -Bstatic -lirc -Bdynamic -ldl -lgcc_s -lgcc -lc -lgcc_s -lgcc -Bstatic -lirc_s -Bdynamic /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o]
+        link line: [ "/usr/bin/ld" -z relro --hash-style=gnu --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_47574 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/lib/clang/21/lib/x86_64-unknown-linux-gnu -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../lib -L/opt/intel/oneapi/compiler/2025.3/bin/compiler/../../opt/compiler/lib -L/lib -L/usr/lib -L/opt/intel/oneapi/2025.3/lib CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o -Bstatic -lsvml -Bdynamic -Bstatic -lirng -Bdynamic -lstdc++ -Bstatic -limf -Bdynamic -lm -lgcc_s -lgcc -Bstatic -lirc -Bdynamic -ldl -lgcc_s -lgcc -lc -lgcc_s -lgcc -Bstatic -lirc_s -Bdynamic /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o]
           arg [/usr/bin/ld] ==> ignore
           arg [-zrelro] ==> ignore
           arg [--hash-style=gnu] ==> ignore
@@ -216,7 +216,7 @@ events:
           arg [-dynamic-linker] ==> ignore
           arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_d44b8] ==> ignore
+          arg [cmTC_47574] ==> ignore
           arg [/lib/x86_64-linux-gnu/Scrt1.o] ==> obj [/lib/x86_64-linux-gnu/Scrt1.o]
           arg [/lib/x86_64-linux-gnu/crti.o] ==> obj [/lib/x86_64-linux-gnu/crti.o]
           arg [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o]
@@ -235,7 +235,7 @@ events:
           arg [-L/lib] ==> dir [/lib]
           arg [-L/usr/lib] ==> dir [/usr/lib]
           arg [-L/opt/intel/oneapi/2025.3/lib] ==> dir [/opt/intel/oneapi/2025.3/lib]
-          arg [CMakeFiles/cmTC_d44b8.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [CMakeFiles/cmTC_47574.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
           arg [-Bstatic] ==> search static
           arg [-lsvml] ==> lib [svml]
           arg [-Bdynamic] ==> search dynamic

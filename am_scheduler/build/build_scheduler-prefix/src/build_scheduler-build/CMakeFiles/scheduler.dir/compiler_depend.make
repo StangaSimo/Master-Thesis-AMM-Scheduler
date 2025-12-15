@@ -313,16 +313,49 @@ CMakeFiles/scheduler.dir/main.cpp.o: /home/simo/Documents/j/master-thesis/am_sch
 scheduler: /home/simo/Documents/j/master-thesis/am_scheduler/bin/lib/libcuda_lib.so \
   /home/simo/Documents/j/master-thesis/am_scheduler/bin/lib/libov_lib.so \
   /home/simo/Documents/j/master-thesis/am_scheduler/bin/lib/libsycl_lib.so \
-  /lib/i386-linux-gnu/libdl.so.2 \
-  /lib/i386-linux-gnu/libpthread.so.0 \
+  /lib/i386-linux-gnu/libz.so.1 \
   /lib/libopenvino.so.2530 \
   /lib/x86_64-linux-gnu/libc.so.6 \
+  /lib/x86_64-linux-gnu/libcublas.so.12 \
+  /lib/x86_64-linux-gnu/libcublasLt.so.12 \
+  /lib/x86_64-linux-gnu/libcudart.so.12 \
   /lib/x86_64-linux-gnu/libdl.so.2 \
   /lib/x86_64-linux-gnu/libm.so.6 \
   /lib/x86_64-linux-gnu/libmvec.so.1 \
   /lib/x86_64-linux-gnu/libpthread.so.0 \
+  /lib/x86_64-linux-gnu/librt.so.1 \
+  /lib/x86_64-linux-gnu/libz.so.1 \
   /lib64/ld-linux-x86-64.so.2 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_core.so.2 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_intel_ilp64.so.2 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_blas.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_data_fitting.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_dft.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_lapack.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_rng.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_sparse.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_stats.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_vm.so.5 \
+  /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_tbb_thread.so.2 \
+  /opt/intel/oneapi/2025.3/lib/libOpenCL.so.1 \
+  /opt/intel/oneapi/2025.3/lib/libimf.so \
+  /opt/intel/oneapi/2025.3/lib/libintlc.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libirng.so \
+  /opt/intel/oneapi/2025.3/lib/libmkl_core.so.2 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_intel_ilp64.so.2 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_blas.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_data_fitting.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_dft.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_lapack.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_rng.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_sparse.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_stats.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_sycl_vm.so.5 \
+  /opt/intel/oneapi/2025.3/lib/libmkl_tbb_thread.so.2 \
+  /opt/intel/oneapi/2025.3/lib/libsvml.so \
+  /opt/intel/oneapi/2025.3/lib/libsycl.so.8 \
   /opt/intel/oneapi/2025.3/lib/libtbb.so.12 \
+  /opt/intel/oneapi/2025.3/lib/libur_loader.so.0 \
   /usr/lib/x86_64-linux-gnu/Scrt1.o \
   /usr/lib/x86_64-linux-gnu/crti.o \
   /usr/lib/x86_64-linux-gnu/crtn.o \
@@ -334,8 +367,7 @@ scheduler: /home/simo/Documents/j/master-thesis/am_scheduler/bin/lib/libcuda_lib
   /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a \
   /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so \
   /usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so \
-  /usr/lib/i386-linux-gnu/libdl.so.2 \
-  /usr/lib/i386-linux-gnu/libpthread.so.0 \
+  /usr/lib/i386-linux-gnu/libz.so.1 \
   /usr/lib/x86_64-linux-gnu/libc_nonshared.a \
   CMakeFiles/scheduler.dir/main.cpp.o
 
@@ -344,13 +376,43 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/lib/x86_64-linux-gnu/libc_nonshared.a:
 
-/usr/lib/i386-linux-gnu/libpthread.so.0:
-
-/usr/lib/i386-linux-gnu/libdl.so.2:
+/usr/lib/i386-linux-gnu/libz.so.1:
 
 /usr/lib/x86_64-linux-gnu/libc.so:
 
 /usr/lib/x86_64-linux-gnu/crti.o:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_tbb_thread.so.2:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_sparse.so.5:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_rng.so.5:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_dft.so.5:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_data_fitting.so.5:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_blas.so.5:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_stats.so.5:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_intel_ilp64.so.2:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_core.so.2:
+
+/opt/intel/oneapi/2025.3/lib/libirng.so:
+
+/opt/intel/oneapi/2025.3/lib/libintlc.so.5:
+
+/opt/intel/oneapi/2025.3/lib/libimf.so:
+
+/opt/intel/oneapi/2025.3/lib/libOpenCL.so.1:
+
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_tbb_thread.so.2:
+
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_blas.so.5:
+
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_intel_ilp64.so.2:
 
 /usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so:
 
@@ -358,17 +420,21 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /lib/x86_64-linux-gnu/libdl.so.2:
 
+/lib/x86_64-linux-gnu/libcudart.so.12:
+
+/lib/x86_64-linux-gnu/libcublas.so.12:
+
 /lib/libopenvino.so.2530:
 
-/lib/i386-linux-gnu/libpthread.so.0:
-
-/lib/i386-linux-gnu/libdl.so.2:
+/lib/i386-linux-gnu/libz.so.1:
 
 /home/simo/Documents/j/master-thesis/am_scheduler/bin/lib/libsycl_lib.so:
 
 /usr/lib/gcc/x86_64-linux-gnu/15/include/stdint.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/15/include/stdarg.h:
+
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_lapack.so.5:
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
@@ -396,7 +462,11 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
+/opt/intel/oneapi/2025.3/lib/libsycl.so.8:
+
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
+
+/opt/intel/oneapi/2025.3/lib/libsvml.so:
 
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
@@ -449,6 +519,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 /usr/include/c++/15/bits/locale_facets_nonio.h:
 
 /usr/include/c++/15/cwchar:
+
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_stats.so.5:
 
 /usr/include/c++/15/bits/stl_function.h:
 
@@ -612,6 +684,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /home/simo/Documents/j/master-thesis/am_scheduler/scheduler/scheduler.hpp:
 
+/lib/x86_64-linux-gnu/libcublasLt.so.12:
+
 /usr/include/c++/15/bits/memoryfwd.h:
 
 /usr/lib/x86_64-linux-gnu/libm.so:
@@ -692,6 +766,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/basic_string.h:
 
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_data_fitting.so.5:
+
 /usr/include/c++/15/streambuf:
 
 /usr/include/c++/15/bits/allocated_ptr.h:
@@ -702,17 +778,25 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/locale_facets.tcc:
 
+/opt/intel/oneapi/2025.3/lib/libur_loader.so.0:
+
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_core.so.2:
+
 /usr/include/c++/15/bits/locale_conv.h:
 
 /usr/include/c++/15/bits/random.tcc:
 
 /usr/include/ctype.h:
 
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_sparse.so.5:
+
 /usr/include/c++/15/bits/allocator.h:
 
 /usr/include/asm-generic/posix_types.h:
 
 /usr/include/c++/15/bit:
+
+/lib/x86_64-linux-gnu/libz.so.1:
 
 /usr/include/pthread.h:
 
@@ -790,6 +874,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_vm.so.5:
+
 /usr/include/c++/15/locale:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
@@ -800,7 +886,11 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/new:
 
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_dft.so.5:
+
 /usr/include/c++/15/thread:
+
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_vm.so.5:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
 
@@ -914,6 +1004,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/stdlib.h:
 
+/lib/x86_64-linux-gnu/librt.so.1:
+
 /usr/include/unistd.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
@@ -950,6 +1042,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/x86_64-linux-gnu/bits/getopt_core.h:
 
+/opt/intel/oneapi/2025.3/lib/libmkl_sycl_lapack.so.5:
+
 /usr/include/c++/15/bits/basic_ios.h:
 
 /usr/include/x86_64-linux-gnu/bits/locale.h:
@@ -981,6 +1075,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 /usr/include/x86_64-linux-gnu/bits/setjmp.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
+
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_rng.so.5:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-least.h:
 

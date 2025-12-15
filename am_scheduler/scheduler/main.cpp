@@ -6,6 +6,10 @@
 
 /* appunti:
  * 
+ * Piccolo scontro con la realtà, fare prima logica 32 bit, scrivere dei test 32 bit e vedere se siamo piu veloci
+ * cosa che vedo molto strana.
+ *
+ *
  * Fare implementazione di convoluzioni per ogni accelleratore,
  * trovare matrici filtro e capire come funzionano, 
  * implementare test per convoluzioni per vedere se funzionano,

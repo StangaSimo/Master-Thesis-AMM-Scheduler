@@ -96,6 +96,11 @@ cuda_lib_EXTERNAL_OBJECTS =
 libcuda_lib.so: CMakeFiles/cuda_lib.dir/runner.cu.o
 libcuda_lib.so: CMakeFiles/cuda_lib.dir/build.make
 libcuda_lib.so: CMakeFiles/cuda_lib.dir/compiler_depend.ts
+libcuda_lib.so: /usr/lib/x86_64-linux-gnu/libcublas.so
+libcuda_lib.so: /usr/lib/x86_64-linux-gnu/libcudart.so
+libcuda_lib.so: /usr/lib/x86_64-linux-gnu/libcublasLt.so
+libcuda_lib.so: /usr/lib/x86_64-linux-gnu/libculibos.a
+libcuda_lib.so: /usr/lib/x86_64-linux-gnu/librt.a
 libcuda_lib.so: CMakeFiles/cuda_lib.dir/linkLibs.rsp
 libcuda_lib.so: CMakeFiles/cuda_lib.dir/objects1.rsp
 libcuda_lib.so: CMakeFiles/cuda_lib.dir/link.txt
