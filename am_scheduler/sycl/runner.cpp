@@ -21,7 +21,7 @@ void init() {
     }
 }
 
-void gemm_32bit(float *A, float *B, float *C, int M, int N, int K) {
+void sycl_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K) {
     if (!global_q) {
         init(); 
     }
@@ -77,6 +77,6 @@ extern "C" {
     }
 
     void sycl_gemm_32bit(float *A, float *B, float *C, int M, int N, int K) {
-        gemm_32bit(A, B, C, M, N, K);
+        sycl_gemm_32bit_p(A, B, C, M, N, K);
     }
 }

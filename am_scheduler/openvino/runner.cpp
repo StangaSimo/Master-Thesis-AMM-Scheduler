@@ -10,8 +10,8 @@ ov::Core core;
 
 using namespace std;
 
-void init_ov(){
-    cout << "[OPENVINO] Init OpenVINO module.\n";
+void ov_init_p() {
+    //cout << "[OPENVINO] Init OpenVINO module.\n";
 
     bool available = false;
 
@@ -24,7 +24,7 @@ void init_ov(){
         exit(EXIT_FAILURE); /* shut down something is wrong */
     }
 
-    cout << "[OPENVINO] NPU up\n";
+    //cout << "[OPENVINO] NPU up\n";
 }
 
 void gemm_32bit_prova(float *A, float *B, float *C, int M, int N, int K) {
@@ -101,7 +101,7 @@ void gemm_32bit_prova(float *A, float *B, float *C, int M, int N, int K) {
     }
 }
 
-void gemm_32bit_prova2(float *A, float *B, float *C, int M, int N, int K){
+void ov_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K){
     /* TODO: don't compile it every time make a method */
     auto A_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)M, (size_t)K});
     auto B_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)K, (size_t)N});
@@ -126,20 +126,13 @@ void gemm_32bit_prova2(float *A, float *B, float *C, int M, int N, int K){
 
     infer_request.infer();
 }
-void prova() {
-        cout << "[OPENVINO] PROVA.\n";
-}
-
 
 extern "C" {
     void ov_init() {
-        prova();
-        cout << "[OPENVINO] Init.\n";
-        init_ov();
-        prova();
+        ov_init_p();
     }
 
     void ov_gemm_32bit(float *A, float *B, float *C, int M, int N, int K){
-        gemm_32bit_prova2(A, B, C, M, N, K);
+        ov_gemm_32bit_p(A, B, C, M, N, K);
     }
 }

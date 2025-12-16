@@ -17,7 +17,7 @@
 
 cublasHandle_t handle;  
 
-void gemm_32bit(float* A, float* B, float* C, int M, int N, int K) {
+void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
         float *d_A, *d_B, *d_C;
 
         CHECK_CUDA(cudaMalloc(&d_A, M * K * sizeof(float)));
@@ -51,7 +51,7 @@ extern "C" {
     }
 
     void cuda_gemm_32bit(float* A, float* B, float* C, int M, int N, int K) {
-        gemm_32bit(A, B, C, M, N, K); 
+        cuda_gemm_32bit_p(A, B, C, M, N, K); 
     }
 
     void cuda_free() {

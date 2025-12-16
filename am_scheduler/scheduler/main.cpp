@@ -43,9 +43,16 @@ int main() {
 
     std::cout << "[MAIN] Init Scheduler\n";
 
+    size_t n = 10;
+    task* task_array = init_tasks_float(n, 1024, 1024, 512);
+
     {
         AMScheduler scheduler = AMScheduler();
+        scheduler.do_tasks(task_array, n);
+        compare_task_float(task_array, n);
     }
+
+    clean_tasks_float(task_array,n);
 
     std::cout << "[MAIN] Closed Scheduler\n";
 

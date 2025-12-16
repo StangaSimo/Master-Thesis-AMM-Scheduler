@@ -13,6 +13,7 @@ using namespace std;
 
 #include <random>
 #include <iostream>
+#include "scheduler.hpp"
 
 #ifdef ENABLE_OPENVINO
 #include "ov_wrapper.h"
@@ -26,7 +27,7 @@ using namespace std;
 #include "sycl_wrapper.h"
 #endif
  
-
+/***************************** Helpers *******************************/
 inline void init_32bit(float* A, float* B, float* C, int M, int N, int K) {
     random_device rd;
     mt19937 gen(rd());
@@ -41,8 +42,6 @@ inline void init_32bit(float* A, float* B, float* C, int M, int N, int K) {
 
     for (int i = 0; i < M * N; ++i) 
         C[i] = 0.0f;
-
-    cout << "[TESTS] Init 32 bit Matrix Completed\n";
 }
 
 inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K) {
@@ -95,12 +94,11 @@ inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K)
 
     return match;
 }
+/******************************** Test Accellerators **********************************/
 
 //TODO 16 bit implementation and test
 inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
     ov_init();  
-
-    cout << "[TESTS] chiamo openvino\n";
     ov_gemm_32bit(A,B,C,M,N,K);
     return compare_cpu_32bit(A,B,C,M,N,K);
 }
@@ -128,12 +126,14 @@ inline void test_accellerators() {
 
     init_32bit(A,B,C,M,N,K);
 
+cout << "[TESTS] ---------------------------------------- \n";
 #ifdef ENABLE_OPENVINO
     if(!test_openvino(A,B,C,M,N,K)){
         cout << "[TESTS] Openvino Error\n";
         exit(EXIT_FAILURE);
     }
 #endif
+cout << "[TESTS] OpenVino OKAY \n";
 
 #ifdef ENABLE_CUDA
     if(!test_cuda(A,B,C,M,N,K)){
@@ -142,16 +142,82 @@ inline void test_accellerators() {
     }
 #endif
 
+cout << "[TESTS] Cuda OKAY \n";
+
 #ifdef ENABLE_SYCL
     if(!test_sycl(A,B,C,M,N,K)){
         cout << "[TESTS] SYCL Error\n";
         exit(EXIT_FAILURE);
     }
 #endif
-    
+cout << "[TESTS] Sycl OKAY \n";
+cout << "[TESTS] ---------------------------------------- \n";
+
     delete[] A;
     delete[] B;
     delete[] C;
 }
 #endif
+
+/***************************** helper test for main ***************************/
+inline task* init_tasks_float(size_t n_task, int m, int n, int k) {
+    
+    task* array_task = new task[n_task];
+    random_device rd;
+    mt19937 gen(rd());
+    
+    uniform_real_distribution<float> dis(-1.0f, 1.0f);
+
+    for (int i = 0; i < n_task; i++) {
+        array_task[i].M = m;
+        array_task[i].N = n;
+        array_task[i].K = k;
+        array_task[i].type = 1; // float
+
+        array_task[i].A = new float[m * k]; 
+        array_task[i].B = new float[k * n];
+        array_task[i].C = new float[m * n];
+
+        float *A = (float*)array_task[i].A;
+        float *B = (float*)array_task[i].B;
+        float *C = (float*)array_task[i].C;
+
+        for (int j = 0; j < m * k; ++j) 
+            A[j] = dis(gen);
+
+        for (int j = 0; j < k * n; ++j) 
+            B[j] = dis(gen);
+
+        for (int j = 0; j < m * n; ++j) 
+            C[j] = 0;
+    }
+
+    return array_task;
+}
+
+inline void compare_task_float(task* array_task, size_t n_task) {
+    
+
+    for (int i = 0; i < n_task; i++) {
+
+        float *A = (float*)array_task[i].A;
+        float *B = (float*)array_task[i].B;
+        float *C = (float*)array_task[i].C;
+ 
+        compare_cpu_32bit(A, B, C, array_task[i].M, array_task[i].N, array_task[i].K);
+    }
+}
+
+inline void clean_tasks_float(task* array_task, size_t n_task) {
+    if (array_task == nullptr) return;
+
+    for (int i = 0; i < n_task; i++) {
+        delete[] static_cast<float*>(array_task[i].A);
+        delete[] static_cast<float*>(array_task[i].B);
+        delete[] static_cast<float*>(array_task[i].C);
+    }
+
+    delete[] array_task;
+}
+
 
