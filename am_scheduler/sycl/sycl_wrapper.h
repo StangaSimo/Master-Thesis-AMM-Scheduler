@@ -7,8 +7,9 @@ extern "C" {
 
     void sycl_init();
 
-
     void sycl_gemm_32bit(float *A, float *B, float *C, int M, int N, int K); 
+
+    void sycl_free();
 
 #ifdef __cplusplus
 }

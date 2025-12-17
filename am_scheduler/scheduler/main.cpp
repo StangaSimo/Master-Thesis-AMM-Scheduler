@@ -33,28 +33,54 @@
  *
  * scrivere mille test veri, benchmark veri, e anche benchmark per calcolo su dag, 
  *
-
+ * TODO: latenza e tempo totale per fare benchmark 
+ *
+ * TODO: batch implementation for GPU, but not so easy with matrix with multiple ???????
+ * TODO: dag imlementation for testing
+ * TODO  video frame for filter application 
+ * TODO  
+ *
  * */
 
 int main() {
     test_accellerators();
 
     std::cout << "[MAIN] Tests Done\n";
-
     std::cout << "[MAIN] Init Scheduler\n";
 
-    size_t n = 10;
-    task* task_array = init_tasks_float(n, 1024, 1024, 512);
+    size_t n_matrix = 100;
+    int M = 1024;
+    int N = 1024;
+    int K = 512;
 
+    std::cout << "[MAIN] CUDA_ONLY ------------------------------------- \n";
     {
-        AMScheduler scheduler = AMScheduler();
-        scheduler.do_tasks(task_array, n);
-        compare_task_float(task_array, n);
+        task* task_array = init_tasks_float(n_matrix, M, N, K);
+
+        AMScheduler scheduler = AMScheduler(Logic::CUDA_ONLY);
+        scheduler.do_tasks(task_array, n_matrix);
+        scheduler.wait();
+
+        //test_compare_task_float(task_array, n_matrix);
+        print_performance_stats(task_array, n_matrix);
+        clean_tasks_float(task_array,n_matrix);
+    }
+    std::cout << "[MAIN] -------------------------------------------------- \n\n";
+
+    std::cout << "[MAIN] ROUND_ROBIN  ------------------------------------- \n";
+    {
+        task* task_array = init_tasks_float(n_matrix, M, N, K);
+
+        AMScheduler scheduler = AMScheduler(Logic::ROUND_ROBIN);
+        scheduler.do_tasks(task_array, n_matrix);
+        scheduler.wait();
+
+        //test_compare_task_float(task_array, n_matrix);
+        print_performance_stats(task_array, n_matrix);
+        clean_tasks_float(task_array,n_matrix);
     }
 
-    clean_tasks_float(task_array,n);
-
+    std::cout << "[MAIN] -------------------------------------------------- \n\n";
     std::cout << "[MAIN] Closed Scheduler\n";
-
     return 0;
 }

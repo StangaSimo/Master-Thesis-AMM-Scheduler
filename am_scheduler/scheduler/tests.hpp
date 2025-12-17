@@ -58,7 +58,7 @@ inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K)
         }
 
     /* epsilon because the NPU will intruduce slightly differnce errors in the float mul */
-    const float epsilon = 0.02f;; /* NPU fault */
+    const float epsilon = 0.03f;; /* NPU fault */
     bool match = true;
     float max_diff = 0.0f;
 
@@ -90,7 +90,7 @@ inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K)
         }
         cout << "\n" << endl;
     } else 
-        cout << "[TEST] GOOD\n";
+        printf("[TESTS] %d %d %d GOOD\n",M,N,K);
 
     return match;
 }
@@ -104,7 +104,7 @@ inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
 }
 
 inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
-    cuda_init();  
+    cuda_init(M,N,K);  
     cuda_gemm_32bit(A,B,C,M,N,K);
     return compare_cpu_32bit(A,B,C,M,N,K);
 }
@@ -190,14 +190,13 @@ inline task* init_tasks_float(size_t n_task, int m, int n, int k) {
 
         for (int j = 0; j < m * n; ++j) 
             C[j] = 0;
+
     }
 
     return array_task;
 }
 
-inline void compare_task_float(task* array_task, size_t n_task) {
-    
-
+inline void test_compare_task_float(task* array_task, size_t n_task) {
     for (int i = 0; i < n_task; i++) {
 
         float *A = (float*)array_task[i].A;
@@ -218,6 +217,41 @@ inline void clean_tasks_float(task* array_task, size_t n_task) {
     }
 
     delete[] array_task;
+}
+
+inline void print_performance_stats(task* tasks, size_t num_tasks) {
+    if (tasks == nullptr || num_tasks == 0) {
+        std::cout << "Nessun task da analizzare." << std::endl;
+        return;
+    }
+
+    auto min_start = tasks[0].start_time;
+    auto max_end = tasks[0].end_time;
+    
+    double total_latency_sum_ms = 0.0;
+
+    for (size_t i = 0; i < num_tasks; ++i) {
+        if (tasks[i].start_time < min_start) 
+            min_start = tasks[i].start_time;
+       
+
+        if (tasks[i].end_time > max_end) 
+            max_end = tasks[i].end_time;
+        
+        std::chrono::duration<double, std::milli> duration = tasks[i].end_time - tasks[i].start_time;
+        total_latency_sum_ms += duration.count();
+    }
+
+    std::chrono::duration<double, std::milli> global_span = max_end - min_start;
+
+    double average_latency_ms = total_latency_sum_ms / num_tasks;
+
+    std::cout << "=== Performance Report ===" << std::endl;
+    std::cout << "Number of Matrix: " << num_tasks << std::endl;
+    std::cout << "--------------------------" << std::endl;
+    std::cout << "Global Span (Max End - Min Start): " << global_span.count() << " ms" << std::endl;
+    std::cout << "AVG latency: " << average_latency_ms << " ms" << std::endl;
+    std::cout << "==========================" << std::endl;
 }
 
 

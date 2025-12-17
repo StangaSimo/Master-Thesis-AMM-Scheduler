@@ -79,4 +79,7 @@ extern "C" {
     void sycl_gemm_32bit(float *A, float *B, float *C, int M, int N, int K) {
         sycl_gemm_32bit_p(A, B, C, M, N, K);
     }
+
+    void sycl_free() {
+    }
 }

@@ -5,11 +5,11 @@
 extern "C" {
 #endif
 
-    void cuda_init();
+    void cuda_init(int M, int N, int K);
 
     void cuda_gemm_32bit(float* A, float* B, float* C, int M, int N, int K);
 
-    void cuda_destroy();
+    void cuda_free();
 
 #ifdef __cplusplus
 }

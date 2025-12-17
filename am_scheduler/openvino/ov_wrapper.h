@@ -9,6 +9,8 @@ extern "C" {
 
     void ov_gemm_32bit(float* A, float* B, float* C, int M, int N, int K);
 
+    void ov_free();
+
 #ifdef __cplusplus
 }
 #endif

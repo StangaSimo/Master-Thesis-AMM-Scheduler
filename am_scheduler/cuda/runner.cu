@@ -16,37 +16,30 @@
 }
 
 cublasHandle_t handle;  
+float *d_A, *d_B, *d_C;
 
 void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
-        float *d_A, *d_B, *d_C;
-
-        CHECK_CUDA(cudaMalloc(&d_A, M * K * sizeof(float)));
-        CHECK_CUDA(cudaMalloc(&d_B, K * N * sizeof(float)));
-        CHECK_CUDA(cudaMalloc(&d_C, M * N * sizeof(float)));
         CHECK_CUDA(cudaMemcpy(d_A, A, M * K * sizeof(float), cudaMemcpyHostToDevice));
         CHECK_CUDA(cudaMemcpy(d_B, B, K * N * sizeof(float), cudaMemcpyHostToDevice));
         CHECK_CUDA(cudaMemcpy(d_C, C, M * N * sizeof(float), cudaMemcpyHostToDevice));
-
         CHECK_CUDA(cudaDeviceSynchronize());
-
         float alpha = 1.0f, beta = 0.0f;
         cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
                     N, M, K, &alpha,
                     d_B, N, d_A, K, &beta, d_C, N);
 
- 
         CHECK_CUDA(cudaDeviceSynchronize()); 
-                                           
         CHECK_CUDA(cudaMemcpy(C, d_C, M * N * sizeof(float), cudaMemcpyDeviceToHost));
-
-        CHECK_CUDA(cudaFree(d_A));
-        CHECK_CUDA(cudaFree(d_B));
-        CHECK_CUDA(cudaFree(d_C));
 }
 
 extern "C" {
-    void cuda_init() {
+    void cuda_init(int M, int N, int K) {
         CHECK_CUBLAS(cublasCreate(&handle));
+
+        CHECK_CUDA(cudaMalloc(&d_A, M * K * sizeof(float)));
+        CHECK_CUDA(cudaMalloc(&d_B, K * N * sizeof(float)));
+        CHECK_CUDA(cudaMalloc(&d_C, M * N * sizeof(float)));
+
         printf("[CUDA-LIB] Inizializzazione device...\n");
     }
 
@@ -56,5 +49,8 @@ extern "C" {
 
     void cuda_free() {
         CHECK_CUBLAS(cublasDestroy(handle));
+        CHECK_CUDA(cudaFree(d_A));
+        CHECK_CUDA(cudaFree(d_B));
+        CHECK_CUDA(cudaFree(d_C));
     }
 }
