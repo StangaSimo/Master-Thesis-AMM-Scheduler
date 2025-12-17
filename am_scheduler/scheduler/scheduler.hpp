@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <atomic>
 #include <stdlib.h>
@@ -17,6 +18,7 @@
 #include <array>
 #include <memory>
 #include <unistd.h>
+#include <vector>
 
 
 using namespace std;
@@ -26,6 +28,7 @@ enum {BUFFER_LENGHT = 1024};
 enum Logic : size_t { /* Scheduler Logic Type */
     ROUND_ROBIN,
     CUDA_ONLY,
+    AUTO_PARTITIONING,
 };
 
 enum BT : size_t { /* backend_type */
@@ -45,7 +48,7 @@ inline void change_status(BT backend_type, bool onoff) {
     case BT::CUDA:
         if (onoff) {
             cout << "[SCHEDULER] CUDA Thread Alive\n";
-            cuda_init(1024,1024,1024); //TODO make this. 
+            cuda_init(1024,1024,1024); //TODO 
         } else {
             cout << "[SCHEDULER] CUDA Thread Shutting Down\n";
             cuda_free();
@@ -80,10 +83,29 @@ inline void change_status(BT backend_type, bool onoff) {
         break;    
 
     default: 
-        cout << "[SCHEDULER] ERROR Thread Spawn\n";
+        cout << "[SCHEDULER] ERROR Change Status\n";
         exit(EXIT_FAILURE);
-        break;
     }
+}
+
+inline void benchmark_acc(BT bt) {
+    switch (bt) {
+
+    case BT::CUDA:
+        //cuda_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
+        break;    
+        
+    case BT::SYCL:
+        break;    
+    
+    case BT::OPENVINO:
+        break;    
+
+    default: 
+        cout << "[SCHEDULER] ERROR benchmark_acc \n";
+        exit(EXIT_FAILURE);
+    }
+
 }
 
 /* task handler for the workers, choose the right backend_type */
@@ -106,8 +128,8 @@ inline void handle_task_thread(BT backend_type, task *task) {
     //    break;    
 
     default: 
+        cout << "[SCHEDULER] ERROR Handle Task\n";
         exit(EXIT_FAILURE);
-        break;
     }
 
     task->end_time = chrono::high_resolution_clock::now();
@@ -125,6 +147,8 @@ class AMScheduler {
         array<unique_ptr<thread>, BT::COUNT> threads; 
         /* type of scheduler strategy to use */
         Logic strategy;
+        /* backend_type vector for handling the accellerators */
+        vector<BT> bts; 
 
 /**********************************  Worker  ***********************************/
 
@@ -149,33 +173,38 @@ class AMScheduler {
 
         /* if there is no task, we check if we have to shutdown */
         void coordinator_thread(SharedBuffer_T &buffers) { 
-            int c=1;
+            int i=0;
+            int bts_len = bts.size();
             task* task = nullptr;
             SharedBuffer *buffer = buffers[BT::CORDINATOR].get();
-
+            
             switch (strategy) {
-                /* only cuda card or cards */
+                /* only cuda cards */
                 case Logic::CUDA_ONLY:
                     while(threads_keep_running) { 
                         task = buffer->get();
                         if (!task) {continue;} 
-
                         buffers[BT::CUDA]->put(task);
                     } 
                     break;
-
                 /* basic logic, if there is one that don't do nothing just send them request */
                 case Logic::ROUND_ROBIN: 
                     while(threads_keep_running) { 
                         task = buffer->get();
                         if (!task) {continue;} 
 
-                        if (c == 0) {c = 1;}
-                        buffers[c]->put(task);
-                        c = (c+1) % 4;
+                        buffers[bts[i]]->put(task);
+
+                        i = (i+1) % bts_len;
                     } 
                     break;
 
+                case Logic::AUTO_PARTITIONING: 
+                    while(threads_keep_running) { 
+                        task = buffer->get();
+                        if (!task) {continue;} 
+                    } 
+                    break;
                 default:
                     printf("[SCHEDULER] Error in chosing the logic \n");
                     exit(EXIT_FAILURE);
@@ -185,38 +214,34 @@ class AMScheduler {
 /**********************************  Init and Stop  ***********************************/
 
         void init_threads() {
+
 #ifdef ENABLE_CUDA
-            shared_buffers[BT::CUDA] = make_unique<SharedBuffer>(BUFFER_LENGHT);
-            threads[BT::CUDA] = make_unique<thread>(&AMScheduler::worker_thread, this, 
-                                                    BT::CUDA, 
-                                                    shared_buffers[BT::CUDA].get());
+            bts.push_back(BT::CUDA);
 #endif
-
 #ifdef ENABLE_OPENVINO
-            shared_buffers[BT::OPENVINO] = make_unique<SharedBuffer>(BUFFER_LENGHT);
-            threads[BT::OPENVINO] = make_unique<thread>(&AMScheduler::worker_thread, this, 
-                                                   BT::OPENVINO,
-                                                   shared_buffers[BT::OPENVINO].get());
-#endif            
-
-#ifdef ENABLE_SYCL
-            shared_buffers[BT::SYCL] = make_unique<SharedBuffer>(BUFFER_LENGHT);
-            threads[BT::SYCL] = make_unique<thread>(&AMScheduler::worker_thread, this, 
-                                                   BT::SYCL,
-                                                   shared_buffers[BT::SYCL].get());
+            bts.push_back(BT::OPENVINO);
 #endif
+#ifdef ENABLE_SYCL
+            bts.push_back(BT::SYCL);
+#endif
+            for (BT i : bts) {
+                shared_buffers[i] = make_unique<SharedBuffer>(BUFFER_LENGHT);
+                threads[i] = make_unique<thread>(&AMScheduler::worker_thread, this, 
+                                                    i, shared_buffers[i].get());
+            }
 
+            if (bts.size() == 0) {cout << "[SCHEDULER] ATTENTION, only CPU up\n";}
+
+            //bts.push_back(BT::CPU); TODO remove this when implementing the cpus 
             /* default CPU thread */
-            //shared_buffers[BT::CPU] = make_unique<SharedBuffer>(BUFFER_LENGHT);
-            //threads[BT::CPU] = make_unique<thread>(&AMScheduler::worker_thread, this, 
-            //                                        BT::CPU,
-            //                                        shared_buffers[BT::CPU].get());
+            shared_buffers[BT::CPU] = make_unique<SharedBuffer>(BUFFER_LENGHT);
+            threads[BT::CPU] = make_unique<thread>(&AMScheduler::worker_thread, this, 
+                                                    BT::CPU, shared_buffers[BT::CPU].get());
 
             /* coordinator */
             shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
             threads[BT::CORDINATOR] = make_unique<thread>(&AMScheduler::coordinator_thread,this, 
-                                        ref(shared_buffers)); /* ref because the thread function
-                                                                try to copy all the parameters */
+                                        ref(shared_buffers)); /* ref because the thread function try to copy all the parameters */
         }
 
         /* shut down threads */
@@ -230,22 +255,42 @@ class AMScheduler {
 
             cout << "[SCHEDULER] Threads Stopped\n";
         }
-       
-/**********************************  Public Interface ***********************************/
+
+        /* upload the banchmark files and generate them if not presents */
+        void init_benchmarks() {
+            for (BT i : bts) {
+                switch (i) {
+                case BT::CUDA: 
+                    break;
+                case BT::OPENVINO: 
+                    break;
+                case BT::SYCL: 
+                    break;
+                case BT::CPU: 
+                    break;
+                default:
+                    cout << "[SCHEDULER] Error in Init init_benchmarks\n";
+                    exit(EXIT_FAILURE);
+                } 
+            }
+        }
+
+        /**********************************  Public Interface ***********************************/
 
     public: 
         /* constructur */
         AMScheduler(Logic l) : threads_keep_running(true), strategy(l) {
-            cout << "[SCHEDULER] Starting..\n";
+            cout << "[SCHEDULER] Starting with " << l << " logic\n";
             init_threads();            
-            cout << "[SCHEDULER] Constructur Complete.\n";
+            cout << "[SCHEDULER] Threads Started\n";
+            //init_benchmarks();            
+            cout << "[SCHEDULER] Benchmarks Done\n";
         }
 
         /* destructur, stop the threads*/
         ~AMScheduler() {
-            cout << "[SCHEDULER] Destructur  Starting..\n";
             stop_threads();
-            cout << "[SCHEDULER] Destructur  Complete..\n";
+            cout << "[SCHEDULER] Destructur Complete..\n";
         }
 
         /* just send the tasks to the coordinator */
@@ -254,7 +299,7 @@ class AMScheduler {
                 tasks[i].start_time = chrono::high_resolution_clock::now();                
                 shared_buffers[BT::CORDINATOR]->put(&tasks[i]);
             }
-            cout << "[SCHEDULER] Task given the coordinator\n";
+            cout << "[SCHEDULER] Task dispached\n";
         }
 
         /* check if all the buffers are empty */
@@ -276,7 +321,7 @@ class AMScheduler {
             }
 
             cout << "[SCHEDULER] All empty.. \n";
-            sleep(2);
+            sleep(2); /* wait for unfinished matrix */
         }
 };
 

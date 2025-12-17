@@ -43,6 +43,8 @@
  * */
 
 int main() {
+
+    /* testing purpuse */
     test_accellerators();
 
     std::cout << "[MAIN] Tests Done\n";
@@ -54,31 +56,18 @@ int main() {
     int K = 512;
 
     std::cout << "[MAIN] CUDA_ONLY ------------------------------------- \n";
-    {
+    Logic l = Logic::CUDA_ONLY; 
+    for (int i=0; i<2; i++) {
+        if (i == 1) {l = Logic::ROUND_ROBIN;}
         task* task_array = init_tasks_float(n_matrix, M, N, K);
-
-        AMScheduler scheduler = AMScheduler(Logic::CUDA_ONLY);
+        AMScheduler scheduler = AMScheduler(l);
         scheduler.do_tasks(task_array, n_matrix);
         scheduler.wait();
 
-        //test_compare_task_float(task_array, n_matrix);
         print_performance_stats(task_array, n_matrix);
         clean_tasks_float(task_array,n_matrix);
-    }
-    std::cout << "[MAIN] -------------------------------------------------- \n\n";
 
-    std::cout << "[MAIN] ROUND_ROBIN  ------------------------------------- \n";
-    {
-        task* task_array = init_tasks_float(n_matrix, M, N, K);
-
-        AMScheduler scheduler = AMScheduler(Logic::ROUND_ROBIN);
-        scheduler.do_tasks(task_array, n_matrix);
-        scheduler.wait();
-
-        //test_compare_task_float(task_array, n_matrix);
-        print_performance_stats(task_array, n_matrix);
-        clean_tasks_float(task_array,n_matrix);
-    }
+    } 
 
     std::cout << "[MAIN] -------------------------------------------------- \n\n";
     std::cout << "[MAIN] Closed Scheduler\n";

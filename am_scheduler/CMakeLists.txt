@@ -6,13 +6,6 @@ include(ExternalProject)
 set(LIB_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/bin)
 file(MAKE_DIRECTORY ${LIB_OUTPUT_DIR})
 
-#ninja stuff
-#if(CMAKE_GENERATOR MATCHES "Ninja")
-#    set(SUB_BUILD_GENERATOR "Ninja")
-#else()
-#    set(SUB_BUILD_GENERATOR "Unix Makefiles")
-#endif()
-
 # CUDA SYCL OPENVINO
 option(USE_CUDA "CUDA ON" OFF) 
 option(USE_SYCL "SYCL ON" OFF)
@@ -25,7 +18,6 @@ if(USE_CUDA)
     message(STATUS "CUDA Backend ON")
     ExternalProject_Add(build_cuda
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/cuda
-        #        CMAKE_GENERATOR ${SUB_BUILD_GENERATOR}
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
             -DCMAKE_BUILD_TYPE=Release
@@ -43,7 +35,6 @@ if(USE_SYCL)
     message(STATUS "Backend SYCL: ON")
     ExternalProject_Add(build_sycl
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/sycl
-        #        CMAKE_GENERATOR ${SUB_BUILD_GENERATOR}
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
             -DCMAKE_BUILD_TYPE=Release
@@ -59,7 +50,6 @@ if(USE_OPENVINO)
     message(STATUS "Backend OpenVINO: ON")
     ExternalProject_Add(build_openvino
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/openvino
-        #    CMAKE_GENERATOR ${SUB_BUILD_GENERATOR}
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
             -DCMAKE_BUILD_TYPE=Release
@@ -72,7 +62,6 @@ endif()
 # scheduler
 ExternalProject_Add(build_scheduler
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/scheduler
-    #    CMAKE_GENERATOR ${SUB_BUILD_GENERATOR}
     CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
         -DCMAKE_BUILD_TYPE=Release

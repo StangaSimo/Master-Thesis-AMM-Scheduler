@@ -90,7 +90,7 @@ inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K)
         }
         cout << "\n" << endl;
     } else 
-        printf("[TESTS] %d %d %d GOOD\n",M,N,K);
+        printf("[TESTS] %d %d %d PASSED \n",M,N,K);
 
     return match;
 }
@@ -100,18 +100,21 @@ inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K)
 inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
     ov_init();  
     ov_gemm_32bit(A,B,C,M,N,K);
+    ov_free();  
     return compare_cpu_32bit(A,B,C,M,N,K);
 }
 
 inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
     cuda_init(M,N,K);  
     cuda_gemm_32bit(A,B,C,M,N,K);
+    cuda_free();
     return compare_cpu_32bit(A,B,C,M,N,K);
 }
 
 inline bool test_sycl(float* A, float* B, float* C, int M, int N, int K) {
     sycl_init();  
     sycl_gemm_32bit(A,B,C,M,N,K);
+    sycl_free();  
     return compare_cpu_32bit(A,B,C,M,N,K);
 }
 
@@ -133,7 +136,7 @@ cout << "[TESTS] ---------------------------------------- \n";
         exit(EXIT_FAILURE);
     }
 #endif
-cout << "[TESTS] OpenVino OKAY \n";
+cout << "[TESTS] OpenVino PASSED \n";
 
 #ifdef ENABLE_CUDA
     if(!test_cuda(A,B,C,M,N,K)){
@@ -142,7 +145,7 @@ cout << "[TESTS] OpenVino OKAY \n";
     }
 #endif
 
-cout << "[TESTS] Cuda OKAY \n";
+cout << "[TESTS] Cuda PASSED \n";
 
 #ifdef ENABLE_SYCL
     if(!test_sycl(A,B,C,M,N,K)){
@@ -150,7 +153,7 @@ cout << "[TESTS] Cuda OKAY \n";
         exit(EXIT_FAILURE);
     }
 #endif
-cout << "[TESTS] Sycl OKAY \n";
+cout << "[TESTS] Sycl PASSED \n";
 cout << "[TESTS] ---------------------------------------- \n";
 
     delete[] A;

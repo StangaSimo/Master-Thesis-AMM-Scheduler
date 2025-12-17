@@ -41,6 +41,10 @@ CMakeFiles/scheduler.dir/main.cpp.o: /home/simo/Documents/j/master-thesis/am_sch
   /usr/include/c++/15/bits/exception.h \
   /usr/include/c++/15/bits/exception_defines.h \
   /usr/include/c++/15/bits/exception_ptr.h \
+  /usr/include/c++/15/bits/fs_dir.h \
+  /usr/include/c++/15/bits/fs_fwd.h \
+  /usr/include/c++/15/bits/fs_ops.h \
+  /usr/include/c++/15/bits/fs_path.h \
   /usr/include/c++/15/bits/functexcept.h \
   /usr/include/c++/15/bits/functional_hash.h \
   /usr/include/c++/15/bits/hash_bytes.h \
@@ -110,6 +114,7 @@ CMakeFiles/scheduler.dir/main.cpp.o: /home/simo/Documents/j/master-thesis/am_sch
   /usr/include/c++/15/chrono \
   /usr/include/c++/15/clocale \
   /usr/include/c++/15/cmath \
+  /usr/include/c++/15/codecvt \
   /usr/include/c++/15/compare \
   /usr/include/c++/15/concepts \
   /usr/include/c++/15/cstddef \
@@ -129,6 +134,7 @@ CMakeFiles/scheduler.dir/main.cpp.o: /home/simo/Documents/j/master-thesis/am_sch
   /usr/include/c++/15/ext/numeric_traits.h \
   /usr/include/c++/15/ext/string_conversions.h \
   /usr/include/c++/15/ext/type_traits.h \
+  /usr/include/c++/15/filesystem \
   /usr/include/c++/15/initializer_list \
   /usr/include/c++/15/iomanip \
   /usr/include/c++/15/ios \
@@ -478,8 +484,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/x86_64-linux-gnu/bits/unistd_ext.h:
 
-/usr/include/x86_64-linux-gnu/bits/unistd.h:
-
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
@@ -502,17 +506,13 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
 
-/usr/include/c++/15/ext/numeric_traits.h:
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
-/usr/include/c++/15/bits/quoted_string.h:
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
-/usr/include/c++/15/ext/atomicity.h:
+/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
-/usr/include/c++/15/ext/alloc_traits.h:
-
-/usr/include/linux/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/select2.h:
+/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
 
 /usr/include/c++/15/exception:
 
@@ -522,13 +522,7 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/cwchar:
 
-/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_stats.so.5:
-
-/usr/include/c++/15/bits/stl_function.h:
-
 /usr/include/c++/15/cstdlib:
-
-/usr/include/c++/15/bits/requires_hosted.h:
 
 /usr/include/c++/15/bits/locale_facets.h:
 
@@ -574,13 +568,9 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/features-time64.h:
 
-/usr/include/c++/15/bits/string_view.tcc:
-
 /usr/include/c++/15/bits/streambuf_iterator.h:
 
 /usr/include/c++/15/tr1/exp_integral.tcc:
-
-/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
 /home/simo/Documents/j/master-thesis/am_scheduler/scheduler/tests.hpp:
 
@@ -588,7 +578,13 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/cctype:
 
+/usr/include/c++/15/ext/atomicity.h:
+
 /usr/include/c++/15/bits/sstream.tcc:
+
+/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
+
+/usr/include/c++/15/codecvt:
 
 /usr/include/c++/15/bits/refwrap.h:
 
@@ -598,6 +594,10 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/range_access.h:
 
+/usr/include/c++/15/bits/quoted_string.h:
+
+/usr/include/c++/15/ext/numeric_traits.h:
+
 /usr/include/c++/15/debug/debug.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so:
@@ -605,6 +605,10 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 /usr/include/c++/15/bits/stl_construct.h:
 
 /usr/include/c++/15/bits/ptr_traits.h:
+
+/usr/include/c++/15/bits/requires_hosted.h:
+
+/usr/include/c++/15/filesystem:
 
 /usr/include/x86_64-linux-gnu/bits/stdio.h:
 
@@ -618,7 +622,31 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/ostream.tcc:
 
-/usr/include/c++/15/ext/string_conversions.h:
+/usr/include/x86_64-linux-gnu/c++/15/bits/os_defines.h:
+
+/usr/include/c++/15/bits/new_allocator.h:
+
+/usr/include/c++/15/bits/uses_allocator.h:
+
+/usr/include/x86_64-linux-gnu/c++/15/bits/ctype_inline.h:
+
+/usr/include/c++/15/bits/move.h:
+
+/usr/include/c++/15/bits/stringfwd.h:
+
+/usr/include/c++/15/bits/fs_path.h:
+
+/usr/include/c++/15/bits/shared_ptr.h:
+
+/lib/x86_64-linux-gnu/libcublasLt.so.12:
+
+/usr/include/c++/15/bits/memoryfwd.h:
+
+/usr/lib/x86_64-linux-gnu/libm.so:
+
+/usr/include/asm-generic/int-ll64.h:
+
+/usr/include/c++/15/tr1/beta_function.tcc:
 
 /usr/include/c++/15/cmath:
 
@@ -634,12 +662,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/concept_check.h:
 
-/usr/include/c++/15/bits/uses_allocator.h:
-
-/usr/include/x86_64-linux-gnu/c++/15/bits/os_defines.h:
-
-/usr/include/c++/15/bits/new_allocator.h:
-
 /usr/include/c++/15/tr1/modified_bessel_func.tcc:
 
 /usr/include/endian.h:
@@ -649,6 +671,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
 /usr/include/asm-generic/errno.h:
+
+/usr/include/c++/15/bits/string_view.tcc:
 
 /usr/include/c++/15/bits/std_abs.h:
 
@@ -672,10 +696,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/tuple:
 
-/usr/include/c++/15/backward/auto_ptr.h:
-
-/usr/include/c++/15/bits/exception_defines.h:
-
 /usr/include/c++/15/bits/predefined_ops.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
@@ -687,10 +707,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 /home/simo/Documents/j/master-thesis/am_scheduler/scheduler/main.cpp:
 
 /usr/include/asm-generic/errno-base.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
-
-/usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
 
 /home/simo/Documents/j/master-thesis/am_scheduler/cuda/cuda_wrapper.h:
 
@@ -712,15 +728,19 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/atomic_base.h:
 
-/usr/include/c++/15/bits/shared_ptr.h:
-
-/usr/include/c++/15/bits/stringfwd.h:
-
 /usr/include/c++/15/bits/chrono.h:
+
+/usr/include/c++/15/bits/nested_exception.h:
+
+/usr/include/linux/sched/types.h:
 
 /usr/include/c++/15/bits/shared_ptr_base.h:
 
 /usr/include/c++/15/bits/stl_uninitialized.h:
+
+/usr/include/x86_64-linux-gnu/bits/unistd.h:
+
+/usr/include/c++/15/bits/fs_ops.h:
 
 /usr/include/x86_64-linux-gnu/asm/errno.h:
 
@@ -728,19 +748,13 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /home/simo/Documents/j/master-thesis/am_scheduler/scheduler/scheduler.hpp:
 
-/lib/x86_64-linux-gnu/libcublasLt.so.12:
-
-/usr/include/c++/15/bits/memoryfwd.h:
-
-/usr/lib/x86_64-linux-gnu/libm.so:
-
-/usr/include/asm-generic/int-ll64.h:
-
-/usr/include/c++/15/tr1/beta_function.tcc:
-
 /usr/include/c++/15/bits/align.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
+
+/usr/include/c++/15/bits/exception_defines.h:
+
+/usr/include/c++/15/backward/auto_ptr.h:
 
 /usr/include/alloca.h:
 
@@ -756,17 +770,19 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/char_traits.h:
 
+/usr/include/c++/15/bits/codecvt.h:
+
 /usr/include/c++/15/bits/invoke.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h:
 
 /usr/include/c++/15/bits/locale_facets_nonio.tcc:
 
-/usr/include/c++/15/bits/codecvt.h:
+/opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_stats.so.5:
 
-/usr/include/c++/15/ext/concurrence.h:
+/usr/include/c++/15/bits/stl_function.h:
 
-/usr/include/c++/15/bits/exception_ptr.h:
+/usr/include/c++/15/bits/fs_dir.h:
 
 /usr/include/x86_64-linux-gnu/c++/15/bits/cpu_defines.h:
 
@@ -830,10 +846,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/iomanip:
 
-/usr/include/linux/sched/types.h:
-
-/usr/include/c++/15/bits/nested_exception.h:
-
 /usr/include/c++/15/bits/locale_classes.tcc:
 
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
@@ -860,11 +872,27 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/bits/ostream_insert.h:
 
+/usr/include/sched.h:
+
+/usr/include/wctype.h:
+
 /usr/include/x86_64-linux-gnu/bits/errno.h:
 
-/usr/include/x86_64-linux-gnu/c++/15/bits/ctype_inline.h:
+/usr/include/c++/15/ext/alloc_traits.h:
 
-/usr/include/c++/15/bits/move.h:
+/usr/include/linux/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/select2.h:
+
+/usr/include/c++/15/bits/exception_ptr.h:
+
+/usr/include/c++/15/ext/concurrence.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
+
+/usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
+
+/usr/include/c++/15/ext/string_conversions.h:
 
 /lib/x86_64-linux-gnu/libpthread.so.0:
 
@@ -972,6 +1000,8 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/c++/15/tr1/special_function_util.h:
 
+/usr/include/c++/15/bits/fs_fwd.h:
+
 /usr/include/c++/15/cstddef:
 
 /usr/include/errno.h:
@@ -1001,10 +1031,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
 /usr/include/math.h:
-
-/usr/include/wctype.h:
-
-/usr/include/sched.h:
 
 /usr/include/stdio.h:
 
@@ -1082,8 +1108,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/x86_64-linux-gnu/bits/setjmp.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
-
 /opt/intel/oneapi/2025.3/lib/intel64/gcc4.8/libmkl_sycl_rng.so.5:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-least.h:
@@ -1098,8 +1122,6 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
-
 /usr/include/c++/15/tr1/poly_hermite.tcc:
 
 /usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
@@ -1109,7 +1131,3 @@ CMakeFiles/scheduler.dir/main.cpp.o:
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
 
 /usr/include/x86_64-linux-gnu/bits/time64.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
