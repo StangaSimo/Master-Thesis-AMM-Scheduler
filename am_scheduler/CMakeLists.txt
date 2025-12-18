@@ -32,7 +32,7 @@ endif()
 
 # SYCL 
 if(USE_SYCL)
-    message(STATUS "Backend SYCL: ON")
+    message(STATUS "SYCL Backend: ON")
     ExternalProject_Add(build_sycl
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/sycl
         CMAKE_ARGS
@@ -43,11 +43,13 @@ if(USE_SYCL)
             #BUILD_ALWAYS 1
     )
     list(APPEND SCHEDULER_DEPS build_sycl)
+else()
+    message(STATUS "SYCL Backend: OFF")
 endif()
 
 # OPENVINO
 if(USE_OPENVINO)
-    message(STATUS "Backend OpenVINO: ON")
+    message(STATUS "OPENVINO Backend: ON")
     ExternalProject_Add(build_openvino
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/openvino
         CMAKE_ARGS
@@ -57,6 +59,8 @@ if(USE_OPENVINO)
             #BUILD_ALWAYS 1
     )
     list(APPEND SCHEDULER_DEPS build_openvino)
+else()
+    message(STATUS "OPENVINO Backend: OFF")
 endif()
 
 # scheduler

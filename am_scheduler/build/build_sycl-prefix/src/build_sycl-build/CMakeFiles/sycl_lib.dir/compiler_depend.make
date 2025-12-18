@@ -693,8 +693,8 @@ libsycl_lib.so: /lib/x86_64-linux-gnu/crti.o \
   /opt/intel/oneapi/2025.3/lib/libmkl_sycl_stats.so \
   /opt/intel/oneapi/2025.3/lib/libmkl_sycl_vm.so \
   /opt/intel/oneapi/2025.3/lib/libmkl_tbb_thread.so \
-  /tmp/icpx-28d0e130f0/libsycl_lib-6af51f.o \
-  /tmp/icpx-28d0e130f0/runner-49ab21.o \
+  /tmp/icpx-9bcd58c9ba/libsycl_lib-a160db.o \
+  /tmp/icpx-9bcd58c9ba/runner-86208c.o \
   /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o \
   /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o \
   /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a \
@@ -713,7 +713,7 @@ libsycl_lib.so: /lib/x86_64-linux-gnu/crti.o \
 
 /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o:
 
-/tmp/icpx-28d0e130f0/runner-49ab21.o:
+/tmp/icpx-9bcd58c9ba/libsycl_lib-a160db.o:
 
 /opt/intel/oneapi/2025.3/lib/libmkl_sycl_vm.so:
 
@@ -1141,8 +1141,6 @@ libsycl_lib.so: /lib/x86_64-linux-gnu/crti.o \
 
 /opt/intel/oneapi/2025.3/include/sycl/ext/oneapi/experimental/prefetch.hpp:
 
-/tmp/icpx-28d0e130f0/libsycl_lib-6af51f.o:
-
 /opt/intel/oneapi/2025.3/include/sycl/info/ext_intel_device_traits.def:
 
 /opt/intel/oneapi/2025.3/include/sycl/detail/kernel_name_str_t.hpp:
@@ -1378,6 +1376,8 @@ libsycl_lib.so: /lib/x86_64-linux-gnu/crti.o \
 /opt/intel/oneapi/2025.3/include/sycl/detail/core.hpp:
 
 /opt/intel/oneapi/2025.3/include/sycl/ext/oneapi/experimental/reduction_properties.hpp:
+
+/tmp/icpx-9bcd58c9ba/runner-86208c.o:
 
 /opt/intel/oneapi/2025.3/include/sycl/info/aspects.def:
 

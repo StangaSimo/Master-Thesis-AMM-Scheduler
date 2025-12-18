@@ -24,6 +24,7 @@ void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
         CHECK_CUDA(cudaMemcpy(d_C, C, M * N * sizeof(float), cudaMemcpyHostToDevice));
         CHECK_CUDA(cudaDeviceSynchronize());
         float alpha = 1.0f, beta = 0.0f;
+
         cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
                     N, M, K, &alpha,
                     d_B, N, d_A, K, &beta, d_C, N);

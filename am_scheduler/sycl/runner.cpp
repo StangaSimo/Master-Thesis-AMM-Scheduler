@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <sycl/sycl.hpp>
 #include <oneapi/mkl/blas.hpp>
 #include <iostream>
@@ -5,8 +6,10 @@
 
 #define ZEROCOPY
 
-static std::unique_ptr<sycl::queue> global_q;
+using namespace std;
 
+static unique_ptr<sycl::queue> global_q;
+    
 void init() {
     try {
         global_q = std::make_unique<sycl::queue>(sycl::gpu_selector_v);
@@ -43,8 +46,8 @@ void sycl_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K) {
         #endif
 
         if (!d_A || !d_B || !d_C) {
-            std::cerr << "[SYCL ERROR] Allocazione memoria fallita!\n";
-            return;
+            cerr << "[SYCL ERROR] Allocazione memoria fallita!\n";
+            exit(EXIT_FAILURE);
         }
 
         q.memcpy(d_A, A, M * K * sizeof(float));

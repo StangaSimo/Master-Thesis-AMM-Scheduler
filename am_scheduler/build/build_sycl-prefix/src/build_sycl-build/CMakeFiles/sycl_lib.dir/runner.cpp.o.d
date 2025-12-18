@@ -1,14 +1,6 @@
 CMakeFiles/sycl_lib.dir/runner.cpp.o: \
   /home/simo/Documents/j/master-thesis/am_scheduler/sycl/runner.cpp \
-  /opt/intel/oneapi/2025.3/include/sycl/sycl.hpp \
-  /opt/intel/oneapi/2025.3/include/sycl/detail/core.hpp \
-  /opt/intel/oneapi/2025.3/include/sycl/accessor.hpp \
-  /opt/intel/oneapi/2025.3/include/sycl/access/access.hpp \
-  /opt/intel/oneapi/2025.3/include/sycl/detail/defines_elementary.hpp \
-  /opt/intel/oneapi/2025.3/include/sycl/buffer.hpp \
-  /opt/intel/oneapi/2025.3/include/sycl/backend_types.hpp \
-  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/ostream \
-  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/requires_hosted.h \
+  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/cstdlib \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/c++config.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/os_defines.h \
   /usr/include/features.h /usr/include/features-time64.h \
@@ -20,7 +12,56 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o: \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/cpu_defines.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/pstl/pstl_config.h \
-  /opt/intel/oneapi/2025.3/include/tbb/tbb.h \
+  /opt/intel/oneapi/2025.3/include/tbb/tbb.h /usr/include/stdlib.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/stddef.h \
+  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stddef_size_t.h \
+  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stddef_wchar_t.h \
+  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stddef_null.h \
+  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/x86_64-linux-gnu/sys/types.h \
+  /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+  /usr/include/x86_64-linux-gnu/bits/time64.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
+  /usr/include/x86_64-linux-gnu/bits/endian.h \
+  /usr/include/x86_64-linux-gnu/bits/endianness.h \
+  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
+  /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
+  /usr/include/x86_64-linux-gnu/sys/select.h \
+  /usr/include/x86_64-linux-gnu/bits/select.h \
+  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
+  /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
+  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
+  /usr/include/alloca.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_abs.h \
+  /opt/intel/oneapi/2025.3/include/sycl/sycl.hpp \
+  /opt/intel/oneapi/2025.3/include/sycl/detail/core.hpp \
+  /opt/intel/oneapi/2025.3/include/sycl/accessor.hpp \
+  /opt/intel/oneapi/2025.3/include/sycl/access/access.hpp \
+  /opt/intel/oneapi/2025.3/include/sycl/detail/defines_elementary.hpp \
+  /opt/intel/oneapi/2025.3/include/sycl/buffer.hpp \
+  /opt/intel/oneapi/2025.3/include/sycl/backend_types.hpp \
+  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/ostream \
+  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/requires_hosted.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/ostream.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/ios \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/iosfwd \
@@ -29,13 +70,6 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o: \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/postypes.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/cwchar \
   /usr/include/wchar.h \
-  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
-  /usr/include/x86_64-linux-gnu/bits/floatn.h \
-  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
-  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/stddef.h \
-  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stddef_size_t.h \
-  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stddef_wchar_t.h \
-  /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stddef_null.h \
   /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/stdarg.h \
   /opt/intel/oneapi/compiler/2025.3/lib/clang/21/include/__stdarg___gnuc_va_list.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
@@ -44,8 +78,6 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o: \
   /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/exception \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/exception.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/version.h \
@@ -69,18 +101,12 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o: \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/clocale \
   /usr/include/locale.h /usr/include/x86_64-linux-gnu/bits/locale.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/cctype \
-  /usr/include/ctype.h /usr/include/x86_64-linux-gnu/bits/types.h \
-  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
-  /usr/include/x86_64-linux-gnu/bits/time64.h \
-  /usr/include/x86_64-linux-gnu/bits/endian.h \
-  /usr/include/x86_64-linux-gnu/bits/endianness.h \
+  /usr/include/ctype.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/ios_base.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/ext/atomicity.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/gthr.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/gthr-default.h \
   /usr/include/pthread.h /usr/include/sched.h \
-  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
   /usr/include/x86_64-linux-gnu/bits/sched.h \
   /usr/include/linux/sched/types.h /usr/include/linux/types.h \
   /usr/include/x86_64-linux-gnu/asm/types.h \
@@ -95,20 +121,9 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o: \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h /usr/include/time.h \
   /usr/include/x86_64-linux-gnu/bits/time.h \
   /usr/include/x86_64-linux-gnu/bits/timex.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
-  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
-  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
-  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
-  /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
-  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
-  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
-  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
-  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/x86_64-linux-gnu/bits/setjmp.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
   /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15/bits/atomic_word.h \
@@ -151,20 +166,6 @@ CMakeFiles/sycl_lib.dir/runner.cpp.o: \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/functional_hash.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/string_view.tcc \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/ext/string_conversions.h \
-  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/cstdlib \
-  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
-  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
-  /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
-  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
-  /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
-  /usr/include/x86_64-linux-gnu/sys/select.h \
-  /usr/include/x86_64-linux-gnu/bits/select.h \
-  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
-  /usr/include/alloca.h \
-  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
-  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
-  /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/bits/std_abs.h \
   /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/cstdio \
   /usr/include/stdio.h \
   /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \

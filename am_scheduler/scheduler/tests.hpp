@@ -3,6 +3,7 @@
 
 /* this is only for testing pourpuse of the dynamic libraries */
 
+#include "sharedbuffer.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <vector>
@@ -44,7 +45,7 @@ inline void init_32bit(float* A, float* B, float* C, int M, int N, int K) {
         C[i] = 0.0f;
 }
 
-inline bool compare_cpu_32bit(float* A, float* B, float* C, int M, int N, int K) {
+inline bool compare_cpu_float(float* A, float* B, float* C, int M, int N, int K) {
     vector<float> C_cpu(M * N, 0.0f);
 
     /* C = A * B */
@@ -101,21 +102,21 @@ inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
     ov_init();  
     ov_gemm_32bit(A,B,C,M,N,K);
     ov_free();  
-    return compare_cpu_32bit(A,B,C,M,N,K);
+    return compare_cpu_float(A,B,C,M,N,K);
 }
 
 inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
     cuda_init(M,N,K);  
     cuda_gemm_32bit(A,B,C,M,N,K);
     cuda_free();
-    return compare_cpu_32bit(A,B,C,M,N,K);
+    return compare_cpu_float(A,B,C,M,N,K);
 }
 
 inline bool test_sycl(float* A, float* B, float* C, int M, int N, int K) {
     sycl_init();  
     sycl_gemm_32bit(A,B,C,M,N,K);
     sycl_free();  
-    return compare_cpu_32bit(A,B,C,M,N,K);
+    return compare_cpu_float(A,B,C,M,N,K);
 }
 
 inline void test_accellerators() {
@@ -129,7 +130,7 @@ inline void test_accellerators() {
 
     init_32bit(A,B,C,M,N,K);
 
-cout << "[TESTS] ---------------------------------------- \n";
+cout << "\n-------------------- [TESTS] ------------------------- \n" ;
 #ifdef ENABLE_OPENVINO
     if(!test_openvino(A,B,C,M,N,K)){
         cout << "[TESTS] Openvino Error\n";
@@ -154,7 +155,7 @@ cout << "[TESTS] Cuda PASSED \n";
     }
 #endif
 cout << "[TESTS] Sycl PASSED \n";
-cout << "[TESTS] ---------------------------------------- \n";
+cout << "\n-------------------- [TESTS] ------------------------- \n" ;
 
     delete[] A;
     delete[] B;
@@ -163,98 +164,69 @@ cout << "[TESTS] ---------------------------------------- \n";
 #endif
 
 /***************************** helper test for main ***************************/
-inline task* init_tasks_float(size_t n_task, int m, int n, int k) {
-    
-    task* array_task = new task[n_task];
-    random_device rd;
-    mt19937 gen(rd());
-    
-    uniform_real_distribution<float> dis(-1.0f, 1.0f);
 
-    for (int i = 0; i < n_task; i++) {
-        array_task[i].M = m;
-        array_task[i].N = n;
-        array_task[i].K = k;
-        array_task[i].type = 1; // float
 
-        array_task[i].A = new float[m * k]; 
-        array_task[i].B = new float[k * n];
-        array_task[i].C = new float[m * n];
+inline void test_compare_task(task* array_task, size_t n_task, Type t) {
+    if (t == Type::FLOAT){
+        for (int i = 0; i < n_task; i++) {
 
-        float *A = (float*)array_task[i].A;
-        float *B = (float*)array_task[i].B;
-        float *C = (float*)array_task[i].C;
+            float *A = (float*)array_task[i].A;
+            float *B = (float*)array_task[i].B;
+            float *C = (float*)array_task[i].C;
 
-        for (int j = 0; j < m * k; ++j) 
-            A[j] = dis(gen);
-
-        for (int j = 0; j < k * n; ++j) 
-            B[j] = dis(gen);
-
-        for (int j = 0; j < m * n; ++j) 
-            C[j] = 0;
-
-    }
-
-    return array_task;
-}
-
-inline void test_compare_task_float(task* array_task, size_t n_task) {
-    for (int i = 0; i < n_task; i++) {
-
-        float *A = (float*)array_task[i].A;
-        float *B = (float*)array_task[i].B;
-        float *C = (float*)array_task[i].C;
- 
-        compare_cpu_32bit(A, B, C, array_task[i].M, array_task[i].N, array_task[i].K);
+            compare_cpu_float(A, B, C, array_task[i].M, array_task[i].N, array_task[i].K);
+        }
     }
 }
 
-inline void clean_tasks_float(task* array_task, size_t n_task) {
-    if (array_task == nullptr) return;
 
-    for (int i = 0; i < n_task; i++) {
-        delete[] static_cast<float*>(array_task[i].A);
-        delete[] static_cast<float*>(array_task[i].B);
-        delete[] static_cast<float*>(array_task[i].C);
-    }
-
-    delete[] array_task;
-}
 
 inline void print_performance_stats(task* tasks, size_t num_tasks) {
     if (tasks == nullptr || num_tasks == 0) {
-        std::cout << "Nessun task da analizzare." << std::endl;
-        return;
+        std::cout << "[ERROR] print_performance_stats" << std::endl;
+        exit(EXIT_FAILURE);
     }
 
     auto min_start = tasks[0].start_time;
     auto max_end = tasks[0].end_time;
     
+    std::chrono::duration<double, std::milli> first_dur = tasks[0].end_time - tasks[0].start_time;
+    double min_latency_ms = first_dur.count();
+    double max_latency_ms = first_dur.count();
+
     double total_latency_sum_ms = 0.0;
 
     for (size_t i = 0; i < num_tasks; ++i) {
         if (tasks[i].start_time < min_start) 
             min_start = tasks[i].start_time;
-       
-
+        
         if (tasks[i].end_time > max_end) 
             max_end = tasks[i].end_time;
         
         std::chrono::duration<double, std::milli> duration = tasks[i].end_time - tasks[i].start_time;
-        total_latency_sum_ms += duration.count();
+        double current_latency = duration.count();
+        
+        total_latency_sum_ms += current_latency;
+
+        if (current_latency < min_latency_ms) {
+            min_latency_ms = current_latency;
+        }
+        if (current_latency > max_latency_ms) {
+            max_latency_ms = current_latency;
+        }
     }
 
     std::chrono::duration<double, std::milli> global_span = max_end - min_start;
-
     double average_latency_ms = total_latency_sum_ms / num_tasks;
 
-    std::cout << "=== Performance Report ===" << std::endl;
+    std::cout << "\n";
+    std::cout << "======= Performance Report =======" << std::endl;
     std::cout << "Number of Matrix: " << num_tasks << std::endl;
-    std::cout << "--------------------------" << std::endl;
-    std::cout << "Global Span (Max End - Min Start): " << global_span.count() << " ms" << std::endl;
-    std::cout << "AVG latency: " << average_latency_ms << " ms" << std::endl;
-    std::cout << "==========================" << std::endl;
+    std::cout << "Global Span:      " << global_span.count() << " ms" << std::endl;
+    std::cout << "AVG latency:      " << average_latency_ms << " ms" << std::endl;
+    std::cout << "MIN latency:      " << min_latency_ms << " ms" << std::endl;
+    std::cout << "MAX latency:      " << max_latency_ms << " ms" << std::endl;
+    std::cout << "==================================" << std::endl;
+    std::cout << "\n";
 }
-
 
