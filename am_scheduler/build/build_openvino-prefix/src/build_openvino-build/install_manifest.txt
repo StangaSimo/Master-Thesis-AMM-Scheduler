@@ -1,2 +1,0 @@
-/home/simo/Documents/j/master-thesis/am_scheduler/bin/lib/libov_lib.so
-/home/simo/Documents/j/master-thesis/am_scheduler/bin/include/ov_wrapper.h

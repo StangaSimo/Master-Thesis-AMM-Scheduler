@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_cuda-prefix/src/build_cuda-build",
-  "command": "/usr/bin/nvcc -forward-unknown-to-host-compiler -Dcuda_lib_EXPORTS  -O3 -DNDEBUG -std=c++17 -Xcompiler=-fPIC -x cu -c /home/simo/Documents/j/master-thesis/am_scheduler/cuda/runner.cu -o CMakeFiles/cuda_lib.dir/runner.cu.o",
-  "file": "/home/simo/Documents/j/master-thesis/am_scheduler/cuda/runner.cu",
-  "output": "CMakeFiles/cuda_lib.dir/runner.cu.o"
-}
-]

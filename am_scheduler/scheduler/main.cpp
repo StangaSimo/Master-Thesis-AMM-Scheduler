@@ -43,9 +43,10 @@
 
 int main() {
 
-    /* testing purpuse */
+    //cout << "\n-------------------- [TESTS] ------------------------- \n" ;
     test_accellerators();
 
+    cout << "\n-------------------- [MAIN] ------------------------- \n" ;
     std::cout << "[MAIN] Tests Done\n";
     std::cout << "[MAIN] Init Scheduler\n";
 
@@ -58,7 +59,7 @@ int main() {
 
     for (int i=0; i<2; i++) {
 
-        cout << "\n-------------------- [MAIN] ------------------------- \n" ;
+        cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
 
         if (i == 0) {l = Logic::CUDA_ONLY;}
         if (i == 1) {l = Logic::ROUND_ROBIN;}

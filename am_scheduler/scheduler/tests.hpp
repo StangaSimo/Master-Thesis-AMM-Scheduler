@@ -130,7 +130,6 @@ inline void test_accellerators() {
 
     init_32bit(A,B,C,M,N,K);
 
-cout << "\n-------------------- [TESTS] ------------------------- \n" ;
 #ifdef ENABLE_OPENVINO
     if(!test_openvino(A,B,C,M,N,K)){
         cout << "[TESTS] Openvino Error\n";
@@ -155,7 +154,6 @@ cout << "[TESTS] Cuda PASSED \n";
     }
 #endif
 cout << "[TESTS] Sycl PASSED \n";
-cout << "\n-------------------- [TESTS] ------------------------- \n" ;
 
     delete[] A;
     delete[] B;

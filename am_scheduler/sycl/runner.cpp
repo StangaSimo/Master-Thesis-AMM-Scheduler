@@ -15,7 +15,7 @@ void init() {
         global_q = std::make_unique<sycl::queue>(sycl::gpu_selector_v);
         
         auto dev = global_q->get_device();
-        std::cout << "[SYCL] Device: " << dev.get_info<sycl::info::device::name>() << "\n";
+        //std::cout << "[SYCL] Device: " << dev.get_info<sycl::info::device::name>() << "\n";
         
         global_q->throw_asynchronous();
         

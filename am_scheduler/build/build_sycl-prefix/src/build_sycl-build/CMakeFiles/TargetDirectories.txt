@@ -1,7 +1,0 @@
-/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/sycl_lib.dir
-/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/edit_cache.dir
-/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/rebuild_cache.dir
-/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/list_install_components.dir
-/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/install.dir
-/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/install/local.dir
-/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build/CMakeFiles/install/strip.dir

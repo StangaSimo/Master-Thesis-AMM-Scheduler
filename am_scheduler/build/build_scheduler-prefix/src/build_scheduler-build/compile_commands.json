@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_scheduler-prefix/src/build_scheduler-build",
-  "command": "/usr/bin/c++ -DENABLE_CUDA -DENABLE_OPENVINO -DENABLE_SYCL -I/home/simo/Documents/j/master-thesis/am_scheduler/cuda -I/home/simo/Documents/j/master-thesis/am_scheduler/sycl -I/home/simo/Documents/j/master-thesis/am_scheduler/openvino -O3 -DNDEBUG -o CMakeFiles/scheduler.dir/main.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/scheduler/main.cpp",
-  "file": "/home/simo/Documents/j/master-thesis/am_scheduler/scheduler/main.cpp",
-  "output": "CMakeFiles/scheduler.dir/main.cpp.o"
-}
-]

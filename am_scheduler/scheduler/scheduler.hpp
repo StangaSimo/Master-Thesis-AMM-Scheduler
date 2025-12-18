@@ -22,6 +22,8 @@
 #include <unistd.h>
 #include <vector>
 
+#include <fstream>
+
 
 using namespace std;
 
@@ -42,205 +44,53 @@ enum BT : size_t { /* backend_type */
     COUNT,
 };
 
+/******* Prototypes ********/
+inline void handle_task(BT backend_type, task *task);
+inline void print_logic(Logic l); 
+inline string get_benchmark_filename(BT bt, int type); 
+inline void init_acc(BT backend_type); 
+inline void free_acc(BT backend_type); 
+inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K);
+inline void benchmark(BT bt, Type type, string filename);
+inline void handle_task(BT backend_type, task *task);
+
 /* for simplicity this is the buffer pointer */
 using SharedBuffer_T = array<unique_ptr<SharedBuffer>, BT::COUNT>;
-
-inline void print_logic(Logic l) {
-    switch (l) {
-    case Logic::ROUND_ROBIN:
-        cout << "[SCHEDULER] Started with ROUND_ROBIN logic \n";
-        break;
-    case Logic::CUDA_ONLY:
-        cout << "[SCHEDULER] Started with CUDA_ONLY logic \n";
-        break;
-    case Logic::AUTO_PARTITIONING:
-        cout << "[SCHEDULER] Started with AUTO_PARTITIONING logic \n";
-        break;
-    default:
-        cout << "[SCHEDULER] ERROR logic \n";
-        exit(EXIT_FAILURE);
-    }
-}
-
-inline string get_benchmark_filename(BT bt, int type) {
-    string base_path = "../../bin/csv/";
-    
-    if (!filesystem::exists(base_path)) {
-        filesystem::create_directories(base_path);
-    }
-
-    string acc_name;
-    switch (bt) {
-        case BT::CUDA:
-            acc_name = "CUDA"; break;
-        case BT::SYCL:
-            acc_name = "SYCL"; break;
-        case BT::OPENVINO: 
-            acc_name = "OPENVINO"; break;
-        default:
-            cout << "[SCHEDULER] ERROR get_benchmark_filename \n";
-            exit(EXIT_FAILURE);
-    }
-
-    string type_name;
-    switch (type) {
-        case 1: type_name = "FP32"; break;
-        case 2: type_name = "FP16"; break; 
-        case 3: type_name = "INT8"; break;
-        default:
-            cout << "[SCHEDULER] ERROR get_benchmark_filename \n";
-            exit(EXIT_FAILURE);
-    }
-
-    return base_path + acc_name + "_" + type_name + ".csv";
-}
-
-inline void change_status(BT backend_type, bool onoff) {
-    switch (backend_type) {
-    case BT::CUDA:
-        if (onoff) {
-            cout << "[SCHEDULER] CUDA Thread Alive\n";
-            cuda_init(1024,1024,1024); //TODO 
-        } else {
-            cout << "[SCHEDULER] CUDA Thread Shutting Down\n";
-            cuda_free();
-        }
-        break;    
-        
-    case BT::SYCL:
-        if (onoff) {
-            sycl_init();
-            cout << "[SCHEDULER] SYCL Thread Alive\n";
-        } else {
-            sycl_free();
-            cout << "[SCHEDULER] SYCL Thread Shutting Down\n";
-        }
-        break;    
-    
-    case BT::OPENVINO:
-        if (onoff) {
-            ov_init();
-            cout << "[SCHEDULER] OPENVINO Thread Alive\n";
-        } else {
-            ov_free();
-            cout << "[SCHEDULER] OPENVINO Thread Shutting Down\n";
-        }
-        break;    
-
-    case BT::CPU:
-        if (onoff)
-            cout << "[SCHEDULER] CPU Thread Alive\n";
-        else 
-            cout << "[SCHEDULER] CPU Thread Shutting Down\n";
-        break;    
-
-    default: 
-        cout << "[SCHEDULER] ERROR Change Status\n";
-        exit(EXIT_FAILURE);
-    }
-}
-
-inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K) {
-    int step = 64; 
-    
-    chrono::high_resolution_clock::time_point start_time;
-    chrono::high_resolution_clock::time_point end_time;
-
-    const int N_WARMUP = 3;
-    const int N_RUNS = 20;
-
-    double total_ms = 0.0;
-    task* task_array = init_tasks(1, M, N, K, type);
-
-    switch (bt) {
-    case BT::CUDA:
-        if (type == 1)
-        //cuda_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
-        break;    
-        
-    case BT::SYCL:
-        //sycl_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
-        break;    
-    
-    case BT::OPENVINO:
-        //ov_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
-        break;    
-
-    default: 
-        cout << "[SCHEDULER] ERROR benchmark_acc \n";
-        exit(EXIT_FAILURE);
-    }
-
-}
-
-inline void benchmark(BT bt, Type type, string filename) {
-    int step = 64;
-    for (int size = 32; size <= 4096; size += step) {
-        benchmark_acc(bt, type, filename, size, size, size);
-    }
-    cout << "[SCHEDULER] Benchmark ===\n";
-    cout << "Results saved in ../../bin/csv/" << filename << "\n";
-}
-
-/* task handler for the workers, choose the right backend_type */
-inline void handle_task(BT backend_type, task *task) {
-    switch (backend_type) {
-    case BT::CUDA:
-        cuda_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
-        break;    
-        
-    case BT::SYCL:
-        sycl_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
-        break;    
-    
-    case BT::OPENVINO:
-        ov_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
-        break;    
-
-    //case BT::CPU:
-    //    // TODO
-    //    break;    
-
-    default: 
-        cout << "[SCHEDULER] ERROR handle task\n";
-        exit(EXIT_FAILURE);
-    }
-
-    task->end_time = chrono::high_resolution_clock::now();
-}
 
 /****************************** Scheduler Class ************************************/
 
 class AMScheduler {
     private:
+
         /* atomic for shutting down threads */
         atomic<bool> threads_keep_running;
+
         /* shared buffers beetween threads */
         SharedBuffer_T shared_buffers;
+
         /* array of threads, one for each accellerator */
         array<unique_ptr<thread>, BT::COUNT> threads; 
+
         /* type of scheduler strategy to use */
         Logic strategy;
+
         /* backend_type vector for handling the accellerators */
         vector<BT> bts; 
 
 /**********************************  Worker  ***********************************/
 
         void worker_thread(BT bt, SharedBuffer *buffer) { 
-            change_status(bt, true);
             task* task = nullptr;
 
             while(threads_keep_running) { 
 
                 /* blocking get for max 50ms */
                 task = buffer->get();
-
                 /* if there isn't a task we check if we have to shutdown */
                 if (!task) {continue;}
 
                 handle_task(bt, task);
             }
-            change_status(bt, false);
         } 
 
 /**********************************  Coordinator  ***********************************/
@@ -291,13 +141,16 @@ class AMScheduler {
 
         void init_threads() {
 
-#ifdef ENABLE_CUDA
-            bts.push_back(BT::CUDA);
-#endif
 #ifdef ENABLE_OPENVINO
+            init_acc(BT::OPENVINO); /* have to init here and not in threads */
             bts.push_back(BT::OPENVINO);
 #endif
+#ifdef ENABLE_CUDA
+            init_acc(BT::CUDA);
+            bts.push_back(BT::CUDA);
+#endif
 #ifdef ENABLE_SYCL
+            init_acc(BT::SYCL);
             bts.push_back(BT::SYCL);
 #endif
             for (BT i : bts) {
@@ -308,7 +161,7 @@ class AMScheduler {
 
             if (bts.size() == 0) {cout << "[SCHEDULER] ATTENTION, only CPU up\n";}
 
-            //bts.push_back(BT::CPU); TODO remove this when implementing the cpus 
+            //bts.push_back(BT::CPU); TODO remove this when implementing the cpus and add init
             /* default CPU thread */
             shared_buffers[BT::CPU] = make_unique<SharedBuffer>(BUFFER_LENGHT);
             threads[BT::CPU] = make_unique<thread>(&AMScheduler::worker_thread, this, 
@@ -329,6 +182,11 @@ class AMScheduler {
                     if(thread->joinable())
                         thread->join();
 
+            /* shut down back ends */
+            for (auto i : bts) {
+                free_acc(i);
+            }
+
             cout << "[SCHEDULER] Threads stopped.\n";
         }
 
@@ -338,7 +196,9 @@ class AMScheduler {
             for (BT i : bts) {
                 string filename; 
                 //TODO: maybe more that 1 type 
+                
                 filename = get_benchmark_filename(i, Type::FLOAT);
+                cout << "\n File: " << filename << "\n"; 
                 if (filesystem::exists(filename)){
                      cout << "[SCHEDULER] File: " << filename <<  " opened.\n"; 
                 } else {
@@ -353,18 +213,17 @@ class AMScheduler {
 
     public: 
         /* constructur */
-        AMScheduler(Logic l) : threads_keep_running(true), strategy(l) {
-            print_logic(l);
-            init_threads();            
+        AMScheduler(Logic logic) : threads_keep_running(true), strategy(logic) {
+            print_logic(logic);
             cout << "[SCHEDULER] Threads started.\n";
-            init_benchmarks();            
+            init_threads();            
             cout << "[SCHEDULER] Benchmarks done.\n";
+            init_benchmarks();            
         }
 
         /* destructur, stop the threads*/
         ~AMScheduler() {
             stop_threads();
-            cout << "[SCHEDULER] Destructur complete..\n";
         }
 
         /* just send the tasks to the coordinator */
@@ -398,5 +257,188 @@ class AMScheduler {
             sleep(2); /* wait for unfinished matrix */
         }
 };
+
+/**********************************  Helper Functions ***********************************/
+
+/* benchmark the accellerator and write in the csv*/
+inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K) {
+    chrono::high_resolution_clock::time_point start_time;
+    chrono::high_resolution_clock::time_point end_time;
+    chrono::duration<double, std::milli> duration;
+
+    const int N_WARMUP = 3;
+    const int N_RUNS = 10;
+
+    double total_ms = 0.0;
+
+    /* we simulate a thread */
+    task* task = init_tasks(1, M, N, K, type);
+
+    for (int i = 0; i < N_WARMUP; i++)
+        handle_task(bt, &task[0]);
+
+    for (int i = 0; i < N_RUNS; i++) {
+        start_time = chrono::high_resolution_clock::now();
+        handle_task(bt, task);
+        end_time = chrono::high_resolution_clock::now();
+        duration = end_time - start_time;
+        total_ms += duration.count();
+    }
+
+    clean_tasks(task, 1, type);
+
+
+    double avg_ms = total_ms / N_RUNS;
+    ofstream file(filename, ios::app);
+
+    if (file.is_open()) {
+        if (filesystem::file_size(filename) == 0) {
+            file << "Accelerator,DataType,M,N,K,Avg_Time_ms\n";
+        }
+        
+        string acc_str = (bt == BT::CUDA ? "CUDA" : (bt == BT::SYCL ? "SYCL" : "OPENVINO"));
+        file << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n";
+        
+        cout << "result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n";
+        file.close();
+    } else {
+        cerr << "[SCEDULER] ERROR Cannot open file: " << filename << "\n";
+    }
+}
+
+/* call benchmark_acc */
+inline void benchmark(BT bt, Type type, string filename) {
+
+    int step = 128;
+    for (int size = 32; size <= 4096; size += step) {
+        benchmark_acc(bt, type, filename, size, size, size);
+    }
+
+    cout << "[SCHEDULER] Benchmark ===\n";
+    cout << "Results saved in bin/csv/" << filename << "\n";
+}
+
+/* task handler for the workers, choose the right backend_type */
+inline void handle_task(BT backend_type, task *task) {
+    switch (backend_type) {
+    case BT::CUDA:
+        cuda_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
+        break;    
+        
+    case BT::SYCL:
+        sycl_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
+        break;    
+    
+    case BT::OPENVINO:
+        ov_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
+        break;    
+
+    //case BT::CPU:
+    //    // TODO
+    //    break;    
+
+    default: 
+        cout << "[SCHEDULER] ERROR handle task\n";
+        exit(EXIT_FAILURE);
+    }
+
+    task->end_time = chrono::high_resolution_clock::now();
+}
+
+/* call the init func of the accellerator */
+inline void init_acc(BT backend_type) {
+    switch (backend_type) {
+    case BT::CUDA:
+        cuda_init(4092,4092,4092); //TODO 
+    case BT::SYCL:
+        sycl_init();
+        break;    
+    case BT::OPENVINO:
+        ov_init();
+        break;    
+    case BT::CPU:
+        break;    
+    default: 
+        cout << "[SCHEDULER] ERROR Change Status\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
+
+/* call the init func of the accellerator */
+inline void free_acc(BT backend_type) {
+    switch (backend_type) {
+    case BT::CUDA:
+        cuda_free();
+    case BT::SYCL:
+        sycl_free();
+        break;    
+    case BT::OPENVINO:
+        ov_free();
+        break;    
+    case BT::CPU:
+        break;    
+    default: 
+        cout << "[SCHEDULER] ERROR Change Status\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
+inline void print_logic(Logic l) {
+    string logic;
+    switch (l) {
+        case Logic::ROUND_ROBIN:
+            logic = "ROUND_ROBIN"; break;
+        case Logic::CUDA_ONLY:
+            logic = "CUDA_ONLY"; break;
+        case Logic::AUTO_PARTITIONING:
+            logic = "AUTO_PARTITIONING"; break;
+        default:
+            cout << "[SCHEDULER] ERROR print_logic \n";
+            exit(EXIT_FAILURE);
+    }
+    cout << "[SCHEDULER] Started with " << logic << " logic \n";
+}
+
+/* return the accellerator string name */
+inline string get_acc_string(BT backend_type) {
+    string res;
+    switch (backend_type) {
+        case BT::CUDA:
+            res = "CUDA"; break;
+        case BT::SYCL:
+            res = "SYCL"; break;
+        case BT::OPENVINO: 
+            res = "OPENVINO"; break;
+        default:
+            cout << "[SCHEDULER] ERROR get_acc_string \n";
+            exit(EXIT_FAILURE);
+    }
+    return res;
+}
+
+/* get the right csv filename for each accellerators */
+inline string get_benchmark_filename(BT bt, int type) {
+    string base_path = "bin/csv/";
+    
+    if (!filesystem::exists(base_path)) {
+        filesystem::create_directories(base_path);
+    }
+
+    string acc_name = get_acc_string(bt) ;
+
+    string type_name;
+    switch (type) {
+        case Type::FLOAT: type_name = "FLOAT"; break;
+        case Type::HALF: type_name = "HALF"; break;
+        case Type::UINT8: type_name = "UINT8"; break;
+        default:
+            cout << "[SCHEDULER] ERROR type get_benchmark_filename \n";
+            exit(EXIT_FAILURE);
+    }
+
+    return base_path + acc_name + "_" + type_name + ".csv";
+}
+
 
 #endif

@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build",
-  "command": "/opt/intel/oneapi/2025.3/bin/icpx -Dsycl_lib_EXPORTS -isystem /opt/intel/oneapi/2025.3/include -O3 -DNDEBUG -fPIC -fsycl -DMKL_ILP64 -o CMakeFiles/sycl_lib.dir/runner.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/sycl/runner.cpp",
-  "file": "/home/simo/Documents/j/master-thesis/am_scheduler/sycl/runner.cpp",
-  "output": "CMakeFiles/sycl_lib.dir/runner.cpp.o"
-}
-]

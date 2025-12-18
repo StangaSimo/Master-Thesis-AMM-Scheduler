@@ -58,8 +58,11 @@ inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
 
             for (int j = 0; j < m * n; ++j) 
                 C[j] = 0;
+
         }
 
+        
+        cout << "\n NOOOOOO \n";
         return array_task;
     } else {
         cout << "[ERROR] Type not hnow ";

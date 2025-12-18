@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/ov_lib.dir/link.d -shared -Wl,-soname,libov_lib.so -o libov_lib.so CMakeFiles/ov_lib.dir/runner.cpp.o  /usr/lib/libopenvino.so.2025.3.0
