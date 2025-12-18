@@ -63,7 +63,7 @@ int main() {
 
         if (i == 0) {l = Logic::CUDA_ONLY;}
         if (i == 1) {l = Logic::ROUND_ROBIN;}
-        if (i == 2) {l = Logic::AUTO_PARTITIONING;}
+        if (i == 2) {l = Logic::STATIC_PARTITIONING;}
 
         task* task_array = init_tasks(n_matrix, M, N, K, Type::FLOAT);
 

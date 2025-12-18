@@ -90,8 +90,9 @@ inline bool compare_cpu_float(float* A, float* B, float* C, int M, int N, int K)
             cout << fixed << setprecision(4) << C[(M - 1) * N + n] << " ";
         }
         cout << "\n" << endl;
-    } else 
-        printf("[TESTS] %d %d %d PASSED \n",M,N,K);
+    } 
+    //else 
+    //    printf("[TESTS] %d %d %d PASSED \n",M,N,K);
 
     return match;
 }
@@ -163,7 +164,6 @@ cout << "[TESTS] Sycl PASSED \n";
 
 /***************************** helper test for main ***************************/
 
-
 inline void test_compare_task(task* array_task, size_t n_task, Type t) {
     if (t == Type::FLOAT){
         for (int i = 0; i < n_task; i++) {
@@ -176,8 +176,6 @@ inline void test_compare_task(task* array_task, size_t n_task, Type t) {
         }
     }
 }
-
-
 
 inline void print_performance_stats(task* tasks, size_t num_tasks) {
     if (tasks == nullptr || num_tasks == 0) {
@@ -227,4 +225,3 @@ inline void print_performance_stats(task* tasks, size_t num_tasks) {
     std::cout << "==================================" << std::endl;
     std::cout << "\n";
 }
-

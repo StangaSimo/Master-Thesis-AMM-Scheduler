@@ -1,3 +1,5 @@
+mkdir bin 
+mkdir build
 rm -rf build/*
 rm bin/scheduler
 rm -rf bin/lib/*

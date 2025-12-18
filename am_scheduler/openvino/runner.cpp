@@ -10,6 +10,11 @@ ov::Core core;
 
 using namespace std;
 
+/* cache for compiled models */
+static std::map<std::tuple<int, int, int>, ov::InferRequest> request_cache;
+const size_t MAX_MAP_SIZE = 50; 
+size_t map_size=0;
+
 void ov_init_p() {
     bool available = false;
 
@@ -23,27 +28,37 @@ void ov_init_p() {
     }
 }
 
+/* gemm with cached openvino */
 void ov_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K){
-    /* TODO: don't compile it every time make a method */
-    auto A_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)M, (size_t)K});
-    auto B_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)K, (size_t)N});
+    auto key = std::make_tuple(M, N, K);
+    if (request_cache.find(key) == request_cache.end()) {
+        map_size++;
+        if (map_size >= MAX_MAP_SIZE) {
+            request_cache.clear();
+            map_size = 1;
+        }
+        auto A_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)M, (size_t)K});
+        auto B_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)K, (size_t)N});
 
-    auto matmul = std::make_shared<ov::op::v0::MatMul>(A_ov, B_ov);
-    auto result = std::make_shared<ov::op::v0::Result>(matmul);
+        auto matmul = std::make_shared<ov::op::v0::MatMul>(A_ov, B_ov);
+        auto result = std::make_shared<ov::op::v0::Result>(matmul);
 
-    auto model = std::make_shared<ov::Model>(result, ov::ParameterVector{A_ov, B_ov});
+        auto model = std::make_shared<ov::Model>(result, ov::ParameterVector{A_ov, B_ov});
 
-    ov::CompiledModel compiled_model = core.compile_model(model, "NPU");
-    ov::InferRequest infer_request = compiled_model.create_infer_request();
+        ov::CompiledModel compiled_model = core.compile_model(model, "NPU");
+        ov::InferRequest request = compiled_model.create_infer_request();
+
+        request_cache[key] = request;
+    }
+
+    ov::InferRequest& infer_request = request_cache[key];
 
     ov::Tensor tensor_A(ov::element::f32, ov::Shape{(size_t)M, (size_t)K}, A);
     ov::Tensor tensor_B(ov::element::f32, ov::Shape{(size_t)K, (size_t)N}, B);
-
     ov::Tensor tensor_C(ov::element::f32, ov::Shape{(size_t)M, (size_t)N}, C);
 
     infer_request.set_input_tensor(0, tensor_A);
     infer_request.set_input_tensor(1, tensor_B);
-    
     infer_request.set_output_tensor(0, tensor_C);
 
     infer_request.infer();
@@ -135,5 +150,32 @@ extern "C" {
 //        cerr << "[OV EXCEPTION] " << e.what() << "\n";
 //    }
 //}
+//
+//void ov_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K){
+//    /* TODO: don't compile it every time make a method */
+//    auto A_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)M, (size_t)K});
+//    auto B_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)K, (size_t)N});
+//
+//    auto matmul = std::make_shared<ov::op::v0::MatMul>(A_ov, B_ov);
+//    auto result = std::make_shared<ov::op::v0::Result>(matmul);
+//
+//    auto model = std::make_shared<ov::Model>(result, ov::ParameterVector{A_ov, B_ov});
+//
+//    ov::CompiledModel compiled_model = core.compile_model(model, "NPU");
+//    ov::InferRequest infer_request = compiled_model.create_infer_request();
+//
+//    ov::Tensor tensor_A(ov::element::f32, ov::Shape{(size_t)M, (size_t)K}, A);
+//    ov::Tensor tensor_B(ov::element::f32, ov::Shape{(size_t)K, (size_t)N}, B);
+//
+//    ov::Tensor tensor_C(ov::element::f32, ov::Shape{(size_t)M, (size_t)N}, C);
+//
+//    infer_request.set_input_tensor(0, tensor_A);
+//    infer_request.set_input_tensor(1, tensor_B);
+//    
+//    infer_request.set_output_tensor(0, tensor_C);
+//
+//    infer_request.infer();
+//}
+
 
 

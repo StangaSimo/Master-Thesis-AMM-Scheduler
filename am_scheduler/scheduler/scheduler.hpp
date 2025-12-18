@@ -32,7 +32,7 @@ enum {BUFFER_LENGHT = 1024};
 enum Logic : size_t { /* Scheduler Logic Type */
     ROUND_ROBIN,
     CUDA_ONLY,
-    AUTO_PARTITIONING,
+    STATIC_PARTITIONING,
 };
 
 enum BT : size_t { /* backend_type */
@@ -125,7 +125,7 @@ class AMScheduler {
                     break;
 
                 /* batch style partitioning */ 
-                case Logic::AUTO_PARTITIONING: 
+                case Logic::STATIC_PARTITIONING: 
                     while(threads_keep_running) { 
                         task = buffer->get();
                         if (!task) {continue;} 
@@ -198,7 +198,6 @@ class AMScheduler {
                 //TODO: maybe more that 1 type 
                 
                 filename = get_benchmark_filename(i, Type::FLOAT);
-                cout << "\n File: " << filename << "\n"; 
                 if (filesystem::exists(filename)){
                      cout << "[SCHEDULER] File: " << filename <<  " opened.\n"; 
                 } else {
@@ -215,10 +214,12 @@ class AMScheduler {
         /* constructur */
         AMScheduler(Logic logic) : threads_keep_running(true), strategy(logic) {
             print_logic(logic);
-            cout << "[SCHEDULER] Threads started.\n";
             init_threads();            
-            cout << "[SCHEDULER] Benchmarks done.\n";
+            cout << "[SCHEDULER] Threads started.\n";
             init_benchmarks();            
+            cout << "[SCHEDULER] Benchmarks done.\n";
+            //init_bench_data();
+            cout << "[SCHEDULER] Benchmarks data uploaded.\n";
         }
 
         /* destructur, stop the threads*/
@@ -309,9 +310,34 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
 /* call benchmark_acc */
 inline void benchmark(BT bt, Type type, string filename) {
 
-    int step = 128;
-    for (int size = 32; size <= 4096; size += step) {
-        benchmark_acc(bt, type, filename, size, size, size);
+    //vector<int> dims_quick = {
+    //128, 512, 1024, 2048, 4096, 6144
+    //};
+
+    vector<int> dims = {
+    128, 256, 512, 768, 
+    1024, 1536, 2048, 3072, 
+    4096, 5120, 6000, 6144
+    };
+
+    //vector<int> dims = {
+    //    128, 256, 384, 512, 640, 768, 
+    //    1024, 1280, 1536, 1792, 
+    //    2048, 2560, 3072, 3584, 
+    //    4096, 4608, 5120, 5632, 6144
+    //};
+
+    for (int m : dims) {
+        for (int n : dims) {
+            for (int k : dims) {
+                // Saltiamo i casi quadrati perché li abbiamo già fatti sopra con più precisione
+                if (m == n && n == k) continue; 
+                if (bt == BT::OPENVINO && m >= 3500) {break;} /* NPU doesn't like more than this */  
+                if (bt == BT::OPENVINO && n >= 3500) {break;} 
+                if (bt == BT::OPENVINO && k >= 3500) {break;}
+                benchmark_acc(bt, type, filename, m, n, k);
+            }
+        }
     }
 
     cout << "[SCHEDULER] Benchmark ===\n";
@@ -391,7 +417,7 @@ inline void print_logic(Logic l) {
             logic = "ROUND_ROBIN"; break;
         case Logic::CUDA_ONLY:
             logic = "CUDA_ONLY"; break;
-        case Logic::AUTO_PARTITIONING:
+        case Logic::STATIC_PARTITIONING:
             logic = "AUTO_PARTITIONING"; break;
         default:
             cout << "[SCHEDULER] ERROR print_logic \n";
