@@ -1,11 +1,11 @@
 appunti.txt
 gpu_benchmark/benchmark
 npu_benchmark/benchmark
-gpu_benchmark/build
-sycl_benchmark/build
+gpu_benchmark/build/
+sycl_benchmark/build/
 
-am_scheduler/bin
-am_scheduler/build
+am_scheduler/bin/
+am_scheduler/build/
 
 vino_c/models
 vino_c/test_npu
