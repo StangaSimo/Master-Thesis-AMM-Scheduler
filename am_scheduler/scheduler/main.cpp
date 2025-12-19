@@ -62,9 +62,9 @@ int main() {
     cout << "\n-------------------- [MAIN] ------------------------- \n" ;
 
     size_t num_matrix = 300;
-    int M = 200;
-    int N = 200;
-    int K = 200;
+    int M = 1000;
+    int N = 1000;
+    int K = 50;
     
     /* cuda test without passing from scheduler */
     test_cuda_streaming(M,N,K,num_matrix,Type::FLOAT);
@@ -76,7 +76,7 @@ int main() {
         cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
         if (i == 0) {l = Logic::CUDA_ONLY;}
         if (i == 1) {l = Logic::ROUND_ROBIN;continue;}
-        if (i == 2) {l = Logic::STATIC_PARTITIONING;continue;}
+        if (i == 2) {l = Logic::STATIC_PARTITIONING;}
 
         task* task_array = init_tasks(num_matrix, M, N, K, Type::FLOAT);
 
@@ -85,7 +85,7 @@ int main() {
         scheduler.do_tasks(task_array, num_matrix);
         scheduler.wait();
 
-        //test_compare_task(task_array, n_matrix, Type::FLOAT);
+        test_compare_task(task_array, num_matrix, Type::FLOAT);
         print_performance_stats(task_array, num_matrix);
         clean_tasks(task_array,num_matrix, Type::FLOAT);
     } 

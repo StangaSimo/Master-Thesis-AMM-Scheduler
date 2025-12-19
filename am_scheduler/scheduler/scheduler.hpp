@@ -24,6 +24,8 @@
 #include <vector>
 #include <fstream>
 
+//#define DEBUG 
+
 #ifdef DEBUG
     #define PRINT(x) std::cout << "DEBUG: " << x << std::endl
 #else
@@ -441,7 +443,7 @@ inline void init_acc(BT backend_type) {
     case BT::CUDA:
         cuda_init(4092,4092,4092); //TODO 
     case BT::SYCL:
-        sycl_init(3000);
+        sycl_init(2000); //TODO
         break;    
     case BT::OPENVINO:
         ov_init();

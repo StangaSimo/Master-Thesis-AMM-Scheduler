@@ -92,8 +92,8 @@ inline bool compare_cpu_float(float* A, float* B, float* C, int M, int N, int K)
         }
         cout << "\n" << endl;
     } 
-    //else 
-    //    printf("[TESTS] %d %d %d PASSED \n",M,N,K);
+    else 
+        PRINT("[TESTS] " <<  M << " " << N << " " << K << " PASSED \n");
 
     return match;
 }
@@ -246,6 +246,8 @@ inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type)
     }
 
     cuda_free();
+
+    test_compare_task(tasks, num_task, Type::FLOAT);
     clean_tasks(tasks,num_task,type);
     print_performance_stats(tasks, num_task);
 } 
