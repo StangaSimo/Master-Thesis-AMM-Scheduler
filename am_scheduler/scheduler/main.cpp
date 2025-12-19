@@ -38,7 +38,10 @@
  * TODO: batch implementation per gli accelleratori che possono? 
  * 
  * TODO: support for 16 bit and 8 bit and update tests. 
+ * 
  *
+ *
+ * ho finito l'implementazione dei benchmark, creato una cache per i modelli di open vino e infatti ora abbiamo delle prestazioni molto carine, ho provato un semplice modello di regressione ma non funziona bene, per cui ho creato una struttura dati.
  * */
 
 int main() {

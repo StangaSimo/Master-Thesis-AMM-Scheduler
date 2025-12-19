@@ -6,6 +6,7 @@
 #include "sycl_wrapper.h"
 
 #include "sharedbuffer.hpp"
+#include "performancemap.hpp"
 #include "tasks.hpp"
 
 #include <cassert>
@@ -21,13 +22,14 @@
 #include <memory>
 #include <unistd.h>
 #include <vector>
-
 #include <fstream>
 
 
 using namespace std;
 
 enum {BUFFER_LENGHT = 1024};
+
+enum {STEP_SIZE = 512};
 
 enum Logic : size_t { /* Scheduler Logic Type */
     ROUND_ROBIN,
@@ -46,13 +48,14 @@ enum BT : size_t { /* backend_type */
 
 /******* Prototypes ********/
 inline void handle_task(BT backend_type, task *task);
-inline void print_logic(Logic l); 
 inline string get_benchmark_filename(BT bt, int type); 
 inline void init_acc(BT backend_type); 
 inline void free_acc(BT backend_type); 
 inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K);
 inline void benchmark(BT bt, Type type, string filename);
 inline void handle_task(BT backend_type, task *task);
+inline void print_logic(Logic l); 
+inline string get_acc_string(BT backend_type); 
 
 /* for simplicity this is the buffer pointer */
 using SharedBuffer_T = array<unique_ptr<SharedBuffer>, BT::COUNT>;
@@ -76,6 +79,9 @@ class AMScheduler {
 
         /* backend_type vector for handling the accellerators */
         vector<BT> bts; 
+
+        /* Perfomance Map for each accellerator*/
+        array<unique_ptr<PerformanceMap>, BT::COUNT> bts_map; 
 
 /**********************************  Worker  ***********************************/
 
@@ -190,7 +196,7 @@ class AMScheduler {
             cout << "[SCHEDULER] Threads stopped.\n";
         }
 
-        /**********************************  Init Benchmarks ***********************************/
+        /**********************************  Init Benchmarks and Map ***********************************/
         /* upload the banchmark files and generate them if not presents */
         void init_benchmarks() {
             for (BT i : bts) {
@@ -208,18 +214,38 @@ class AMScheduler {
             }
         }
 
+        /* create the map for each accellerator */
+        void init_maps() {
+            for (BT i : bts) {
+                string filename; 
+                filename = get_benchmark_filename(i, Type::FLOAT);
+                if (filesystem::exists(filename)){
+
+                    bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE,filename);
+
+                    double res = bts_map[i]->query(512,2460,512);
+                    string s = get_acc_string(i);
+                    cout << "\n\n" << s << " prova regression: " << res <<  "\n\n"; 
+                } else {
+
+                     cerr << "[SCHEDULER] File: " << filename <<  " not found for map init\n"; 
+                     exit(EXIT_FAILURE);
+                }
+            }
+        }
+
         /**********************************  Public Interface ***********************************/
 
     public: 
-        /* constructur */
+        /* constructur init threads, benchark files, regression models */
         AMScheduler(Logic logic) : threads_keep_running(true), strategy(logic) {
             print_logic(logic);
             init_threads();            
             cout << "[SCHEDULER] Threads started.\n";
             init_benchmarks();            
             cout << "[SCHEDULER] Benchmarks done.\n";
-            //init_bench_data();
-            cout << "[SCHEDULER] Benchmarks data uploaded.\n";
+            init_maps();
+            cout << "[SCHEDULER] Regression done.\n";
         }
 
         /* destructur, stop the threads*/
@@ -288,7 +314,6 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
 
     clean_tasks(task, 1, type);
 
-
     double avg_ms = total_ms / N_RUNS;
     ofstream file(filename, ios::app);
 
@@ -309,32 +334,17 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
 
 /* call benchmark_acc */
 inline void benchmark(BT bt, Type type, string filename) {
-
-    //vector<int> dims_quick = {
-    //128, 512, 1024, 2048, 4096, 6144
-    //};
-
-    vector<int> dims = {
-    128, 256, 512, 768, 
-    1024, 1536, 2048, 3072, 
-    4096, 5120, 6000, 6144
-    };
-
-    //vector<int> dims = {
-    //    128, 256, 384, 512, 640, 768, 
-    //    1024, 1280, 1536, 1792, 
-    //    2048, 2560, 3072, 3584, 
-    //    4096, 4608, 5120, 5632, 6144
-    //};
+    vector<int> dims;
+    for (int d = STEP_SIZE; d <= STEP_SIZE*6; d += STEP_SIZE) {
+        dims.push_back(d);
+    }
 
     for (int m : dims) {
         for (int n : dims) {
             for (int k : dims) {
-                // Saltiamo i casi quadrati perché li abbiamo già fatti sopra con più precisione
-                if (m == n && n == k) continue; 
-                if (bt == BT::OPENVINO && m >= 3500) {break;} /* NPU doesn't like more than this */  
-                if (bt == BT::OPENVINO && n >= 3500) {break;} 
-                if (bt == BT::OPENVINO && k >= 3500) {break;}
+                //if (bt == BT::OPENVINO && m >= 3500) {break;} /* NPU doesn't like more than this */  
+                //if (bt == BT::OPENVINO && n >= 3500) {break;} 
+                //if (bt == BT::OPENVINO && k >= 3500) {break;}
                 benchmark_acc(bt, type, filename, m, n, k);
             }
         }
