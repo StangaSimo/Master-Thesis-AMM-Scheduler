@@ -3,6 +3,7 @@
 #include <ostream>
 
 #include "sharedbuffer.hpp"
+#include "tasks.hpp"
 #include "tests.hpp"
 
 /* appunti:
@@ -41,7 +42,11 @@
  * 
  *
  *
- * ho finito l'implementazione dei benchmark, creato una cache per i modelli di open vino e infatti ora abbiamo delle prestazioni molto carine, ho provato un semplice modello di regressione ma non funziona bene, per cui ho creato una struttura dati.
+ *  ho finito l'implementazione dei benchmark, creato una cache per i modelli di open vino e infatti ora abbiamo delle prestazioni molto carine, ho provato un semplice modello di regressione ma non funziona bene, per cui ho usato un hashmap e giocando con la chiave riesco a fare delle query velocissime che posso anche cachare (visto che di solito le matrici sono sempre tutte uguali) .
+ *
+ * implementare delle vere convoluzioni, oppure usare altre librerie per vedere come si comporta questo approccio 
+ * sulle reti neurali, e cosi via.
+ *
  * */
 
 int main() {
@@ -53,19 +58,18 @@ int main() {
     std::cout << "[MAIN] Tests Done\n";
     std::cout << "[MAIN] Init Scheduler\n";
 
-    size_t n_matrix = 100;
-    int M = 512;
-    int N = 512;
-    int K = 256;
+    size_t n_matrix = 60*100;
+    int M = 1920;
+    int N = 300;
+    int K = 1080;
 
     Logic l;
 
-    for (int i=0; i<2; i++) {
+    for (int i=0; i<3; i++) {
 
         cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
-
         if (i == 0) {l = Logic::CUDA_ONLY;}
-        if (i == 1) {l = Logic::ROUND_ROBIN;}
+        if (i == 1) {l = Logic::ROUND_ROBIN;continue;}
         if (i == 2) {l = Logic::STATIC_PARTITIONING;}
 
         task* task_array = init_tasks(n_matrix, M, N, K, Type::FLOAT);
@@ -75,7 +79,7 @@ int main() {
         scheduler.do_tasks(task_array, n_matrix);
         scheduler.wait();
 
-        //test_compare_task_float(task_array, n_matrix);
+        //test_compare_task(task_array, n_matrix, Type::FLOAT);
         print_performance_stats(task_array, n_matrix);
         clean_tasks(task_array,n_matrix, Type::FLOAT);
 

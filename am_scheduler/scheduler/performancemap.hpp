@@ -35,6 +35,11 @@ class PerformanceMap {
     unordered_map<unsigned long long, double> grid_map;
     long long STEP_SIZE;
 
+    long long last_M = 0;    
+    long long last_N = 0;    
+    long long last_K = 0;    
+    double last_key = 0.0;    
+
 private:
 
     /* return the successor of val in our step_size */
@@ -92,10 +97,19 @@ public:
     double query(long long M, long long N, long long K) {
         unsigned long long key = get_key(M, N, K);
 
+        /* we cache the last results */
+        if (M == last_M && N == last_N && K == last_K) {return last_K;}
+
+        last_M = M;
+        last_N = N;
+        last_K = K;
+
         if (grid_map.find(key) != grid_map.end()) {
+            last_K = grid_map[key];
             return grid_map[key];
         }
 
+        last_K = -1.0;
         return -1.0; 
     }
 };

@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "tasks.hpp"
 
-#define SLEEP
+//#define SLEEP
 
 enum {GET_SLEEP = 1000}; /* 10 ms */
 enum {PUT_SLEEP = 1000}; /* 10 ms */
