@@ -24,6 +24,11 @@
 #include <vector>
 #include <fstream>
 
+#ifdef DEBUG
+    #define PRINT(x) std::cout << "DEBUG: " << x << std::endl
+#else
+    #define PRINT(x)
+#endif
 
 using namespace std;
 
@@ -104,105 +109,103 @@ class AMScheduler {
         /* if there is no task, we check if we have to shutdown */
         void coordinator_thread(SharedBuffer_T &buffers) { 
             int i=0;
-
             int c = 0;
             int bts_len = bts.size();
-            SharedBuffer *buffer = buffers[BT::CORDINATOR].get();
-            
-            task* single_task = nullptr;
-            task* tasks[BATCH_SIZE];
 
             double acc_speed[bts_len];
             double total_speed = 0.0;
             int n_acc_task[BATCH_SIZE];
             int remaining_c = 0;
             
-            switch (strategy) {
-                case Logic::CUDA_ONLY:
 
-                    if (buffers[BT::CUDA] == nullptr) {
-                        cerr << "[SCHEDULER] Error, cuda logic but no cuda card";
-                        exit(EXIT_FAILURE);
+            SharedBuffer *buffer = buffers[BT::CORDINATOR].get();
+            task* single_task = nullptr;
+            task* tasks[BATCH_SIZE];
+
+            switch (strategy) {
+            case Logic::CUDA_ONLY:
+
+                if (buffers[BT::CUDA] == nullptr) {
+                    cerr << "[SCHEDULER] Error, cuda logic but no cuda card";
+                    exit(EXIT_FAILURE);
+                }
+
+                while(threads_keep_running) { 
+                    single_task = buffer->get();
+                    if (!single_task) {continue;} 
+                    buffers[BT::CUDA]->put(single_task);
+                } 
+
+                break;
+
+            /* basic logic, if there is one that don't do nothing just send them request */
+            case Logic::ROUND_ROBIN: 
+
+                while(threads_keep_running) { 
+                    single_task = buffer->get();
+                    if (!single_task) {continue;} 
+
+                    buffers[bts[i]]->put(single_task);
+
+                    i = (i+1) % bts_len;
+                } 
+                break;
+
+            /* batch style partitioning with time decision assuming same matrix */
+            case Logic::STATIC_PARTITIONING: 
+
+                while(threads_keep_running) { 
+
+                    while (c < BATCH_SIZE) {
+                        tasks[c] = buffer->get();
+                        if (!tasks[c]) {break;} 
+                        c++;
                     }
 
-                    while(threads_keep_running) { 
-                        single_task = buffer->get();
-                        if (!single_task) {continue;} 
-                        buffers[BT::CUDA]->put(single_task);
-                    } 
+                    if (c == 0) {continue;}
 
-                    break;
+                    if (c == 1) { /* 1 task, to the fastest */
+                        buffers[bts[0]]->put(tasks[0]);
+                        c = 0;
+                        continue;
+                    }
 
-                /* basic logic, if there is one that don't do nothing just send them request */
-                case Logic::ROUND_ROBIN: 
+                    if (bts_len >= c){  /* the remaining tasks TODO: i don't think so, but lets see */
+                        for (int j=0; j<c; j++)
+                            buffers[bts[j]]->put(tasks[j]);
+                        c = 0;
+                        continue;
+                    }
+                    total_speed = 0;
 
-                    while(threads_keep_running) { 
-                        single_task = buffer->get();
-                        if (!single_task) {continue;} 
+                    for (int j=0; j<bts_len; j++){
+                        acc_speed[j] = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K) * c;        
+                        total_speed += acc_speed[j];
+                    }
+                    
+                    remaining_c = c;                        
+                    for (int j=0; j<bts_len; j++) {
+                        n_acc_task[j] = (acc_speed[j] / total_speed) * c;
+                        remaining_c -= n_acc_task[j];
+                    }
 
-                        buffers[bts[i]]->put(single_task);
-
-                        i = (i+1) % bts_len;
-                    } 
-                    break;
-
-                /* batch style partitioning with time decision assuming same matrix */
-                case Logic::STATIC_PARTITIONING: 
-
-                    while(threads_keep_running) { 
-
-                        while (c < BATCH_SIZE) {
-                            tasks[c] = buffer->get();
-                            if (!tasks[c]) {break;} 
-                            c++;
+                    int t = 0;
+                    for (int j=0; j<bts_len; j++)
+                        for (int w=0; w<n_acc_task[j]; w++){
+                            buffers[bts[j]]->put(tasks[t]);
+                            t++;
                         }
 
-                        if (c == 0) {continue;}
-
-                        if (c == 1) { /* 1 task, to the fastest */
-                            buffers[bts[0]]->put(tasks[0]);
-                            c = 0;
-                            continue;
-                        }
-
-                        if (bts_len >= c){  /* the remaining tasks TODO: i don't think so, but lets see */
-                            for (int j=0; j<c; j++)
-                                buffers[bts[j]]->put(tasks[j]);
-                            c = 0;
-                            continue;
-                        }
-                        total_speed = 0;
-
-                        for (int j=0; j<bts_len; j++){
-                            acc_speed[j] = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K) * c;        
-                            total_speed += acc_speed[j];
-                        }
-                        
-                        remaining_c = c;                        
-                        for (int j=0; j<bts_len; j++) {
-                            n_acc_task[j] = (acc_speed[j] / total_speed) * c;
-                            remaining_c -= n_acc_task[j];
-                        }
-
-                        int t = 0;
-                        for (int j=0; j<bts_len; j++)
-                            for (int w=0; w<n_acc_task[j]; w++){
-                                buffers[bts[j]]->put(tasks[t]);
-                                t++;
-                            }
-
-                        //cout << "reamaining_c " << remaining_c << "\n";
-
-                        if (remaining_c != 0) {
-                            for (int j=c-remaining_c; j<c; j++)
-                                buffers[bts[0]]->put(tasks[j]);
-                        }
-                        c = 0; 
-                    } 
-                    break;
-                default:
-                    printf("[SCHEDULER] Error in chosing the logic.\n");
-                    exit(EXIT_FAILURE);
+                    if (remaining_c != 0) {
+                        for (int j=c-remaining_c; j<c; j++)
+                            buffers[bts[0]]->put(tasks[j]);
+                    }
+                    c = 0; 
+                } 
+                break;
+            default:
+                printf("[SCHEDULER] Error in chosing the logic.\n");
+                exit(EXIT_FAILURE);
             }
         }
 
@@ -210,7 +213,8 @@ class AMScheduler {
 
         void init_threads() {
 
-                        /* from the fastest to the slowest */
+            /* from the fastest to the slowest */
+            /* init here and not in the threads */
 #ifdef ENABLE_CUDA
             init_acc(BT::CUDA);
             bts.push_back(BT::CUDA);
@@ -220,7 +224,7 @@ class AMScheduler {
             bts.push_back(BT::SYCL);
 #endif
 #ifdef ENABLE_OPENVINO
-            init_acc(BT::OPENVINO); /* init here and not in the threads */
+            init_acc(BT::OPENVINO); 
             bts.push_back(BT::OPENVINO);
 #endif
 
@@ -230,7 +234,7 @@ class AMScheduler {
                                                     i, shared_buffers[i].get());
             }
 
-            if (bts.size() == 0) {cout << "[SCHEDULER] ATTENTION, only CPU up\n";}
+            if (bts.size() == 0) {PRINT("[SCHEDULER] ATTENTION, only CPU up\n");}
 
             //bts.push_back(BT::CPU); TODO remove this when implementing the cpus and add init
             /* default CPU thread */
@@ -241,8 +245,6 @@ class AMScheduler {
             shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
             threads[BT::CORDINATOR] = make_unique<thread>(&AMScheduler::coordinator_thread,this, 
                                         ref(shared_buffers)); /* ref because the thread function try to copy all the parameters */
-
-
         }
 
         /* shut down threads */
@@ -259,7 +261,7 @@ class AMScheduler {
                 free_acc(i);
             }
 
-            cout << "[SCHEDULER] Threads stopped.\n";
+            PRINT("[SCHEDULER] Threads stopped.\n");
         }
 
         /**********************************  Init Benchmarks and Map ***********************************/
@@ -269,11 +271,11 @@ class AMScheduler {
                 string filename; 
                 filename = get_benchmark_filename(i, Type::FLOAT); //TODO: typechange
                 if (filesystem::exists(filename)){
-                     cout << "[SCHEDULER] File: " << filename <<  " opened.\n"; 
+                     PRINT("[SCHEDULER] File: " << filename <<  " opened.\n"); 
                 } else {
-                     cout << "[SCHEDULER] File: " << filename <<  " not present\n"; 
+                     PRINT("[SCHEDULER] File: " << filename <<  " not present\n"); 
                      benchmark(i, Type::FLOAT ,filename);
-                     cout << "[SCHEDULER] Benchmark file created\n"; 
+                     PRINT("[SCHEDULER] Benchmark file created\n"); 
                 }
             }
         }
@@ -295,15 +297,15 @@ class AMScheduler {
         /**********************************  Public Interface ***********************************/
 
     public: 
-        /* constructur init threads, benchark files, regression models */
+        /* constructur init threads, benchmark files, regression models */
         AMScheduler(Logic logic) : threads_keep_running(true), strategy(logic) {
             print_logic(logic);
             init_threads();            
-            cout << "[SCHEDULER] Threads started.\n";
+            PRINT("[SCHEDULER] Threads started.\n");
             init_benchmarks();            
-            cout << "[SCHEDULER] Benchmarks done.\n";
+            PRINT("[SCHEDULER] Benchmarks done.\n");
             init_maps();
-            cout << "[SCHEDULER] Regression done.\n";
+            PRINT("[SCHEDULER] Regression done.\n");
         }
 
         /* destructur, stop the threads*/
@@ -317,17 +319,17 @@ class AMScheduler {
                 tasks[i].start_time = chrono::high_resolution_clock::now();                
                 shared_buffers[BT::CORDINATOR]->put(&tasks[i]);
             }
-            cout << "[SCHEDULER] Task dispached\n";
+            PRINT("[SCHEDULER] Task dispached\n");
         }
 
         /* check if all the buffers are empty */
         void wait() {
-            cout << "[SCHEDULER] Waiting.. \n";
+            PRINT("[SCHEDULER] Waiting.. \n");
             /* wait coordinator */
             while (!shared_buffers[0]->is_empty()){
                 usleep(10000);
             }
-            cout << "[SCHEDULER] Coordinator empty.. \n";
+            PRINT("[SCHEDULER] Coordinator empty.. \n");
 
             /* wait other threads */
             for (int i=1; i<BT::COUNT; i++) {
@@ -338,7 +340,8 @@ class AMScheduler {
                 }
             }
 
-            cout << "[SCHEDULER] All empty.. \n";
+            PRINT("[SCHEDULER] All empty.. \n");
+            // TODO: maybe better shutdown? 
             sleep(2); /* wait for unfinished matrix */
         }
 };
@@ -383,33 +386,26 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
         string acc_str = (bt == BT::CUDA ? "CUDA" : (bt == BT::SYCL ? "SYCL" : "OPENVINO"));
         file << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n";
         
-        cout << "result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n";
+        PRINT("result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n");
         file.close();
     } else {
         cerr << "[SCEDULER] ERROR Cannot open file: " << filename << "\n";
     }
 }
 
-/* call benchmark_acc */
+/* call benchmark_acc for each test matrix*/
 inline void benchmark(BT bt, Type type, string filename) {
     vector<int> dims;
-    for (int d = STEP_SIZE; d <= STEP_SIZE*6; d += STEP_SIZE) {
+    for (int d = STEP_SIZE; d <= STEP_SIZE*6; d += STEP_SIZE) 
         dims.push_back(d);
-    }
 
-    for (int m : dims) {
-        for (int n : dims) {
-            for (int k : dims) {
-                //if (bt == BT::OPENVINO && m >= 3500) {break;} /* NPU doesn't like more than this */  
-                //if (bt == BT::OPENVINO && n >= 3500) {break;} 
-                //if (bt == BT::OPENVINO && k >= 3500) {break;}
+    for (int m : dims) 
+        for (int n : dims) 
+            for (int k : dims) 
                 benchmark_acc(bt, type, filename, m, n, k);
-            }
-        }
-    }
 
-    cout << "[SCHEDULER] Benchmark ===\n";
-    cout << "Results saved in bin/csv/" << filename << "\n";
+    PRINT("[SCHEDULER] Benchmark ===\n");
+    PRINT("Results saved in bin/csv/" << filename << "\n");
 }
 
 /* task handler for the workers, choose the right backend_type */
@@ -432,7 +428,7 @@ inline void handle_task(BT backend_type, task *task) {
     //    break;    
 
     default: 
-        cout << "[SCHEDULER] ERROR handle task\n";
+        cerr << "[SCHEDULER] ERROR handle task\n";
         exit(EXIT_FAILURE);
     }
 
@@ -445,7 +441,7 @@ inline void init_acc(BT backend_type) {
     case BT::CUDA:
         cuda_init(4092,4092,4092); //TODO 
     case BT::SYCL:
-        sycl_init();
+        sycl_init(3000);
         break;    
     case BT::OPENVINO:
         ov_init();
@@ -453,7 +449,7 @@ inline void init_acc(BT backend_type) {
     case BT::CPU:
         break;    
     default: 
-        cout << "[SCHEDULER] ERROR Change Status\n";
+        cerr << "[SCHEDULER] ERROR Change Status\n";
         exit(EXIT_FAILURE);
     }
 }
@@ -472,7 +468,7 @@ inline void free_acc(BT backend_type) {
     case BT::CPU:
         break;    
     default: 
-        cout << "[SCHEDULER] ERROR Change Status\n";
+        cerr << "[SCHEDULER] ERROR Change Status\n";
         exit(EXIT_FAILURE);
     }
 }
@@ -487,10 +483,10 @@ inline void print_logic(Logic l) {
         case Logic::STATIC_PARTITIONING:
             logic = "STATIC_PARTITIONING"; break;
         default:
-            cout << "[SCHEDULER] ERROR print_logic \n";
+            cerr << "[SCHEDULER] ERROR print_logic \n";
             exit(EXIT_FAILURE);
     }
-    cout << "[SCHEDULER] Started with " << logic << " logic \n";
+    PRINT("[SCHEDULER] Started with " << logic << " logic \n");
 }
 
 /* return the accellerator string name */
@@ -504,7 +500,7 @@ inline string get_acc_string(BT backend_type) {
         case BT::OPENVINO: 
             res = "OPENVINO"; break;
         default:
-            cout << "[SCHEDULER] ERROR get_acc_string \n";
+            cerr << "[SCHEDULER] ERROR get_acc_string \n";
             exit(EXIT_FAILURE);
     }
     return res;
@@ -525,7 +521,7 @@ inline string get_benchmark_filename(BT bt, int type) {
         case Type::HALF: type_name = "HALF"; break;
         case Type::UINT8: type_name = "UINT8"; break;
         default:
-            cout << "[SCHEDULER] ERROR type get_benchmark_filename \n";
+            cerr << "[SCHEDULER] ERROR type get_benchmark_filename \n";
             exit(EXIT_FAILURE);
     }
 

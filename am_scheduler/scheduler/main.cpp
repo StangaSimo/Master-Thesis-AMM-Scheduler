@@ -39,13 +39,18 @@
  * TODO: batch implementation per gli accelleratori che possono? 
  * 
  * TODO: support for 16 bit and 8 bit and update tests. 
+ *
+ *
+ * FARE TIPI DIVERSI (TEST ecc...)
+ * AGGIUNGERE LA CPU
  * 
+ * LOGICA CON MATRICI DIVERSE.
  *
  *
- *  ho finito l'implementazione dei benchmark, creato una cache per i modelli di open vino e infatti ora abbiamo delle prestazioni molto carine, ho provato un semplice modello di regressione ma non funziona bene, per cui ho usato un hashmap e giocando con la chiave riesco a fare delle query velocissime che posso anche cachare (visto che di solito le matrici sono sempre tutte uguali) .
  *
- * implementare delle vere convoluzioni, oppure usare altre librerie per vedere come si comporta questo approccio 
- * sulle reti neurali, e cosi via.
+ * MATRICE ENORME 
+ * 
+ * ho finito l'implementazione dei benchmark, creato una cache per i modelli di open vino e infatti ora abbiamo delle prestazioni molto carine, ho provato un semplice modello di regressione ma non funziona bene, per cui ho usato un hashmap e giocando con la chiave riesco a fare delle query velocissime che posso anche cachare (visto che di solito le matrici sono sempre tutte uguali).
  *
  * */
 
@@ -55,13 +60,14 @@ int main() {
     test_accellerators();
 
     cout << "\n-------------------- [MAIN] ------------------------- \n" ;
-    std::cout << "[MAIN] Tests Done\n";
-    std::cout << "[MAIN] Init Scheduler\n";
 
-    size_t n_matrix = 60*100;
-    int M = 1920;
-    int N = 300;
-    int K = 1080;
+    size_t num_matrix = 300;
+    int M = 200;
+    int N = 200;
+    int K = 200;
+    
+    /* cuda test without passing from scheduler */
+    test_cuda_streaming(M,N,K,num_matrix,Type::FLOAT);
 
     Logic l;
 
@@ -70,19 +76,18 @@ int main() {
         cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
         if (i == 0) {l = Logic::CUDA_ONLY;}
         if (i == 1) {l = Logic::ROUND_ROBIN;continue;}
-        if (i == 2) {l = Logic::STATIC_PARTITIONING;}
+        if (i == 2) {l = Logic::STATIC_PARTITIONING;continue;}
 
-        task* task_array = init_tasks(n_matrix, M, N, K, Type::FLOAT);
+        task* task_array = init_tasks(num_matrix, M, N, K, Type::FLOAT);
 
         AMScheduler scheduler = AMScheduler(l);
 
-        scheduler.do_tasks(task_array, n_matrix);
+        scheduler.do_tasks(task_array, num_matrix);
         scheduler.wait();
 
         //test_compare_task(task_array, n_matrix, Type::FLOAT);
-        print_performance_stats(task_array, n_matrix);
-        clean_tasks(task_array,n_matrix, Type::FLOAT);
-
+        print_performance_stats(task_array, num_matrix);
+        clean_tasks(task_array,num_matrix, Type::FLOAT);
     } 
 
     return 0;

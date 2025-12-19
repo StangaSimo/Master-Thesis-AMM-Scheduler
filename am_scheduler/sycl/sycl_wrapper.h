@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-    void sycl_init();
+    void sycl_init(int max_matrix_size);
 
     void sycl_gemm_32bit(float *A, float *B, float *C, int M, int N, int K); 
 

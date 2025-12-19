@@ -4,6 +4,7 @@
 /* this is only for testing pourpuse of the dynamic libraries */
 
 #include "sharedbuffer.hpp"
+#include "tasks.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <vector>
@@ -109,12 +110,12 @@ inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
 inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
     cuda_init(M,N,K);  
     cuda_gemm_32bit(A,B,C,M,N,K);
-    cuda_free();
+    cuda_free(); 
     return compare_cpu_float(A,B,C,M,N,K);
 }
 
 inline bool test_sycl(float* A, float* B, float* C, int M, int N, int K) {
-    sycl_init();  
+    sycl_init(2000); //TODO: change this  
     sycl_gemm_32bit(A,B,C,M,N,K);
     sycl_free();  
     return compare_cpu_float(A,B,C,M,N,K);
@@ -145,7 +146,6 @@ cout << "[TESTS] OpenVino PASSED \n";
         exit(EXIT_FAILURE);
     }
 #endif
-
 cout << "[TESTS] Cuda PASSED \n";
 
 #ifdef ENABLE_SYCL
@@ -225,3 +225,27 @@ inline void print_performance_stats(task* tasks, size_t num_tasks) {
     std::cout << "==================================" << std::endl;
     std::cout << "\n";
 }
+
+inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type) {
+    task* tasks = init_tasks(num_task, M, N, K, type);
+    cuda_init(M,N,K); // cambiare, con max matrix size e via.
+
+    for (int i=0; i<num_task; i++) {
+        float* A = (float*)tasks[i].A;
+        float* B = (float*)tasks[i].B;
+        float* C = (float*)tasks[i].C;
+        int M = tasks[i].M;
+        int N = tasks[i].N;
+        int K = tasks[i].K;
+        tasks[i].start_time = chrono::high_resolution_clock::now();                
+
+        //TODO: type 
+        cuda_gemm_32bit(A, B, C, M, N, K);
+
+        tasks[i].end_time = chrono::high_resolution_clock::now();                
+    }
+
+    cuda_free();
+    clean_tasks(tasks,num_task,type);
+    print_performance_stats(tasks, num_task);
+} 

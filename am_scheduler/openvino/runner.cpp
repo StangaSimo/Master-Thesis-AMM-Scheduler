@@ -1,4 +1,5 @@
 #include "ov_wrapper.h" // Il nostro header C
+#include <iterator>
 #include <openvino/openvino.hpp>
 #include <openvino/op/matmul.hpp>
 #include <cstdlib>
@@ -12,7 +13,7 @@ using namespace std;
 
 /* cache for compiled models */
 static std::map<std::tuple<int, int, int>, ov::InferRequest> request_cache;
-const size_t MAX_MAP_SIZE = 50; 
+const size_t MAX_MAP_SIZE = 30; 
 size_t map_size=0;
 
 void ov_init_p() {
