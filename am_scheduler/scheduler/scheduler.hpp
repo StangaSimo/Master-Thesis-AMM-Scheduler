@@ -106,13 +106,14 @@ class AMScheduler {
         /* if there is no task, we check if we have to shutdown */
         void coordinator_thread(SharedBuffer_T &buffers) { 
             int i=0;
-            int c = 0;
+            int c=0;
             int bts_len = bts.size();
 
             double acc_speed[bts_len];
             double total_speed = 0.0;
             int n_acc_task[BATCH_SIZE];
-            int remaining_c = 0;
+            int remaining_c=0;
+            int t=0;
             
 
             SharedBuffer *buffer = buffers[BT::CORDINATOR].get();
@@ -173,26 +174,35 @@ class AMScheduler {
                         c = 0;
                         continue;
                     }
-                    total_speed = 0;
 
+                    /* velocity = 1 / time */
+                    total_speed = 0.0;
                     for (int j=0; j<bts_len; j++){
-                        acc_speed[j] = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K) * c;        
+                        double single_matrix_ms = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K);
+                        acc_speed[j] = 1.0 / (single_matrix_ms * (double) c);        
+                        //cout << "M: " <<tasks[0]->M << " N: " <<tasks[0]->N << " K: " <<tasks[0]->K<< "\n";
+                        //cout << "acc: " << bts[j] << " ci mette: " << acc_speed[j] << " per una: " << prova << "\n";
                         total_speed += acc_speed[j];
                     }
                     
+                    /* acc_speed = 1_matrix_ms * c, total_speed = acc_speed[j] */ 
                     remaining_c = c;                        
                     for (int j=0; j<bts_len; j++) {
-                        n_acc_task[j] = (acc_speed[j] / total_speed) * c;
+                        double ratio = acc_speed[j] / total_speed;
+                        n_acc_task[j] = (int)(ratio * c);
+                        //cout << "acc: " << bts[j] << " prende: " << n_acc_task[j] << " task\n";
                         remaining_c -= n_acc_task[j];
                     }
 
-                    int t = 0;
+                    /* send task to the accellerators */
+                    t = 0;
                     for (int j=0; j<bts_len; j++)
                         for (int w=0; w<n_acc_task[j]; w++){
                             buffers[bts[j]]->put(tasks[t]);
                             t++;
                         }
 
+                    /* send the remaining to the fastest */
                     if (remaining_c != 0) {
                         for (int j=c-remaining_c; j<c; j++)
                             buffers[bts[0]]->put(tasks[j]);
@@ -351,8 +361,8 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     chrono::high_resolution_clock::time_point end_time;
     chrono::duration<double, std::milli> duration;
 
-    const int N_WARMUP = 3;
-    const int N_RUNS = 10;
+    const int N_WARMUP = 2;
+    const int N_RUNS = 5;
 
     double total_ms = 0.0;
 
@@ -393,7 +403,8 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
 /* call benchmark_acc for each test matrix*/
 inline void benchmark(BT bt, Type type, string filename) {
     vector<int> dims;
-    for (int d = STEP_SIZE; d <= STEP_SIZE*6; d += STEP_SIZE) 
+
+    for (int d = STEP_SIZE; d <= STEP_SIZE*STEP_TOTAL; d += STEP_SIZE) 
         dims.push_back(d);
 
     for (int m : dims) 

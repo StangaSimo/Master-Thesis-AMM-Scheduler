@@ -1,96 +1,34 @@
-------------------------------------- No sleep Cuda Old
-
-Cuda only
-==================================
+------------------------------------- Cuda Old
 N Matrix: 500
 M : 1024 N : 1024 K : 512
 
+Cuda only
+==================================
 Avg latency:      2.02696 ms
-Min latency:      1.99322 ms
-Max latency:      2.42652 ms
-
 Total ms:      1015.95 ms
 ==================================
 
 
 Cuda with scheduler
 ==================================
-N Matrix: 500
-M : 1024 N : 1024 K : 512
-
 Avg latency:      514.161 ms
-Min latency:      2.97636 ms
-Max latency:      1019.86 ms
-
 Total ms:      1019.89 ms
 ==================================
 
 
 Static partitioning
 ==================================
-N Matrix: 500
-M : 1024 N : 1024 K : 512
-
 Avg latency:      279.387 ms
-Min latency:      2.88401 ms
-Max latency:      685.577 ms
-
 Total ms:      685.592 ms
 ==================================
 
-
-------------------------------------- sleep Cuda Old
+------------------------------------- Cuda with Async and 2 Stream
+N Matrix: 500
+M : 1024 N : 1024 K : 512
 
 Cuda only
 ==================================
-N Matrix: 500
-M : 1024 N : 1024 K : 512
-
-Avg latency:      2.04724 ms
-Min latency:      1.98682 ms
-Max latency:      3.05543 ms
-
-Total ms:      1026.03 ms
-==================================
-
-
-Cuda with scheduler
-==================================
-N Matrix: 500
-M : 1024 N : 1024 K : 512
-
-Avg latency:      514.003 ms
-Min latency:      3.42812 ms
-Max latency:      1017.86 ms
-
-Total ms:      1017.86 ms
-==================================
-
-
-Static partitioning
-==================================
-N Matrix: 500
-M : 1024 N : 1024 K : 512
-
-Avg latency:      266.626 ms
-Min latency:      3.64637 ms
-Max latency:      639.777 ms
-
-Total ms:      639.784 ms
-==================================
-
-
-------------------------------------- no sleep Cuda Async Stream    old benchmark file
-
-Cuda only
-==================================
-N Matrix: 500
-M : 1024 N : 1024 K : 512
-
 Avg latency:      1.35473 ms
-Min latency:      1.31901 ms
-Max latency:      1.82329 ms
-
 Total ms:      679.189 ms
 ==================================
 
@@ -101,22 +39,67 @@ N Matrix: 500
 M : 1024 N : 1024 K : 512
 
 Avg latency:      343.614 ms
-Min latency:      1.78597 ms
-Max latency:      677.284 ms
-
 Total ms:      677.304 ms
 ==================================
 
 
 Static partitioning
 ==================================
-N Matrix: 500
-M : 1024 N : 1024 K : 512
-
 Avg latency:      231.839 ms
-Min latency:      1.87564 ms
-Max latency:      625.979 ms
-
 Total ms:      625.996 ms
 ==================================
 
+
+Anche aumentando il numero di matrici siamo sempre alla stessa velocita, per cui va migliorata la logica e aggiornati i file di benchmark. 
+
+Ritoccata la logica che aveva un piccolo bug di decisione delle matrici e adesso riusciamo a scalare anche con il batch size dell'algoritmo statico.
+
+
+------------------------------------- new logic, new benchmark files , 10 batch size 
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Cuda only
+==================================
+Avg latency:      1.34976 ms
+Total ms:      676.816 ms
+==================================
+
+
+Cuda with scheduler
+==================================
+Avg latency:      342.636 ms
+Total ms:      676.409 ms
+==================================
+
+
+Static partitioning
+==================================
+Avg latency:      233.577 ms
+Total ms:      514.685 ms
+==================================
+
+
+------------------------------------- new logic, new benchmark files, 80 batch size 
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Cuda only
+==================================
+Avg latency:      1.35506 ms
+Total ms:      679.137 ms
+==================================
+
+
+Cuda with scheduler
+==================================
+Avg latency:      344.736 ms
+Total ms:      679.803 ms
+==================================
+
+
+Static partitioning
+==================================
+Avg latency:      210.537 ms
+Total ms:      434.241 ms
+==================================

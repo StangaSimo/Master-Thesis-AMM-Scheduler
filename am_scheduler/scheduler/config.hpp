@@ -3,18 +3,22 @@
 
 //#define DEBUG
 
-//#define SLEEP
-#define M_ 2048
-#define N_ 2048
-#define K_ 1024 
-#define N_MATRIX 100 
+/********** tests ************/
+#define M_ 1024
+#define N_ 1024
+#define K_ 512 
+#define N_MATRIX 500
 
+/********** buffers ************/
+//#define SLEEP
 enum {GET_SLEEP = 500};       /* shared buffer sleep time */
 enum {PUT_SLEEP = 500};       /* 5 ms */
-enum {BUFFER_LENGHT = 1024};  /* shared buffer length */
+enum {BUFFER_LENGHT = 512};  /* shared buffer length */
 
-enum {STEP_SIZE = 512};       /* benchmark for csv step size */
-enum {BATCH_SIZE = 10};       /* static partitioning batch size */
 
+enum {STEP_SIZE = 256};       /* benchmark for csv step size */
+enum {STEP_TOTAL = 12};       /* STEP_SIZE * STEP_TOTAL */
+
+enum {BATCH_SIZE = 80};       /* static partitioning batch size */
 
 #endif
