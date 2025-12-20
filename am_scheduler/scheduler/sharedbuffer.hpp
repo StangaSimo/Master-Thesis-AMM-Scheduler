@@ -4,11 +4,7 @@
 #include <memory>
 #include <unistd.h>
 #include "tasks.hpp"
-
-#define SLEEP
-
-enum {GET_SLEEP = 500}; /* 5 ms */
-enum {PUT_SLEEP = 500}; /* 5 ms */
+#include "config.hpp"
 
 using namespace std;
 

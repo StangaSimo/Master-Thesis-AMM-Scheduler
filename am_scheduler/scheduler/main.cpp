@@ -4,6 +4,7 @@
 
 #include "sharedbuffer.hpp"
 #include "tasks.hpp"
+#include "config.hpp"
 #include "tests.hpp"
 
 /* appunti:
@@ -63,10 +64,10 @@ int main() {
 
     cout << "\n-------------------- [MAIN] ------------------------- \n" ;
 
-    size_t num_matrix = 500;
-    int M = 1024;
-    int N = 1024;
-    int K = 512;
+    size_t num_matrix = N_MATRIX;
+    int M = M_;
+    int N = N_;
+    int K = K_;
     
     /* cuda test without passing from scheduler */
     cout << "\nCuda only \n";

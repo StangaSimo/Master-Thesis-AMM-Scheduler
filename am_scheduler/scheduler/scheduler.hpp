@@ -8,6 +8,7 @@
 #include "sharedbuffer.hpp"
 #include "performancemap.hpp"
 #include "tasks.hpp"
+#include "config.hpp"
 
 #include <cassert>
 #include <cstddef>
@@ -24,19 +25,13 @@
 #include <vector>
 #include <fstream>
 
-//#define DEBUG 
-
-#ifdef DEBUG
+#ifdef DEBUG 
     #define PRINT(x) std::cout << "DEBUG: " << x << std::endl
 #else
     #define PRINT(x)
 #endif
 
 using namespace std;
-
-enum {BUFFER_LENGHT = 1024};  /* shared buffer length */
-enum {STEP_SIZE = 512};       /* benchmark step size */
-enum {BATCH_SIZE = 10};      /* static partitioning batch size */
 
 enum Logic : size_t { /* Scheduler Logic Type */
     ROUND_ROBIN,

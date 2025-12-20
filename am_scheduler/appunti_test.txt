@@ -79,3 +79,44 @@ Max latency:      639.777 ms
 Total ms:      639.784 ms
 ==================================
 
+
+------------------------------------- no sleep Cuda Async Stream    old benchmark file
+
+Cuda only
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      1.35473 ms
+Min latency:      1.31901 ms
+Max latency:      1.82329 ms
+
+Total ms:      679.189 ms
+==================================
+
+
+Cuda with scheduler
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      343.614 ms
+Min latency:      1.78597 ms
+Max latency:      677.284 ms
+
+Total ms:      677.304 ms
+==================================
+
+
+Static partitioning
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      231.839 ms
+Min latency:      1.87564 ms
+Max latency:      625.979 ms
+
+Total ms:      625.996 ms
+==================================
+

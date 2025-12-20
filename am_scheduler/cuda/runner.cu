@@ -14,31 +14,46 @@
     if(e != CUBLAS_STATUS_SUCCESS)                \
         printf ("%s %d CUBLAS ERROR: ", __FILE__, __LINE__); \
 }
+#define N_STREAM 2
 
 cublasHandle_t handle;  
-float *d_A, *d_B, *d_C;
+cudaStream_t streams[N_STREAM];
+float *d_A[N_STREAM]; 
+float *d_B[N_STREAM]; 
+float *d_C[N_STREAM];
+int i = 0; /* stream id*/
 
 void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
-        CHECK_CUDA(cudaMemcpy(d_A, A, M * K * sizeof(float), cudaMemcpyHostToDevice));
-        CHECK_CUDA(cudaMemcpy(d_B, B, K * N * sizeof(float), cudaMemcpyHostToDevice));
-        CHECK_CUDA(cudaMemcpy(d_C, C, M * N * sizeof(float), cudaMemcpyHostToDevice));
-        CHECK_CUDA(cudaDeviceSynchronize());
-        float alpha = 1.0f, beta = 0.0f;
+
+        cublasSetStream(handle, streams[i]);
+
+        CHECK_CUDA(cudaMemcpyAsync(d_A[i], A, M * K * sizeof(float), cudaMemcpyHostToDevice, streams[i]));
+        CHECK_CUDA(cudaMemcpyAsync(d_B[i], B, K * N * sizeof(float), cudaMemcpyHostToDevice, streams[i]));
+
+        float a = 1.0f, b = 0.0f;
+        // 2. Impostiamo lo stream su cuBLAS
+
 
         cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
-                    N, M, K, &alpha,
-                    d_B, N, d_A, K, &beta, d_C, N);
+                N, M, K, &a,
+                d_B[i], N, d_A[i], K, &b, d_C[i], N);
 
-        CHECK_CUDA(cudaDeviceSynchronize()); 
-        CHECK_CUDA(cudaMemcpy(C, d_C, M * N * sizeof(float), cudaMemcpyDeviceToHost));
+        CHECK_CUDA(cudaMemcpyAsync(C, d_C[i], M * N * sizeof(float), cudaMemcpyDeviceToHost, streams[i]));
+        CHECK_CUDA(cudaStreamSynchronize(streams[i])); /* blocking for latency metrics */ 
+
+        i = (i + 1) % N_STREAM; /* change stream for the next call */
 }
 
 extern "C" {
     void cuda_init(int M, int N, int K) {
         CHECK_CUBLAS(cublasCreate(&handle));
-        CHECK_CUDA(cudaMalloc(&d_A, M * K * sizeof(float)));
-        CHECK_CUDA(cudaMalloc(&d_B, K * N * sizeof(float)));
-        CHECK_CUDA(cudaMalloc(&d_C, M * N * sizeof(float)));
+
+        for (int j = 0; j < N_STREAM; ++j) {
+            CHECK_CUDA(cudaStreamCreate(&streams[j]));
+            CHECK_CUDA(cudaMalloc(&d_A[j], M * K * sizeof(float)));
+            CHECK_CUDA(cudaMalloc(&d_B[j], K * N * sizeof(float)));
+            CHECK_CUDA(cudaMalloc(&d_C[j], M * N * sizeof(float)));
+        }
     }
 
     void cuda_gemm_32bit(float* A, float* B, float* C, int M, int N, int K) {
@@ -46,9 +61,12 @@ extern "C" {
     }
 
     void cuda_free() {
-        CHECK_CUDA(cudaFree(d_A));
-        CHECK_CUDA(cudaFree(d_B));
-        CHECK_CUDA(cudaFree(d_C));
+        for (int j = 0; j < N_STREAM; ++j) {
+            CHECK_CUDA(cudaFree(d_A[j]));
+            CHECK_CUDA(cudaFree(d_B[j]));
+            CHECK_CUDA(cudaFree(d_C[j]));
+            CHECK_CUDA(cudaStreamDestroy(streams[j]));
+        }
         CHECK_CUBLAS(cublasDestroy(handle));
     }
 }
