@@ -221,10 +221,10 @@ inline void print_performance_stats(task* tasks, size_t num_tasks) {
     std::cout << "==================================" << std::endl;
     std::cout << "N Matrix: " << num_tasks << std::endl;
     std::cout << "M : " << M  << " N : " << N << " K : " << K << std::endl;
-    std::cout << "Total ms:      " << global_span.count() << " ms" << std::endl;
-    std::cout << "Avg latency:      " << average_latency_ms << " ms" << std::endl;
+    std::cout << "\nAvg latency:      " << average_latency_ms << " ms" << std::endl;
     std::cout << "Min latency:      " << min_latency_ms << " ms" << std::endl;
     std::cout << "Max latency:      " << max_latency_ms << " ms" << std::endl;
+    std::cout << "\nTotal ms:      " << global_span.count() << " ms" << std::endl;
     std::cout << "==================================" << std::endl;
     std::cout << "\n";
 }

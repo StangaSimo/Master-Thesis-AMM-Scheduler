@@ -1,0 +1,81 @@
+------------------------------------- No sleep Cuda Old
+
+Cuda only
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      2.02696 ms
+Min latency:      1.99322 ms
+Max latency:      2.42652 ms
+
+Total ms:      1015.95 ms
+==================================
+
+
+Cuda with scheduler
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      514.161 ms
+Min latency:      2.97636 ms
+Max latency:      1019.86 ms
+
+Total ms:      1019.89 ms
+==================================
+
+
+Static partitioning
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      279.387 ms
+Min latency:      2.88401 ms
+Max latency:      685.577 ms
+
+Total ms:      685.592 ms
+==================================
+
+
+------------------------------------- sleep Cuda Old
+
+Cuda only
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      2.04724 ms
+Min latency:      1.98682 ms
+Max latency:      3.05543 ms
+
+Total ms:      1026.03 ms
+==================================
+
+
+Cuda with scheduler
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      514.003 ms
+Min latency:      3.42812 ms
+Max latency:      1017.86 ms
+
+Total ms:      1017.86 ms
+==================================
+
+
+Static partitioning
+==================================
+N Matrix: 500
+M : 1024 N : 1024 K : 512
+
+Avg latency:      266.626 ms
+Min latency:      3.64637 ms
+Max latency:      639.777 ms
+
+Total ms:      639.784 ms
+==================================
+

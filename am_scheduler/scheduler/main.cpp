@@ -54,6 +54,8 @@
  *
  * */
 
+/* BATCH_SIZE, SLEEP, DEBUG */
+
 int main() {
 
     //cout << "\n-------------------- [TESTS] ------------------------- \n" ;
@@ -61,10 +63,10 @@ int main() {
 
     cout << "\n-------------------- [MAIN] ------------------------- \n" ;
 
-    size_t num_matrix = 150;
-    int M = 1536;
-    int N = 1536;
-    int K = 1024;
+    size_t num_matrix = 500;
+    int M = 1024;
+    int N = 1024;
+    int K = 512;
     
     /* cuda test without passing from scheduler */
     cout << "\nCuda only \n";
