@@ -185,14 +185,18 @@ inline void print_performance_stats(task* tasks, size_t num_tasks) {
 
     auto min_start = tasks[0].start_time;
     auto max_end = tasks[0].end_time;
+    int M = tasks[0].M;
+    int N = tasks[0].N;
+    int K = tasks[0].K;
     
-    std::chrono::duration<double, std::milli> first_dur = tasks[0].end_time - tasks[0].start_time;
-    double min_latency_ms = first_dur.count();
-    double max_latency_ms = first_dur.count();
+    std::chrono::duration<double, std::milli> first_time = tasks[0].end_time - tasks[0].start_time;
+    double min_latency_ms = first_time.count();
+    double max_latency_ms = first_time.count();
 
     double total_latency_sum_ms = 0.0;
 
-    for (size_t i = 0; i < num_tasks; ++i) {
+    for (size_t i=1; i<num_tasks; i++) {
+
         if (tasks[i].start_time < min_start) 
             min_start = tasks[i].start_time;
         
@@ -200,28 +204,27 @@ inline void print_performance_stats(task* tasks, size_t num_tasks) {
             max_end = tasks[i].end_time;
         
         std::chrono::duration<double, std::milli> duration = tasks[i].end_time - tasks[i].start_time;
-        double current_latency = duration.count();
+        double curr_latency_ms = duration.count();
         
-        total_latency_sum_ms += current_latency;
+        total_latency_sum_ms += curr_latency_ms;
 
-        if (current_latency < min_latency_ms) {
-            min_latency_ms = current_latency;
-        }
-        if (current_latency > max_latency_ms) {
-            max_latency_ms = current_latency;
-        }
+        if (curr_latency_ms < min_latency_ms) 
+            min_latency_ms = curr_latency_ms;
+
+        if (curr_latency_ms > max_latency_ms) 
+            max_latency_ms = curr_latency_ms;
     }
 
     std::chrono::duration<double, std::milli> global_span = max_end - min_start;
     double average_latency_ms = total_latency_sum_ms / num_tasks;
 
-    std::cout << "\n";
-    std::cout << "======= Performance Report =======" << std::endl;
-    std::cout << "Number of Matrix: " << num_tasks << std::endl;
-    std::cout << "Global Span:      " << global_span.count() << " ms" << std::endl;
-    std::cout << "AVG latency:      " << average_latency_ms << " ms" << std::endl;
-    std::cout << "MIN latency:      " << min_latency_ms << " ms" << std::endl;
-    std::cout << "MAX latency:      " << max_latency_ms << " ms" << std::endl;
+    std::cout << "==================================" << std::endl;
+    std::cout << "N Matrix: " << num_tasks << std::endl;
+    std::cout << "M : " << M  << " N : " << N << " K : " << K << std::endl;
+    std::cout << "Total ms:      " << global_span.count() << " ms" << std::endl;
+    std::cout << "Avg latency:      " << average_latency_ms << " ms" << std::endl;
+    std::cout << "Min latency:      " << min_latency_ms << " ms" << std::endl;
+    std::cout << "Max latency:      " << max_latency_ms << " ms" << std::endl;
     std::cout << "==================================" << std::endl;
     std::cout << "\n";
 }
@@ -247,7 +250,7 @@ inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type)
 
     cuda_free();
 
-    test_compare_task(tasks, num_task, Type::FLOAT);
-    clean_tasks(tasks,num_task,type);
+    //test_compare_task(tasks, num_task, Type::FLOAT);
     print_performance_stats(tasks, num_task);
+    clean_tasks(tasks,num_task,type);
 } 

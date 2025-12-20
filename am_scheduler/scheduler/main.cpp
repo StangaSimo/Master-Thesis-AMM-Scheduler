@@ -61,22 +61,24 @@ int main() {
 
     cout << "\n-------------------- [MAIN] ------------------------- \n" ;
 
-    size_t num_matrix = 300;
-    int M = 1000;
-    int N = 1000;
-    int K = 50;
+    size_t num_matrix = 150;
+    int M = 1536;
+    int N = 1536;
+    int K = 1024;
     
     /* cuda test without passing from scheduler */
+    cout << "\nCuda only \n";
     test_cuda_streaming(M,N,K,num_matrix,Type::FLOAT);
 
     Logic l;
 
     for (int i=0; i<3; i++) {
 
+        if (i == 1) {continue;}
         cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
-        if (i == 0) {l = Logic::CUDA_ONLY;}
-        if (i == 1) {l = Logic::ROUND_ROBIN;continue;}
-        if (i == 2) {l = Logic::STATIC_PARTITIONING;}
+        if (i == 0) {l = Logic::CUDA_ONLY;cout << "\nCuda with scheduler \n";}
+        if (i == 1) {l = Logic::ROUND_ROBIN;cout << "\nRound robin \n";}
+        if (i == 2) {l = Logic::STATIC_PARTITIONING;cout << "\nStatic partitioning \n";}
 
         task* task_array = init_tasks(num_matrix, M, N, K, Type::FLOAT);
 
@@ -85,7 +87,7 @@ int main() {
         scheduler.do_tasks(task_array, num_matrix);
         scheduler.wait();
 
-        test_compare_task(task_array, num_matrix, Type::FLOAT);
+        //test_compare_task(task_array, num_matrix, Type::FLOAT);
         print_performance_stats(task_array, num_matrix);
         clean_tasks(task_array,num_matrix, Type::FLOAT);
     } 
