@@ -447,9 +447,9 @@ inline void handle_task(BT backend_type, task *task) {
 inline void init_acc(BT backend_type) {
     switch (backend_type) {
     case BT::CUDA:
-        cuda_init(4092,4092,4092); //TODO 
+        cuda_init(MAX_SIZE,MAX_SIZE,MAX_SIZE); //TODO 
     case BT::SYCL:
-        sycl_init(2000); //TODO
+        sycl_init(MAX_SIZE,MAX_SIZE,MAX_SIZE); //TODO
         break;    
     case BT::OPENVINO:
         ov_init();

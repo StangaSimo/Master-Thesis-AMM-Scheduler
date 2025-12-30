@@ -22,7 +22,7 @@ Avg latency:      279.387 ms
 Total ms:      685.592 ms
 ==================================
 
-------------------------------------- Cuda with Async and 2 Stream
+------------------------------------- Cuda with Async commands and 2 Stream
 N Matrix: 500
 M : 1024 N : 1024 K : 512
 
@@ -50,10 +50,13 @@ Total ms:      625.996 ms
 ==================================
 
 
-Anche aumentando il numero di matrici siamo sempre alla stessa velocita, per cui va migliorata la logica e aggiornati i file di benchmark. 
 
-Ritoccata la logica che aveva un piccolo bug di decisione delle matrici e adesso riusciamo a scalare anche con il batch size dell'algoritmo statico.
+I cambiamenti piu grossi:
+ritoccata la logica di partizionamento, 
+migliorata la struttura dati per mantenere i risultati dei benchmark con una cache,
+migliorato anche la struttura di open vino inserendo anche qui una cache per i modelli,
 
+e adesso riusciamo ad andare piu veloce e anche a scalare aumentando il numero di batch, ovviamente andrà cercato uno sweet spot. 
 
 ------------------------------------- new logic, new benchmark files , 10 batch size 
 N Matrix: 500

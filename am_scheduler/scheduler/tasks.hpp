@@ -29,7 +29,6 @@ typedef struct {
 } task;
 
 inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
-    if (t == Type::FLOAT) {
         task* array_task = new task[n_task];
         random_device rd;
         mt19937 gen(rd());
@@ -42,29 +41,53 @@ inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
             array_task[i].K = k;
             array_task[i].type = t;
 
-            array_task[i].A = new float[m * k]; 
-            array_task[i].B = new float[k * n];
-            array_task[i].C = new float[m * n];
+            if (t == Type::FLOAT) {
+                array_task[i].A = new float[m * k]; 
+                array_task[i].B = new float[k * n];
+                array_task[i].C = new float[m * n];
 
-            float *A = (float*)array_task[i].A;
-            float *B = (float*)array_task[i].B;
-            float *C = (float*)array_task[i].C;
+                float *A = (float*)array_task[i].A;
+                float *B = (float*)array_task[i].B;
+                float *C = (float*)array_task[i].C;
 
-            for (int j = 0; j < m * k; ++j) 
-                A[j] = dis(gen);
+                for (int j = 0; j < m * k; ++j) 
+                    A[j] = dis(gen);
 
-            for (int j = 0; j < k * n; ++j) 
-                B[j] = dis(gen);
+                for (int j = 0; j < k * n; ++j) 
+                    B[j] = dis(gen);
 
-            for (int j = 0; j < m * n; ++j) 
-                C[j] = 0;
+                for (int j = 0; j < m * n; ++j) 
+                    C[j] = 0;
+
+            } else if (t == Type::HALF) {
+
+
+
+            } else {
+                cout << "";
+            }
+
         }
 
         return array_task;
-    } else {
-        cout << "[ERROR] Type not hnow ";
-        exit(EXIT_FAILURE);
-    }
+    //uint16_t* pA = (uint16_t*)A;
+    //uint16_t* pB = (uint16_t*)B;
+    //uint16_t* pC = (uint16_t*)C;
+
+    //random_device rd;
+    //mt19937 gen(rd());
+    //uniform_real_distribution<float> dis(-1.0f, 1.0f);
+
+    //for (int i = 0; i < M * K; ++i) pA[i] = float_to_half(dis(gen));
+    //for (int i = 0; i < K * N; ++i) pB[i] = float_to_half(dis(gen));
+    //memset(pC, 0, M * N * sizeof(uint16_t));
+
+
+    //         
+    //    } else {
+    //    cout << "[ERROR] Type not hnow ";
+    //    exit(EXIT_FAILURE);
+    //}
 }
 
 inline void clean_tasks(task* array_task, size_t n_task, Type type) {
@@ -80,4 +103,3 @@ inline void clean_tasks(task* array_task, size_t n_task, Type type) {
     delete[] array_task;
 }
 #endif
-

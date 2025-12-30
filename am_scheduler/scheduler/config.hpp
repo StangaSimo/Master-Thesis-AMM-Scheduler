@@ -7,7 +7,8 @@
 #define M_ 1024
 #define N_ 1024
 #define K_ 512 
-#define N_MATRIX 500
+#define N_MATRIX 100
+#define MAX_SIZE 2048
 
 /********** buffers ************/
 //#define SLEEP

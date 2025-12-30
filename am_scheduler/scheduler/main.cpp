@@ -57,6 +57,18 @@
 
 /* BATCH_SIZE, SLEEP, DEBUG */
 
+
+
+
+// TODO: vedere se ha senso fare l'implementazione a 8 bit, magari si convertono e via. 
+//
+//
+//
+//
+//
+//
+//
+
 int main() {
 
     //cout << "\n-------------------- [TESTS] ------------------------- \n" ;
