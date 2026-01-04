@@ -7,6 +7,7 @@
 
 #include "sharedbuffer.hpp"
 #include "performancemap.hpp"
+#include "profiler.hpp"
 #include "tasks.hpp"
 #include "config.hpp"
 
@@ -31,21 +32,18 @@
     #define PRINT(x)
 #endif
 
+#ifdef ENABLE_PROFILING
+    #define PROF(x) x 
+#else
+    #define PROF(x) 
+#endif
+
 using namespace std;
 
 enum Logic : size_t { /* Scheduler Logic Type */
     ROUND_ROBIN,
     CUDA_ONLY,
     STATIC_PARTITIONING,
-};
-
-enum BT : size_t { /* backend_type */
-    CORDINATOR,
-    CUDA, 
-    SYCL, 
-    OPENVINO,
-    CPU,
-    COUNT,
 };
 
 /******* Prototypes ********/
@@ -55,7 +53,6 @@ inline void init_acc(BT backend_type);
 inline void free_acc(BT backend_type); 
 inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K);
 inline void benchmark(BT bt, Type type, string filename);
-inline void handle_task(BT backend_type, task *task);
 inline void print_logic(Logic l); 
 inline string get_acc_string(BT backend_type); 
 
@@ -82,22 +79,29 @@ class AMScheduler {
         /* backend_type vector for handling the accellerators */
         vector<BT> bts; 
 
-        /* Perfomance Map for each accellerator*/
+        /* Perfomance Map for each accellerator */
         array<unique_ptr<PerformanceMap>, BT::COUNT> bts_map; 
+
+        /* metrics profiler */
+        Profiler profiler = Profiler();
 
 /**********************************  Worker  ***********************************/
 
         void worker_thread(BT bt, SharedBuffer *buffer) { 
             task* task = nullptr;
-
+            
+            PROF(profiler.init_last_work(bt));
             while(threads_keep_running) { 
 
-                /* blocking get for max 50ms */
+                /* blocking get for max 50ms if SLEEP on */
                 task = buffer->get();
+
                 /* if there isn't a task we check if we have to shutdown */
                 if (!task) {continue;}
 
+                PROF(profiler.start_worker(bt));                 
                 handle_task(bt, task);
+                PROF(profiler.end_worker(bt));                 
             }
         } 
 
@@ -153,6 +157,8 @@ class AMScheduler {
             case Logic::STATIC_PARTITIONING: 
 
                 while(threads_keep_running) { 
+                    
+                    PROF(profiler.start_fetch());
 
                     while (c < BATCH_SIZE) {
                         tasks[c] = buffer->get();
@@ -160,6 +166,9 @@ class AMScheduler {
                         c++;
                     }
 
+                    PROF(profiler.stop_fetch());
+
+                    PROF(profiler.start_logic());
                     if (c == 0) {continue;}
 
                     if (c == 1) { /* 1 task, to the fastest */
@@ -178,10 +187,8 @@ class AMScheduler {
                     /* velocity = 1 / time */
                     total_speed = 0.0;
                     for (int j=0; j<bts_len; j++){
-                        double single_matrix_ms = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K);
+                        double single_matrix_ms = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K, tasks[0]->type);
                         acc_speed[j] = 1.0 / (single_matrix_ms * (double) c);        
-                        //cout << "M: " <<tasks[0]->M << " N: " <<tasks[0]->N << " K: " <<tasks[0]->K<< "\n";
-                        //cout << "acc: " << bts[j] << " ci mette: " << acc_speed[j] << " per una: " << prova << "\n";
                         total_speed += acc_speed[j];
                     }
                     
@@ -190,10 +197,12 @@ class AMScheduler {
                     for (int j=0; j<bts_len; j++) {
                         double ratio = acc_speed[j] / total_speed;
                         n_acc_task[j] = (int)(ratio * c);
-                        //cout << "acc: " << bts[j] << " prende: " << n_acc_task[j] << " task\n";
                         remaining_c -= n_acc_task[j];
                     }
 
+                    PROF(profiler.stop_logic());
+
+                    PROF(profiler.start_dispatch());
                     /* send task to the accellerators */
                     t = 0;
                     for (int j=0; j<bts_len; j++)
@@ -203,11 +212,14 @@ class AMScheduler {
                         }
 
                     /* send the remaining to the fastest */
-                    if (remaining_c != 0) {
+                    if (remaining_c != 0)
                         for (int j=c-remaining_c; j<c; j++)
                             buffers[bts[0]]->put(tasks[j]);
-                    }
+                   
                     c = 0; 
+
+                    PROF(profiler.stop_dispatch());
+                    PROF(profiler.record_sample());
                 } 
                 break;
             default:
@@ -264,9 +276,8 @@ class AMScheduler {
                         thread->join();
 
             /* shut down back ends */
-            for (auto i : bts) {
+            for (auto i : bts) 
                 free_acc(i);
-            }
 
             PRINT("[SCHEDULER] Threads stopped.\n");
         }
@@ -275,13 +286,26 @@ class AMScheduler {
         /* upload the banchmark files and generate them if not presents */
         void init_benchmarks() {
             for (BT i : bts) {
-                string filename; 
-                filename = get_benchmark_filename(i, Type::FLOAT); //TODO: typechange
-                if (filesystem::exists(filename)){
-                     PRINT("[SCHEDULER] File: " << filename <<  " opened.\n"); 
+
+                string filename_f; 
+                string filename_h; 
+
+                filename_f = get_benchmark_filename(i, Type::FLOAT); 
+                filename_h = get_benchmark_filename(i, Type::HALF); 
+
+                if (filesystem::exists(filename_f)){
+                     PRINT("[SCHEDULER] File: " << filename_f <<  " opened.\n"); 
                 } else {
-                     PRINT("[SCHEDULER] File: " << filename <<  " not present\n"); 
-                     benchmark(i, Type::FLOAT ,filename);
+                     PRINT("[SCHEDULER] File: " << filename_f <<  " not present\n"); 
+                     benchmark(i, Type::FLOAT ,filename_f);
+                     PRINT("[SCHEDULER] Benchmark file created\n"); 
+                }
+
+                if (filesystem::exists(filename_h)){
+                     PRINT("[SCHEDULER] File: " << filename_h <<  " opened.\n"); 
+                } else {
+                     PRINT("[SCHEDULER] File: " << filename_h <<  " not present\n"); 
+                     benchmark(i, Type::HALF ,filename_h);
                      PRINT("[SCHEDULER] Benchmark file created\n"); 
                 }
             }
@@ -290,15 +314,18 @@ class AMScheduler {
         /* create the map for each accellerator */
         void init_maps() {
             for (BT i : bts) {
-                string filename; 
-                filename = get_benchmark_filename(i, Type::FLOAT); //TODO: typechange
-                if (filesystem::exists(filename)){
-                    bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE,filename);
+                string filename_f; 
+                string filename_h; 
+                filename_f = get_benchmark_filename(i, Type::FLOAT); 
+                filename_h = get_benchmark_filename(i, Type::HALF); 
+
+                if (filesystem::exists(filename_f) && filesystem::exists(filename_h)){
+                    bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE,filename_f,filename_h);
                 } else {
-                     cerr << "[SCHEDULER] File: " << filename <<  " not found for map init\n"; 
+                     cerr << "[SCHEDULER] File: " << filename_f <<  " or " << filename_h << " not found for map init\n"; 
                      exit(EXIT_FAILURE);
                 }
-            }
+           }
         }
 
         /**********************************  Public Interface ***********************************/
@@ -348,9 +375,13 @@ class AMScheduler {
             }
 
             PRINT("[SCHEDULER] All empty.. \n");
+
             // TODO: maybe better shutdown? 
             sleep(2); /* wait for unfinished matrix */
         }
+
+        /* return the profiler for printing the stats */
+        void print_profiler_stats() {profiler.print_stats(bts);}
 };
 
 /**********************************  Helper Functions ***********************************/
@@ -419,16 +450,26 @@ inline void benchmark(BT bt, Type type, string filename) {
 /* task handler for the workers, choose the right backend_type */
 inline void handle_task(BT backend_type, task *task) {
     switch (backend_type) {
+
     case BT::CUDA:
-        cuda_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
+        if (task->type == Type::FLOAT)
+            cuda_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            cuda_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
         break;    
-        
+
     case BT::SYCL:
-        sycl_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
+        if (task->type == Type::FLOAT)
+            sycl_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            sycl_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
         break;    
-    
+
     case BT::OPENVINO:
-        ov_gemm_32bit((float*)task->A,(float*)task->B,(float*)task->C, task->M, task->N, task->K);
+        if (task->type == Type::FLOAT)
+            ov_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            ov_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
         break;    
 
     //case BT::CPU:

@@ -2,6 +2,7 @@
 #define REGRESSION_H
 
 #include "regression.hpp"
+#include "tasks.hpp"
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
@@ -32,13 +33,19 @@ inline vector<string> split(const string &s, char delimiter) {
 /* 1048576 limit for each M or N or K */
 class PerformanceMap {
 
-    unordered_map<unsigned long long, double> grid_map;
-    long long STEP_SIZE;
+    struct map_struct {
+        unordered_map<unsigned long long, double> grid_map;
+        
+        long long last_M = -1;    
+        long long last_N = -1;    
+        long long last_K = -1;    
+        double last_result = -1.0; 
+    };
 
-    long long last_M = 0;    
-    long long last_N = 0;    
-    long long last_K = 0;    
-    double last_key = 0.0;    
+    map_struct map_f;
+    map_struct map_h;
+
+    long long STEP_SIZE;
 
 private:
 
@@ -58,23 +65,18 @@ private:
         return ((unsigned long long)rM << 40) | ((unsigned long long)rN << 20) | (unsigned long long)rK;
     }
 
-    void add_key(long long M, long long N, long long K, double time) {
+    void add_key(long long M, long long N, long long K, double time, Type type) {
         unsigned long long key = get_key(M, N, K);
-        grid_map[key] = time;
+        if (type == Type::FLOAT)
+           map_f.grid_map[key] = time;
+        if (type == Type::HALF)
+           map_h.grid_map[key] = time;
     }
-
-    /* open file and init the map */
-    void init_map(string filename){
-        ifstream file(filename);
-
-        if (!file.is_open()) {
-            cerr << "[PerformanceMap]: ERROR open file" << filename <<" \n";
-            exit(EXIT_FAILURE);
-        }
-
+    
+    void add_keys(ifstream* file, Type type) {
         string line;
-        getline(file, line);
-        while (std::getline(file, line)) {
+        getline(*file, line);
+        while (std::getline(*file, line)) {
             vector<std::string> row = split(line, ',');
             if (row.size() < 6) continue;
 
@@ -83,33 +85,54 @@ private:
             int K = stod(row[4]);
             double time = stod(row[5]);
             
-            add_key(M, N, K, time);
+            add_key(M, N, K, time, type);
         }
+    }
+
+    /* open file and init the map */
+    void init_maps(string filename_f, string filename_h){
+        ifstream file_f(filename_f);
+        ifstream file_h(filename_h);
+
+        if (!file_f.is_open()) {
+            cerr << "[PerformanceMap]: ERROR open file" << filename_f <<" \n";
+            exit(EXIT_FAILURE);
+        }
+
+        if (!file_h.is_open()) {
+            cerr << "[PerformanceMap]: ERROR open file" << filename_h <<" \n";
+            exit(EXIT_FAILURE);
+        }
+
+        add_keys(&file_f,Type::FLOAT);
+        add_keys(&file_h,Type::HALF);
     }
 
 public:
 
-    PerformanceMap(int step_size, string filename) : STEP_SIZE(step_size) {
-        init_map(filename);        
+    PerformanceMap(int step_size, string filename_f, string filename_h) : STEP_SIZE(step_size) {
+        init_maps(filename_f, filename_h);        
     }
 
     /* return the time, -1 if the matrix is too big */
-    double query(long long M, long long N, long long K) {
+    double query(long long M, long long N, long long K, Type type) {
+        map_struct &data = (type == Type::FLOAT) ? map_f : map_h;
+
         unsigned long long key = get_key(M, N, K);
 
         /* we cache the last results */
-        if (M == last_M && N == last_N && K == last_K) {return last_K;}
+        if (M == data.last_M && N == data.last_N && K == data.last_K) {return data.last_K;}
 
-        last_M = M;
-        last_N = N;
-        last_K = K;
+        data.last_M = M;
+        data.last_N = N;
+        data.last_K = K;
 
-        if (grid_map.find(key) != grid_map.end()) {
-            last_K = grid_map[key];
-            return grid_map[key];
+        if (data.grid_map.find(key) != data.grid_map.end()) {
+            data.last_K = data.grid_map[key];
+            return data.grid_map[key];
         }
 
-        last_K = -1.0;
+        data.last_K = -1.0;
         return -1.0; 
     }
 };

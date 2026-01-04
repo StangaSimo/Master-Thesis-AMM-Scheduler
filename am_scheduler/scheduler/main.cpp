@@ -71,41 +71,50 @@
 
 int main() {
 
-    //cout << "\n-------------------- [TESTS] ------------------------- \n" ;
     test_accellerators();
-
-    cout << "\n-------------------- [MAIN] ------------------------- \n" ;
 
     size_t num_matrix = N_MATRIX;
     int M = M_;
     int N = N_;
     int K = K_;
     
-    /* cuda test without passing from scheduler */
-    cout << "\nCuda only \n";
-    test_cuda_streaming(M,N,K,num_matrix,Type::FLOAT);
+    Type type = Type::FLOAT;
 
-    Logic l;
+    for (int w=0; w<2; w++) {
+        if (w == 0) {cout << "\n--------------------  32BIT:  \n";}
+        if (w == 1) {cout << "\n--------------------  16BIT:  \n"; type = Type::HALF;}
 
-    for (int i=0; i<3; i++) {
+        cout << "\nCuda only \n";
+        /* cuda test without passing from scheduler */
+        test_cuda_streaming(M, N, K, num_matrix, type);
 
-        if (i == 1) {continue;}
-        cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
-        if (i == 0) {l = Logic::CUDA_ONLY;cout << "\nCuda with scheduler \n";}
-        if (i == 1) {l = Logic::ROUND_ROBIN;cout << "\nRound robin \n";}
-        if (i == 2) {l = Logic::STATIC_PARTITIONING;cout << "\nStatic partitioning \n";}
+        Logic l;
 
-        task* task_array = init_tasks(num_matrix, M, N, K, Type::FLOAT);
+        for (int i=0; i<3; i++) {
 
-        AMScheduler scheduler = AMScheduler(l);
+            if (i == 1) {continue;}
 
-        scheduler.do_tasks(task_array, num_matrix);
-        scheduler.wait();
+            //cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
+            if (i == 0) {l = Logic::CUDA_ONLY; cout << "\nCuda with scheduler \n";}
+            if (i == 1) {l = Logic::ROUND_ROBIN; cout << "\nRound robin \n";}
+            if (i == 2) {l = Logic::STATIC_PARTITIONING; cout << "\nStatic partitioning \n";}
 
-        //test_compare_task(task_array, num_matrix, Type::FLOAT);
-        print_performance_stats(task_array, num_matrix);
-        clean_tasks(task_array,num_matrix, Type::FLOAT);
-    } 
+            task* task_array = init_tasks(num_matrix, M, N, K, type);
 
+            AMScheduler scheduler = AMScheduler(l);
+
+            scheduler.do_tasks(task_array, num_matrix);
+            scheduler.wait();
+
+            //test_compare_task(task_array, num_matrix, Type::FLOAT);
+            print_performance_stats(task_array, num_matrix);
+
+#ifdef ENABLE_PROFILING
+            scheduler.print_profiler_stats();
+#endif
+            clean_tasks(task_array, num_matrix, type);
+        } 
+
+    }
     return 0;
 }
