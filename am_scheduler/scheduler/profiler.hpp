@@ -124,7 +124,8 @@ public:
         print_metric(fetch);
         print_metric(logic);
         print_metric(disp);
-        std::cout << std::left << std::setw(10) << "Total: " << total/count << "us\n";
+        std::cout << std::left << std::setw(10) << "Total time: " << total/count << "us\n";
+
         std::cout << "\nWorkers:\n";
 
         for (BT i : bts) {
@@ -132,12 +133,15 @@ public:
             double total_time = w.total_work + w.total_idle;
             double occupancy = (total_time > 0) ? (w.total_work / total_time) * 100.0 : 0.0;
             double avg_idle = (w.tasks_processed > 0) ? w.total_idle / w.tasks_processed : 0.0;
+            double avg_work = (w.tasks_processed > 0) ? w.total_work / w.tasks_processed : 0.0;
 
             string acc_str = (i == BT::CUDA ? "CUDA" : (i == BT::SYCL ? "SYCL" : "OPENVINO"));
-            std::cout << "[" << acc_str << "]" << std::endl;
-            std::cout << "  Tasks Processed: " << w.tasks_processed << std::endl;
-            std::cout << "  Occupancy:       " << std::fixed << std::setprecision(2) << occupancy << " %" << std::endl;
-            std::cout << "  Avg Idle/Task:   " << avg_idle << " us" << std::endl;
+            std::cout << "[" << acc_str << "]" << "\n";
+            std::cout << "  Tasks: " << w.tasks_processed << "\n";
+            std::cout << "  Occupancy:       " << std::fixed << std::setprecision(2) << occupancy << " %\n";
+            std::cout << "  Avg idle time:   " << avg_idle << " us\n";
+            std::cout << "  Avg work time:   " << avg_work << " us\n";
+            std::cout << "  total time:   " << total_time/1000 << " ms\n";
         }
 
         std::cout << "===================================\n";
@@ -148,13 +152,13 @@ private:
         std::cout << std::left << std::setw(10) << m.name 
                   << " | Avg: " << std::setw(3) << std::fixed << std::setprecision(2) << m.avg() << " us"
                   << " | Min: " << std::setw(3) << m.min << " us"
-                  << " | Max: " << std::setw(3) << m.max << " us" << std::endl;
+                  << " | Max: " << std::setw(3) << m.max << " us\n";
     }
 };
 
 inline void print_performance_stats(task* tasks, size_t num_tasks) {
     if (tasks == nullptr || num_tasks == 0) {
-        std::cout << "[ERROR] print_performance_stats" << std::endl;
+        std::cout << "[ERROR] print_performance_stats\n";
         exit(EXIT_FAILURE);
     }
 
@@ -193,13 +197,13 @@ inline void print_performance_stats(task* tasks, size_t num_tasks) {
     std::chrono::duration<double, std::milli> global_span = max_end - min_start;
     double average_latency_ms = total_latency_sum_ms / num_tasks;
 
-    std::cout << "==================================" << std::endl;
-    std::cout << "N Matrix: " << num_tasks << std::endl;
-    std::cout << "M : " << M  << " N : " << N << " K : " << K << std::endl;
-    std::cout << "\nAvg latency:      " << average_latency_ms << " ms" << std::endl;
-    std::cout << "Min latency:      " << min_latency_ms << " ms" << std::endl;
-    std::cout << "Max latency:      " << max_latency_ms << " ms" << std::endl;
-    std::cout << "\nTotal ms:      " << global_span.count() << " ms" << std::endl;
+    std::cout << "==================================\n";
+    std::cout << "N Matrix: " << num_tasks << "\n";
+    std::cout << "M : " << M  << " N : " << N << " K : " << K << "\n";
+    std::cout << "\nAvg latency:      " << average_latency_ms << " ms\n";
+    std::cout << "Min latency:      " << min_latency_ms << " ms\n";
+    std::cout << "Max latency:      " << max_latency_ms << " ms\n";
+    std::cout << "\nTotal ms:      " << global_span.count() << " ms\n";
     std::cout << "\n";
 }
 #endif

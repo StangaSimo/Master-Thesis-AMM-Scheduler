@@ -8,8 +8,8 @@
 
 using namespace std;
 
-
-enum BT : size_t { /* backend_type */
+/* backend_type */
+enum BT : size_t { 
     CORDINATOR,
     CUDA, 
     SYCL, 

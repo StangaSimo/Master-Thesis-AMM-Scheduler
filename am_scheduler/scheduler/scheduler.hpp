@@ -171,15 +171,15 @@ class AMScheduler {
                     PROF(profiler.start_logic());
                     if (c == 0) {continue;}
 
-                    if (c == 1) { /* 1 task, to the fastest */
-                        buffers[bts[0]]->put(tasks[0]);
-                        c = 0;
-                        continue;
-                    }
+                    //if (c == 1) { /* 1 task, to the fastest */
+                    //    buffers[bts[0]]->put(tasks[0]);
+                    //    c = 0;
+                    //    continue;
+                    //}
 
                     if (bts_len >= c){  /* the remaining tasks TODO: i don't think so, but lets see */
                         for (int j=0; j<c; j++)
-                            buffers[bts[j]]->put(tasks[j]);
+                            buffers[bts[0]]->put(tasks[j]);
                         c = 0;
                         continue;
                     }
