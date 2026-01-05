@@ -31,6 +31,11 @@ using namespace std;
 #ifdef ENABLE_SYCL
 #include "sycl_wrapper.h"
 #endif
+
+#ifdef ENABLE_OPENBLAS
+#include "cpu.hpp"
+#endif
+ 
  
 /***************************** Helpers *******************************/
 
@@ -206,6 +211,12 @@ inline void test_accellerators() {
         if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "SYCL 32bit Fail\n"; exit(1); }
     #endif
 
+    #ifdef ENABLE_OPENBLAS
+        cpu_init();
+        cpu_gemm_32bit(A,B,C,M,N,K);
+        if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "SYCL 32bit Fail\n"; exit(1); }
+    #endif
+
     delete[] A; delete[] B; delete[] C;
 
 
@@ -233,17 +244,22 @@ inline void test_accellerators() {
         if(!compare_cpu_16bit(A16, B16, C16, M, N, K)) { cout << "SYCL 16bit Fail\n"; exit(1); }
     #endif
 
+    #ifdef ENABLE_OPENBLAS
+        cpu_gemm_16bit(A16, B16, C16, M, N, K);
+        if(!compare_cpu_16bit(A16, B16, C16, M, N, K)) { cout << "CPU 16bit Fail\n"; exit(1); }
+    #endif
+
     delete[] A16; delete[] B16; delete[] C16;
 
 
     /* ------------------- 8 BIT TEST ------------------- */
-    //cout << "\n--- Running 8-bit INT8 Tests ---\n";
+    cout << "\n--- Running 8-bit INT8 Tests ---\n";
     // Input 1 byte, Output 4 byte (int32)
-    //int8_t *A8 = new int8_t[M*K];
-    //int8_t *B8 = new int8_t[K*N];
-    //int32_t *C8 = new int32_t[M*N]; 
+    int8_t *A8 = new int8_t[M*K];
+    int8_t *B8 = new int8_t[K*N];
+    int32_t *C8 = new int32_t[M*N]; 
 
-    //init_8bit(A8, B8, C8, M, N, K);
+    init_8bit(A8, B8, C8, M, N, K);
 
     //#ifdef ENABLE_OPENVINO
     //    ov_gemm_8bit(A8, B8, C8, M, N, K);
@@ -251,11 +267,11 @@ inline void test_accellerators() {
     //    ov_free();
     //#endif
 
-    //#ifdef ENABLE_CUDA
-    //    cuda_gemm_8bit(A8, B8, C8, M, N, K);
-    //    if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "CUDA 8bit Fail\n"; exit(1); }
-    //    cuda_free();
-    //#endif
+    #ifdef ENABLE_CUDA
+        cuda_gemm_8bit(A8, B8, C8, M, N, K);
+        if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "CUDA 8bit Fail\n"; exit(1); }
+        cuda_free();
+    #endif
 
     //#ifdef ENABLE_SYCL
     //    sycl_gemm_8bit(A8, B8, C8, M, N, K);
@@ -282,8 +298,6 @@ inline void test_compare_task(task* array_task, size_t n_task, Type t) {
         for (int i = 0; i < n_task; i++) 
             compare_cpu_8bit(array_task[i].A, array_task[i].B, array_task[i].C, array_task[i].M, array_task[i].N, array_task[i].K);
 }
-
-
 
 inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type) {
     task* tasks = init_tasks(num_task, M, N, K, type);

@@ -24,6 +24,12 @@ if(NOT DEFINED ENABLE_OPENVINO)
     set(ENABLE_OPENVINO OFF) 
 endif()
 
+#OPENBLAS
+if(NOT DEFINED ENABLE_OPENBLAS)
+    message("[SCHEDULER] OpenBLAS off on scheduler")
+    set(ENABLE_OPENBLAS OFF)
+endif()
+
 # cuda_wrapper.h
 include_directories(${CUDA_SRC_DIR})
 # sycl_wrapper.h
@@ -33,6 +39,10 @@ include_directories(${OPEN_SRC_DIR})
 
 # where to find the .so
 link_directories(${LIBS_DIR}/lib)
+
+# search for OMP
+find_package(OpenMP REQUIRED)
+
 
 add_executable(scheduler main.cpp)
 
@@ -52,6 +62,25 @@ endif()
 if(ENABLE_OPENVINO)
     target_compile_definitions(scheduler PRIVATE ENABLE_OPENVINO)
     target_link_libraries(scheduler ov_lib)
+endif()
+
+#OPENBLAS
+if(ENABLE_OPENBLAS)
+    message(STATUS "[SCHEDULER] Linking OpenBLAS")
+    target_compile_definitions(scheduler PRIVATE ENABLE_OPENBLAS)
+    
+    find_library(OPENBLAS_LIB openblas)
+    
+    if(NOT OPENBLAS_LIB)
+        message(FATAL_ERROR "OpenBLAS library not found! Install with 'sudo apt install libopenblas-dev'")
+    endif()
+    
+    target_link_libraries(scheduler ${OPENBLAS_LIB})
+endif()
+
+#OMP
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(scheduler OpenMP::OpenMP_CXX)
 endif()
 
 # RPATH for libraries path, ORIGIN = exe path, so bin

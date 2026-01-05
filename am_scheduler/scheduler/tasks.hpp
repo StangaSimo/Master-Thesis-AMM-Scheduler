@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstring>
 #include <chrono>
+#include <iostream>
 #include <random>
 
 using namespace std;
@@ -14,7 +15,7 @@ enum BT : size_t {
     CUDA, 
     SYCL, 
     OPENVINO,
-    CPU,
+    OPENBLAS,
     COUNT,
 };
 
@@ -106,7 +107,7 @@ inline uint16_t float_to_half(float f) {
 
     uint32_t h_e, h_m;
 
-    if (e >= 143) { /* Overflow -> Inf */
+    if (e >= 143) { 
         h_e = 31; h_m = 0;
     } 
     else if (e < 113) { 
@@ -129,7 +130,6 @@ inline float half_to_float(uint16_t h) {
             uint32_t res = s << 31;
             float f; memcpy(&f, &res, 4); return f;
         } else {
-            // Per il range -1..1 dei test, non dovremmo colpire troppo i denorm
             while (!(m & 0x00000400)) { m <<= 1; e -= 1; }
             e += 1; m &= ~0x00000400;
         }
@@ -181,6 +181,44 @@ inline void init_16bit(void* A, void* B, void* C, int M, int N, int K) {
     for (int i = 0; i < M * K; ++i) pA[i] = float_to_half(dis(gen));
     for (int i = 0; i < K * N; ++i) pB[i] = float_to_half(dis(gen));
     memset(pC, 0, M * N * sizeof(uint16_t));
+}
+
+inline void init_8bit(void* A, void* B, void* C, int M, int N, int K) {
+    int8_t* pA = (int8_t*)A;
+    int8_t* pB = (int8_t*)B;
+    int32_t* pC = (int32_t*)C; /* C 32 bit for the overflows */
+
+    random_device rd;
+    mt19937 gen(rd());
+    
+    uniform_int_distribution<int> dis(-127, 127); /* 8bit maximum and minimum */
+
+    for (int i = 0; i < M * K; ++i) 
+        pA[i] = (int8_t)dis(gen);
+
+    for (int i = 0; i < K * N; ++i) 
+        pB[i] = (int8_t)dis(gen);
+
+    memset(pC, 0, M * N * sizeof(int32_t));
+}
+
+/* return the accellerator string name */
+inline string get_acc_string(BT backend_type) {
+    string res;
+    switch (backend_type) {
+        case BT::CUDA:
+            res = "CUDA"; break;
+        case BT::SYCL:
+            res = "SYCL"; break;
+        case BT::OPENVINO: 
+            res = "OPENVINO"; break;
+        case BT::OPENBLAS: 
+            res = "OPENBLAS"; break;
+        default:
+            cerr << "[SCHEDULER] ERROR get_acc_string \n";
+            exit(EXIT_FAILURE);
+    }
+    return res;
 }
 
 #endif

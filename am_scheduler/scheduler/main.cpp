@@ -48,32 +48,18 @@
  * LOGICA CON MATRICI DIVERSE.
  *
  *
- *
+ * 
  * MATRICE ENORME 
  * 
- * ho finito l'implementazione dei benchmark, creato una cache per i modelli di open vino e infatti ora abbiamo delle prestazioni molto carine, ho provato un semplice modello di regressione ma non funziona bene, per cui ho usato un hashmap e giocando con la chiave riesco a fare delle query velocissime che posso anche cachare (visto che di solito le matrici sono sempre tutte uguali).
- *
  * */
 
 /* BATCH_SIZE, SLEEP, DEBUG */
-
-
-
-
-// TODO: vedere se ha senso fare l'implementazione a 8 bit, magari si convertono e via. 
-//
-//
-//
-//
-//
-//
-//
 
 int main() {
 
     test_accellerators();
 
-    size_t num_matrix = N_MATRIX;
+    size_t n_matrix = N_MATRIX;
     int M = M_;
     int N = N_;
     int K = K_;
@@ -86,7 +72,7 @@ int main() {
 
         cout << "\nCuda only \n";
         /* cuda test without passing from scheduler */
-        test_cuda_streaming(M, N, K, num_matrix, type);
+        test_cuda_streaming(M, N, K, n_matrix, type);
 
         Logic l;
 
@@ -99,20 +85,20 @@ int main() {
             if (i == 1) {l = Logic::ROUND_ROBIN; cout << "\nRound robin \n";}
             if (i == 2) {l = Logic::STATIC_PARTITIONING; cout << "\nStatic partitioning \n";}
 
-            task* task_array = init_tasks(num_matrix, M, N, K, type);
+            task* task_array = init_tasks(n_matrix, M, N, K, type);
 
             AMScheduler scheduler = AMScheduler(l);
 
-            scheduler.do_tasks(task_array, num_matrix);
+            scheduler.do_tasks(task_array, n_matrix);
             scheduler.wait();
 
             //test_compare_task(task_array, num_matrix, Type::FLOAT);
-            print_performance_stats(task_array, num_matrix);
+            print_performance_stats(task_array, n_matrix);
 
 #ifdef ENABLE_PROFILING
             scheduler.print_profiler_stats();
 #endif
-            clean_tasks(task_array, num_matrix, type);
+            clean_tasks(task_array, n_matrix, type);
         } 
 
     }

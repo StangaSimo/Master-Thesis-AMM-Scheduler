@@ -10,6 +10,7 @@ file(MAKE_DIRECTORY ${LIB_OUTPUT_DIR})
 option(USE_CUDA "CUDA ON" OFF) 
 option(USE_SYCL "SYCL ON" OFF)
 option(USE_OPENVINO "OpenVINO ON" OFF)
+option(USE_OPENBLAS "OpenBLAS ON" OFF)
 
 set(SCHEDULER_DEPS "") # depends variable 
 
@@ -85,16 +86,17 @@ ExternalProject_Add(build_scheduler
         -DENABLE_CUDA=${USE_CUDA} # USE_CUDA
         -DENABLE_SYCL=${USE_SYCL} # USE_SYCL
         -DENABLE_OPENVINO=${USE_OPENVINO} # USE_OPENVINO
+        -DENABLE_OPENBLAS=${USE_OPENBLAS} # USE_OPENBLAS
 
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON # for clangd
     DEPENDS ${SCHEDULER_DEPS}
     #BUILD_ALWAYS 1
 )
 
-#add_custom_target(UpdateLSP
-#    ALL
-#    COMMAND ${CMAKE_COMMAND} -E echo "update LSP..."
-#    COMMAND python3 ${CMAKE_SOURCE_DIR}/merge_clangd.py
-#    COMMENT "merge compile_commands.json for clangd"
-#    DEPENDS build_scheduler 
-#)
+add_custom_target(UpdateLSP
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E echo "update LSP..."
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/merge_clangd.py
+    COMMENT "merge compile_commands.json for clangd"
+    DEPENDS build_scheduler 
+)

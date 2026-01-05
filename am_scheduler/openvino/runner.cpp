@@ -1,7 +1,7 @@
 #include "ov_wrapper.h" // Il nostro header C
-#include <iterator>
 #include <openvino/openvino.hpp>
 #include <openvino/op/matmul.hpp>
+#include <openvino/op/convert.hpp>
 #include <cstdlib>
 #include <iostream>
 
@@ -12,7 +12,6 @@ ov::Core core;
 using namespace std;
 
 //TODO convert hashmap from tuple to bellissimo int 
-
 /* cache for compiled models */
 static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_32bit;
 static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_16bit;
@@ -76,15 +75,21 @@ void cache_8bit(tuple<int, int, int> key) {
         auto A_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::i8, ov::Shape{(size_t)get<0>(key), (size_t)get<2>(key)});
         auto B_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::i8, ov::Shape{(size_t)get<2>(key), (size_t)get<1>(key)});
 
-        auto matmul = std::make_shared<ov::op::v0::MatMul>(A_ov, B_ov);
-        auto result = std::make_shared<ov::op::v0::Result>(matmul);
+        /* convert inner tensor from 8bit to 16bit */
+        auto A_conv = std::make_shared<ov::op::v0::Convert>(A_ov, ov::element::i16);
+        auto B_conv = std::make_shared<ov::op::v0::Convert>(B_ov, ov::element::i16);
+
+        auto matmul = std::make_shared<ov::op::v0::MatMul>(A_conv, B_conv);
+
+        auto result_conv = std::make_shared<ov::op::v0::Convert>(matmul, ov::element::i32);
+        auto result = std::make_shared<ov::op::v0::Result>(result_conv);
 
         auto model = std::make_shared<ov::Model>(result, ov::ParameterVector{A_ov, B_ov});
 
         ov::CompiledModel compiled_model = core.compile_model(model, "NPU");
         ov::InferRequest request = compiled_model.create_infer_request();
 
-        request_cache_16bit[key] = request;
+        request_cache_8bit[key] = request;
     }
 }
 
@@ -144,7 +149,7 @@ void ov_gemm_8bit_p(void *A, void *B, void *C, int M, int N, int K){
 
     ov::Tensor tensor_A(ov::element::i8, ov::Shape{(size_t)M, (size_t)K}, A);
     ov::Tensor tensor_B(ov::element::i8, ov::Shape{(size_t)K, (size_t)N}, B);
-    ov::Tensor tensor_C(ov::element::i8, ov::Shape{(size_t)M, (size_t)N}, C);
+    ov::Tensor tensor_C(ov::element::i32, ov::Shape{(size_t)M, (size_t)N}, C);
 
     infer_request.set_input_tensor(0, tensor_A);
     infer_request.set_input_tensor(1, tensor_B);

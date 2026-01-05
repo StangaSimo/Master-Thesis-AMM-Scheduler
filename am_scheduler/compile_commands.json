@@ -1,25 +1,25 @@
 [
     {
         "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_cuda-prefix/src/build_cuda-build",
-        "command": "/usr/bin/nvcc -forward-unknown-to-host-compiler -Dcuda_lib_EXPORTS  -O3 -DNDEBUG -std=c++17 -Xcompiler=-fPIC -x cu -c /home/simo/Documents/j/master-thesis/am_scheduler/cuda/runner.cu -o CMakeFiles/cuda_lib.dir/runner.cu.o",
+        "command": "/usr/bin/nvcc -forward-unknown-to-host-compiler -Dcuda_lib_EXPORTS  -O2 -DNDEBUG -std=c++17 -Xcompiler=-fPIC -x cu -c /home/simo/Documents/j/master-thesis/am_scheduler/cuda/runner.cu -o CMakeFiles/cuda_lib.dir/runner.cu.o",
         "file": "/home/simo/Documents/j/master-thesis/am_scheduler/cuda/runner.cu",
         "output": "CMakeFiles/cuda_lib.dir/runner.cu.o"
     },
     {
         "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_scheduler-prefix/src/build_scheduler-build",
-        "command": "/usr/bin/c++ -DENABLE_CUDA -DENABLE_OPENVINO -DENABLE_SYCL -I/home/simo/Documents/j/master-thesis/am_scheduler/cuda -I/home/simo/Documents/j/master-thesis/am_scheduler/sycl -I/home/simo/Documents/j/master-thesis/am_scheduler/openvino -O3 -DNDEBUG -o CMakeFiles/scheduler.dir/main.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/scheduler/main.cpp",
+        "command": "/usr/bin/c++ -DENABLE_CUDA -DENABLE_OPENBLAS -DENABLE_OPENVINO -DENABLE_SYCL -I/home/simo/Documents/j/master-thesis/am_scheduler/cuda -I/home/simo/Documents/j/master-thesis/am_scheduler/sycl -I/home/simo/Documents/j/master-thesis/am_scheduler/openvino -O2 -DNDEBUG -fopenmp -o CMakeFiles/scheduler.dir/main.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/scheduler/main.cpp",
         "file": "/home/simo/Documents/j/master-thesis/am_scheduler/scheduler/main.cpp",
         "output": "CMakeFiles/scheduler.dir/main.cpp.o"
     },
     {
         "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_sycl-prefix/src/build_sycl-build",
-        "command": "/opt/intel/oneapi/2025.3/bin/icpx -Dsycl_lib_EXPORTS -isystem /opt/intel/oneapi/2025.3/include -O3 -DNDEBUG -fPIC -fsycl -DMKL_ILP64 -o CMakeFiles/sycl_lib.dir/runner.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/sycl/runner.cpp",
+        "command": "/opt/intel/oneapi/2025.3/bin/icpx -Dsycl_lib_EXPORTS -isystem /opt/intel/oneapi/2025.3/include -O2 -DNDEBUG -fPIC -fsycl -DMKL_ILP64 -o CMakeFiles/sycl_lib.dir/runner.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/sycl/runner.cpp",
         "file": "/home/simo/Documents/j/master-thesis/am_scheduler/sycl/runner.cpp",
         "output": "CMakeFiles/sycl_lib.dir/runner.cpp.o"
     },
     {
         "directory": "/home/simo/Documents/j/master-thesis/am_scheduler/build/build_openvino-prefix/src/build_openvino-build",
-        "command": "/usr/bin/c++ -DOV_THREAD=OV_THREAD_TBB -D_GLIBCXX_USE_CXX11_ABI=1 -Dov_lib_EXPORTS  -O3 -DNDEBUG -fPIC -Wno-error=deprecated-declarations -o CMakeFiles/ov_lib.dir/runner.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/openvino/runner.cpp",
+        "command": "/usr/bin/c++ -DOV_THREAD=OV_THREAD_TBB -D_GLIBCXX_USE_CXX11_ABI=1 -Dov_lib_EXPORTS  -O2 -DNDEBUG -fPIC -Wno-error=deprecated-declarations -o CMakeFiles/ov_lib.dir/runner.cpp.o -c /home/simo/Documents/j/master-thesis/am_scheduler/openvino/runner.cpp",
         "file": "/home/simo/Documents/j/master-thesis/am_scheduler/openvino/runner.cpp",
         "output": "CMakeFiles/ov_lib.dir/runner.cpp.o"
     }

@@ -1,7 +1,6 @@
-#ifndef REGRESSION_H
-#define REGRESSION_H
+#ifndef PERFORMANCEMAP_H
+#define PERFORMANCEMAP_H
 
-#include "regression.hpp"
 #include "tasks.hpp"
 #include <iostream>
 #include <unordered_map>

@@ -73,10 +73,10 @@ class Regression {
             double beta = (n_samples * sum_xy - sum_x * sum_y) / denominator;
             double alpha = (sum_y - beta * sum_x) / n_samples;
 
-            cout << "\n\nREGRESSION " << filename << " ------------------------" << std::endl;
-            cout << "Time = " << alpha << " + " << beta << " * (M*N*K)" << std::endl;
-            cout << "Overhead base (alpha): " << alpha << " ms" << std::endl;
-            cout << "Tempo per operazione (beta): " << beta << " ms/FLOP_block\n\n" << std::endl;
+            cout << "\n\nREGRESSION " << filename << " ------------------------\n";
+            cout << "Time = " << alpha << " + " << beta << " * (M*N*K)\n";
+            cout << "Overhead base (alpha): " << alpha << " ms\n";
+            cout << "Tempo per operazione (beta): " << beta << " ms/FLOP_block\n\n";
         }
 
         vector<string> split(const string &s, char delimiter) {

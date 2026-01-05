@@ -135,12 +135,12 @@ public:
             double avg_idle = (w.tasks_processed > 0) ? w.total_idle / w.tasks_processed : 0.0;
             double avg_work = (w.tasks_processed > 0) ? w.total_work / w.tasks_processed : 0.0;
 
-            string acc_str = (i == BT::CUDA ? "CUDA" : (i == BT::SYCL ? "SYCL" : "OPENVINO"));
+            string acc_str = get_acc_string(i);
             std::cout << "[" << acc_str << "]" << "\n";
             std::cout << "  Tasks: " << w.tasks_processed << "\n";
             std::cout << "  Occupancy:       " << std::fixed << std::setprecision(2) << occupancy << " %\n";
-            std::cout << "  Avg idle time:   " << avg_idle << " us\n";
-            std::cout << "  Avg work time:   " << avg_work << " us\n";
+            std::cout << "  Total idle time: " << w.total_idle << " us,  Avg idle time:   " << avg_idle << " us\n";
+            std::cout << "  Total work time: " <<  w.total_work << " us,  Avg work time:   " << avg_work << " us\n";
             std::cout << "  total time:   " << total_time/1000 << " ms\n";
         }
 

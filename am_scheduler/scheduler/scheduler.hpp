@@ -1,9 +1,26 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
+//#ifdef ENABLE_OPENVINO
+//#include "ov_wrapper.h"
+//#endif
+//
+//#ifdef ENABLE_CUDA
+//#include "cuda_wrapper.h"
+//#endif
+//
+//#ifdef ENABLE_SYCL
+//#include "sycl_wrapper.h"
+//#endif
+//
+//#ifdef ENABLE_OPENBLAS
+//#include "cpu.hpp"
+//#endif
+
 #include "cuda_wrapper.h"
 #include "ov_wrapper.h"
 #include "sycl_wrapper.h"
+#include "cpu.hpp"
 
 #include "sharedbuffer.hpp"
 #include "performancemap.hpp"
@@ -40,13 +57,14 @@
 
 using namespace std;
 
-enum Logic : size_t { /* Scheduler Logic Type */
+/* Scheduler Logic Type */
+enum Logic : size_t { 
     ROUND_ROBIN,
     CUDA_ONLY,
     STATIC_PARTITIONING,
 };
 
-/******* Prototypes ********/
+/****************************** Prototypes ************************************/
 inline void handle_task(BT backend_type, task *task);
 inline string get_benchmark_filename(BT bt, int type); 
 inline void init_acc(BT backend_type); 
@@ -246,6 +264,10 @@ class AMScheduler {
             init_acc(BT::OPENVINO); 
             bts.push_back(BT::OPENVINO);
 #endif
+#ifdef ENABLE_OPENBLAS
+            init_acc(BT::OPENBLAS); 
+            bts.push_back(BT::OPENBLAS);
+#endif
 
             for (BT i : bts) {
                 shared_buffers[i] = make_unique<SharedBuffer>(BUFFER_LENGHT);
@@ -255,11 +277,6 @@ class AMScheduler {
 
             if (bts.size() == 0) {PRINT("[SCHEDULER] ATTENTION, only CPU up\n");}
 
-            //bts.push_back(BT::CPU); TODO remove this when implementing the cpus and add init
-            /* default CPU thread */
-            shared_buffers[BT::CPU] = make_unique<SharedBuffer>(BUFFER_LENGHT);
-            threads[BT::CPU] = make_unique<thread>(&AMScheduler::worker_thread, this, 
-                                                    BT::CPU, shared_buffers[BT::CPU].get());
             /* coordinator */
             shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
             threads[BT::CORDINATOR] = make_unique<thread>(&AMScheduler::coordinator_thread,this, 
@@ -283,6 +300,7 @@ class AMScheduler {
         }
 
         /**********************************  Init Benchmarks and Map ***********************************/
+         
         /* upload the banchmark files and generate them if not presents */
         void init_benchmarks() {
             for (BT i : bts) {
@@ -387,6 +405,7 @@ class AMScheduler {
 /**********************************  Helper Functions ***********************************/
 
 /* benchmark the accellerator and write in the csv*/
+/* FIX: NON USARE LA SOLITA TASK PER IL BENCHMARK */
 inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K) {
     chrono::high_resolution_clock::time_point start_time;
     chrono::high_resolution_clock::time_point end_time;
@@ -398,22 +417,23 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     double total_ms = 0.0;
 
     /* we simulate a thread */
-    task* task = init_tasks(1, M, N, K, type);
+    task* tasks = init_tasks(N_RUNS+N_WARMUP, M, N, K, type);
+    //task* task = init_tasks(1, M, N, K, type);
 
     for (int i = 0; i < N_WARMUP; i++)
-        handle_task(bt, &task[0]);
+        handle_task(bt, &tasks[0]);
 
-    for (int i = 0; i < N_RUNS; i++) {
+    for (int i = N_WARMUP; i < N_RUNS; i++) {
         start_time = chrono::high_resolution_clock::now();
-        handle_task(bt, task);
+        handle_task(bt, &tasks[0]);
         end_time = chrono::high_resolution_clock::now();
         duration = end_time - start_time;
         total_ms += duration.count();
     }
 
-    clean_tasks(task, 1, type);
+    clean_tasks(tasks, N_RUNS+N_WARMUP, type);
 
-    double avg_ms = total_ms / N_RUNS;
+    double avg_ms = total_ms/N_RUNS;
     ofstream file(filename, ios::app);
 
     if (file.is_open()) {
@@ -421,7 +441,7 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
             file << "Accelerator,DataType,M,N,K,Avg_Time_ms\n";
         }
         
-        string acc_str = (bt == BT::CUDA ? "CUDA" : (bt == BT::SYCL ? "SYCL" : "OPENVINO"));
+        string acc_str = get_acc_string(bt);
         file << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n";
         
         PRINT("result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n");
@@ -472,9 +492,12 @@ inline void handle_task(BT backend_type, task *task) {
             ov_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
         break;    
 
-    //case BT::CPU:
-    //    // TODO
-    //    break;    
+    case BT::OPENBLAS:
+        if (task->type == Type::FLOAT)
+            cpu_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            cpu_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        break;    
 
     default: 
         cerr << "[SCHEDULER] ERROR handle task\n";
@@ -488,14 +511,16 @@ inline void handle_task(BT backend_type, task *task) {
 inline void init_acc(BT backend_type) {
     switch (backend_type) {
     case BT::CUDA:
-        cuda_init(MAX_SIZE,MAX_SIZE,MAX_SIZE); //TODO 
+        cuda_init(MAX_SIZE,MAX_SIZE,MAX_SIZE);
+        break;
     case BT::SYCL:
-        sycl_init(MAX_SIZE,MAX_SIZE,MAX_SIZE); //TODO
+        sycl_init(MAX_SIZE,MAX_SIZE,MAX_SIZE);
         break;    
     case BT::OPENVINO:
         ov_init();
         break;    
-    case BT::CPU:
+    case BT::OPENBLAS:
+        cpu_init();
         break;    
     default: 
         cerr << "[SCHEDULER] ERROR Change Status\n";
@@ -514,7 +539,7 @@ inline void free_acc(BT backend_type) {
     case BT::OPENVINO:
         ov_free();
         break;    
-    case BT::CPU:
+    case BT::OPENBLAS:
         break;    
     default: 
         cerr << "[SCHEDULER] ERROR Change Status\n";
@@ -536,23 +561,6 @@ inline void print_logic(Logic l) {
             exit(EXIT_FAILURE);
     }
     PRINT("[SCHEDULER] Started with " << logic << " logic \n");
-}
-
-/* return the accellerator string name */
-inline string get_acc_string(BT backend_type) {
-    string res;
-    switch (backend_type) {
-        case BT::CUDA:
-            res = "CUDA"; break;
-        case BT::SYCL:
-            res = "SYCL"; break;
-        case BT::OPENVINO: 
-            res = "OPENVINO"; break;
-        default:
-            cerr << "[SCHEDULER] ERROR get_acc_string \n";
-            exit(EXIT_FAILURE);
-    }
-    return res;
 }
 
 /* get the right csv filename for each accellerators */
