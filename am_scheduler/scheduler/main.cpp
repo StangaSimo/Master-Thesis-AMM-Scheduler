@@ -42,15 +42,16 @@
  * TODO: support for 16 bit and 8 bit and update tests. 
  *
  *
- * FARE TIPI DIVERSI (TEST ecc...)
- * AGGIUNGERE LA CPU
- * 
- * LOGICA CON MATRICI DIVERSE.
+ * Da fare domani:
  *
+ * Prima di tutto, fixare sycl (magari aggiungere il doppio nei tempi del benchmark potrebbe essere il fix).
  *
- * 
+ * LOGICA DAG, 
  * MATRICE ENORME 
+ * FRAME VIDEO 
  * 
+ *
+ *
  * */
 
 /* BATCH_SIZE, SLEEP, DEBUG */

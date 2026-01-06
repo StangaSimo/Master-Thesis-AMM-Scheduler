@@ -195,7 +195,7 @@ class AMScheduler {
                     //    continue;
                     //}
 
-                    if (bts_len >= c){  /* the remaining tasks TODO: i don't think so, but lets see */
+                    if (bts_len >= c){ /* the remaining tasks TODO: i don't think so, but lets see */
                         for (int j=0; j<c; j++)
                             buffers[bts[0]]->put(tasks[j]);
                         c = 0;
@@ -221,6 +221,7 @@ class AMScheduler {
                     PROF(profiler.stop_logic());
 
                     PROF(profiler.start_dispatch());
+
                     /* send task to the accellerators */
                     t = 0;
                     for (int j=0; j<bts_len; j++)
@@ -275,7 +276,8 @@ class AMScheduler {
                                                     i, shared_buffers[i].get());
             }
 
-            if (bts.size() == 0) {PRINT("[SCHEDULER] ATTENTION, only CPU up\n");}
+            if (bts.size() == 0) 
+                PRINT("[SCHEDULER] ATTENTION, only CPU up\n");
 
             /* coordinator */
             shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
@@ -405,7 +407,7 @@ class AMScheduler {
 /**********************************  Helper Functions ***********************************/
 
 /* benchmark the accellerator and write in the csv*/
-/* FIX: NON USARE LA SOLITA TASK PER IL BENCHMARK */
+/* RECALL: NON USARE LA SOLITA TASK PER IL BENCHMARK per la cache */
 inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K) {
     chrono::high_resolution_clock::time_point start_time;
     chrono::high_resolution_clock::time_point end_time;
@@ -418,7 +420,6 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
 
     /* we simulate a thread */
     task* tasks = init_tasks(N_RUNS+N_WARMUP, M, N, K, type);
-    //task* task = init_tasks(1, M, N, K, type);
 
     for (int i = 0; i < N_WARMUP; i++)
         handle_task(bt, &tasks[0]);
@@ -434,6 +435,12 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     clean_tasks(tasks, N_RUNS+N_WARMUP, type);
 
     double avg_ms = total_ms/N_RUNS;
+
+    /* for sycl we add 2 times the benchmark result for mitigating the overhead during the 
+     * cpu bottleneck */
+    if (bt == BT::SYCL)
+        avg_ms += avg_ms;
+
     ofstream file(filename, ios::app);
 
     if (file.is_open()) {
@@ -470,7 +477,6 @@ inline void benchmark(BT bt, Type type, string filename) {
 /* task handler for the workers, choose the right backend_type */
 inline void handle_task(BT backend_type, task *task) {
     switch (backend_type) {
-
     case BT::CUDA:
         if (task->type == Type::FLOAT)
             cuda_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
