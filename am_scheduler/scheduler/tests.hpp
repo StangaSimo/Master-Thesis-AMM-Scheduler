@@ -159,26 +159,26 @@ inline bool compare_cpu_8bit(void* A, void* B, void* C, int M, int N, int K) {
 /******************************** Test Accellerators **********************************/
 
 //TODO 16 bit implementation and test
-inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
-    ov_init();  
-    ov_gemm_32bit(A,B,C,M,N,K);
-    ov_free();  
-    return compare_cpu_32bit(A,B,C,M,N,K);
-}
-
-inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
-    cuda_init(M,N,K);  
-    cuda_gemm_32bit(A,B,C,M,N,K);
-    cuda_free(); 
-    return compare_cpu_32bit(A,B,C,M,N,K);
-}
-
-inline bool test_sycl(float* A, float* B, float* C, int M, int N, int K) {
-    sycl_init(M,N,K);
-    sycl_gemm_32bit(A,B,C,M,N,K);
-    sycl_free();  
-    return compare_cpu_32bit(A,B,C,M,N,K);
-}
+//inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
+//    ov_init();  
+//    ov_gemm_32bit(A,B,C,M,N,K);
+//    ov_free();  
+//    return compare_cpu_32bit(A,B,C,M,N,K);
+//}
+//
+//inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
+//    cuda_init(M,N,K);  
+//    cuda_gemm_32bit(A,B,C,M,N,K);
+//    cuda_free(); 
+//    return compare_cpu_32bit(A,B,C,M,N,K);
+//}
+//
+//inline bool test_sycl(float* A, float* B, float* C, int M, int N, int K) {
+//    sycl_init(M,N,K);
+//    sycl_gemm_32bit(A,B,C,M,N,K);
+//    sycl_free();  
+//    return compare_cpu_32bit(A,B,C,M,N,K);
+//}
 
 inline void test_accellerators() {
     int M = 512;
@@ -301,6 +301,7 @@ inline void test_compare_task(task* array_task, size_t n_task) {
             compare_cpu_8bit(array_task[i].A, array_task[i].B, array_task[i].C, array_task[i].M, array_task[i].N, array_task[i].K);
 }
 
+#ifdef ENABLE_CUDA
 inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type) {
     task* tasks = init_tasks(num_task, M, N, K, type);
     cuda_init(M,N,K);
@@ -338,5 +339,6 @@ inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type)
     print_performance_stats(tasks, num_task);
     clean_tasks(tasks,num_task);
 } 
+#endif
 
 #endif

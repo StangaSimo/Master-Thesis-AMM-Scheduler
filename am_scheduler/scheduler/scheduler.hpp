@@ -1,26 +1,28 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
-//#ifdef ENABLE_OPENVINO
-//#include "ov_wrapper.h"
-//#endif
-//
-//#ifdef ENABLE_CUDA
-//#include "cuda_wrapper.h"
-//#endif
-//
-//#ifdef ENABLE_SYCL
-//#include "sycl_wrapper.h"
-//#endif
-//
-//#ifdef ENABLE_OPENBLAS
-//#include "cpu.hpp"
-//#endif
-
-#include "cuda_wrapper.h"
+#ifdef ENABLE_OPENVINO
 #include "ov_wrapper.h"
+#include <openvino/op/util/attr_types.hpp>
+#endif
+
+#ifdef ENABLE_CUDA
+#include "cuda_wrapper.h"
+#endif
+
+#ifdef ENABLE_SYCL
+#include <sycl/vector.hpp>
 #include "sycl_wrapper.h"
+#endif
+
+#ifdef ENABLE_OPENBLAS
 #include "cpu.hpp"
+#endif
+
+//#include "cuda_wrapper.h"
+//#include "ov_wrapper.h"
+//#include "sycl_wrapper.h"
+//#include "cpu.hpp"
 
 #include "sharedbuffer.hpp"
 #include "performancemap.hpp"
@@ -36,7 +38,6 @@
 #include <iostream>
 #include <atomic>
 #include <stdlib.h>
-#include <sycl/vector.hpp>
 #include <thread>
 #include <array>
 #include <memory>
@@ -303,23 +304,20 @@ class AMScheduler {
                             rows_distributed += rows[j];
                         }
 
-                        /* the remaining to the fastest */
+                        /* the remaining to the fastest and so on */
                         int diff = single_task->M - rows_distributed;
-                        rows[0] += diff;
-
-                        if (rows[0] > MAX_SIZE) {
-                            diff = rows[0] - MAX_SIZE;
-                            rows[0] = MAX_SIZE;        
-                            /* if are more than max_size we distribute the row for each accellerator */
-                            int w = 1;
-                            while (diff > 0) {
-                                rows[w] += 1;
-                                diff--;
-                                w++;
-                                w = w%bts_len;
-                                if (w == 0) w++;
+                        for (int j=0; j<bts_len; j++) {
+                            if (diff == 0) break;
+                            rows[j] += diff;
+                            if (rows[j] > MAX_SIZE) {
+                                if (j == 4) {cerr << "[ERROR] no more memory for LARGE_MATRIX_SPLIT"; exit(EXIT_FAILURE);}
+                                diff = rows[j] - MAX_SIZE;
+                                rows[j] = MAX_SIZE;
+                            } else {
+                                break;
                             }
                         }
+
                     }
 
                     PROF(profiler.stop_logic());
@@ -566,7 +564,7 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     /* for sycl we add 2 times the benchmark result for mitigating the overhead during the 
      * cpu bottleneck */
     if (bt == BT::SYCL)
-        avg_ms += avg_ms;
+        avg_ms += (avg_ms/2);
 
     ofstream file(filename, ios::app);
 
@@ -605,31 +603,39 @@ inline void benchmark(BT bt, Type type, string filename) {
 inline void handle_task(BT backend_type, task *task) {
     switch (backend_type) {
     case BT::CUDA:
+#ifdef ENABLE_CUDA
         if (task->type == Type::FLOAT)
             cuda_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
         if (task->type == Type::HALF)
             cuda_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
         break;    
 
     case BT::SYCL:
+#ifdef ENABLE_SYCL
         if (task->type == Type::FLOAT)
             sycl_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
         if (task->type == Type::HALF)
             sycl_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
         break;    
 
     case BT::OPENVINO:
+#ifdef ENABLE_OPENVINO
         if (task->type == Type::FLOAT)
             ov_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
         if (task->type == Type::HALF)
             ov_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
         break;    
 
     case BT::OPENBLAS:
+#ifdef ENABLE_OPENBLAS
         if (task->type == Type::FLOAT)
             cpu_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
         if (task->type == Type::HALF)
             cpu_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
         break;    
 
     default: 
@@ -644,16 +650,24 @@ inline void handle_task(BT backend_type, task *task) {
 inline void init_acc(BT backend_type) {
     switch (backend_type) {
     case BT::CUDA:
+#ifdef ENABLE_CUDA
         cuda_init(MAX_SIZE,MAX_SIZE,MAX_SIZE);
+#endif 
         break;
     case BT::SYCL:
+#ifdef ENABLE_SYCL
         sycl_init(MAX_SIZE,MAX_SIZE,MAX_SIZE);
+#endif 
         break;    
     case BT::OPENVINO:
+#ifdef ENABLE_OPENVINO
         ov_init();
+#endif 
         break;    
     case BT::OPENBLAS:
+#ifdef ENABLE_OPENBLAS
         cpu_init();
+#endif 
         break;    
     default: 
         cerr << "[SCHEDULER] ERROR Change Status\n";
@@ -665,14 +679,22 @@ inline void init_acc(BT backend_type) {
 inline void free_acc(BT backend_type) {
     switch (backend_type) {
     case BT::CUDA:
+#ifdef ENABLE_CUDA
         cuda_free();
+#endif 
     case BT::SYCL:
+#ifdef ENABLE_SYCL
         sycl_free();
+#endif 
         break;    
     case BT::OPENVINO:
+#ifdef ENABLE_OPENVINO
         ov_free();
+#endif 
         break;    
     case BT::OPENBLAS:
+#ifdef ENABLE_OPENBLAS
+#endif 
         break;    
     default: 
         cerr << "[SCHEDULER] ERROR Change Status\n";

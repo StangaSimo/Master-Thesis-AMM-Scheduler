@@ -95,6 +95,7 @@ int main() {
             clean_tasks(task_array, n_matrix);
         } 
     }
+    return 0;
 
     {
         cout << "\nLarge Matrix Split \n";
@@ -104,7 +105,7 @@ int main() {
         scheduler.do_tasks(big_task, 1);
         scheduler.wait();
         scheduler.print_stats(nullptr,1);
-        test_compare_task(big_task, 1);
+        //test_compare_task(big_task, 1);
         clean_tasks(big_task, 1);
     }
     

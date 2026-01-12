@@ -6,15 +6,15 @@
 #define ENABLE_PROFILING
 
 /********** tests ************/
-#define M_ 1024
-#define N_ 1024
-#define K_ 512 
-#define N_MATRIX 1
+#define M_ 1920
+#define N_ 1920
+#define K_ 1024 
+#define N_MATRIX 600 
 #define MAX_SIZE 4092
 
 enum {BATCH_SIZE = 30};       /* static partitioning batch size */
 
-#define M_split 4000 /* big matrix split size, max is MAX_SIZE/4 */
+#define M_split 14000 /* big matrix split size, max is MAX_SIZE/4 */
 #define N_split 4000 
 #define K_split 4000 
 
@@ -24,7 +24,7 @@ enum {SPLIT_MATRIX_ITERATION = 3};       /* static partitioning batch size */
 //#define SLEEP
 enum {GET_SLEEP = 500};       /* shared buffer sleep time */
 enum {PUT_SLEEP = 500};       /* 5 ms */
-enum {BUFFER_LENGHT = 512};  /* shared buffer length */
+enum {BUFFER_LENGHT = 1024};  /* shared buffer length */
 
 /********** benchmark ************/
 enum {STEP_SIZE = 256};       /* benchmark for csv step size */
