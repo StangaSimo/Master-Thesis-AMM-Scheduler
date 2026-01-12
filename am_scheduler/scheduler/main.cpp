@@ -67,7 +67,7 @@ int main() {
     
     Type type = Type::FLOAT;
 
-    for (int w=0; w<2; w++) {
+    for (int w=0; w<1; w++) {
         if (w == 0) {cout << "\n--------------------  32BIT:  \n";}
         if (w == 1) {cout << "\n--------------------  16BIT:  \n"; type = Type::HALF;}
 
@@ -77,11 +77,10 @@ int main() {
 
         Logic l;
 
-        for (int i=0; i<3; i++) {
+        for (int i=0; i<4; i++) {
 
             if (i == 1) {continue;}
 
-            //cout << "\n-------------------- [SCHEDULER] " << i << " ------------------------- \n" ;
             if (i == 0) {l = Logic::CUDA_ONLY; cout << "\nCuda with scheduler \n";}
             if (i == 1) {l = Logic::ROUND_ROBIN; cout << "\nRound robin \n";}
             if (i == 2) {l = Logic::STATIC_PARTITIONING; cout << "\nStatic partitioning \n";}
@@ -99,9 +98,22 @@ int main() {
 #ifdef ENABLE_PROFILING
             scheduler.print_profiler_stats();
 #endif
-            clean_tasks(task_array, n_matrix, type);
+            clean_tasks(task_array, n_matrix);
         } 
-
     }
+    
+    Logic l = Logic::LARGE_MATRIX_SPLIT; 
+    cout << "\nLarge Matrix Split \n";
+
+    task* task = init_tasks(1, M_split,N_split, K_split, type);
+    AMScheduler scheduler = AMScheduler(l);
+    scheduler.do_tasks(task, 0);
+    scheduler.wait();
+    print_performance_stats(task, 1);
+#ifdef ENABLE_PROFILING
+            scheduler.print_profiler_stats();
+#endif
+
+    clean_tasks(task, 1);
     return 0;
 }

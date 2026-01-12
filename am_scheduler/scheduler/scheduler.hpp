@@ -62,6 +62,7 @@ enum Logic : size_t {
     ROUND_ROBIN,
     CUDA_ONLY,
     STATIC_PARTITIONING,
+    LARGE_MATRIX_SPLIT,
 };
 
 /****************************** Prototypes ************************************/
@@ -103,6 +104,9 @@ class AMScheduler {
         /* metrics profiler */
         Profiler profiler = Profiler();
 
+        /* pointer for split_matrix logic*/ 
+        vector<task*> sub_task_array;
+
 /**********************************  Worker  ***********************************/
 
         void worker_thread(BT bt, SharedBuffer *buffer) { 
@@ -129,14 +133,13 @@ class AMScheduler {
         void coordinator_thread(SharedBuffer_T &buffers) { 
             int i=0;
             int c=0;
-            int bts_len = bts.size();
+            int bts_len = bts.size(); /* number of accellerators */
 
             double acc_speed[bts_len];
             double total_speed = 0.0;
             int n_acc_task[BATCH_SIZE];
             int remaining_c=0;
             int t=0;
-            
 
             SharedBuffer *buffer = buffers[BT::CORDINATOR].get();
             task* single_task = nullptr;
@@ -171,7 +174,7 @@ class AMScheduler {
                 } 
                 break;
 
-            /* batch style partitioning with time decision assuming same matrix */
+            /* batch style partitioning */
             case Logic::STATIC_PARTITIONING: 
 
                 while(threads_keep_running) { 
@@ -189,13 +192,8 @@ class AMScheduler {
                     PROF(profiler.start_logic());
                     if (c == 0) {continue;}
 
-                    //if (c == 1) { /* 1 task, to the fastest */
-                    //    buffers[bts[0]]->put(tasks[0]);
-                    //    c = 0;
-                    //    continue;
-                    //}
-
-                    if (bts_len >= c){ /* the remaining tasks TODO: i don't think so, but lets see */
+                    /* if the tasks are less the number of accellerators, send all them to the fastest TODO: check if this is the case */
+                    if (bts_len >= c){ 
                         for (int j=0; j<c; j++)
                             buffers[bts[0]]->put(tasks[j]);
                         c = 0;
@@ -241,6 +239,101 @@ class AMScheduler {
                     PROF(profiler.record_sample());
                 } 
                 break;
+            
+            /* split a large matrix row wise */
+            case Logic::LARGE_MATRIX_SPLIT:
+
+                while(threads_keep_running) { 
+                    PROF(profiler.start_fetch());
+                    task *single_task = buffer->get();
+                    if (!single_task) {continue;} 
+                    PROF(profiler.stop_fetch());
+                    PROF(profiler.start_logic());
+
+                    double curr_speeds[bts_len];
+                    int rows[bts_len];
+
+                    int rest = single_task->M % bts_len;
+                    int base = single_task->M / bts_len;
+
+                    /* equal row initially */
+                    for(int j=0; j<bts_len; j++) 
+                        rows[j] = base + (j < rest ? 1 : 0);
+
+                    /* loop vasi comunicanti 3 iteration */
+                    for (int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
+                        double total_speed = 0.0;
+
+                        /* current speed for 1 row */
+                        for(int j=0; j<bts_len; j++) {
+                            int r = (rows[j] > 0) ? rows[j] : 1;
+
+                            double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type);
+
+                            /* single row speed, number of rows / ms */
+                            double speed = (double)r / (ms + 1e-9);
+
+                            curr_speeds[j] = speed;
+                            total_speed += speed;
+                        }
+
+                        int rows_distributed = 0;
+                        for(int j=0; j<bts_len; j++) {
+                            double ratio = curr_speeds[j] / total_speed;
+
+                            /* new rows from the ratio */
+                            int target_rows = (int)(ratio * single_task->M);
+
+                            rows[j] = target_rows;
+                            rows_distributed += rows[j];
+                        }
+
+                        /* the remaining to the fastest */
+                        int diff = single_task->M - rows_distributed;
+                        rows[0] += diff;
+                    }
+
+                    PROF(profiler.stop_logic());
+                    PROF(profiler.start_dispatch());
+
+                    // C. Creazione dei Sub-Task e Dispatch
+                    size_t elem_size = (single_task->type == Type::FLOAT) ? 4 : 2;
+                    size_t offset_rows_accumulated = 0;
+
+                    for (int j=0; j<bts_len; j++) {
+                        int h = rows[j];
+                        if (h <= 0) continue; 
+
+                        // Creiamo una copia del task (shallow copy della struct)
+                        task* sub_task = new task(*single_task);
+
+                        /* save the pointer for freeing up after */
+                        sub_task_array.push_back(sub_task);
+
+                        // Aggiorniamo le dimensioni della fetta
+                        sub_task->M = h; 
+
+                        size_t offset_A = offset_rows_accumulated * single_task->K * elem_size;
+                        sub_task->A = (char*)single_task->A + offset_A;
+
+                        // B resta intera: nessun offset
+                        sub_task->B = single_task->B;
+
+                        // C viene tagliata: offset = righe_prec * N * sizeof
+                        size_t offset_C = offset_rows_accumulated * single_task->N * elem_size;
+                        sub_task->C = (char*)single_task->C + offset_C;
+
+                        // Spediamo al buffer dell'acceleratore j
+                        buffers[bts[j]]->put(sub_task);
+
+                        // Avanziamo l'offset
+                        offset_rows_accumulated += h;
+                    }
+
+                    PROF(profiler.stop_dispatch());
+                    PROF(profiler.record_sample());    
+                } 
+                break;
             default:
                 printf("[SCHEDULER] Error in chosing the logic.\n");
                 exit(EXIT_FAILURE);
@@ -276,10 +369,9 @@ class AMScheduler {
                                                     i, shared_buffers[i].get());
             }
 
-            if (bts.size() == 0) 
-                PRINT("[SCHEDULER] ATTENTION, only CPU up\n");
+            if (bts.size() == 0)  {PRINT("[SCHEDULER] ATTENTION, no accellerator\n"); exit(EXIT_FAILURE);}
 
-            /* coordinator */
+            /* coordinator thread */
             shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
             threads[BT::CORDINATOR] = make_unique<thread>(&AMScheduler::coordinator_thread,this, 
                                         ref(shared_buffers)); /* ref because the thread function try to copy all the parameters */
@@ -294,9 +386,14 @@ class AMScheduler {
                     if(thread->joinable())
                         thread->join();
 
-            /* shut down back ends */
+            /* shut down backends */
             for (auto i : bts) 
                 free_acc(i);
+            
+            /* cleanups sub_task array */
+            if (strategy == Logic::LARGE_MATRIX_SPLIT)
+                for (int i=0; i<sub_task_array.size(); i++)
+                    clean_tasks(sub_task_array[i], 1);
 
             PRINT("[SCHEDULER] Threads stopped.\n");
         }
@@ -367,7 +464,7 @@ class AMScheduler {
             stop_threads();
         }
 
-        /* just send the tasks to the coordinator */
+        /* send the tasks to the coordinator */
         void do_tasks(task* tasks, size_t n) {
             for (int i=0; i<n; i++) {
                 tasks[i].start_time = chrono::high_resolution_clock::now();                
@@ -432,8 +529,8 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
         total_ms += duration.count();
     }
 
-    clean_tasks(tasks, N_RUNS+N_WARMUP, type);
-
+    clean_tasks(tasks, N_RUNS+N_WARMUP);
+    
     double avg_ms = total_ms/N_RUNS;
 
     /* for sycl we add 2 times the benchmark result for mitigating the overhead during the 
@@ -562,6 +659,8 @@ inline void print_logic(Logic l) {
             logic = "CUDA_ONLY"; break;
         case Logic::STATIC_PARTITIONING:
             logic = "STATIC_PARTITIONING"; break;
+        case Logic::LARGE_MATRIX_SPLIT:
+            logic = "LARGE_MATRIX_SPLIT"; break;
         default:
             cerr << "[SCHEDULER] ERROR print_logic \n";
             exit(EXIT_FAILURE);

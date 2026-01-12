@@ -334,7 +334,7 @@ inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type)
 
     //test_compare_task(tasks, num_task, Type::FLOAT);
     print_performance_stats(tasks, num_task);
-    clean_tasks(tasks,num_task,type);
+    clean_tasks(tasks,num_task);
 } 
 
 #endif

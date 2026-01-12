@@ -156,6 +156,7 @@ private:
     }
 };
 
+/* it prints the performance stats of the tasks */
 inline void print_performance_stats(task* tasks, size_t num_tasks) {
     if (tasks == nullptr || num_tasks == 0) {
         std::cout << "[ERROR] print_performance_stats\n";

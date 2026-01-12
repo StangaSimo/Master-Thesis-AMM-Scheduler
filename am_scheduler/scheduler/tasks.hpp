@@ -30,7 +30,7 @@ typedef struct {
     void *B;
     void *C;
     
-    Type type; /* 1 float, 2 half, 3 8bit*/
+    Type type; /* 1 float, 2 half, 3 8bit */
     int M; 
     int N; 
     int K; 
@@ -44,7 +44,7 @@ inline float half_to_float(uint16_t h);
 inline uint16_t float_to_half(float f);
 inline void init_16bit(void* A, void* B, void* C, int M, int N, int K);
 inline void init_32bit(void* A, void* B, void* C, int M, int N, int K);
-inline void clean_tasks(task* array_task, size_t n_task, Type type);
+inline void clean_tasks(task* array_task, size_t n_task);
 
 inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
         task* array_task = new task[n_task];
@@ -78,8 +78,10 @@ inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
         return array_task;
  }
 
-inline void clean_tasks(task* array_task, size_t n_task, Type type) {
+inline void clean_tasks(task* array_task, size_t n_task) {
     if (array_task == nullptr) return;
+
+    Type type = array_task[0].type;
 
     if (type == Type::FLOAT) {
         for (int i = 0; i < n_task; i++) {
