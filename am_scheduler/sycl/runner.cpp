@@ -4,7 +4,6 @@
 #include <iostream>
 #include <memory>
 
-#define ZEROCOPY
 #define N_STREAMS 2
 
 using namespace std;
@@ -22,6 +21,11 @@ struct SYCLStream {
         d_A_h = sycl::malloc_device<sycl::half>(max_elements, q);
         d_B_h = sycl::malloc_device<sycl::half>(max_elements, q);
         d_C_h = sycl::malloc_device<sycl::half>(max_elements, q);
+
+        if (q.get_device().get_info<sycl::info::device::name>()  != "Intel(R) Arc(TM) Graphics") {
+            std::cout << "Intel GPU NOT PRESENT\n";
+            exit(EXIT_FAILURE);
+        }
     }
 
     ~SYCLStream() {

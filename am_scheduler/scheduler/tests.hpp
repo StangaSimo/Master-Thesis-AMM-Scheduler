@@ -285,7 +285,9 @@ inline void test_accellerators() {
 }
 /***************************** helper test for main ***************************/
 
-inline void test_compare_task(task* array_task, size_t n_task, Type t) {
+inline void test_compare_task(task* array_task, size_t n_task) {
+    Type t = array_task->type;
+
     if (t == Type::FLOAT)
         for (int i = 0; i < n_task; i++)
             compare_cpu_32bit(array_task[i].A, array_task[i].B, array_task[i].C, array_task[i].M, array_task[i].N, array_task[i].K);
@@ -332,7 +334,7 @@ inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type)
 
     cuda_free();
 
-    //test_compare_task(tasks, num_task, Type::FLOAT);
+    //test_compare_task(tasks, num_task);
     print_performance_stats(tasks, num_task);
     clean_tasks(tasks,num_task);
 } 

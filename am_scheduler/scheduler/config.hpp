@@ -9,14 +9,14 @@
 #define M_ 1024
 #define N_ 1024
 #define K_ 512 
-#define N_MATRIX 400
-#define MAX_SIZE 3200
+#define N_MATRIX 1
+#define MAX_SIZE 4092
 
 enum {BATCH_SIZE = 30};       /* static partitioning batch size */
 
-#define M_split 10000 /* big matrix split size */
-#define N_split 10000
-#define K_split 10000 
+#define M_split 4000 /* big matrix split size, max is MAX_SIZE/4 */
+#define N_split 4000 
+#define K_split 4000 
 
 enum {SPLIT_MATRIX_ITERATION = 3};       /* static partitioning batch size */
 

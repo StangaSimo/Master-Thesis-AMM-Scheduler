@@ -39,6 +39,7 @@ class PerformanceMap {
         long long last_N = -1;    
         long long last_K = -1;    
         double last_result = -1.0; 
+        double max_result = -1.0;
     };
 
     map_struct map_f;
@@ -66,10 +67,14 @@ private:
 
     void add_key(long long M, long long N, long long K, double time, Type type) {
         unsigned long long key = get_key(M, N, K);
-        if (type == Type::FLOAT)
+        if (type == Type::FLOAT){
            map_f.grid_map[key] = time;
-        if (type == Type::HALF)
+           map_f.max_result = (map_f.max_result > time ) ? map_f.max_result : time;
+        }
+        if (type == Type::HALF){
            map_h.grid_map[key] = time;
+           map_h.max_result = (map_h.max_result > time ) ? map_h.max_result : time;
+        }
     }
     
     void add_keys(ifstream* file, Type type) {
@@ -131,8 +136,8 @@ public:
             return data.grid_map[key];
         }
 
-        data.last_K = -1.0;
-        return -1.0; 
+        data.last_K = data.max_result * 1.5;
+        return  data.max_result * 1.5; 
     }
 };
 

@@ -81,7 +81,7 @@ inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
 inline void clean_tasks(task* array_task, size_t n_task) {
     if (array_task == nullptr) return;
 
-    Type type = array_task[0].type;
+    Type type = array_task->type;
 
     if (type == Type::FLOAT) {
         for (int i = 0; i < n_task; i++) {
@@ -98,6 +98,7 @@ inline void clean_tasks(task* array_task, size_t n_task) {
             delete[] static_cast<uint16_t*>(array_task[i].C);
         }
     }
+
     delete[] array_task;
 }
 

@@ -36,6 +36,7 @@
 #include <iostream>
 #include <atomic>
 #include <stdlib.h>
+#include <sycl/vector.hpp>
 #include <thread>
 #include <array>
 #include <memory>
@@ -85,6 +86,7 @@ class AMScheduler {
 
         /* atomic for shutting down threads */
         atomic<bool> threads_keep_running;
+        atomic<int> pending_tasks = 0;
 
         /* shared buffers beetween threads */
         SharedBuffer_T shared_buffers;
@@ -124,6 +126,7 @@ class AMScheduler {
                 PROF(profiler.start_worker(bt));                 
                 handle_task(bt, task);
                 PROF(profiler.end_worker(bt));                 
+                pending_tasks--;
             }
         } 
 
@@ -240,13 +243,15 @@ class AMScheduler {
                 } 
                 break;
             
-            /* split a large matrix row wise */
+            /* split a large matrix row wise with Iterative Refinement Partitioning*/
             case Logic::LARGE_MATRIX_SPLIT:
 
                 while(threads_keep_running) { 
                     PROF(profiler.start_fetch());
-                    task *single_task = buffer->get();
+
+                    single_task = buffer->get();
                     if (!single_task) {continue;} 
+
                     PROF(profiler.stop_fetch());
                     PROF(profiler.start_logic());
 
@@ -260,7 +265,7 @@ class AMScheduler {
                     for(int j=0; j<bts_len; j++) 
                         rows[j] = base + (j < rest ? 1 : 0);
 
-                    /* loop vasi comunicanti 3 iteration */
+                    /* loop for adjusting the ratios */
                     for (int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
                         double total_speed = 0.0;
 
@@ -270,6 +275,11 @@ class AMScheduler {
 
                             double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type);
 
+                            /* openvino have to compile the model the first time so is extreme slow in this scenario */
+                            if (bts[j] == BT::OPENVINO) {ms += 4*ms;}
+
+                            //cout << get_acc_string(bts[j]) << " get " << ms << " ms\n";
+
                             /* single row speed, number of rows / ms */
                             double speed = (double)r / (ms + 1e-9);
 
@@ -277,12 +287,17 @@ class AMScheduler {
                             total_speed += speed;
                         }
 
+                        /* adjust the row with the ratios */
                         int rows_distributed = 0;
                         for(int j=0; j<bts_len; j++) {
                             double ratio = curr_speeds[j] / total_speed;
 
                             /* new rows from the ratio */
                             int target_rows = (int)(ratio * single_task->M);
+
+                            /* limit the size */
+                            if (target_rows > MAX_SIZE)
+                                target_rows = MAX_SIZE;
 
                             rows[j] = target_rows;
                             rows_distributed += rows[j];
@@ -291,45 +306,66 @@ class AMScheduler {
                         /* the remaining to the fastest */
                         int diff = single_task->M - rows_distributed;
                         rows[0] += diff;
+
+                        if (rows[0] > MAX_SIZE) {
+                            diff = rows[0] - MAX_SIZE;
+                            rows[0] = MAX_SIZE;        
+                            /* if are more than max_size we distribute the row for each accellerator */
+                            int w = 1;
+                            while (diff > 0) {
+                                rows[w] += 1;
+                                diff--;
+                                w++;
+                                w = w%bts_len;
+                                if (w == 0) w++;
+                            }
+                        }
                     }
 
                     PROF(profiler.stop_logic());
                     PROF(profiler.start_dispatch());
 
-                    // C. Creazione dei Sub-Task e Dispatch
                     size_t elem_size = (single_task->type == Type::FLOAT) ? 4 : 2;
                     size_t offset_rows_accumulated = 0;
 
+                    /* dispatch tasks */
                     for (int j=0; j<bts_len; j++) {
                         int h = rows[j];
+                        cout << get_acc_string(bts[j]) << " get " << rows[j] << " rows\n";
                         if (h <= 0) continue; 
 
-                        // Creiamo una copia del task (shallow copy della struct)
-                        task* sub_task = new task(*single_task);
+                        task* sub_task = new ::task;
+                        *sub_task = *single_task;
 
-                        /* save the pointer for freeing up after */
+                        /* save the pointer for later freeup */
                         sub_task_array.push_back(sub_task);
 
-                        // Aggiorniamo le dimensioni della fetta
+                        /* A row */
                         sub_task->M = h; 
 
+                        /* A offset */
                         size_t offset_A = offset_rows_accumulated * single_task->K * elem_size;
                         sub_task->A = (char*)single_task->A + offset_A;
 
-                        // B resta intera: nessun offset
+                        /* B offset still all in memory */
                         sub_task->B = single_task->B;
 
-                        // C viene tagliata: offset = righe_prec * N * sizeof
+                        /* C offset */
                         size_t offset_C = offset_rows_accumulated * single_task->N * elem_size;
                         sub_task->C = (char*)single_task->C + offset_C;
 
-                        // Spediamo al buffer dell'acceleratore j
+                        /* add task to the pending */
+                        pending_tasks++;
+
+                        /* submit to the acc */
                         buffers[bts[j]]->put(sub_task);
 
-                        // Avanziamo l'offset
-                        offset_rows_accumulated += h;
+                        /* for each accellerator we add more offset */
+                        offset_rows_accumulated += h; 
                     }
 
+                    /* remove task */
+                    pending_tasks--;
                     PROF(profiler.stop_dispatch());
                     PROF(profiler.record_sample());    
                 } 
@@ -393,7 +429,7 @@ class AMScheduler {
             /* cleanups sub_task array */
             if (strategy == Logic::LARGE_MATRIX_SPLIT)
                 for (int i=0; i<sub_task_array.size(); i++)
-                    clean_tasks(sub_task_array[i], 1);
+                    delete sub_task_array[i];
 
             PRINT("[SCHEDULER] Threads stopped.\n");
         }
@@ -456,7 +492,7 @@ class AMScheduler {
             init_benchmarks();            
             PRINT("[SCHEDULER] Benchmarks done.\n");
             init_maps();
-            PRINT("[SCHEDULER] Regression done.\n");
+            PRINT("[SCHEDULER] PerformanceMap done.\n");
         }
 
         /* destructur, stop the threads*/
@@ -466,39 +502,33 @@ class AMScheduler {
 
         /* send the tasks to the coordinator */
         void do_tasks(task* tasks, size_t n) {
+            pending_tasks += n;
             for (int i=0; i<n; i++) {
                 tasks[i].start_time = chrono::high_resolution_clock::now();                
                 shared_buffers[BT::CORDINATOR]->put(&tasks[i]);
             }
-            PRINT("[SCHEDULER] Task dispached\n");
+            PRINT("[SCHEDULER] Task dispached.\n");
         }
 
         /* check if all the buffers are empty */
         void wait() {
             PRINT("[SCHEDULER] Waiting.. \n");
-            /* wait coordinator */
-            while (!shared_buffers[0]->is_empty()){
-                usleep(10000);
-            }
-            PRINT("[SCHEDULER] Coordinator empty.. \n");
 
-            /* wait other threads */
-            for (int i=1; i<BT::COUNT; i++) {
-                if (shared_buffers[i] != nullptr) {
-                    while (!shared_buffers[i]->is_empty()){
-                        usleep(10000);
-                    }
-                }
+            while (pending_tasks > 0) {
+                usleep(1000);
             }
 
-            PRINT("[SCHEDULER] All empty.. \n");
-
-            // TODO: maybe better shutdown? 
-            sleep(2); /* wait for unfinished matrix */
+            PRINT("[SCHEDULER] All tasks done. \n");
         }
 
         /* return the profiler for printing the stats */
-        void print_profiler_stats() {profiler.print_stats(bts);}
+        void print_stats(task* tasks, int num_tasks) {
+            if (strategy == Logic::LARGE_MATRIX_SPLIT) {
+                profiler.print_stats(bts, sub_task_array);
+            } else {
+                profiler.print_stats(bts, tasks, num_tasks);
+            }
+        }
 };
 
 /**********************************  Helper Functions ***********************************/

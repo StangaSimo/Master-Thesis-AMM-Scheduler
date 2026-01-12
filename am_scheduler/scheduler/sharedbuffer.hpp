@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <unistd.h>
+#include <atomic>
 #include "tasks.hpp"
 #include "config.hpp"
 
@@ -14,8 +15,8 @@ class SharedBuffer {
         unique_ptr<task*[]> data; /* unique pointer so delete is not needed */
         size_t size = 0;
         
-        size_t write_i = 0;
-        size_t read_i = 0; 
+        alignas(64) std::atomic<size_t> write_i{0};
+        alignas(64) std::atomic<size_t> read_i{0};
 
     public:
         /* constructor */

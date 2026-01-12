@@ -1,4 +1,5 @@
 #include "scheduler.hpp"
+#include <cstddef>
 #include <iostream>
 #include <ostream>
 
@@ -47,11 +48,8 @@
  * Prima di tutto, fixare sycl (magari aggiungere il doppio nei tempi del benchmark potrebbe essere il fix).
  *
  * LOGICA DAG, 
- * MATRICE ENORME 
  * FRAME VIDEO 
  * 
- *
- *
  * */
 
 /* BATCH_SIZE, SLEEP, DEBUG */
@@ -77,7 +75,7 @@ int main() {
 
         Logic l;
 
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<3; i++) {
 
             if (i == 1) {continue;}
 
@@ -92,28 +90,23 @@ int main() {
             scheduler.do_tasks(task_array, n_matrix);
             scheduler.wait();
 
-            //test_compare_task(task_array, num_matrix, Type::FLOAT);
-            print_performance_stats(task_array, n_matrix);
-
-#ifdef ENABLE_PROFILING
-            scheduler.print_profiler_stats();
-#endif
+            //test_compare_task(task_array, num_matrix);
+            scheduler.print_stats(task_array,n_matrix);
             clean_tasks(task_array, n_matrix);
         } 
     }
+
+    {
+        cout << "\nLarge Matrix Split \n";
+        Logic l = Logic::LARGE_MATRIX_SPLIT; 
+        task* big_task = init_tasks(1, M_split,N_split,K_split,Type::FLOAT);
+        AMScheduler scheduler = AMScheduler(l);
+        scheduler.do_tasks(big_task, 1);
+        scheduler.wait();
+        scheduler.print_stats(nullptr,1);
+        test_compare_task(big_task, 1);
+        clean_tasks(big_task, 1);
+    }
     
-    Logic l = Logic::LARGE_MATRIX_SPLIT; 
-    cout << "\nLarge Matrix Split \n";
-
-    task* task = init_tasks(1, M_split,N_split, K_split, type);
-    AMScheduler scheduler = AMScheduler(l);
-    scheduler.do_tasks(task, 0);
-    scheduler.wait();
-    print_performance_stats(task, 1);
-#ifdef ENABLE_PROFILING
-            scheduler.print_profiler_stats();
-#endif
-
-    clean_tasks(task, 1);
     return 0;
 }
