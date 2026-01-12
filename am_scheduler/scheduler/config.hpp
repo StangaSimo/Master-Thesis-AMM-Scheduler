@@ -9,7 +9,7 @@
 #define M_ 1920
 #define N_ 1920
 #define K_ 1024 
-#define N_MATRIX 600 
+#define N_MATRIX 300 
 #define MAX_SIZE 4092
 
 enum {BATCH_SIZE = 30};       /* static partitioning batch size */

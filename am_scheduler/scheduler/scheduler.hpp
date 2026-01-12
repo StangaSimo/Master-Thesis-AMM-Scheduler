@@ -74,7 +74,7 @@ inline void init_acc(BT backend_type);
 inline void free_acc(BT backend_type); 
 inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K);
 inline void benchmark(BT bt, Type type, string filename);
-inline void print_logic(Logic l); 
+inline string get_logic_string(Logic l); 
 inline string get_acc_string(BT backend_type); 
 
 /* for simplicity this is the buffer pointer */
@@ -484,7 +484,7 @@ class AMScheduler {
     public: 
         /* constructur init threads, benchmark files, regression models */
         AMScheduler(Logic logic) : threads_keep_running(true), strategy(logic) {
-            print_logic(logic);
+            get_logic_string(logic);
             init_threads();            
             PRINT("[SCHEDULER] Threads started.\n");
             init_benchmarks();            
@@ -522,9 +522,9 @@ class AMScheduler {
         /* return the profiler for printing the stats */
         void print_stats(task* tasks, int num_tasks) {
             if (strategy == Logic::LARGE_MATRIX_SPLIT) {
-                profiler.print_stats(bts, sub_task_array);
+                profiler.print_stats(bts, sub_task_array, get_logic_string(strategy));
             } else {
-                profiler.print_stats(bts, tasks, num_tasks);
+                profiler.print_stats(bts, tasks, num_tasks, get_logic_string(strategy));
             }
         }
 };
@@ -702,7 +702,7 @@ inline void free_acc(BT backend_type) {
     }
 }
 
-inline void print_logic(Logic l) {
+inline string get_logic_string(Logic l) {
     string logic;
     switch (l) {
         case Logic::ROUND_ROBIN:
@@ -718,6 +718,7 @@ inline void print_logic(Logic l) {
             exit(EXIT_FAILURE);
     }
     PRINT("[SCHEDULER] Started with " << logic << " logic \n");
+    return logic;
 }
 
 /* get the right csv filename for each accellerators */
