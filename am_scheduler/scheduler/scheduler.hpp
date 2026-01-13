@@ -152,6 +152,8 @@ class AMScheduler {
             switch (strategy) {
             case Logic::CUDA_ONLY:
 
+                PROF(profiler.start_power_monitor());
+
                 if (buffers[BT::CUDA] == nullptr) {
                     cerr << "[SCHEDULER] Error, cuda logic but no cuda card";
                     exit(EXIT_FAILURE);
@@ -162,6 +164,8 @@ class AMScheduler {
                     if (!single_task) {continue;} 
                     buffers[BT::CUDA]->put(single_task);
                 } 
+
+                PROF(profiler.stop_power_monitor());
 
                 break;
 
@@ -180,6 +184,8 @@ class AMScheduler {
 
             /* batch style partitioning */
             case Logic::STATIC_PARTITIONING: 
+
+                PROF(profiler.start_power_monitor());
 
                 while(threads_keep_running) { 
                     
@@ -242,10 +248,14 @@ class AMScheduler {
                     PROF(profiler.stop_dispatch());
                     PROF(profiler.record_sample());
                 } 
+
+                PROF(profiler.stop_power_monitor());
                 break;
             
             /* split a large matrix row wise with Iterative Refinement Partitioning*/
             case Logic::LARGE_MATRIX_SPLIT:
+
+                PROF(profiler.start_power_monitor());
 
                 while(threads_keep_running) { 
                     PROF(profiler.start_fetch());
@@ -317,7 +327,6 @@ class AMScheduler {
                                 break;
                             }
                         }
-
                     }
 
                     PROF(profiler.stop_logic());
@@ -367,6 +376,8 @@ class AMScheduler {
                     PROF(profiler.stop_dispatch());
                     PROF(profiler.record_sample());    
                 } 
+
+                PROF(profiler.stop_power_monitor());
                 break;
             default:
                 printf("[SCHEDULER] Error in chosing the logic.\n");

@@ -3,7 +3,9 @@
 
 /********** debug ************/
 //#define DEBUG
-#define ENABLE_PROFILING
+#define ENABLE_PROFILING /* profiler for timing the scheduler */
+#define ENABLE_INTEL_POWER_PROFILE /* profiling the power consumption with intel rapl */
+
 
 /********** tests ************/
 #define M_ 1920

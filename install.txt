@@ -3,6 +3,9 @@ nvidia-cuda-toolkit
 
 
 
+---------- opencv for video filter:
+sudo apt install libopencv-dev
+
 ---------- openvino:
 https://docs.openvino.ai/2025/get-started/install-openvino/install-openvino-apt.html
 

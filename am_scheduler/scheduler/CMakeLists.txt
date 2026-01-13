@@ -30,6 +30,12 @@ if(NOT DEFINED ENABLE_OPENBLAS)
     set(ENABLE_OPENBLAS OFF)
 endif()
 
+#OPENCV
+if(NOT DEFINED ENABLE_OPENCV)
+    message("[SCHEDULER] OpenCV off on scheduler")
+    set(ENABLE_OPENCV OFF)
+endif()
+
 # cuda_wrapper.h
 include_directories(${CUDA_SRC_DIR})
 # sycl_wrapper.h
@@ -43,13 +49,12 @@ link_directories(${LIBS_DIR}/lib)
 # search for OMP
 find_package(OpenMP REQUIRED)
 
-
 add_executable(scheduler main.cpp)
 
 # CUDA 
 if(ENABLE_CUDA)
     target_compile_definitions(scheduler PRIVATE ENABLE_CUDA)
-    target_link_libraries(scheduler cuda_lib stdc++)
+    target_link_libraries(scheduler cuda_lib stdc++ nvidia-ml) # nviida-ml for power profile 
 endif()
 
 # SYCL 
@@ -81,6 +86,16 @@ endif()
 #OMP
 if(OpenMP_CXX_FOUND)
     target_link_libraries(scheduler OpenMP::OpenMP_CXX)
+endif()
+
+
+#OPENCV
+if(ENABLE_OPENCV)
+    find_package(OpenCV REQUIRED)             
+    message(STATUS "OpenCV found: ${OpenCV_VERSION}")
+    include_directories(${OpenCV_INCLUDE_DIRS})
+    target_compile_definitions(scheduler PRIVATE ENABLE_OPENCV)
+    target_link_libraries(scheduler ${OpenCV_LIBS}) 
 endif()
 
 # RPATH for libraries path, ORIGIN = exe path, so bin

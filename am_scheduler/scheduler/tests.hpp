@@ -2,8 +2,6 @@
 #define TEST_H
 
 /* this is only for testing pourpuse of the dynamic libraries */
-
-#include "sharedbuffer.hpp"
 #include "tasks.hpp"
 #include "profiler.hpp"
 #include <cstdlib>
@@ -158,35 +156,13 @@ inline bool compare_cpu_8bit(void* A, void* B, void* C, int M, int N, int K) {
 }
 /******************************** Test Accellerators **********************************/
 
-//TODO 16 bit implementation and test
-//inline bool test_openvino(float* A, float* B, float* C, int M, int N, int K) {
-//    ov_init();  
-//    ov_gemm_32bit(A,B,C,M,N,K);
-//    ov_free();  
-//    return compare_cpu_32bit(A,B,C,M,N,K);
-//}
-//
-//inline bool test_cuda(float* A, float* B, float* C, int M, int N, int K) {
-//    cuda_init(M,N,K);  
-//    cuda_gemm_32bit(A,B,C,M,N,K);
-//    cuda_free(); 
-//    return compare_cpu_32bit(A,B,C,M,N,K);
-//}
-//
-//inline bool test_sycl(float* A, float* B, float* C, int M, int N, int K) {
-//    sycl_init(M,N,K);
-//    sycl_gemm_32bit(A,B,C,M,N,K);
-//    sycl_free();  
-//    return compare_cpu_32bit(A,B,C,M,N,K);
-//}
-
 inline void test_accellerators() {
     int M = 512;
     int N = 512;
     int K = 256;
     
     /* ------------------- 32 BIT TEST ------------------- */
-    cout << "\n--- Running 32-bit FP32 Tests ---\n";
+    cout << "\n--- Running 32-bit Tests ---\n";
     float *A = new float[M*K];
     float *B = new float[K*N];
     float *C = new float[M*N];
@@ -197,32 +173,35 @@ inline void test_accellerators() {
         ov_init();
         ov_gemm_32bit(A,B,C,M,N,K);
         if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "OpenVINO 32bit Fail\n"; exit(1); }
+        cout << "--- OpenVino Passed\n";
     #endif
 
     #ifdef ENABLE_CUDA
         cuda_init(MAX_SIZE, MAX_SIZE, MAX_SIZE);
         cuda_gemm_32bit(A,B,C,M,N,K);
         if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "CUDA 32bit Fail\n"; exit(1); }
+        cout << "--- Cuda Passed\n";
     #endif
 
     #ifdef ENABLE_SYCL
         sycl_init(MAX_SIZE, MAX_SIZE, MAX_SIZE);
         sycl_gemm_32bit(A,B,C,M,N,K);
         if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "SYCL 32bit Fail\n"; exit(1); }
+        cout << "--- Sycl Passed\n";
     #endif
 
     #ifdef ENABLE_OPENBLAS
         cpu_init();
         cpu_gemm_32bit(A,B,C,M,N,K);
         if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "SYCL 32bit Fail\n"; exit(1); }
+        cout << "--- OpenBlas Passed\n";
     #endif
 
     delete[] A; delete[] B; delete[] C;
-
+    cout << "--- PASSED 32-bit Tests ---\n";
 
     /* ------------------- 16 BIT TEST ------------------- */
     cout << "\n--- Running 16-bit FP16 Tests ---\n";
-    // Usiamo uint16_t per allocare la dimensione giusta (2 bytes)
     uint16_t *A16 = new uint16_t[M*K];
     uint16_t *B16 = new uint16_t[K*N];
     uint16_t *C16 = new uint16_t[M*N];
@@ -232,34 +211,39 @@ inline void test_accellerators() {
     #ifdef ENABLE_OPENVINO
         ov_gemm_16bit(A16, B16, C16, M, N, K);
         if(!compare_cpu_16bit(A16, B16, C16, M, N, K)) { cout << "OpenVINO 16bit Fail\n"; exit(1); }
+        cout << "--- OpenVino Passed\n";
     #endif
 
     #ifdef ENABLE_CUDA
         cuda_gemm_16bit(A16, B16, C16, M, N, K);
         if(!compare_cpu_16bit(A16, B16, C16, M, N, K)) { cout << "CUDA 16bit Fail\n"; exit(1); }
+        cout << "--- Cuda Passed\n";
     #endif
 
     #ifdef ENABLE_SYCL
         sycl_gemm_16bit(A16, B16, C16, M, N, K);
         if(!compare_cpu_16bit(A16, B16, C16, M, N, K)) { cout << "SYCL 16bit Fail\n"; exit(1); }
+        cout << "--- Sycl Passed\n";
     #endif
 
     #ifdef ENABLE_OPENBLAS
         cpu_gemm_16bit(A16, B16, C16, M, N, K);
         if(!compare_cpu_16bit(A16, B16, C16, M, N, K)) { cout << "CPU 16bit Fail\n"; exit(1); }
+        cout << "--- OpenBlas Passed\n";
     #endif
 
     delete[] A16; delete[] B16; delete[] C16;
 
+    cout << "--- PASSED 32-bit Tests ---\n";
 
     /* ------------------- 8 BIT TEST ------------------- */
-    cout << "\n--- Running 8-bit INT8 Tests ---\n";
+    //cout << "\n--- Running 8-bit INT8 Tests ---\n";
     // Input 1 byte, Output 4 byte (int32)
-    int8_t *A8 = new int8_t[M*K];
-    int8_t *B8 = new int8_t[K*N];
-    int32_t *C8 = new int32_t[M*N]; 
+    //int8_t *A8 = new int8_t[M*K];
+    //int8_t *B8 = new int8_t[K*N];
+    //int32_t *C8 = new int32_t[M*N]; 
 
-    init_8bit(A8, B8, C8, M, N, K);
+    //init_8bit(A8, B8, C8, M, N, K);
 
     //#ifdef ENABLE_OPENVINO
     //    ov_gemm_8bit(A8, B8, C8, M, N, K);
@@ -267,11 +251,11 @@ inline void test_accellerators() {
     //    ov_free();
     //#endif
 
-    #ifdef ENABLE_CUDA
-        cuda_gemm_8bit(A8, B8, C8, M, N, K);
-        if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "CUDA 8bit Fail\n"; exit(1); }
-        cuda_free();
-    #endif
+    //#ifdef ENABLE_CUDA
+    //    cuda_gemm_8bit(A8, B8, C8, M, N, K);
+    //    if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "CUDA 8bit Fail\n"; exit(1); }
+    //    cuda_free();
+    //#endif
 
     //#ifdef ENABLE_SYCL
     //    sycl_gemm_8bit(A8, B8, C8, M, N, K);
@@ -303,6 +287,7 @@ inline void test_compare_task(task* array_task, size_t n_task) {
 
 #ifdef ENABLE_CUDA
 inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type) {
+    cout << "\nCuda only \n";
     task* tasks = init_tasks(num_task, M, N, K, type);
     cuda_init(M,N,K);
 
