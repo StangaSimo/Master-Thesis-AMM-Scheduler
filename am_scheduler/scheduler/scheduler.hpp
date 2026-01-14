@@ -202,7 +202,7 @@ class AMScheduler {
                     PROF(profiler.start_logic());
                     if (c == 0) {continue;}
 
-                    /* if the tasks are less the number of accellerators, send all them to the fastest TODO: check if this is the case */
+                    /* if the tasks are less the number of accellerators, send all them to the fastest */
                     if (bts_len >= c){ 
                         for (int j=0; j<c; j++)
                             buffers[bts[0]]->put(tasks[j]);
@@ -286,11 +286,6 @@ class AMScheduler {
 
                             double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type);
 
-                            /* openvino have to compile the model the first time so is extreme slow in this scenario */
-                            if (bts[j] == BT::OPENVINO) {ms += 4*ms;}
-
-                            //cout << get_acc_string(bts[j]) << " get " << ms << " ms\n";
-
                             /* single row speed, number of rows / ms */
                             double speed = (double)r / (ms + 1e-9);
 
@@ -306,26 +301,8 @@ class AMScheduler {
                             /* new rows from the ratio */
                             int target_rows = (int)(ratio * single_task->M);
 
-                            /* limit the size */
-                            if (target_rows > MAX_SIZE)
-                                target_rows = MAX_SIZE;
-
                             rows[j] = target_rows;
                             rows_distributed += rows[j];
-                        }
-
-                        /* the remaining to the fastest and so on */
-                        int diff = single_task->M - rows_distributed;
-                        for (int j=0; j<bts_len; j++) {
-                            if (diff == 0) break;
-                            rows[j] += diff;
-                            if (rows[j] > MAX_SIZE) {
-                                if (j == 4) {cerr << "[ERROR] no more memory for LARGE_MATRIX_SPLIT"; exit(EXIT_FAILURE);}
-                                diff = rows[j] - MAX_SIZE;
-                                rows[j] = MAX_SIZE;
-                            } else {
-                                break;
-                            }
                         }
                     }
 
@@ -333,42 +310,52 @@ class AMScheduler {
                     PROF(profiler.start_dispatch());
 
                     size_t elem_size = (single_task->type == Type::FLOAT) ? 4 : 2;
-                    size_t offset_rows_accumulated = 0;
+                    size_t offset_rows_acc = 0;
 
                     /* dispatch tasks */
                     for (int j=0; j<bts_len; j++) {
                         int h = rows[j];
-                        cout << get_acc_string(bts[j]) << " get " << rows[j] << " rows\n";
+                        cout << get_acc_string(bts[j]) << " get " << h << " rows\n";
                         if (h <= 0) continue; 
 
-                        task* sub_task = new ::task;
-                        *sub_task = *single_task;
+                        /* divide rows into tasks if exceed MAX_SIZE */
+                        while (h > 0) {
+                            int h_limit = h;
+                            
+                            if (h_limit > MAX_SIZE) 
+                                h_limit = MAX_SIZE;
 
-                        /* save the pointer for later freeup */
-                        sub_task_array.push_back(sub_task);
+                            task* sub_task = new ::task;
+                            *sub_task = *single_task;
 
-                        /* A row */
-                        sub_task->M = h; 
+                            /* save the pointer for later freeup */
+                            sub_task_array.push_back(sub_task);
 
-                        /* A offset */
-                        size_t offset_A = offset_rows_accumulated * single_task->K * elem_size;
-                        sub_task->A = (char*)single_task->A + offset_A;
+                            /* A row */
+                            sub_task->M = h_limit; 
 
-                        /* B offset still all in memory */
-                        sub_task->B = single_task->B;
+                            /* A offset */
+                            size_t offset_A = offset_rows_acc * single_task->K * elem_size;
+                            sub_task->A = (char*)single_task->A + offset_A;
 
-                        /* C offset */
-                        size_t offset_C = offset_rows_accumulated * single_task->N * elem_size;
-                        sub_task->C = (char*)single_task->C + offset_C;
+                            /* B offset still all in memory */
+                            sub_task->B = single_task->B;
 
-                        /* add task to the pending */
-                        pending_tasks++;
+                            /* C offset */
+                            size_t offset_C = offset_rows_acc * single_task->N * elem_size;
+                            sub_task->C = (char*)single_task->C + offset_C;
 
-                        /* submit to the acc */
-                        buffers[bts[j]]->put(sub_task);
+                            /* add task to the pending */
+                            pending_tasks++;
 
-                        /* for each accellerator we add more offset */
-                        offset_rows_accumulated += h; 
+                            /* submit to the acc */
+                            buffers[bts[j]]->put(sub_task);
+
+                            /* for each accellerator we add more offset */
+                            offset_rows_acc += h_limit; 
+                            
+                            h -= h_limit;
+                        }
                     }
 
                     /* remove task */
@@ -481,8 +468,8 @@ class AMScheduler {
                 filename_f = get_benchmark_filename(i, Type::FLOAT); 
                 filename_h = get_benchmark_filename(i, Type::HALF); 
 
-                if (filesystem::exists(filename_f) && filesystem::exists(filename_h)){
-                    bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE,filename_f,filename_h);
+                if (filesystem::exists(filename_f) && filesystem::exists(filename_h)) {
+                    bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE, i, filename_f, filename_h);
                 } else {
                      cerr << "[SCHEDULER] File: " << filename_f <<  " or " << filename_h << " not found for map init\n"; 
                      exit(EXIT_FAILURE);
@@ -549,20 +536,22 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     chrono::high_resolution_clock::time_point end_time;
     chrono::duration<double, std::milli> duration;
 
-    const int N_WARMUP = 2;
-    const int N_RUNS = 5;
+    const int N_WARMUP = 1;
+    const int N_RUNS = 4;
 
     double total_ms = 0.0;
 
     /* we simulate a thread */
     task* tasks = init_tasks(N_RUNS+N_WARMUP, M, N, K, type);
 
+    /* warmup */
     for (int i = 0; i < N_WARMUP; i++)
-        handle_task(bt, &tasks[0]);
+        handle_task(bt, &tasks[i]);
 
+    /* runs with */
     for (int i = N_WARMUP; i < N_RUNS; i++) {
         start_time = chrono::high_resolution_clock::now();
-        handle_task(bt, &tasks[0]);
+        handle_task(bt, &tasks[i]);
         end_time = chrono::high_resolution_clock::now();
         duration = end_time - start_time;
         total_ms += duration.count();
@@ -571,11 +560,6 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     clean_tasks(tasks, N_RUNS+N_WARMUP);
     
     double avg_ms = total_ms/N_RUNS;
-
-    /* for sycl we add 2 times the benchmark result for mitigating the overhead during the 
-     * cpu bottleneck */
-    if (bt == BT::SYCL)
-        avg_ms += (avg_ms/2);
 
     ofstream file(filename, ios::app);
 

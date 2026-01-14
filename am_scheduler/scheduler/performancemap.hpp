@@ -2,8 +2,11 @@
 #define PERFORMANCEMAP_H
 
 #include "tasks.hpp"
+#include "config.hpp"
+
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set> /* for jit times */
 #include <fstream>
 #include <vector>
 #include <string>
@@ -45,6 +48,12 @@ class PerformanceMap {
     map_struct map_f;
     map_struct map_h;
 
+    unordered_set<unsigned long long> jit_cache_f;
+    unordered_set<unsigned long long> jit_cache_h;
+
+    /* which accellerator am i */
+    BT bt;
+
     long long STEP_SIZE;
 
 private:
@@ -63,6 +72,15 @@ private:
 
         /* 64 bit  |4bit nil|20bit M|20bit N|20bit K| */
         return ((unsigned long long)rM << 40) | ((unsigned long long)rN << 20) | (unsigned long long)rK;
+    }
+
+    /* key used in jit_cache for sycl, only N and K */
+    unsigned long long get_sycl_key(long long N, long long K) {
+        long long rN = round_up(N);
+        long long rK = round_up(K);
+
+        /* 64 bit  |32bit N|32bit K| */
+        return ((unsigned long long)rN << 32) | (unsigned long long)rK;
     }
 
     void add_key(long long M, long long N, long long K, double time, Type type) {
@@ -94,7 +112,7 @@ private:
     }
 
     /* open file and init the map */
-    void init_maps(string filename_f, string filename_h){
+    void init_maps(string filename_f, string filename_h) {
         ifstream file_f(filename_f);
         ifstream file_h(filename_h);
 
@@ -114,31 +132,73 @@ private:
 
 public:
 
-    PerformanceMap(int step_size, string filename_f, string filename_h) : STEP_SIZE(step_size) {
+    PerformanceMap(int step_size, BT bt, string filename_f, string filename_h) : STEP_SIZE(step_size), bt(bt) {
         init_maps(filename_f, filename_h);        
     }
 
-    /* return the time, -1 if the matrix is too big */
+    /* return the time */
     double query(long long M, long long N, long long K, Type type) {
-        map_struct &data = (type == Type::FLOAT) ? map_f : map_h;
+        map_struct* data = nullptr;
+        unordered_set<unsigned long long>* jit_cache = nullptr;
+        double result;
 
         unsigned long long key = get_key(M, N, K);
 
-        /* we cache the last results */
-        if (M == data.last_M && N == data.last_N && K == data.last_K) {return data.last_K;}
-
-        data.last_M = M;
-        data.last_N = N;
-        data.last_K = K;
-
-        if (data.grid_map.find(key) != data.grid_map.end()) {
-            data.last_K = data.grid_map[key];
-            return data.grid_map[key];
+        if (type == Type::FLOAT) {
+            jit_cache = &jit_cache_f;
+            data = &map_f;
+        } else {
+            jit_cache = &jit_cache_h;
+            data = &map_h;
         }
 
-        data.last_K = data.max_result * 1.5;
-        return  data.max_result * 1.5; 
+        /* we cache the last results */
+        if (M == data->last_M && N == data->last_N && K == data->last_K) {return data->last_K;}
+
+        data->last_M = M;
+        data->last_N = N;
+        data->last_K = K;
+
+        /* return if we find the key */
+        if (data->grid_map.find(key) != data->grid_map.end()) {
+            result = data->grid_map[key];
+
+            /* add ms only if openvino never see M N K*/
+            if (bt == BT::OPENVINO) {
+                if (jit_cache->find(key) == jit_cache->end()){
+                     jit_cache->insert(key);
+                     result += JIT_MS_OV;
+                }
+            }
+
+            /* add ms only if sycl never see N K*/
+            if (bt == BT::SYCL) {
+
+                /* mitigate sycl overhead when other accellerator are running */
+                result += result * 0.5;
+
+                unsigned long long sycl_key = get_sycl_key(N, K);
+                if (jit_cache->find(sycl_key) == jit_cache->end()){
+                     jit_cache->insert(sycl_key);
+                     result += JIT_MS_SYCL;
+                }
+            }
+
+            data->last_K = result;
+            return result;
+        }
+
+        /* if we don't have data on this matrix, just return max time * 2 */
+        result  = data->max_result * 2;
+
+        /* add jit expences 150 ms in avg for each */
+        if (bt == BT::OPENVINO || bt == BT::SYCL) 
+            result += 150;
+
+        /* cache the result */
+        data->last_K = result;
+
+        return data->max_result; 
     }
 };
-
 #endif

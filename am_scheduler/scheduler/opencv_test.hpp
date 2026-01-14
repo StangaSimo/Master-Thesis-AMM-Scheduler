@@ -12,21 +12,17 @@
 #include "scheduler.hpp"
 
 inline void prepare_task_from_frame(const cv::Mat& frame, const cv::Mat& kernel, task& t) {
-    int k_sz = kernel.rows; // Assumiamo kernel quadrato (es. 3)
+    int k_sz = kernel.rows;
 
-    // 1. Calcolo Dimensioni Output (N)
     int out_h = frame.rows - k_sz + 1;
     int out_w = frame.cols - k_sz + 1;
-    int num_patches = out_h * out_w; // Questo è il tuo N
+    int num_patches = out_h * out_w;
 
-    // 2. Setup Metadati Task
     t.type = Type::FLOAT;
-    t.M = 1;                    // Filtro srotolato è 1 riga
-    t.K = k_sz * k_sz;          // Lunghezza filtro (es. 9)
-    t.N = num_patches;          // Colonne di B (totale pixel output)
+    t.M = 1;               
+    t.K = k_sz * k_sz;
+    t.N = num_patches;
 
-    // 3. Allocazione Memoria (Se non è già allocata)
-    // NOTA: In produzione, evita di fare malloc/new a ogni frame! Riusa i buffer.
     // A: 1 * K
     t.A = new float[t.M * t.K];
     // B: K * N
@@ -34,8 +30,6 @@ inline void prepare_task_from_frame(const cv::Mat& frame, const cv::Mat& kernel,
     // C: 1 * N (M * N)
     t.C = new float[t.M * t.N];
 
-    // 4. Riempimento Matrice A (Il Filtro)
-    // Copiamo il kernel appiattendolo
     float* A_ptr = (float*)t.A;
     int a_idx = 0;
     for(int i=0; i<k_sz; ++i) {
@@ -44,29 +38,18 @@ inline void prepare_task_from_frame(const cv::Mat& frame, const cv::Mat& kernel,
         }
     }
 
-    // 5. Riempimento Matrice B (im2col - Image to Column)
-    // Vogliamo che B sia (K righe x N colonne).
-    // Ogni colonna j rappresenta un patch dell'immagine.
-    // Ogni riga i rappresenta un pixel specifico del kernel (es. l'angolo in alto a sinistra).
-
     float* B_ptr = (float*)t.B;
-    int patch_idx = 0; // Indice della colonna corrente (da 0 a N-1)
+    int patch_idx = 0;
 
-    // Scorriamo l'immagine (sliding window)
     for (int y = 0; y < out_h; y++) {
         for (int x = 0; x < out_w; x++) {
 
-            // Per ogni patch, copiamo i pixel nelle righe corrispondenti della colonna patch_idx
-            int k_pixel_idx = 0; // Indice della riga in B (da 0 a K-1)
+            int k_pixel_idx = 0;
 
             for (int ky = 0; ky < k_sz; ky++) {
                 for (int kx = 0; kx < k_sz; kx++) {
                     float pixel_val = frame.at<float>(y + ky, x + kx);
 
-                    // FORMULA MATRICE FLATTENED: index = (riga * larghezza) + colonna
-                    // riga = k_pixel_idx
-                    // larghezza = t.N (numero di colonne totali)
-                    // colonna = patch_idx
                     B_ptr[k_pixel_idx * t.N + patch_idx] = pixel_val;
 
                     k_pixel_idx++;
@@ -93,7 +76,11 @@ inline void free_batch(std::vector<task>& tasks) {
     tasks.clear();
 }
 
-inline void test_video_filter() {
+inline void display_video(std::vector<task>& tasks) {
+
+}
+
+inline void test_video_filter(Logic l, bool display) {
     cv::VideoCapture cap("test.mp4");
 
     if(!cap.isOpened()) {
@@ -111,7 +98,7 @@ inline void test_video_filter() {
 
     vector<task> tasks;
     tasks.reserve(1000);
-    AMScheduler scheduler = AMScheduler(Logic::STATIC_PARTITIONING);
+
 
     while(true) {
         cap >> frame;
@@ -128,29 +115,33 @@ inline void test_video_filter() {
     }
 
     cout << "[OPENCV TEST] frame Processati\n";
+
+    AMScheduler scheduler = AMScheduler(l);
     scheduler.do_tasks(tasks.data(), tasks.size());
     scheduler.wait();
+    scheduler.print_stats(tasks.data(), tasks.size());
+
     cout << "[OPENCV TEST] Scheduler finito\n";
 
-    for (auto& t : tasks) {
-        cv::Mat display;
+    if (display) {
+        for (auto& t : tasks) {
+            cv::Mat display;
 
-        cv::Mat out = result_from_task(t, float_img.cols, kernel.rows);
+            cv::Mat out = result_from_task(t, float_img.cols, kernel.rows);
 
-        cv::normalize(out, out, 0, 255, cv::NORM_MINMAX); 
-        out.convertTo(display, CV_8U);
+            cv::normalize(out, out, 0, 255, cv::NORM_MINMAX); 
+            out.convertTo(display, CV_8U);
 
-        cv::imshow("Scheduler Output", display);
+            cv::imshow("Scheduler Output", display);
 
-        if (cv::waitKey(30) == 27) {
-            video_ended = true;
-            break;
+            if (cv::waitKey(30) == 27) {
+                video_ended = true;
+                break;
+            }
         }
     }
 
     free_batch(tasks);
-
-    cout << "[OPENCV TEST] frame finiti\n";
 }
 
 #endif

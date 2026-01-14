@@ -8,19 +8,23 @@
 
 
 /********** tests ************/
-#define M_ 1920
-#define N_ 1920
-#define K_ 1024 
-#define N_MATRIX 300 
-#define MAX_SIZE 4092
-
-enum {BATCH_SIZE = 30};       /* static partitioning batch size */
+#define M_ 1024
+#define N_ 1024
+#define K_ 512 
+#define N_MATRIX 800 
 
 #define M_split 14000 /* big matrix split size, max is MAX_SIZE/4 */
 #define N_split 4000 
 #define K_split 4000 
 
-enum {SPLIT_MATRIX_ITERATION = 3};       /* static partitioning batch size */
+/********** scheduler ************/
+#define MAX_SIZE 4092
+
+#define JIT_MS_SYCL 120            /* mitigate jit time for sycl */
+#define JIT_MS_OV 80            /* mitigate jit time for openvino */
+
+enum {BATCH_SIZE = 30};       /* static partitioning batch size */
+enum {SPLIT_MATRIX_ITERATION = 4};       /* static partitioning batch size */
 
 /********** buffers ************/
 //#define SLEEP

@@ -95,10 +95,10 @@ ExternalProject_Add(build_scheduler
     #BUILD_ALWAYS 1
 )
 
-add_custom_target(UpdateLSP
-    ALL
-    COMMAND ${CMAKE_COMMAND} -E echo "update LSP..."
-    COMMAND python3 ${CMAKE_SOURCE_DIR}/merge_clangd.py
-    COMMENT "merge compile_commands.json for clangd"
-    DEPENDS build_scheduler 
-)
+#add_custom_target(UpdateLSP
+#    ALL
+#    COMMAND ${CMAKE_COMMAND} -E echo "update LSP..."
+#    COMMAND python3 ${CMAKE_SOURCE_DIR}/merge_clangd.py
+#    COMMENT "merge compile_commands.json for clangd"
+#    DEPENDS build_scheduler 
+#)

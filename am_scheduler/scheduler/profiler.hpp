@@ -293,19 +293,19 @@ class Profiler {
 
             std::string acc_str = get_acc_string(i);
             std::cout << "[" << acc_str << "]" << "\n";
-            std::cout << "  Tasks: " << w.tasks_processed << "\n";
-            std::cout << "  Occupancy:         " << std::fixed << std::setprecision(2) << occupancy << " %\n";
-            std::cout << "  Total idle time: " << total_idle_ms << " ms,  Avg idle time:   " << avg_idle_us << " us\n";
-            std::cout << "  Total work time: " << total_work_ms << " ms,  Avg work time:   " << avg_work_us << " us\n";
+            std::cout << "  tasks: " << w.tasks_processed << "\n";
+            std::cout << "  occupancy:         " << std::fixed << std::setprecision(2) << occupancy << " %\n";
+            std::cout << "  total idle time: " << total_idle_ms << " ms,  Avg idle time:   " << avg_idle_us << " us\n";
+            std::cout << "  total work time: " << total_work_ms << " ms,  Avg work time:   " << avg_work_us << " us\n";
             std::cout << "  total time:       " << total_time_ms << " ms\n";
         }
     }
 
     void print_metric(const Metric& m) {
         std::cout << std::left << std::setw(10) << m.name 
-            << " | Avg: " << std::setw(6) << std::fixed << std::setprecision(2) << m.avg() << " us"
-            << " | Min: " << std::setw(6) << m.min << " us"
-            << " | Max: " << std::setw(6) << m.max << " us\n";
+            << " | avg: " << std::setw(6) << std::fixed << std::setprecision(2) << m.avg() << " us"
+            << " | min: " << std::setw(6) << m.min << " us"
+            << " | max: " << std::setw(6) << m.max << " us\n";
     }
 
     void save_to_csv(std::string strategy, int M, int N, int K, int num_tasks, 

@@ -40,8 +40,14 @@
  *
  * TODO: batch implementation per gli accelleratori che possono? 
  * 
- * TODO: support for 16 bit and 8 bit and update tests. 
  *
+ *
+ *
+ * scheduler targeting different accellerators in matrix multplication 
+ *
+ *
+ * TODO: streming di Matrici diverse 
+ * TODO: aggiustare large matrix split con euristica.
  *
  * */
 
@@ -92,8 +98,12 @@ void test_large_matrix_split() {
 
 int main() {
     test_accellerators();
+    //test_jit_times();
     test_scheduler_logics();
-    test_large_matrix_split();
-    test_video_filter();
+    //test_large_matrix_split();
+
+    /* remove openvino */
+    //test_video_filter(Logic::CUDA_ONLY, false);
+    //test_video_filter(Logic::STATIC_PARTITIONING, true);
     return 0;
 }
