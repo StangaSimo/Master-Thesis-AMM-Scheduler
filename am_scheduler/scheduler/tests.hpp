@@ -177,14 +177,14 @@ inline void test_accellerators() {
     #endif
 
     #ifdef ENABLE_CUDA
-        cuda_init(MAX_SIZE, MAX_SIZE, MAX_SIZE);
+        cuda_init();
         cuda_gemm_32bit(A,B,C,M,N,K);
         if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "CUDA 32bit Fail\n"; exit(1); }
         cout << "--- Cuda Passed\n";
     #endif
 
     #ifdef ENABLE_SYCL
-        sycl_init(MAX_SIZE, MAX_SIZE, MAX_SIZE);
+        sycl_init();
         sycl_gemm_32bit(A,B,C,M,N,K);
         if(!compare_cpu_32bit(A,B,C,M,N,K)) { cout << "SYCL 32bit Fail\n"; exit(1); }
         cout << "--- Sycl Passed\n";
@@ -289,7 +289,7 @@ inline void test_compare_task(task* array_task, size_t n_task) {
 inline void test_cuda_streaming(int M, int N, int K, size_t num_task, Type type) {
     cout << "\nCuda only \n";
     task* tasks = init_tasks(num_task, M, N, K, type);
-    cuda_init(M,N,K);
+    cuda_init();
 
     for (int i=0; i<num_task; i++) {
         void* A = tasks[i].A;
@@ -342,7 +342,7 @@ inline void test_jit_times() {
     double difference = 0.0;
  
     ov_init();
-    sycl_init(MAX_SIZE, MAX_SIZE, MAX_SIZE);
+    sycl_init();
 
     for (int d = STEP_SIZE; d <= STEP_SIZE*STEP_TOTAL; d += STEP_SIZE) 
         dims.push_back(d);
@@ -367,7 +367,6 @@ inline void test_jit_times() {
                 cout << "ov_jit : " << jit_duration.count()  << " ms | ov : " << duration.count() << " ms m " << m << " n " << n << " k "<<  k  <<"\n ";
                 diff.push_back(difference);
                  
-
                 /* sycl */
                 //start_time = chrono::high_resolution_clock::now();
                 //handle_task(BT::SYCL, task);

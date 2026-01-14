@@ -100,7 +100,7 @@ int main() {
     test_accellerators();
     //test_jit_times();
     test_scheduler_logics();
-    //test_large_matrix_split();
+    test_large_matrix_split();
 
     /* remove openvino */
     //test_video_filter(Logic::CUDA_ONLY, false);

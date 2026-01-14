@@ -21,10 +21,10 @@
 #define MAX_SIZE 4092
 
 #define JIT_MS_SYCL 120            /* mitigate jit time for sycl */
-#define JIT_MS_OV 80            /* mitigate jit time for openvino */
+#define JIT_MS_OV 40            /* mitigate jit time for openvino */
 
 enum {BATCH_SIZE = 30};       /* static partitioning batch size */
-enum {SPLIT_MATRIX_ITERATION = 4};       /* static partitioning batch size */
+enum {SPLIT_MATRIX_ITERATION = 3};       /* static partitioning batch size */
 
 /********** buffers ************/
 //#define SLEEP
@@ -33,8 +33,8 @@ enum {PUT_SLEEP = 500};       /* 5 ms */
 enum {BUFFER_LENGHT = 1024};  /* shared buffer length */
 
 /********** benchmark ************/
-enum {STEP_SIZE = 256};       /* benchmark for csv step size */
-enum {STEP_TOTAL = 12};       /* STEP_SIZE * STEP_TOTAL */
+enum {STEP_SIZE = 512};       /* benchmark for csv step size */
+enum {STEP_TOTAL = 8};       /* STEP_SIZE * STEP_TOTAL */
 
 /********** CPU ************/
 enum {N_CORES = 6};       /* number of cores for cpu gemm */

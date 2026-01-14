@@ -37,16 +37,14 @@ struct SYCLStream {
 //static unique_ptr<sycl::queue> global_q;
 static std::vector<std::unique_ptr<SYCLStream>> streams;
 static int current_stream = 0;
-static size_t MAX_ELEM = 0;
+static size_t MAX = (size_t)4096 * 4096;
 
-void init(int M, int N, int K) {
+void init() {
     try {
-        MAX_ELEM = (size_t)M * K; 
-        if (MAX_ELEM < (size_t)K*N) MAX_ELEM = (size_t)K*N; 
 
         /* stream persistenti */
         for(int i=0; i<N_STREAMS; i++) {
-            streams.push_back(std::make_unique<SYCLStream>(MAX_ELEM));
+            streams.push_back(std::make_unique<SYCLStream>(MAX));
         }
 
     } catch (sycl::exception const& e) {
@@ -88,8 +86,8 @@ void sycl_gemm_16bit_p(sycl::half *A, sycl::half *B, sycl::half *C, int M, int N
 }
 
 extern "C" {
-    void sycl_init(int M, int N, int K) {
-        init(M,N,K);
+    void sycl_init() {
+        init();
     }
 
     void sycl_gemm_32bit(void *A, void *B, void *C, int M, int N, int K) {

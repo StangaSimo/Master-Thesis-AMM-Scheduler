@@ -277,7 +277,7 @@ class AMScheduler {
                         rows[j] = base + (j < rest ? 1 : 0);
 
                     /* loop for adjusting the ratios */
-                    for (int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
+                    for(int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
                         double total_speed = 0.0;
 
                         /* current speed for 1 row */
@@ -285,6 +285,8 @@ class AMScheduler {
                             int r = (rows[j] > 0) ? rows[j] : 1;
 
                             double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type);
+
+                            cout << "acc " << j << " ms " <<  ms << "\n";
 
                             /* single row speed, number of rows / ms */
                             double speed = (double)r / (ms + 1e-9);
@@ -646,12 +648,12 @@ inline void init_acc(BT backend_type) {
     switch (backend_type) {
     case BT::CUDA:
 #ifdef ENABLE_CUDA
-        cuda_init(MAX_SIZE,MAX_SIZE,MAX_SIZE);
+        cuda_init();
 #endif 
         break;
     case BT::SYCL:
 #ifdef ENABLE_SYCL
-        sycl_init(MAX_SIZE,MAX_SIZE,MAX_SIZE);
+        sycl_init();
 #endif 
         break;    
     case BT::OPENVINO:

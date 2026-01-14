@@ -175,7 +175,7 @@ public:
             if (bt == BT::SYCL) {
 
                 /* mitigate sycl overhead when other accellerator are running */
-                result += result * 0.5;
+                result += result;
 
                 unsigned long long sycl_key = get_sycl_key(N, K);
                 if (jit_cache->find(sycl_key) == jit_cache->end()){
@@ -189,16 +189,22 @@ public:
         }
 
         /* if we don't have data on this matrix, just return max time * 2 */
-        result  = data->max_result * 2;
+        result  = data->max_result * 1.5;
 
-        /* add jit expences 150 ms in avg for each */
-        if (bt == BT::OPENVINO || bt == BT::SYCL) 
-            result += 150;
+        /* add jit expences */
+        if (bt == BT::SYCL) {
+            /* mitigate sycl overhead when other accellerator are running */
+            result += result;
+            result += JIT_MS_SYCL;
+        }
+
+        if (bt == BT::OPENVINO) 
+            result += JIT_MS_OV;
 
         /* cache the result */
         data->last_K = result;
 
-        return data->max_result; 
+        return result; 
     }
 };
 #endif

@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-    void cuda_init(int M, int N, int K);
+    void cuda_init();
     void cuda_free();
     void cuda_gemm_32bit(void* A, void* B, void* C, int M, int N, int K);
     void cuda_gemm_16bit(void* A, void* B, void* C, int M, int N, int K);
