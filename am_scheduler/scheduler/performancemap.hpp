@@ -5,6 +5,7 @@
 #include "config.hpp"
 
 #include <iostream>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set> /* for jit times */
 #include <fstream>
@@ -36,7 +37,7 @@ inline vector<string> split(const string &s, char delimiter) {
 class PerformanceMap {
 
     struct map_struct {
-        unordered_map<unsigned long long, double> grid_map;
+        unordered_map<unsigned long long, tuple<double, double>> grid_map;
         
         long long last_M = -1;    
         long long last_N = -1;    
@@ -83,14 +84,14 @@ private:
         return ((unsigned long long)rN << 32) | (unsigned long long)rK;
     }
 
-    void add_key(long long M, long long N, long long K, double time, Type type) {
+    void add_key(long long M, long long N, long long K, double time, double jit_time, Type type) {
         unsigned long long key = get_key(M, N, K);
         if (type == Type::FLOAT){
-           map_f.grid_map[key] = time;
+           map_f.grid_map[key] = std::make_tuple(time, jit_time);
            map_f.max_result = (map_f.max_result > time ) ? map_f.max_result : time;
         }
         if (type == Type::HALF){
-           map_h.grid_map[key] = time;
+           map_h.grid_map[key] = std::make_tuple(time, jit_time);
            map_h.max_result = (map_h.max_result > time ) ? map_h.max_result : time;
         }
     }
@@ -106,8 +107,9 @@ private:
             int N = stod(row[3]);
             int K = stod(row[4]);
             double time = stod(row[5]);
+            double jit_time = stod(row[6]);
             
-            add_key(M, N, K, time, type);
+            add_key(M, N, K, time, jit_time, type);
         }
     }
 
@@ -136,11 +138,11 @@ public:
         init_maps(filename_f, filename_h);        
     }
 
-    /* return the time */
-    double query(long long M, long long N, long long K, Type type) {
+    /* return the time, add_jit true = populate the jit cache */
+    double query(long long M, long long N, long long K, Type type, bool add_jit) {
         map_struct* data = nullptr;
         unordered_set<unsigned long long>* jit_cache = nullptr;
-        double result;
+        double time_ms;
 
         unsigned long long key = get_key(M, N, K);
 
@@ -161,13 +163,17 @@ public:
 
         /* return if we find the key */
         if (data->grid_map.find(key) != data->grid_map.end()) {
-            result = data->grid_map[key];
+            time_ms = get<0>(data->grid_map[key]);
 
             /* add ms only if openvino never see M N K*/
             if (bt == BT::OPENVINO) {
+
+                //result += result * 0.5;
+
                 if (jit_cache->find(key) == jit_cache->end()){
-                     jit_cache->insert(key);
-                     result += JIT_MS_OV;
+                    if (add_jit)
+                        jit_cache->insert(key);
+                    time_ms += JIT_MS_OV;
                 }
             }
 
@@ -175,36 +181,39 @@ public:
             if (bt == BT::SYCL) {
 
                 /* mitigate sycl overhead when other accellerator are running */
-                result += result;
+                //result += result * 0.5;
 
                 unsigned long long sycl_key = get_sycl_key(N, K);
                 if (jit_cache->find(sycl_key) == jit_cache->end()){
-                     jit_cache->insert(sycl_key);
-                     result += JIT_MS_SYCL;
+                    if (add_jit)
+                        jit_cache->insert(sycl_key);
+                    time_ms += JIT_MS_SYCL;
                 }
             }
-
-            data->last_K = result;
-            return result;
+            
+            data->last_K = time_ms;
+            return time_ms;
         }
 
         /* if we don't have data on this matrix, just return max time * 2 */
-        result  = data->max_result * 1.5;
+        time_ms = data->max_result * 2;
 
         /* add jit expences */
         if (bt == BT::SYCL) {
             /* mitigate sycl overhead when other accellerator are running */
-            result += result;
-            result += JIT_MS_SYCL;
+            //result += result * 0.5;
+            time_ms += JIT_MS_SYCL;
         }
 
-        if (bt == BT::OPENVINO) 
-            result += JIT_MS_OV;
+        if (bt == BT::OPENVINO) {
+            //result += result * 0.5;
+            time_ms += JIT_MS_OV;
+        }
 
         /* cache the result */
-        data->last_K = result;
+        data->last_K = time_ms;
 
-        return result; 
+        return time_ms; 
     }
 };
 #endif

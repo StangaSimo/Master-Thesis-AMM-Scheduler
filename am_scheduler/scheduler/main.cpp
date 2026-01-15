@@ -49,6 +49,9 @@
  * TODO: streming di Matrici diverse 
  * TODO: aggiustare large matrix split con euristica.
  *
+ *
+ * test jit -> euristica risolta -
+ *
  * */
 
 /* BATCH_SIZE, SLEEP, DEBUG */
@@ -98,10 +101,10 @@ void test_large_matrix_split() {
 
 int main() {
     test_accellerators();
-    //test_jit_times();
     test_scheduler_logics();
-    test_large_matrix_split();
+    //test_large_matrix_split();
 
+    //test_jit_times();
     /* remove openvino */
     //test_video_filter(Logic::CUDA_ONLY, false);
     //test_video_filter(Logic::STATIC_PARTITIONING, true);

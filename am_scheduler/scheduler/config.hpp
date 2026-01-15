@@ -2,10 +2,9 @@
 #define CONFIG_H
 
 /********** debug ************/
-//#define DEBUG
-#define ENABLE_PROFILING /* profiler for timing the scheduler */
+#define DEBUG
+#define ENABLE_PROFILING           /* profiler for timing the scheduler */
 #define ENABLE_INTEL_POWER_PROFILE /* profiling the power consumption with intel rapl */
-
 
 /********** tests ************/
 #define M_ 1024
@@ -20,8 +19,13 @@
 /********** scheduler ************/
 #define MAX_SIZE 4092
 
-#define JIT_MS_SYCL 120            /* mitigate jit time for sycl */
-#define JIT_MS_OV 40            /* mitigate jit time for openvino */
+/* large matrix multiplication */
+//#define JIT_MS_SYCL 200            /* mitigate jit time for sycl */
+//#define JIT_MS_OV 100            /* mitigate jit time for openvino */
+
+/* streaming */
+#define JIT_MS_SYCL 80
+#define JIT_MS_OV 120
 
 enum {BATCH_SIZE = 30};       /* static partitioning batch size */
 enum {SPLIT_MATRIX_ITERATION = 3};       /* static partitioning batch size */
@@ -37,6 +41,6 @@ enum {STEP_SIZE = 512};       /* benchmark for csv step size */
 enum {STEP_TOTAL = 8};       /* STEP_SIZE * STEP_TOTAL */
 
 /********** CPU ************/
-enum {N_CORES = 6};       /* number of cores for cpu gemm */
+enum {N_CORES = 2};       /* number of cores for cpu gemm */
 
 #endif

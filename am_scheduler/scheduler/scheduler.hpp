@@ -213,7 +213,7 @@ class AMScheduler {
                     /* velocity = 1 / time */
                     total_speed = 0.0;
                     for (int j=0; j<bts_len; j++){
-                        double single_matrix_ms = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K, tasks[0]->type);
+                        double single_matrix_ms = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K, tasks[0]->type, true);
                         acc_speed[j] = 1.0 / (single_matrix_ms * (double) c);        
                         total_speed += acc_speed[j];
                     }
@@ -284,9 +284,9 @@ class AMScheduler {
                         for(int j=0; j<bts_len; j++) {
                             int r = (rows[j] > 0) ? rows[j] : 1;
 
-                            double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type);
+                            double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type, false);
 
-                            cout << "acc " << j << " ms " <<  ms << "\n";
+                            cout << "acc " << j << " ms " <<  ms << " for M: " << r << " N: " << single_task->N << " K: " << single_task->K << " \n";
 
                             /* single row speed, number of rows / ms */
                             double speed = (double)r / (ms + 1e-9);
@@ -538,20 +538,38 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     chrono::high_resolution_clock::time_point end_time;
     chrono::duration<double, std::milli> duration;
 
-    const int N_WARMUP = 1;
     const int N_RUNS = 4;
+    const int N_TASKS = N_RUNS + 2;
 
     double total_ms = 0.0;
+    double jit_ms = 0.0;
+    double no_jit_ms = 0.0;
 
     /* we simulate a thread */
-    task* tasks = init_tasks(N_RUNS+N_WARMUP, M, N, K, type);
+    task* tasks = init_tasks(N_TASKS, M, N, K, type);
 
-    /* warmup */
-    for (int i = 0; i < N_WARMUP; i++)
-        handle_task(bt, &tasks[i]);
+    /* warmup | jit detection */
+    start_time = chrono::high_resolution_clock::now();
+    handle_task(bt, &tasks[0]);
+    end_time = chrono::high_resolution_clock::now();
+    duration = end_time - start_time;
+    jit_ms = duration.count();
+
+    start_time = chrono::high_resolution_clock::now();
+    handle_task(bt, &tasks[0]);
+    end_time = chrono::high_resolution_clock::now();
+    duration = end_time - start_time;
+    jit_ms = jit_ms - duration.count();
+
+    //if (bt == BT::OPENVINO || bt == BT::SYCL) {
+    //    jit_ms = duration.count();
+    //} else {
+    //    jit_ms = 0.0;
+    //}
+    //
 
     /* runs with */
-    for (int i = N_WARMUP; i < N_RUNS; i++) {
+    for (int i = 2; i < N_TASKS; i++) {
         start_time = chrono::high_resolution_clock::now();
         handle_task(bt, &tasks[i]);
         end_time = chrono::high_resolution_clock::now();
@@ -559,21 +577,20 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
         total_ms += duration.count();
     }
 
-    clean_tasks(tasks, N_RUNS+N_WARMUP);
+    clean_tasks(tasks, N_TASKS);
     
     double avg_ms = total_ms/N_RUNS;
 
     ofstream file(filename, ios::app);
 
     if (file.is_open()) {
-        if (filesystem::file_size(filename) == 0) {
-            file << "Accelerator,DataType,M,N,K,Avg_Time_ms\n";
-        }
+        if (filesystem::file_size(filename) == 0) 
+            file << "Accelerator,DataType,M,N,K,Avg_Time_ms,Jit_Time_ms\n";
         
         string acc_str = get_acc_string(bt);
-        file << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n";
+        file << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "," << jit_ms << "\n";
         
-        PRINT("result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "\n");
+        PRINT("result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "," << jit_ms << "\n");
         file.close();
     } else {
         cerr << "[SCEDULER] ERROR Cannot open file: " << filename << "\n";
