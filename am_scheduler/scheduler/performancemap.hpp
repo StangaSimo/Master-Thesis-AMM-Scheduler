@@ -76,13 +76,13 @@ private:
     }
 
     /* key used in jit_cache for sycl, only N and K */
-    unsigned long long get_sycl_key(long long N, long long K) {
-        long long rN = round_up(N);
-        long long rK = round_up(K);
+    //unsigned long long get_sycl_key(long long N, long long K) {
+    //    long long rN = round_up(N);
+    //    long long rK = round_up(K);
 
-        /* 64 bit  |32bit N|32bit K| */
-        return ((unsigned long long)rN << 32) | (unsigned long long)rK;
-    }
+    //    /* 64 bit  |32bit N|32bit K| */
+    //    return ((unsigned long long)rN << 32) | (unsigned long long)rK;
+    //}
 
     void add_key(long long M, long long N, long long K, double time, double jit_time, Type type) {
         unsigned long long key = get_key(M, N, K);

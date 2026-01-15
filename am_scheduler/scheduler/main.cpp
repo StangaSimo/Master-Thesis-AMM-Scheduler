@@ -7,54 +7,46 @@
 #include "tests.hpp"
 #include "opencv_test.hpp"
 
-
-/* appunti:
- * 
- * Piccolo scontro con la realtà, fare prima logica 32 bit, scrivere dei test 32 bit e vedere se siamo piu veloci
- * cosa che vedo molto strana.
- *
- * Fare implementazione di convoluzioni per ogni accelleratore,
- * trovare matrici filtro e capire come funzionano, 
- * implementare test per convoluzioni per vedere se funzionano,
- *
- * implementazione di matrici con dag e logica dello scheduler per gestirle.
- *
- * blocking ring buffer, se è vuoto si fa busy spin per un po' poi ci si mette a dormire 
- * veniamo svegliati dal main comunque.
- *
- * tabella matrici e ms, e modello di regressione per il fall back
- *
- * uint16_t per matrici a 16 bit, mentre float per 32.
- *
- * scrivere mille test veri, benchmark veri, e anche benchmark per calcolo su dag, 
- *
- * TODO: per ora, round robin, e solo cuda, pipeline per diverse operazioni (convoluzione e gemm), auto partitioning. 
- *
- * TODO: dag logic per grafi complessi? 
- *
- * TODO: simulare una rete neurale: quindi frame 1 per matrice 1 poi 2 e cosi via, poi frame 2 per matrice 1 poi 2 e cosi via per i test, quindi simil dag. 
- *                                                                       
- * TODO: big matrix multiplication 
- *
- * TODO: latenza e tempo totale per fare benchmark, anche watt consumati in generale e quindi anche una logica piu smart
- *
- * TODO: batch implementation per gli accelleratori che possono? 
- * 
- *
- *
- *
+/*
  * scheduler targeting different accellerators in matrix multplication 
  *
+ *  TODO: streming di Matrici diverse 
  *
- * TODO: streming di Matrici diverse 
- * TODO: aggiustare large matrix split con euristica.
- *
- *
- * test jit -> euristica risolta -
+ * test jit, prova senza blas, prova meno cpu a blas, benchamark aggiornati, performance map aggiornata,  risolto
  *
  * */
 
 /* BATCH_SIZE, SLEEP, DEBUG */
+void test_hetero_logic(Logic l) {
+    size_t n_matrix = 50;
+
+    task* task_array = init_hetero_tasks(n_matrix, Type::FLOAT);
+    cout << "Task create \n";
+    AMScheduler scheduler = AMScheduler(l);
+
+    scheduler.do_tasks(task_array, n_matrix);
+    scheduler.wait();
+
+    //test_compare_task(task_array, num_matrix);
+    scheduler.print_stats(task_array,n_matrix);
+    clean_tasks(task_array, n_matrix);
+}
+
+void test_dynamic() {
+    size_t n_matrix = 500;
+    int M = M_;
+    int N = N_;
+    int K = K_;
+    Logic l = Logic::DYNAMIC;
+    Type type = Type::FLOAT;
+
+    task* task_array = init_tasks(n_matrix, M, N, K, type);
+    AMScheduler scheduler = AMScheduler(l);
+    scheduler.do_tasks(task_array, n_matrix);
+    scheduler.wait();
+    scheduler.print_stats(task_array,n_matrix);
+    clean_tasks(task_array, n_matrix);
+}
 
 void test_scheduler_logics() {
     size_t n_matrix = N_MATRIX;
@@ -72,9 +64,10 @@ void test_scheduler_logics() {
         //test_cuda_streaming(M, N, K, n_matrix, type);
 
         Logic l;
-        for (int i=0; i<2; i++) {
+        for (int i=0; i<3; i++) {
             if (i == 0) {l = Logic::CUDA_ONLY; cout << "\nCuda with scheduler \n";}
             if (i == 1) {l = Logic::STATIC_PARTITIONING; cout << "\nStatic partitioning \n";}
+            if (i == 2) {l = Logic::DYNAMIC; cout << "\nDyanamic \n";}
 
             task* task_array = init_tasks(n_matrix, M, N, K, type);
             AMScheduler scheduler = AMScheduler(l);
@@ -101,8 +94,12 @@ void test_large_matrix_split() {
 
 int main() {
     test_accellerators();
-    //test_scheduler_logics();
-    test_large_matrix_split();
+    test_scheduler_logics();
+    //test_large_matrix_split();
+    //test_hetero_logic(Logic::STATIC_HETERO_PARTITIONING);
+    //test_hetero_logic(Logic::DYNAMIC);
+    //test_dynamic();
+
 
     //test_jit_times();
     /* remove openvino */

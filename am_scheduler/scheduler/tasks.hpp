@@ -7,6 +7,8 @@
 #include <iostream>
 #include <random>
 
+#include "config.hpp"
+
 using namespace std;
 
 /* backend_type */
@@ -76,7 +78,56 @@ inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
         }
 
         return array_task;
- }
+}
+
+inline task* init_hetero_tasks(size_t n_task, Type t) {
+    task* array_task = new task[n_task];
+    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    
+    std::vector<int> possible_sizes;
+    possible_sizes.reserve(STEP_TOTAL);
+    
+    for (int s = 1; s <= STEP_TOTAL; s++) 
+        possible_sizes.push_back(s * STEP_SIZE);
+
+    std::uniform_int_distribution<> dis_idx(0, possible_sizes.size() - 1);
+
+    for (size_t i = 0; i < n_task; i++) {
+        int curr_m = possible_sizes[dis_idx(gen)];
+        int curr_n = possible_sizes[dis_idx(gen)];
+        int curr_k = possible_sizes[dis_idx(gen)];
+
+        cout << " M : " << curr_m << " N: " << curr_n << " K: " << curr_k << "\n";
+
+        array_task[i].M = curr_m;
+        array_task[i].N = curr_n;
+        array_task[i].K = curr_k;
+        array_task[i].type = t;
+
+        size_t A = (size_t)curr_m * curr_k;
+        size_t B = (size_t)curr_k * curr_n;
+        size_t C = (size_t)curr_m * curr_n;
+
+        if (t == Type::FLOAT) {
+            array_task[i].A = new float[A]; 
+            array_task[i].B = new float[B];
+            array_task[i].C = new float[C];
+
+            init_32bit(array_task[i].A, array_task[i].B, array_task[i].C, curr_m, curr_n, curr_k);
+
+        } else if (t == Type::HALF) {
+            array_task[i].A = new uint16_t[A]; 
+            array_task[i].B = new uint16_t[B];
+            array_task[i].C = new uint16_t[C];
+
+            init_16bit(array_task[i].A, array_task[i].B, array_task[i].C, curr_m, curr_n, curr_k);
+        } 
+    }
+
+    return array_task;
+}
 
 inline void clean_tasks(task* array_task, size_t n_task) {
     if (array_task == nullptr) return;

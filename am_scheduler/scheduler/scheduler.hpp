@@ -65,6 +65,8 @@ enum Logic : size_t {
     CUDA_ONLY,
     STATIC_PARTITIONING,
     LARGE_MATRIX_SPLIT,
+    STATIC_HETERO_PARTITIONING,
+    DYNAMIC,
 };
 
 /****************************** Prototypes ************************************/
@@ -88,6 +90,7 @@ class AMScheduler {
         /* atomic for shutting down threads */
         atomic<bool> threads_keep_running;
         atomic<int> pending_tasks = 0;
+        atomic<bool>* busy[BT::COUNT];
 
         /* shared buffers beetween threads */
         SharedBuffer_T shared_buffers;
@@ -114,24 +117,43 @@ class AMScheduler {
 
         void worker_thread(BT bt, SharedBuffer *buffer) { 
             task* task = nullptr;
-            
             PROF(profiler.init_last_work(bt));
-            while(threads_keep_running) { 
 
-                /* blocking get for max 50ms if SLEEP on */
-                task = buffer->get();
+            if (strategy == Logic::DYNAMIC) {
 
-                /* if there isn't a task we check if we have to shutdown */
-                if (!task) {continue;}
+                /* Dynamic execution */
+                while(threads_keep_running) { 
+                    task = buffer->get();
+                    if (!task) {continue;}
 
-                PROF(profiler.start_worker(bt));                 
-                handle_task(bt, task);
-                PROF(profiler.end_worker(bt));                 
-                pending_tasks--;
+                    PROF(profiler.start_worker(bt));                 
+                    handle_task(bt, task);
+                    PROF(profiler.end_worker(bt));                 
+
+                    *busy[bt] = false;
+                    pending_tasks--;
+                }
+
+            } else {
+
+                /* Static execution */
+                while(threads_keep_running) { 
+                    /* blocking if SLEEP on */
+                    task = buffer->get();
+
+                    /* if there isn't a task we check if we have to shutdown */
+                    if (!task) {continue;}
+
+                    PROF(profiler.start_worker(bt));                 
+                    handle_task(bt, task);
+                    PROF(profiler.end_worker(bt));                 
+                    pending_tasks--;
+                }
+
             }
         } 
 
-/**********************************  Coordinator  ***********************************/
+        /**********************************  Coordinator  ***********************************/
 
         /* if there is no task, we check if we have to shutdown */
         void coordinator_thread(SharedBuffer_T &buffers) { 
@@ -140,7 +162,7 @@ class AMScheduler {
             int bts_len = bts.size(); /* number of accellerators */
 
             double acc_speed[bts_len];
-            double total_speed = 0.0;
+            double total_speed=0.0;
             int n_acc_task[BATCH_SIZE];
             int remaining_c=0;
             int t=0;
@@ -148,6 +170,13 @@ class AMScheduler {
             SharedBuffer *buffer = buffers[BT::CORDINATOR].get();
             task* single_task = nullptr;
             task* tasks[BATCH_SIZE];
+            task* tasks_hetero[BATCH_SIZE_HETERO];
+
+            bool dispached = true;
+
+            double bt_ms[bts_len];
+            for (int i=0; i<bts_len; i++)
+                bt_ms[i]=0.0;
 
             switch (strategy) {
             case Logic::CUDA_ONLY:
@@ -169,7 +198,7 @@ class AMScheduler {
 
                 break;
 
-            /* basic logic, if there is one that don't do nothing just send them request */
+            /* basic logic, just send all the tasks to all the bt */
             case Logic::ROUND_ROBIN: 
 
                 while(threads_keep_running) { 
@@ -368,6 +397,113 @@ class AMScheduler {
 
                 PROF(profiler.stop_power_monitor());
                 break;
+
+            case Logic::STATIC_HETERO_PARTITIONING:  
+
+                PROF(profiler.start_power_monitor());
+
+                while (threads_keep_running) { 
+
+                    PROF(profiler.start_fetch());
+
+                    while (c < BATCH_SIZE_HETERO) {
+                        tasks_hetero[c] = buffer->get();
+                        if (!tasks_hetero[c]) {break;} 
+                        c++;
+                    }
+
+                    PROF(profiler.stop_fetch());
+
+                    PROF(profiler.start_logic());
+                    if (c == 0) {continue;}
+
+
+                    /* iterator for each bt */ 
+                    int i_bt[bts_len];
+
+                    for (int i=0; i<bts_len; i++)
+                        i_bt[i] = 0;
+                    
+                    task* dispatch_tasks[bts_len][BATCH_SIZE_HETERO];
+                    
+                    /* for every task */
+                    for (int i = 0; i < c; i++) {
+                        int best_bt = -1;
+                        double min_ms = 1e15;
+
+                        /* for every bt */
+                        for (int j = 0; j < bts_len; j++) {
+                            double query_ms = bts_map[bts[j]]->query(tasks_hetero[i]->M, tasks_hetero[i]->N, tasks_hetero[i]->K, tasks_hetero[i]->type, false);
+
+                            double finish_ms = bt_ms[j] + query_ms;
+
+                            /* we assign the task to the least "filled" */
+                            if (finish_ms < min_ms) {
+                                min_ms = finish_ms;
+                                best_bt = j;
+                            }
+                        }
+
+                        /* openvino and sycl jit updates */
+                        if (bts[best_bt] == BT::OPENVINO || bts[best_bt] == BT::SYCL)
+                            bts_map[bts[best_bt]]->query(tasks_hetero[i]->M, tasks_hetero[i]->N, tasks_hetero[i]->K, tasks_hetero[i]->type, true);
+
+                        dispatch_tasks[best_bt][i_bt[best_bt]] = tasks_hetero[i];
+                        i_bt[best_bt]++;
+                        bt_ms[best_bt] = min_ms;
+                    }
+
+                    PROF(profiler.stop_logic());
+
+                    PROF(profiler.start_dispatch());
+                    for (int i = 0; i < bts_len; i++) {
+                       cout << "acc" << get_acc_string(bts[i]) << " contiene : " << i_bt[i] <<  " tasks con " << bt_ms[i] << " ms di carico \n";
+
+                        for (int j=0; j<i_bt[bts[i]]; j++)
+                            buffers[bts[i]]->put(dispatch_tasks[i][j]);
+
+                    }
+                    PROF(profiler.stop_dispatch());
+                    PROF(profiler.record_sample());    
+                    c = 0;
+                }
+
+                PROF(profiler.stop_power_monitor());
+                break;
+
+            case Logic::DYNAMIC:  
+
+                PROF(profiler.start_power_monitor());
+
+                i = 0;
+                while (threads_keep_running) { 
+                    PROF(profiler.start_logic());
+                    if (dispached) {
+                        PROF(profiler.start_fetch());
+                        single_task = buffer->get();
+                        PROF(profiler.stop_fetch());
+                        if (!single_task) {continue;} 
+                        dispached = false;
+                    }
+
+                    if (*busy[bts[i]] == false) {
+                        *busy[bts[i]] = true; 
+                        dispached = true;
+                        PROF(profiler.start_dispatch());
+                        buffers[bts[i]]->put(single_task);
+                        PROF(profiler.stop_dispatch());
+                    }
+
+                    i++;
+                    i = i % bts_len;
+
+                    PROF(profiler.stop_logic());
+                    PROF(profiler.record_sample());    
+                }
+
+
+                PROF(profiler.stop_power_monitor());
+                break;
             default:
                 printf("[SCHEDULER] Error in chosing the logic.\n");
                 exit(EXIT_FAILURE);
@@ -397,13 +533,25 @@ class AMScheduler {
             bts.push_back(BT::OPENBLAS);
 #endif
 
+            /* initialize atomics for dynamic strategy */
+            if(strategy == Logic::DYNAMIC) {
+                #ifdef SLEEP 
+                cout("[SCHEDULER] ERROR remove "#define SLEEP" with Dynamic logic")
+                exit(FAILUREEXIT_FAILURE);
+                #endif
+                for (int i=0; i<bts.size(); i++) {
+                    busy[bts[i]] = new atomic<bool>;
+                    *busy[bts[i]] = false;
+                }
+            }
+
             for (BT i : bts) {
                 shared_buffers[i] = make_unique<SharedBuffer>(BUFFER_LENGHT);
                 threads[i] = make_unique<thread>(&AMScheduler::worker_thread, this, 
                                                     i, shared_buffers[i].get());
             }
 
-            if (bts.size() == 0)  {PRINT("[SCHEDULER] ATTENTION, no accellerator\n"); exit(EXIT_FAILURE);}
+            if (bts.size() == 0) {PRINT("[SCHEDULER] ATTENTION, no accellerator\n"); exit(EXIT_FAILURE);}
 
             /* coordinator thread */
             shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
@@ -429,6 +577,11 @@ class AMScheduler {
                 for (int i=0; i<sub_task_array.size(); i++)
                     delete sub_task_array[i];
 
+            /* cleanups atomics */
+            if(strategy == Logic::DYNAMIC)
+                for (int i=0; i<bts.size(); i++)
+                    delete busy[bts[i]];
+
             PRINT("[SCHEDULER] Threads stopped.\n");
         }
 
@@ -444,7 +597,7 @@ class AMScheduler {
                 filename_f = get_benchmark_filename(i, Type::FLOAT); 
                 filename_h = get_benchmark_filename(i, Type::HALF); 
 
-                if (filesystem::exists(filename_f)){
+                if (filesystem::exists(filename_f)) {
                      PRINT("[SCHEDULER] File: " << filename_f <<  " opened.\n"); 
                 } else {
                      PRINT("[SCHEDULER] File: " << filename_f <<  " not present\n"); 
@@ -720,6 +873,10 @@ inline string get_logic_string(Logic l) {
             logic = "STATIC_PARTITIONING"; break;
         case Logic::LARGE_MATRIX_SPLIT:
             logic = "LARGE_MATRIX_SPLIT"; break;
+        case Logic::STATIC_HETERO_PARTITIONING:
+            logic = "STATIC_HETERO_PARTITIONING"; break;
+        case Logic::DYNAMIC:
+            logic = "DYNAMIC"; break;
         default:
             cerr << "[SCHEDULER] ERROR print_logic \n";
             exit(EXIT_FAILURE);

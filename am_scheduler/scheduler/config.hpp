@@ -19,15 +19,12 @@
 /********** scheduler ************/
 #define MAX_SIZE 4092
 
-/* large matrix multiplication */
-//#define JIT_MS_SYCL 200            /* mitigate jit time for sycl */
-//#define JIT_MS_OV 100            /* mitigate jit time for openvino */
+#define JIT_MS_SYCL 140  /* mitigate jit time for sycl */
 
-/* streaming */
-#define JIT_MS_SYCL 140
-#define JIT_MS_OV 120
+//#define JIT_MS_OV 120
 
-enum {BATCH_SIZE = 30};       /* static partitioning batch size */
+enum {BATCH_SIZE = 30};                  /* static partitioning batch size */
+enum {BATCH_SIZE_HETERO = 50};           /* static partitioning batch size */
 enum {SPLIT_MATRIX_ITERATION = 3};       /* static partitioning batch size */
 
 /********** buffers ************/

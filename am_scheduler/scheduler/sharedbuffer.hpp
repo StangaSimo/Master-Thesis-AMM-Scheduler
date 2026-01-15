@@ -42,7 +42,7 @@ class SharedBuffer {
         }
 
         /* get one task pointer sleep if empty, return to the caller after
-         * 5 attempt*/
+         * 50 attempt*/
         task* get() {
             int c = 0;
 
@@ -55,7 +55,7 @@ class SharedBuffer {
 #else
             while (write_i == read_i){
                 c++;
-                if (c >= 500) {return nullptr;}
+                if (c >= 50) {return nullptr;}
             }
 #endif
             task* ele = data[read_i];
