@@ -142,7 +142,7 @@ public:
     double query(long long M, long long N, long long K, Type type, bool add_jit) {
         map_struct* data = nullptr;
         unordered_set<unsigned long long>* jit_cache = nullptr;
-        double time_ms;
+        double time_ms, jit_ms;
 
         unsigned long long key = get_key(M, N, K);
 
@@ -164,30 +164,35 @@ public:
         /* return if we find the key */
         if (data->grid_map.find(key) != data->grid_map.end()) {
             time_ms = get<0>(data->grid_map[key]);
+            jit_ms = get<1>(data->grid_map[key]);
 
-            /* add ms only if openvino never see M N K*/
+            /* add jit_ms only if openvino never see M N K*/
             if (bt == BT::OPENVINO) {
 
-                //result += result * 0.5;
+                /* mitigate overhead when other accellerator are running */
+                time_ms += time_ms * 0.3;
 
                 if (jit_cache->find(key) == jit_cache->end()){
                     if (add_jit)
                         jit_cache->insert(key);
-                    time_ms += JIT_MS_OV;
+
+                    time_ms += jit_ms * 1.3;
                 }
             }
 
-            /* add ms only if sycl never see N K*/
+            /* add jit_ms only if sycl never see N */
             if (bt == BT::SYCL) {
 
-                /* mitigate sycl overhead when other accellerator are running */
-                //result += result * 0.5;
+                /* mitigate overhead when other accellerator are running */
+                time_ms += time_ms * 0.5;
 
-                unsigned long long sycl_key = get_sycl_key(N, K);
+                unsigned long long sycl_key = (unsigned long long) N;
                 if (jit_cache->find(sycl_key) == jit_cache->end()){
+
                     if (add_jit)
                         jit_cache->insert(sycl_key);
-                    time_ms += JIT_MS_SYCL;
+
+                    time_ms += JIT_MS_SYCL * 2;
                 }
             }
             
@@ -199,15 +204,8 @@ public:
         time_ms = data->max_result * 2;
 
         /* add jit expences */
-        if (bt == BT::SYCL) {
-            /* mitigate sycl overhead when other accellerator are running */
-            //result += result * 0.5;
-            time_ms += JIT_MS_SYCL;
-        }
-
-        if (bt == BT::OPENVINO) {
-            //result += result * 0.5;
-            time_ms += JIT_MS_OV;
+        if (bt == BT::SYCL || bt == BT::OPENVINO) {
+            time_ms += JIT_MS_SYCL*2;
         }
 
         /* cache the result */

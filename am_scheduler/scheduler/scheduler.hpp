@@ -556,17 +556,10 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     jit_ms = duration.count();
 
     start_time = chrono::high_resolution_clock::now();
-    handle_task(bt, &tasks[0]);
+    handle_task(bt, &tasks[1]);
     end_time = chrono::high_resolution_clock::now();
     duration = end_time - start_time;
     jit_ms = jit_ms - duration.count();
-
-    //if (bt == BT::OPENVINO || bt == BT::SYCL) {
-    //    jit_ms = duration.count();
-    //} else {
-    //    jit_ms = 0.0;
-    //}
-    //
 
     /* runs with */
     for (int i = 2; i < N_TASKS; i++) {

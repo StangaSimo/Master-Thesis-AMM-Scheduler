@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 /********** debug ************/
-#define DEBUG
+//#define DEBUG
 #define ENABLE_PROFILING           /* profiler for timing the scheduler */
 #define ENABLE_INTEL_POWER_PROFILE /* profiling the power consumption with intel rapl */
 
@@ -24,7 +24,7 @@
 //#define JIT_MS_OV 100            /* mitigate jit time for openvino */
 
 /* streaming */
-#define JIT_MS_SYCL 80
+#define JIT_MS_SYCL 140
 #define JIT_MS_OV 120
 
 enum {BATCH_SIZE = 30};       /* static partitioning batch size */
