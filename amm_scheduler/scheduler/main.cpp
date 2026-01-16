@@ -8,7 +8,7 @@
 #include "opencv_test.hpp"
 
 /*
- *
+ * TODO: MEMORY ORDERING
  *
  * test jit, prova senza blas, prova meno cpu a blas, benchamark aggiornati (sbagliati per openvino, funzioan solo se le matrici sono ordine), performance map aggiornata,  risolto
  *
@@ -22,16 +22,17 @@
  * MA PERCHE SYCL VA PIU VELOCE CON DYNAMIC NEL TEST SCHEDULER LOGIC????????
  *
  *
- *
- *
  * Asymetric Matrix Multiplication Scheduler 
  *
- * Design and Implementation of a Unified Heterogeneous Scheduler for CPU, GPU, and NPU Architectures
- * Development of a Cross-Platform Heterogeneous Scheduler: Bridging Proprietary and Open Standards in Modern Computing
+ *  Design and Implementation of a Unified Heterogeneous Scheduler for CPU, GPU, and NPU Architectures
  *
- * "AM_SCHEDULER: Architecting Runtime System for Asymmetric Heterogeneous Computing"
+ *  Development of a Cross-Platform Heterogeneous Scheduler: Bridging Proprietary and Open Standards in Modern Computing
  *
- * "AM_SCHEDULER: Architecting a Resilient Scheduling System for Asymmetric Heterogeneous Workloads
+ * "AMM_SCHEDULER: Architecting a runtime scheduling System for Asymmetric Heterogeneous Computing"
+ *
+ * "AMM_SCHEDULER: Architecting a Scheduling System for Asymmetric Heterogeneous Workloads
+ *
+ *
  *
  * */
 
@@ -121,10 +122,10 @@ void test_large_matrix_split() {
 int main() {
     test_accellerators();
 
-    test_scheduler_logics();
+    //test_scheduler_logics();
     //test_large_matrix_split();
 
-    //test_hetero_logic();
+    test_hetero_logic();
 
     //test_dynamic();
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(am_scheduler)
+project(amm_scheduler)
 
 include(ExternalProject)
 

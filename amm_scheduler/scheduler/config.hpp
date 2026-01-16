@@ -7,17 +7,17 @@
 #define ENABLE_INTEL_POWER_PROFILE /* profiling the power consumption with intel rapl */
 
 /********** tests ************/
-//#define M_ 4092
-//#define N_ 4092
-//#define K_ 4092 
-//#define N_MATRIX 100 
-//enum {BATCH_SIZE = 30};
+#define M_ 4092
+#define N_ 4092
+#define K_ 4092 
+#define N_MATRIX 100 
+enum {BATCH_SIZE = 30};
 
-#define M_ 1024
-#define N_ 1024
-#define K_ 512 
-#define N_MATRIX 800 
-enum {BATCH_SIZE = 50};
+//#define M_ 1024
+//#define N_ 1024
+//#define K_ 512 
+//#define N_MATRIX 800 
+//enum {BATCH_SIZE = 50};
 
 
 #define M_split 14000 /* big matrix split size, max is MAX_SIZE/4 */

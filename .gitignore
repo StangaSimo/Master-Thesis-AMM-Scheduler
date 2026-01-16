@@ -4,9 +4,9 @@ npu_benchmark/benchmark
 gpu_benchmark/build/
 sycl_benchmark/build/
 
-am_scheduler/bin/
-am_scheduler/test.mp4
-am_scheduler/build/
+amm_scheduler/bin/
+amm_scheduler/test.mp4
+amm_scheduler/build/
 
 vino_c/models
 vino_c/test_npu
