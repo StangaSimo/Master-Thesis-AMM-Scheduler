@@ -122,7 +122,7 @@ class AMScheduler {
             if (strategy == Logic::DYNAMIC) {
 
                 /* Dynamic execution */
-                while(threads_keep_running) { 
+                while (threads_keep_running) { 
                     task = buffer->get();
                     if (!task) {continue;}
 
@@ -137,7 +137,7 @@ class AMScheduler {
             } else {
 
                 /* Static execution */
-                while(threads_keep_running) { 
+                while (threads_keep_running) { 
                     /* blocking if SLEEP on */
                     task = buffer->get();
 
@@ -188,7 +188,7 @@ class AMScheduler {
                     exit(EXIT_FAILURE);
                 }
 
-                while(threads_keep_running) { 
+                while (threads_keep_running) { 
                     single_task = buffer->get();
                     if (!single_task) {continue;} 
                     buffers[BT::CUDA]->put(single_task);
@@ -201,7 +201,7 @@ class AMScheduler {
             /* basic logic, just send all the tasks to all the bt */
             case Logic::ROUND_ROBIN: 
 
-                while(threads_keep_running) { 
+                while (threads_keep_running) { 
                     single_task = buffer->get();
                     if (!single_task) {continue;} 
 
@@ -211,13 +211,13 @@ class AMScheduler {
                 } 
                 break;
 
-            /* batch style partitioning */
+                /* batch style partitioning */
             case Logic::STATIC_PARTITIONING: 
 
                 PROF(profiler.start_power_monitor());
 
-                while(threads_keep_running) { 
-                    
+                while (threads_keep_running) { 
+
                     PROF(profiler.start_fetch());
 
                     while (c < BATCH_SIZE) {
@@ -229,30 +229,64 @@ class AMScheduler {
                     PROF(profiler.stop_fetch());
 
                     PROF(profiler.start_logic());
+
                     if (c == 0) {continue;}
 
-                    /* if the tasks are less the number of accellerators, send all them to the fastest */
-                    if (bts_len >= c){ 
+                    /* if tasks less number of bts, send all to the fastest */
+                    if (bts_len >= c) { 
                         for (int j=0; j<c; j++)
                             buffers[bts[0]]->put(tasks[j]);
                         c = 0;
                         continue;
                     }
 
-                    /* velocity = 1 / time */
+                    /* speeds */
                     total_speed = 0.0;
                     for (int j=0; j<bts_len; j++){
                         double single_matrix_ms = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, tasks[0]->K, tasks[0]->type, true);
-                        acc_speed[j] = 1.0 / (single_matrix_ms * (double) c);        
+                        acc_speed[j] = 1.0 / (single_matrix_ms + 1e-9); /* 1e-9 for not dividing for 0 */       
                         total_speed += acc_speed[j];
                     }
                     
-                    /* acc_speed = 1_matrix_ms * c, total_speed = acc_speed[j] */ 
-                    remaining_c = c;                        
+                    /* exact task per acc (double) */
+                    double shares[bts_len];
+                    int total_assigned = 0;
+                    
                     for (int j=0; j<bts_len; j++) {
                         double ratio = acc_speed[j] / total_speed;
-                        n_acc_task[j] = (int)(ratio * c);
-                        remaining_c -= n_acc_task[j];
+                        shares[j] = ratio * (double)c;
+                        n_acc_task[j] = (int)shares[j]; /* integer part */
+                        total_assigned += n_acc_task[j];
+                    }
+
+                    int missing_c = c - total_assigned;
+                    
+                    /* assign the missing task to the accellerator 
+                     * mitigate slowness between accellerators */
+                    while (missing_c > 0) {
+                        int best_j = -1;
+                        double max_decimal = -1.0;
+
+                        /* find the accellerator with the highest decimal part */
+                        for (int j=0; j<bts_len; j++) {
+                            double decimal_part = shares[j] - (double)n_acc_task[j];
+                            if (decimal_part > max_decimal) {
+                                max_decimal = decimal_part;
+                                best_j = j;
+                            }
+                        }
+
+                        /* assign one more task to the winner */
+                        if (best_j != -1) {
+                            n_acc_task[best_j]++;
+                            /* set to -1 so it won't be picked again */
+                            shares[best_j] = -1.0; 
+                            missing_c--;
+                        } else {
+                            /* fallback */
+                            n_acc_task[0]++;
+                            missing_c--;
+                        }
                     }
 
                     PROF(profiler.stop_logic());
@@ -261,19 +295,16 @@ class AMScheduler {
 
                     /* send task to the accellerators */
                     t = 0;
-                    for (int j=0; j<bts_len; j++)
+                    for (int j=0; j<bts_len; j++) {
                         for (int w=0; w<n_acc_task[j]; w++){
+                            if (t >= c) break;
+                            
                             buffers[bts[j]]->put(tasks[t]);
                             t++;
                         }
-
-                    /* send the remaining to the fastest */
-                    if (remaining_c != 0)
-                        for (int j=c-remaining_c; j<c; j++)
-                            buffers[bts[0]]->put(tasks[j]);
-                   
+                    }
+                    
                     c = 0; 
-
                     PROF(profiler.stop_dispatch());
                     PROF(profiler.record_sample());
                 } 
@@ -286,7 +317,7 @@ class AMScheduler {
 
                 PROF(profiler.start_power_monitor());
 
-                while(threads_keep_running) { 
+                while (threads_keep_running) { 
                     PROF(profiler.start_fetch());
 
                     single_task = buffer->get();
@@ -302,15 +333,15 @@ class AMScheduler {
                     int base = single_task->M / bts_len;
 
                     /* equal row initially */
-                    for(int j=0; j<bts_len; j++) 
+                    for (int j=0; j<bts_len; j++) 
                         rows[j] = base + (j < rest ? 1 : 0);
 
                     /* loop for adjusting the ratios */
-                    for(int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
+                    for (int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
                         double total_speed = 0.0;
 
                         /* current speed for 1 row */
-                        for(int j=0; j<bts_len; j++) {
+                        for (int j=0; j<bts_len; j++) {
                             int r = (rows[j] > 0) ? rows[j] : 1;
 
                             double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type, false);
@@ -326,7 +357,7 @@ class AMScheduler {
 
                         /* adjust the row with the ratios */
                         int rows_distributed = 0;
-                        for(int j=0; j<bts_len; j++) {
+                        for (int j=0; j<bts_len; j++) {
                             double ratio = curr_speeds[j] / total_speed;
 
                             /* new rows from the ratio */
@@ -459,7 +490,7 @@ class AMScheduler {
                     for (int i = 0; i < bts_len; i++) {
                        cout << "acc" << get_acc_string(bts[i]) << " contiene : " << i_bt[i] <<  " tasks con " << bt_ms[i] << " ms di carico \n";
 
-                        for (int j=0; j<i_bt[bts[i]]; j++)
+                        for (int j=0; j<i_bt[i]; j++)
                             buffers[bts[i]]->put(dispatch_tasks[i][j]);
 
                     }
@@ -478,6 +509,7 @@ class AMScheduler {
                 i = 0;
                 while (threads_keep_running) { 
                     PROF(profiler.start_logic());
+
                     if (dispached) {
                         PROF(profiler.start_fetch());
                         single_task = buffer->get();
@@ -498,7 +530,9 @@ class AMScheduler {
                     i = i % bts_len;
 
                     PROF(profiler.stop_logic());
-                    PROF(profiler.record_sample());    
+
+                    if (dispached)
+                        PROF(profiler.record_sample());    
                 }
 
 

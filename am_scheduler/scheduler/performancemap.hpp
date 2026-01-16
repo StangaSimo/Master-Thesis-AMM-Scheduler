@@ -184,7 +184,7 @@ public:
             if (bt == BT::SYCL) {
 
                 /* mitigate overhead when other accellerator are running */
-                time_ms += time_ms * 0.5;
+                //time_ms += time_ms * 0.5;
 
                 unsigned long long sycl_key = (unsigned long long) N;
                 if (jit_cache->find(sycl_key) == jit_cache->end()){
@@ -192,9 +192,13 @@ public:
                     if (add_jit)
                         jit_cache->insert(sycl_key);
 
-                    time_ms += JIT_MS_SYCL * 2;
+                    time_ms += JIT_MS_SYCL;
                 }
             }
+            
+            /* mitigate openblas error in bencharks  */
+            if (bt == BT::OPENBLAS)
+                time_ms = time_ms/2;
             
             data->last_K = time_ms;
             return time_ms;
@@ -205,7 +209,7 @@ public:
 
         /* add jit expences */
         if (bt == BT::SYCL || bt == BT::OPENVINO) {
-            time_ms += JIT_MS_SYCL*2;
+            time_ms += JIT_MS_SYCL;
         }
 
         /* cache the result */

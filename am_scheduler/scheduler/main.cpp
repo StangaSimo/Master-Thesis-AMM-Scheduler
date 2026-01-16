@@ -8,27 +8,53 @@
 #include "opencv_test.hpp"
 
 /*
- * scheduler targeting different accellerators in matrix multplication 
  *
- *  TODO: streming di Matrici diverse 
  *
- * test jit, prova senza blas, prova meno cpu a blas, benchamark aggiornati, performance map aggiornata,  risolto
+ * test jit, prova senza blas, prova meno cpu a blas, benchamark aggiornati (sbagliati per openvino, funzioan solo se le matrici sono ordine), performance map aggiornata,  risolto
+ *
+ * test prima con openvino scheduler logic (sia matrici 2048 che 4096) e large matrix mul
+ *
+ *
+ * poi ethero 
+ * poi ethero senza openvino 
+ *
+ *
+ * MA PERCHE SYCL VA PIU VELOCE CON DYNAMIC NEL TEST SCHEDULER LOGIC????????
+ *
+ *
+ *
+ *
+ * Asymetric Matrix Multiplication Scheduler 
+ *
+ * Design and Implementation of a Unified Heterogeneous Scheduler for CPU, GPU, and NPU Architectures
+ * Development of a Cross-Platform Heterogeneous Scheduler: Bridging Proprietary and Open Standards in Modern Computing
+ *
+ * "AM_SCHEDULER: Architecting Runtime System for Asymmetric Heterogeneous Computing"
+ *
+ * "AM_SCHEDULER: Architecting a Resilient Scheduling System for Asymmetric Heterogeneous Workloads
  *
  * */
 
-/* BATCH_SIZE, SLEEP, DEBUG */
-void test_hetero_logic(Logic l) {
-    size_t n_matrix = 50;
+void test_hetero_logic() {
+    size_t n_matrix = 80;
 
     task* task_array = init_hetero_tasks(n_matrix, Type::FLOAT);
     cout << "Task create \n";
-    AMScheduler scheduler = AMScheduler(l);
+    Logic l = Logic::CUDA_ONLY;
+    for (int i=0; i<3; i++) {
 
-    scheduler.do_tasks(task_array, n_matrix);
-    scheduler.wait();
+        if (i == 1) {l = Logic::STATIC_HETERO_PARTITIONING; cout << "\nStatic partitioning \n";}
+        if (i == 2) {l = Logic::DYNAMIC; cout << "\nStatic partitioning \n";}
 
-    //test_compare_task(task_array, num_matrix);
-    scheduler.print_stats(task_array,n_matrix);
+        AMScheduler scheduler = AMScheduler(l);
+
+        scheduler.do_tasks(task_array, n_matrix);
+        scheduler.wait();
+
+        //test_compare_task(task_array, num_matrix);
+        scheduler.print_stats(task_array,n_matrix);
+
+    }
     clean_tasks(task_array, n_matrix);
 }
 
@@ -67,7 +93,7 @@ void test_scheduler_logics() {
         for (int i=0; i<3; i++) {
             if (i == 0) {l = Logic::CUDA_ONLY; cout << "\nCuda with scheduler \n";}
             if (i == 1) {l = Logic::STATIC_PARTITIONING; cout << "\nStatic partitioning \n";}
-            if (i == 2) {l = Logic::DYNAMIC; cout << "\nDyanamic \n";}
+            if (i == 2) {l = Logic::DYNAMIC; cout << "\nDynamic \n";}
 
             task* task_array = init_tasks(n_matrix, M, N, K, type);
             AMScheduler scheduler = AMScheduler(l);
@@ -94,16 +120,19 @@ void test_large_matrix_split() {
 
 int main() {
     test_accellerators();
+
     test_scheduler_logics();
     //test_large_matrix_split();
-    //test_hetero_logic(Logic::STATIC_HETERO_PARTITIONING);
-    //test_hetero_logic(Logic::DYNAMIC);
+
+    //test_hetero_logic();
+
     //test_dynamic();
 
 
     //test_jit_times();
     /* remove openvino */
     //test_video_filter(Logic::CUDA_ONLY, false);
-    //test_video_filter(Logic::STATIC_PARTITIONING, true);
+    //test_video_filter(Logic::STATIC_PARTITIONING, false);
+    //test_video_filter(Logic::DYNAMIC, true);
     return 0;
 }

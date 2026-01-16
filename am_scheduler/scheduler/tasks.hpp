@@ -99,7 +99,7 @@ inline task* init_hetero_tasks(size_t n_task, Type t) {
         int curr_n = possible_sizes[dis_idx(gen)];
         int curr_k = possible_sizes[dis_idx(gen)];
 
-        cout << " M : " << curr_m << " N: " << curr_n << " K: " << curr_k << "\n";
+        //cout << " M : " << curr_m << " N: " << curr_n << " K: " << curr_k << "\n";
 
         array_task[i].M = curr_m;
         array_task[i].N = curr_n;

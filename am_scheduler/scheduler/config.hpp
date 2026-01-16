@@ -7,10 +7,18 @@
 #define ENABLE_INTEL_POWER_PROFILE /* profiling the power consumption with intel rapl */
 
 /********** tests ************/
+//#define M_ 4092
+//#define N_ 4092
+//#define K_ 4092 
+//#define N_MATRIX 100 
+//enum {BATCH_SIZE = 30};
+
 #define M_ 1024
 #define N_ 1024
 #define K_ 512 
 #define N_MATRIX 800 
+enum {BATCH_SIZE = 50};
+
 
 #define M_split 14000 /* big matrix split size, max is MAX_SIZE/4 */
 #define N_split 4000 
@@ -21,11 +29,9 @@
 
 #define JIT_MS_SYCL 140  /* mitigate jit time for sycl */
 
-//#define JIT_MS_OV 120
-
-enum {BATCH_SIZE = 30};                  /* static partitioning batch size */
-enum {BATCH_SIZE_HETERO = 50};           /* static partitioning batch size */
-enum {SPLIT_MATRIX_ITERATION = 3};       /* static partitioning batch size */
+//enum {BATCH_SIZE = 50};                  /* static partitioning batch size */
+enum {BATCH_SIZE_HETERO = 40};           
+enum {SPLIT_MATRIX_ITERATION = 3};       
 
 /********** buffers ************/
 //#define SLEEP
