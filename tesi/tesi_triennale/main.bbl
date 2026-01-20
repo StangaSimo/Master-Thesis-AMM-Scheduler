@@ -1,0 +1,63 @@
+\begin{thebibliography}{10}
+
+\bibitem{sitoAlveoU50}
+Inc. Advanced Micro~Devices.
+\newblock Alveou50, 2022.
+\newblock https://www.xilinx.com/products/boards-and-kits/alveo/u50.html\#documentation.
+
+\bibitem{sitoDocumentazioneVitis}
+Inc. Advanced Micro~Devices.
+\newblock Building and running vitis reference guide, 2023.
+\newblock https://docs.xilinx.com/r/en-US/Vitis-Tutorials-Getting-Started/Building-and-Running-on-Alveo-U250-Data-Center-Accelerator-Card.
+
+\bibitem{sitoMicroblaze}
+Inc. Advanced Micro~Devices.
+\newblock Microblaze reference guide, 2023.
+\newblock https://docs.xilinx.com/v/u/en-US/ug984-vivado-microblaze-ref.
+
+\bibitem{sitoDocumentazionePragma}
+Inc. Advanced Micro~Devices.
+\newblock Pragma vitis reference guide, 2023.
+\newblock https://docs.xilinx.com/r/en-US/ug1399-vitis-hls/pragma-HLS-interface.
+
+\bibitem{sitoAMDvitis}
+Inc. Advanced Micro~Devices.
+\newblock Vitis unified software platform, 2023.
+\newblock https://www.xilinx.com/products/design-tools/vitis.html.
+
+\bibitem{sitoREG}
+NATIONAL~INSTRUMENTS CORP.
+\newblock Introduction to fpga hardware concepts, 2023.
+\newblock https://www.ni.com/docs/en-US/bundle/labview-fpga-module/page/lvfpgaconcepts/fpga\_basic\_chip\_terms.html\#:~:text=A%20register%20is%20a%20group,match%20the%20internally%20stored%20data.
+
+\bibitem{sitognu}
+Inc. Free Software~Foundation.
+\newblock Gcc, the gnu compiler collection, 2023.
+\newblock https://gcc.gnu.org.
+
+\bibitem{libroarchitetture}
+Harris Harris.
+\newblock {\em Digital Design and Computer Architecture: ARM Edition}.
+\newblock Morgan Kaupfman, 2016.
+
+\bibitem{sitoOpencl}
+The Khronos®~Group Inc.
+\newblock Opencl, 2023.
+\newblock https://www.khronos.org/opencl/.
+
+\bibitem{sitoLUT}
+Xilinx Inc.
+\newblock Lut, 2018.
+\newblock https://www.xilinx.com/htmldocs/xilinx2017\_4/sdaccel\_doc/yeo1504034293627.html\#:~:text=The%20LUT%20is%20the%20basic,functions%20to%20yield%20output%20values.
+
+\bibitem{sitoURAM}
+Xilinx Inc.
+\newblock Ultra ram, 2023.
+\newblock https://docs.xilinx.com/r/en-US/am007-versal-memory/UltraRAM.
+
+\bibitem{sitoDSP}
+Wikipedia.
+\newblock Dsp, 2023.
+\newblock https://it.wikipedia.org/wiki/DSP.
+
+\end{thebibliography}

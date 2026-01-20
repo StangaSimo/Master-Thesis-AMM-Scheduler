@@ -125,7 +125,7 @@ int main() {
     //test_scheduler_logics();
     //test_large_matrix_split();
 
-    test_hetero_logic();
+    //test_hetero_logic();
 
     //test_dynamic();
 
@@ -134,6 +134,6 @@ int main() {
     /* remove openvino */
     //test_video_filter(Logic::CUDA_ONLY, false);
     //test_video_filter(Logic::STATIC_PARTITIONING, false);
-    //test_video_filter(Logic::DYNAMIC, true);
+    test_video_filter(Logic::DYNAMIC, true);
     return 0;
 }

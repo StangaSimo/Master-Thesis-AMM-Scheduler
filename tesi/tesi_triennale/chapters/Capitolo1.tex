@@ -1,0 +1,24 @@
+\chapter{Introduzione}
+
+\section{Contesto}
+Nel mondo dell'informatica l'utilizzo dei dispositivi FPGA (Field-Programmable Gate Array) è diventato sempre più comune per l'accelerazione di algoritmi e applicazioni specifiche attraverso hardware "customizzato", in modo da migliorare prestazioni, flessibilità e personalizzazione. Qui entrano in gioco i processori softcore, che sono diventati una risorsa essenziale per sfruttare al massimo le potenzialità dei dispositivi FPGA. 
+
+I processori softcore sono stati sviluppati per essere configurabili e programmabili in modo da adattarsi ad ogni specifica, questa loro caratteristica li rende adatti a una vasta gamma di compiti, dall'elaborazione dati all'elaborazione dei segnali, dall'elaborazione delle immagini all'automazione industriale, rendendo più semplice lo sviluppo di queste applicazioni anche per sviluppatori senza specifiche esperienze "hardware".
+
+\vspace{1.3cm}
+
+\section{Obiettivo}
+Per questa mia tesi, mi è stato assegnato il compito di sviluppare un semplice interprete che sia in grado di eseguire un sottoinsieme delle istruzioni del processore Microblaze, softcore sviluppato da Xilinx e successivamente sperimentare questo softcore molto piccolo sulla FPGA. Lo scopo era quello di enfatizzare quanto questa soluzione sia flessibile e configurabile, misurarne l'occupazione sul dispositivo, verificarne il corretto funzionamento e determinare il numero massimo di istanze che possono essere inserite nel dispositivo.
+
+In prospettiva, il softcore sviluppato dovrebbe essere utilizzato per simulare una GPU con core indipendenti e privi di controllore SIMD, mettendo in evidenza il potenziale di accelerazione offerto da questa configurazione, in particolare nella computazione di applicazioni data parallel con thread di controllo "divergenti", ovvero che nello stesso istante eseguono computazioni localmente differenti tra di loro. 
+
+
+\section{Scaletta Tesi}
+Il resto di questa tesi è organizzata quanto segue: 
+\begin{itemize}
+    \item \textbf{Capitolo 2}: Descrive gli strumenti usati per lo sviluppo del progetto.
+    \item \textbf{Capitolo 3}: Fornisce una panoramica generale sul funzionamento del progetto, e riporta le possibilità di configurazione e estensione del progetto.
+    \item \textbf{Capitolo 4}: Fornisce in dettaglio la spiegazione dell'implementazione delle componenti del progetto.
+    \item \textbf{Capitolo 5}: Riporta i risultati ottenuti sull'occupazione della FPGA, come è stato verificato il funzionamento delle diverse versioni dell'interprete.
+    \item \textbf{Capitolo 6}: Conclude la tesi riassumendo i risultati ottenuti durante il percorso di sviluppo del progetto. Inoltre offre un bilancio personale sul l'intero lavoro svolto.
+\end{itemize}
