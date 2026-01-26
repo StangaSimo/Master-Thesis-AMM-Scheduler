@@ -15,7 +15,6 @@
 #include <string>
 #include <vector>
 
-// Definiamo DEBUG anche qui per stampare i risultati
 #ifdef INTEL
 // #include <oneapi/tbb/global_control.h>
 // #include <oneapi/tbb/task_arena.h>
@@ -29,8 +28,6 @@ void benchmark_cpu(const std::string &device_name, int M, int N, int K,
   std::cout << "Matrix size: " << M << "x" << N << "x" << K
             << " | Runs: " << runs << "\n";
 #endif
-
-  // cv::setNumThreads(6);
 
   cv::Mat h_A(M, K, CV_32F);
   cv::Mat h_B(K, N, CV_32F);
@@ -69,7 +66,6 @@ void benchmark_cpu(const std::string &device_name, int M, int N, int K,
   std::cout << "Average GFLOPS: " << avg_gflops << "\n";
   std::cout << "================================\n\n";
 #endif
-  // cv::setNumThreads(0);
 }
 
 void benchmark_gpu(const std::string &device_name, int M, int N, int K,
@@ -114,7 +110,6 @@ void benchmark_gpu(const std::string &device_name, int M, int N, int K,
   /* warmup */
   cv::gemm(u_A, u_B, 1.0, cv::UMat(), 0.0, u_C);
   cv::ocl::finish();
-  // cv::Mat warmup_result = u_C.getMat(cv::ACCESS_READ);
 
   for (int i = 0; i < runs; i++) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -129,8 +124,6 @@ void benchmark_gpu(const std::string &device_name, int M, int N, int K,
     sum_ms += ms;
     sum_gflops += gflops;
   }
-
-  // cv::Mat result_sync = u_C.getMat(cv::ACCESS_READ);
 
   double avg_time = sum_ms / runs;
   double avg_gflops = sum_gflops / runs;
@@ -162,7 +155,6 @@ bool createOpenCLContext(const std::string &platform_substr) {
     std::string platformName = platforms[i].name();
     std::cout << "  [" << i << "] " << platformName;
 
-    // Try to get device count for this platform
     cv::ocl::Device device;
     try {
       platforms[i].getDevice(device, 0);
@@ -173,7 +165,6 @@ bool createOpenCLContext(const std::string &platform_substr) {
     std::cout << "\n";
   }
 
-  // Find the platform
   cv::ocl::PlatformInfo foundPlatform;
   bool platformFound = false;
 
@@ -202,15 +193,12 @@ bool createOpenCLContext(const std::string &platform_substr) {
 
   std::cout << "[INFO] Selected platform: " << foundPlatform.name() << "\n";
 
-  // Get the device from this platform
   cv::ocl::Device device;
   foundPlatform.getDevice(device, 0);
 
   std::cout << "[INFO] Selected device: " << device.name() << "\n";
   std::cout << "[INFO] Device vendor: " << device.vendorName() << "\n";
 
-  // Create context using the static method with configuration string
-  // Format: "platform_name:device_type:device_index"
   std::stringstream config;
   config << foundPlatform.name() << ":GPU:0";
 

@@ -14,49 +14,14 @@
 #include <cstdio>
 #include <cstdint> // Per uint16_t
 
-// ==========================================
-// CONFIGURAZIONE
-// ==========================================
-
-// De-commenta per Zero-Copy
-// #define ZEROCOPY
-
-// 1. CAMBIO TIPO: Usiamo sycl::half invece di float
+// sycl::half invece di float
 using data_t = sycl::half; 
-
-// ==========================================
-// EXTERN "C" ESEMPIO
-// ==========================================
-
-// Esempio di funzione C pura che riceve i dati.
-// Siccome il C non conosce "sycl::half", li passiamo come void* // o uint16_t* (bit grezzi).
-extern "C" {
-    void processa_dati_c(void* raw_data, int n) {
-        // Qui dentro siamo in "C". 
-        // raw_data punta all'array di sycl::half.
-        // Esempio: cast a uint16_t per leggere i bit
-        uint16_t* ptr = (uint16_t*)raw_data;
-        
-        // Esempio fittizio: leggiamo il primo valore come intero (bit pattern)
-        if (n > 0) {
-            // printf("C Function: Received %d elements. First block bits: 0x%x\n", n, ptr[0]);
-        }
-    }
-}
-
-// ==========================================
-// STRUTTURE DATI
-// ==========================================
 
 struct PowerStats {
     double avg;
     double min;
     double max;
 };
-
-// ==========================================
-// FUNZIONI AUSILIARIE
-// ==========================================
 
 PowerStats compute_stats(const std::vector<double>& v) {
     if (v.empty()) return {0.0, 0.0, 0.0};
@@ -109,10 +74,6 @@ void save_results_to_csv(const std::string& filename,
     std::cout << ">> Risultati salvati in: " << filename << "\n";
 }
 
-// ==========================================
-// MONITORAGGIO GPU
-// ==========================================
-
 class GpuPowerMonitor {
 private:
     std::atomic<bool> sampling;
@@ -164,10 +125,6 @@ public:
     PowerStats get_stats() { return compute_stats(gpu_samples); }
 };
 
-// ==========================================
-// BENCHMARK USM
-// ==========================================
-
 namespace mkl = oneapi::mkl;
 
 void benchmark(sycl::queue& q, int M, int N, int K, int runs) {
@@ -177,14 +134,9 @@ void benchmark(sycl::queue& q, int M, int N, int K, int runs) {
     std::cout << "\n=== Benchmark FP16 [EXPLICIT]: " << M << "x" << N << "x" << K << " ===" << "\n";
     #endif
 
-    // 2. CASTING: Inizializzazione richiede cast esplicito a sycl::half (data_t)
     std::vector<data_t> h_A(M * K, data_t(1.0f));
     std::vector<data_t> h_B(K * N, data_t(2.0f));
     std::vector<data_t> h_C(M * N, data_t(0.0f));
-
-    // 3. ESEMPIO CHIAMATA C: Passiamo il puntatore raw dei dati host
-    // Il C non sa cos'è un std::vector o sycl::half, passiamo l'indirizzo dei dati raw.
-    //processa_dati_c(static_cast<void*>(h_A.data()), h_A.size());
 
     try {
         data_t *d_A, *d_B, *d_C;
@@ -214,11 +166,9 @@ void benchmark(sycl::queue& q, int M, int N, int K, int runs) {
         q.wait();
 
         mkl::transpose trans = mkl::transpose::nontrans;
-        // 4. PARAMETRI FP16: Anche alpha e beta devono essere sycl::half
         data_t alpha = data_t(1.0f); 
         data_t beta = data_t(0.0f);
 
-        // Warmup
         mkl::blas::row_major::gemm(q, trans, trans, M, N, K, alpha, d_A, K, d_B, N, beta, d_C, N);
         q.wait();
 
@@ -243,7 +193,6 @@ void benchmark(sycl::queue& q, int M, int N, int K, int runs) {
 
             auto t_compute_start = std::chrono::high_resolution_clock::now();
             
-            // GEMM usa data_t (sycl::half)
             auto e_gemm = mkl::blas::row_major::gemm(q, trans, trans, M, N, K, alpha, d_A, K, d_B, N, beta, d_C, N);
             e_gemm.wait();
             
@@ -283,7 +232,7 @@ int main() {
         
         // 5. CHECK SUPPORTO FP16
         if (!dev.has(sycl::aspect::fp16)) {
-            std::cerr << "[ERRORE CRITICO] Il dispositivo non supporta FP16 (half precision)!\n";
+            std::cerr << "[ERRORE] no FP16!\n";
             return 1;
         }
         
