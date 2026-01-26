@@ -3,13 +3,18 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 A level-1 auxiliary file: chapters/Frontespizio.aux
 A level-1 auxiliary file: chapters/Abstract.aux
-A level-1 auxiliary file: chapters/Capitolo1.aux
+A level-1 auxiliary file: chapters/0_introduction.aux
+A level-1 auxiliary file: chapters/1_tools.aux
+A level-1 auxiliary file: chapters/2_logical_design_benchmark.aux
+A level-1 auxiliary file: chapters/2_logical_design_scheduler.aux
+A level-1 auxiliary file: chapters/3_implementation.aux
+A level-1 auxiliary file: chapters/4_results.aux
 A level-1 auxiliary file: chapters/AppendiceA.aux
 The style file: plain.bst
 Database file #1: chapters/Bibliografia.bib
 You've used 1 entry,
             2118 wiz_defined-function locations,
-            509 strings with 4234 characters,
+            514 strings with 4388 characters,
 and the built_in function-call counts, 256 in all, are:
 = -- 23
 > -- 7

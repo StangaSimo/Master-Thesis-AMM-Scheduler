@@ -243,6 +243,5 @@ int main() {
   benchmark_gpu("GPU (OpenCV/OpenCL)", M, N, K, runs);
   benchmark_cpu("CPU (OpenCV)", M, N, K, runs);
 
-  // TODO: consumo watt intel, consumo watt amd, e metriche
   return 0;
 }

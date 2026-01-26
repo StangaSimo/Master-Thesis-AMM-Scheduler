@@ -1,0 +1,48 @@
+% CUDA 
+% SYCL 
+% OEPNVINO 
+% OPENBLASS 
+% C++/ C Cmake
+
+\chapter{Tools and Technologies}
+This chapter presents the hardware and software resources used to develop and validate the system. I chose to work on a hybrid and highly heterogeneous architecture to test the scheduler in a real-world scenario. In this scenario, devices with different performance characteristics and programming models must work together.
+
+\section{Experimental Platform}
+All development and benchmarking activities were carried out on a mobile workstation (Lenovo Yoga Pro 9). This platform represents a modern high-performance "Edge" computing node well, it integrates all the types of accelerators studied into a single physical system: multicore CPU, NPU, integrated GPU, and discrete GPU.Having these components available at the same time allowed me to emulate, within a single node, the typical orchestration issues of heterogeneous distributed systems.
+
+\subsection{The SoC: Intel Core Ultra 9 185H}
+The core of the system is the Intel Core Ultra 9 185H processor, based on the "Meteor Lake" architecture. This component marks a significant change from traditional monolithic CPUs. It uses a disaggregated design (tiled architecture) that combines different specialized processing units:
+
+\begin{itemize}
+    \item \textbf{Host CPU}: This cpu is made of 16 hybrid cores (6 Performance-cores for raw power, 8 Efficient-cores, and 2 Low-Power-cores for background efficiency). In this project, this unit acts as the Host. It runs the scheduler code, manages task dispatching, and coordinates data flows to the accelerators.
+
+    \item \textbf{NPU} - Intel AI Boost: The Ultra 9 includes a native Neural Processing Unit. This is a low-power accelerator designed specifically for neural network inference. In my framework, the NPU is used via the OpenVINO backend to run AI workloads without loading the GPU or the main CPU.
+
+    \item \textbf{iGPU} - Intel Arc Graphics: : Integrated into the SoC, this graphics unit (based on Xe-LPG architecture) offers parallel computing capabilities with direct access to system memory. Even though it is less powerful than a discrete solution, it is a key target for testing the SYCL backend in a unified memory scenario.
+\end{itemize}
+
+\subsection{NVIDIA GeForce RTX 4060}
+
+To complement the Intel SoC, the system is equipped with a discrete NVIDIA GeForce RTX 4060 GPU Laptop Edition, based on the Ada Lovelace architecture, this card acts as the high-throughput accelerator of the system.
+
+Unlike the iGPU, it has dedicated video memory (GDDR6 VRAM) and specific cores (CUDA Cores). Within the scheduler, this device is managed via the CUDA backend. It is typically chosen for processing massive data streams or large matrices, where the execution speed makes up for the cost of data transfer over the PCIe bus.
+
+Questa è una citazione \cite{LabelPerLaCitazione}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

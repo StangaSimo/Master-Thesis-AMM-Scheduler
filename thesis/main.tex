@@ -10,6 +10,9 @@
 \usepackage{rotating}
 \usepackage{fancyhdr}               
 
+%TODO sembra molto meglio cosi
+\usepackage{lmodern}
+
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}         
@@ -32,6 +35,9 @@
   \fancyhead{}
   \renewcommand{\headrulewidth}{0pt}
 }
+
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.2cm}
 
 \lstdefinestyle{codeStyle}{
     % Colore dei commenti
@@ -102,9 +108,15 @@
 
 \tableofcontents
 
-\listoffigures
+%\listoffigures
 
-\include{chapters/Capitolo1}
+%\include{chapters/Capitolo1}
+\include{chapters/0_introduction.tex}
+\include{chapters/1_tools.tex}
+\include{chapters/2_logical_design_benchmark.tex}
+\include{chapters/2_logical_design_scheduler.tex}
+\include{chapters/3_implementation.tex}
+\include{chapters/4_results.tex}
 
 \appendix
 
