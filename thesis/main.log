@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  27 JAN 2026 17:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  27 JAN 2026 18:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -959,12 +959,20 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
 ]
-<images/openblass.jpg, id=212, 803.0pt x 548.0475pt>
-File: images/openblass.jpg Graphic file (type jpg)
-<use images/openblass.jpg>
-Package pdftex.def Info: images/openblass.jpg  used on input line 88.
-(pdftex.def)             Requested size: 80.3047pt x 54.80795pt.
-
+<images/sycl.jpg, id=216, 1104.125pt x 501.875pt>
+File: images/sycl.jpg Graphic file (type jpg)
+<use images/sycl.jpg>
+Package pdftex.def Info: images/sycl.jpg  used on input line 93.
+(pdftex.def)             Requested size: 88.3318pt x 40.15082pt.
+<images/oneapi.png, id=218, 244.66406pt x 249.18094pt>
+File: images/oneapi.png Graphic file (type png)
+<use images/oneapi.png>
+Package pdftex.def Info: images/oneapi.png  used on input line 104.
+(pdftex.def)             Requested size: 48.93193pt x 49.8353pt.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 109.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -974,12 +982,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [11
 
- <./images/openblass.jpg>]
-<images/sycl.jpg, id=218, 1104.125pt x 501.875pt>
-File: images/sycl.jpg Graphic file (type jpg)
-<use images/sycl.jpg>
-Package pdftex.def Info: images/sycl.jpg  used on input line 100.
-(pdftex.def)             Requested size: 110.41896pt x 50.19043pt.
+ <./images/sycl.jpg> <./images/oneapi.png>]
+<images/openvino.jpg, id=230, 992.70876pt x 266.9975pt>
+File: images/openvino.jpg Graphic file (type jpg)
+<use images/openvino.jpg>
+Package pdftex.def Info: images/openvino.jpg  used on input line 119.
+(pdftex.def)             Requested size: 99.27669pt x 26.70131pt.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -990,12 +998,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [12
 
- <./images/sycl.jpg>]
-<images/openvino.jpg, id=224, 992.70876pt x 266.9975pt>
-File: images/openvino.jpg Graphic file (type jpg)
-<use images/openvino.jpg>
-Package pdftex.def Info: images/openvino.jpg  used on input line 112.
-(pdftex.def)             Requested size: 99.27669pt x 26.70131pt.
+ <./images/openvino.jpg>]
+<images/openblass.jpg, id=236, 803.0pt x 548.0475pt>
+File: images/openblass.jpg Graphic file (type jpg)
+<use images/openblass.jpg>
+Package pdftex.def Info: images/openblass.jpg  used on input line 131.
+(pdftex.def)             Requested size: 80.3047pt x 54.80795pt.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1006,11 +1014,11 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [13
 
- <./images/openvino.jpg>]
-<images/C.jpeg, id=231, 803.0pt x 421.575pt>
+ <./images/openblass.jpg>]
+<images/C.jpeg, id=248, 803.0pt x 421.575pt>
 File: images/C.jpeg Graphic file (type jpg)
 <use images/C.jpeg>
-Package pdftex.def Info: images/C.jpeg  used on input line 124.
+Package pdftex.def Info: images/C.jpeg  used on input line 148.
 (pdftex.def)             Requested size: 112.41924pt x 59.0201pt.
 
 
@@ -1023,10 +1031,10 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [14
 
  <./images/C.jpeg>]
-<images/cmake_logo.svg.png, id=242, 963.6pt x 964.60374pt>
+<images/cmake_logo.svg.png, id=259, 963.6pt x 964.60374pt>
 File: images/cmake_logo.svg.png Graphic file (type png)
 <use images/cmake_logo.svg.png>
-Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 155.
+Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 179.
 (pdftex.def)             Requested size: 77.08957pt x 77.16988pt.
 )
 
@@ -1093,12 +1101,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--7
  []
 
 
-Underfull \hbox (badness 1817) in paragraph at lines 9--12
+Underfull \hbox (badness 1253) in paragraph at lines 9--12
 []\T1/lmr/m/n/13 Intel Cor-po-ra-tion.  \T1/lmr/m/it/13 In-tel Core Ul-tra Pro-ces-sors (Se-ries 1)\T1/lmr/m/n/13 , 2024.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9--12
+Overfull \hbox (3.15086pt too wide) in paragraph at lines 9--12
 \T1/lmr/m/n/13 https://www.intel.com/content/www/us/en/products/sku/236849/intel-
  []
 
@@ -1108,31 +1116,64 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--12
  []
 
 
-Underfull \hbox (badness 2556) in paragraph at lines 23--26
+Overfull \hbox (65.31152pt too wide) in paragraph at lines 14--17
+\T1/lmr/m/n/13 https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html. 
+ []
+
+
+Underfull \hbox (badness 1817) in paragraph at lines 28--31
 []\T1/lmr/m/n/13 Klaus Hinum.  \T1/lmr/m/it/13 NVIDIA GeForce RTX 4060 Lap-top GPU Spec\T1/lmr/m/n/13 ,
  []
 
 
-Underfull \hbox (badness 7397) in paragraph at lines 23--26
+Underfull \hbox (badness 3250) in paragraph at lines 28--31
 \T1/lmr/m/n/13 2022.  https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-
  []
 
 
-Underfull \hbox (badness 3746) in paragraph at lines 28--31
-[]\T1/lmr/m/n/13 NVIDIA Cor-po-ra-tion.  \T1/lmr/m/it/13 CUDA C++ Pro-gram-ming Guide\T1/lmr/m/n/13 , 2024.
+Underfull \hbox (badness 10000) in paragraph at lines 33--36
+[]\T1/lmr/m/n/13 NVIDIA Cor-po-ra-tion.  \T1/lmr/m/it/13 Cublas\T1/lmr/m/n/13 , 2025.
  []
 
 
-Underfull \hbox (badness 4108) in paragraph at lines 33--36
+Underfull \hbox (badness 2617) in paragraph at lines 38--41
+[]\T1/lmr/m/n/13 NVIDIA Cor-po-ra-tion.  \T1/lmr/m/it/13 CUDA C++ Pro-gram-ming Guide\T1/lmr/m/n/13 , 2025.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--51
+[]\T1/lmr/m/n/13 OpenBLAS Team.  Open-blas github, 2024.
+ []
+
+
+Underfull \hbox (badness 3019) in paragraph at lines 53--56
 []\T1/lmr/m/n/13 Steve Ren-nich.  \T1/lmr/m/it/13 CUDA C++ Streams and Con-cur-rency\T1/lmr/m/n/13 , 2024.
  []
 
 
-Overfull \hbox (120.55934pt too wide) in paragraph at lines 33--36
+Overfull \hbox (126.92392pt too wide) in paragraph at lines 53--56
 \T1/lmr/m/n/13 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
-) [25] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+
+Underfull \hbox (badness 4726) in paragraph at lines 63--66
+[]\T1/lmr/m/n/13 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
+ []
+
+[25]
+Overfull \hbox (11.30067pt too wide) in paragraph at lines 68--71
+[]\T1/lmr/m/n/13 Zhang Xi-anyi.  Open-blas, 2025.  http://www.openmathlib.org/OpenBLAS/. 
+ []
+
+)
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[26] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-14>
@@ -1146,21 +1187,21 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: E0B683AC6143B63A4C1F1F1FBB1C50AF;2194.
+(rerunfilecheck)             Checksum: 5897974DC8B7EF00EF2E5B34EA1FAFF9;2194.
  ) 
 Here is how much of TeX's memory you used:
- 31196 strings out of 467538
- 626339 string characters out of 5419551
- 1176305 words of memory out of 5000000
- 59455 multiletter control sequences out of 15000+600000
- 681862 words of font info for 73 fonts, out of 8000000 for 9000
+ 31262 strings out of 467538
+ 627376 string characters out of 5419551
+ 1177526 words of memory out of 5000000
+ 59509 multiletter control sequences out of 15000+600000
+ 682180 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,11n,108p,645b,515s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri12.pfb>
-Output written on main.pdf (25 pages, 582107 bytes).
+ 108i,11n,108p,794b,584s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt12.pfb>
+Output written on main.pdf (26 pages, 647106 bytes).
 PDF statistics:
- 332 PDF objects out of 1000 (max. 8388607)
- 256 compressed objects within 3 object streams
- 62 named destinations out of 1000 (max. 500000)
- 346 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 358 PDF objects out of 1000 (max. 8388607)
+ 277 compressed objects within 3 object streams
+ 70 named destinations out of 1000 (max. 500000)
+ 351 words of extra memory for PDF output out of 10000 (max. 10000000)
 

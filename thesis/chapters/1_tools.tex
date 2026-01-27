@@ -71,36 +71,43 @@ computing (HPC) \cite{cuda_guide}.
 In this project CUDA is the tool chosen to extract maximum throughput from the hardware \ref{4060}. The implementation relies on specific libraries and mechanisms to optimize the execution of matrix multiplication streams.
 
 \begin{itemize}
-    \item \textbf{cuBLAS and Tensor Cores}: to perform linear algebra operations we adopts cuBLAS (CUDA Basic Linear Algebra Subroutines). This library is the GPU-accelerated version of the standard BLAS specification and provides highly optimized implementations of matrix operations, specifically, cuBLAS allows the utilization of Tensor Cores, specialized hardware units designed to accelerate mixed-precision matrix multiplication (Float16 and Int8). This significantly increases the theoretical throughput compared to standard floating-point units.
+    \item \textbf{cuBLAS and Tensor Cores}: to perform linear algebra operations we adopts cuBLAS (CUDA Basic Linear Algebra Subroutines). This library is the GPU-accelerated version of the standard BLAS specification and provides highly optimized implementations of matrix operations, specifically, cuBLAS allows the utilization of Tensor Cores, specialized hardware units designed to accelerate mixed-precision matrix multiplication (Float16 and Int8). This significantly increases the theoretical throughput compared to standard floating-point units \cite{cublas}.
 
     \item \textbf{CUDA Streams}: To handle the latency introduced by data transfers between the CPU and the GPU the system utilizes CUDA Streams. A stream is a sequence of operations that execute in issue-order on the GPU, by employing multiple streams it is possible to achieve concurrency: while one stream is transferring data over the PCIe bus another stream can execute a computational kernel \cite{cuda_streams}. This mechanism, known as "latency hiding", is fundamental for real-time processing and ensures that the GPU compute units remain active as much as possible.
 
-    \item \textbf{NVIDIA Management Library (NVML)}: For the analysis of energy efficiency the project integrates the NVIDIA Management Library (NVML). This serves as a monitoring tool that provides direct access to the GPU hardware sensors, it allows the retrieval of real-time metrics such as power usage (in milliJoule) and temperature without requiring external physical probes.
+    \item \textbf{NVIDIA Management Library (NVML)}: For the analysis of energy efficiency the project integrates the NVIDIA Management Library (NVML). This serves as a monitoring tool that provides direct access to the GPU hardware sensors, it allows the retrieval of real-time metrics such as power usage (in milliJoule) and temperature without requiring external physical probes \cite{nvml}.
 \end{itemize}
-
-\clearpage
-
-\section{OpenBlass}
-\label{openblass}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[scale=0.1]{images/openblass.jpg} 
-    \caption{OpenBlass Logo}
-    \label{openblass logo}
-\end{figure}
 
 \clearpage
 
 \section{SYCL}
 \label{sycl}
 
+While CUDA provides maximum performance for NVIDIA hardware, it requires a proprietary programming model, and to address the need for portability and to fully exploit the Intel hardware present in the system, the project adopts the SYCL standard through the Intel oneAPI toolkit.
+
+\begin{itemize}
+\item \textbf{The SYCL Standard}: 
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.1]{images/sycl.jpg} 
+    \includegraphics[scale=0.08]{images/sycl.jpg} 
     \caption{SYCL Logo}
     \label{sycl logo}
 \end{figure}
+
+SYCL is an open, royalty-free standard managed by the Khronos Group. It enables high-performance computing on heterogeneous accelerators (such as CPUs, GPUs, and FPGAs) using standard ISO C++ \cite{sycl}. As defined in the official specification, SYCL provides an abstraction layer that allows developers to write code for heterogeneous processors using a "single-source" style. This means that host code on the CPU and the device code on the accelerator are written in the same file, utilizing standard C++ templates and lambda functions. This approach eliminates the complexity of managing separate source files for different architectures.
+
+\item \textbf{Intel oneAPI}: 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.2]{images/oneapi.png} 
+    \caption{OneApi Logo}
+    \label{oneapi logo}
+\end{figure}
+
+SYCL requires a specific software development kit (SDK) to be compiled and executed. For this thesis, the Intel oneAPI Base Toolkit was selected \cite{intel_oneapi}. oneAPI is Intel's unified programming model designed to simplify development across diverse architectures, it implements the SYCL standard via the \texttt{icpx} compiler, and provides a comprehensive set of libraries optimized for a large set of devices. The choice of this toolkit allows the project to target the available Intel hardware efficiently. Moreover this choice guarantees that the codebase could seamlessly target accellerator from othe vendor like AMD without having to rewrite the code.
+\end{itemize}
 
 \clearpage
 
@@ -114,6 +121,23 @@ In this project CUDA is the tool chosen to extract maximum throughput from the h
     \label{ov logo}
 \end{figure}
 
+\clearpage
+
+\section{OpenBlass}
+\label{openblass}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.1]{images/openblass.jpg} 
+    \caption{OpenBlass Logo}
+    \label{openblass logo}
+\end{figure}
+
+To enable efficient processing on the Host CPU, the project integrates OpenBLAS. OpenBLAS is an optimized, open-source implementation of the BLAS (Basic Linear Algebra Subprograms) API. Historically, the project emerged as a successor to GotoBLAS2, a highly regarded library developed by Kazushige Goto, then after the original development ceased, the OpenBLAS community took over to maintain the code and expand support for modern architectures \cite{openblas}.
+
+The library achieves high performance through a mechanism called runtime processor detection. OpenBLAS first identifies the CPU architecture and automatically selects the most optimized functions for that specific hardware, these functions are often implemented in assembly language to leverage SIMD instructions, such as AVX2 or AVX-512, which allow the processor to handle multiple data points simultaneously. Additionally, the library automatically handles multi-threading to distribute the computational load across all available processor cores\cite{openblas_git}.
+
+In this project this library allow the Host CPU to be treated as an additional accelerator, so rather than limiting the CPU solely to orchestration tasks, OpenBLAS enables the scheduler to use some of the processor cores as a worker node. More details on this will be provided in the Implementation Chapter \ref{implementation}.
 \clearpage
 
 \section{C/C++}
