@@ -5,35 +5,87 @@
 % C++/ C Cmake
 
 \chapter{Tools and Technologies}
-This chapter presents the hardware and software resources used to develop and validate the system. I chose to work on a hybrid and highly heterogeneous architecture to test the scheduler in a real-world scenario. In this scenario, devices with different performance characteristics and programming models must work together.
+This chapter presents the hardware and software resources used to develop and validate the system. The choice to work on a hybrid and highly heterogeneous architecture was made to test the scheduler in a real-world scenario, and in this scenario, devices with different performance characteristics and programming models have to work together.
 
 \section{Experimental Platform}
-All development and benchmarking activities were carried out on a mobile workstation (Lenovo Yoga Pro 9). This platform represents a modern high-performance "Edge" computing node well, it integrates all the types of accelerators studied into a single physical system: multicore CPU, NPU, integrated GPU, and discrete GPU.Having these components available at the same time allowed me to emulate, within a single node, the typical orchestration issues of heterogeneous distributed systems.
+All development and benchmarking activities were done on a mobile workstation Lenovo Yoga Pro 9i gen 9. This platform represents a modern high-performance "Edge" computing node well, it integrates all the types of accelerators studied into a single physical system: multicore CPU, NPU, integrated GPU, and discrete GPU, and having these components available at the same time allowed to emulate, within a single node, the orchestration issues of heterogeneous distributed systems.
+
+\clearpage 
 
 \subsection{The SoC: Intel Core Ultra 9 185H}
-The core of the system is the Intel Core Ultra 9 185H processor, based on the "Meteor Lake" architecture. This component marks a significant change from traditional monolithic CPUs. It uses a disaggregated design (tiled architecture) that combines different specialized processing units:
+The core of the system is the Intel Core Ultra 9 185H processor, based on the "Meteor Lake" architecture \cite{intel_meteor_lake}. This component marks a significant change from traditional monolithic CPUs. It uses a disaggregated design (tiled architecture) that combines different specialized processing units:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.2]{images/core_ultra.png} 
+    \caption{Intel Ultra Logo}
+    \label{}
+\end{figure}
 
 \begin{itemize}
-    \item \textbf{Host CPU}: This cpu is made of 16 hybrid cores (6 Performance-cores for raw power, 8 Efficient-cores, and 2 Low-Power-cores for background efficiency). In this project, this unit acts as the Host. It runs the scheduler code, manages task dispatching, and coordinates data flows to the accelerators.
+    \item \textbf{Host CPU}: This cpu is made of 16 hybrid cores, 6 Performance-cores, 8 Efficient-cores, and 2 Low-Power-cores for efficiency. In this project this unit acts both as host and accelerator, it runs the scheduler code and does some computation through the OpenBlass library (\ref{openblass}).
 
-    \item \textbf{NPU} - Intel AI Boost: The Ultra 9 includes a native Neural Processing Unit. This is a low-power accelerator designed specifically for neural network inference. In my framework, the NPU is used via the OpenVINO backend to run AI workloads without loading the GPU or the main CPU.
+    \item \textbf{NPU} - Intel AI Boost: The Ultra 9 includes a native Neural Processing Unit. This is a low-power accelerator designed specifically for neural network inference. Its compute acceleration is facilitated by Neural Compute Engines, which consist of hardware acceleration blocks for AI operations like Matrix Multiplication and Convolution, alongside Streaming Hybrid Architecture Vector Engines for general computing tasks \cite{intel_npu}. In this project the NPU is used via the OpenVINO  {\ref{ov}} backend to run Matrix Multiplication. 
 
-    \item \textbf{iGPU} - Intel Arc Graphics: : Integrated into the SoC, this graphics unit (based on Xe-LPG architecture) offers parallel computing capabilities with direct access to system memory. Even though it is less powerful than a discrete solution, it is a key target for testing the SYCL backend in a unified memory scenario.
+    \item \textbf{iGPU} - Intel Arc Graphics: : Integrated into the SoC, this graphics unit based on Xe-LPG architecture \cite{intel_arc}, offers parallel computing capabilities with direct access to system memory, in this project this accellerator has been used with the SYCL library (\ref{sycl}) as the backend to leverage the full performance of this accellerator. 
 \end{itemize}
 
+\clearpage 
+
 \subsection{NVIDIA GeForce RTX 4060}
+\label{4060}
 
-To complement the Intel SoC, the system is equipped with a discrete NVIDIA GeForce RTX 4060 GPU Laptop Edition, based on the Ada Lovelace architecture, this card acts as the high-throughput accelerator of the system.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.1]{images/rtx.png} 
+    \caption{Nvidia Rtx Logo}
+    \label{}
+\end{figure}
 
-Unlike the iGPU, it has dedicated video memory (GDDR6 VRAM) and specific cores (CUDA Cores). Within the scheduler, this device is managed via the CUDA backend. It is typically chosen for processing massive data streams or large matrices, where the execution speed makes up for the cost of data transfer over the PCIe bus.
+To complement the Intel SoC the system is equipped with a discrete NVIDIA GeForce RTX 4060 Laptop GPU. This device is based on the Ada Lovelace architecture \cite{nvidia_ada} and acts as the high-throughput accelerator of the system.
 
-Questa è una citazione \cite{LabelPerLaCitazione}.
+Unlike the integrated GPU this card features 3072 CUDA Cores for general parallel processing and 96 Fourth-Generation Tensor Cores. The Tensor Cores are specifically designed to accelerate dense matrix multiplications with 16 or even 8 bit operations.
 
+The device utilizes 8 GB of GDDR6 VRAM with a 128-bit memory interface, this dedicated memory provides high bandwidth but requires explicit data transfer over the PCIe bus.
 
+Within the scheduler this device is managed via the CUDA backend \ref{cuda}.
 
+\section{CUDA Toolkit}
+\label{cuda}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.2]{images/cuda.jpg} 
+    \caption{Nvidia Cuda Logo}
+    \label{cuda logo}
+\end{figure}
 
+To exploit the computational capabilities of the discrete NVIDIA GPU the system utilizes CUDA (Compute Unified Device Architecture). This parallel computing platform and programming model developed by NVIDIA that enables dramatic increases in computing performance by
+harnessing the power of the GPU. It allows developers to accelerate compute-
+intensive applications using C, C++, and Fortran, and is widely adopted
+in fields such as deep learning, scientific computing, and high-performance
+computing (HPC) \cite{cuda_guide}.
 
+\clearpage
+
+In this project CUDA is the tool chosen to extract maximum throughput from the hardware \ref{4060}. The implementation relies on specific libraries and mechanisms to optimize the execution of matrix multiplication streams.
+
+\begin{itemize}
+    \item \textbf{cuBLAS and Tensor Cores}: to perform linear algebra operations we adopts cuBLAS (CUDA Basic Linear Algebra Subroutines). This library is the GPU-accelerated version of the standard BLAS specification and provides highly optimized implementations of matrix operations, specifically, cuBLAS allows the utilization of Tensor Cores, specialized hardware units designed to accelerate mixed-precision matrix multiplication (Float16 and Int8). This significantly increases the theoretical throughput compared to standard floating-point units.
+
+    \item \textbf{CUDA Streams}: To handle the latency introduced by data transfers between the CPU and the GPU the system utilizes CUDA Streams. A stream is a sequence of operations that execute in issue-order on the GPU, by employing multiple streams it is possible to achieve concurrency: while one stream is transferring data over the PCIe bus another stream can execute a computational kernel \cite{cuda_streams}. This mechanism, known as "latency hiding", is fundamental for real-time processing and ensures that the GPU compute units remain active as much as possible.
+
+    \item \textbf{NVIDIA Management Library (NVML)}: For the analysis of energy efficiency the project integrates the NVIDIA Management Library (NVML). This serves as a monitoring tool that provides direct access to the GPU hardware sensors, it allows the retrieval of real-time metrics such as power usage (in milliJoule) and temperature without requiring external physical probes.
+\end{itemize}
+
+\section{OpenBlass}
+\label{openblass}
+
+\section{SYCL}
+\label{sycl}
+
+\section{Openvino}
+\label{ov}
 
 
 

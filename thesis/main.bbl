@@ -1,8 +1,28 @@
 \begin{thebibliography}{1}
 
-\bibitem{LabelPerLaCitazione}
-Nome Cognome.
-\newblock Il gabbiano e altri incredibili racconti impegnati ma non troppo.
-\newblock {\em Il mio giornale}, 1:69, 04 2022.
+\bibitem{intel_arc}
+{Intel Corporation}.
+\newblock {\em Intel Arc Graphics Xe-LPG Architecture}, 2023.
+
+\bibitem{intel_meteor_lake}
+{Intel Corporation}.
+\newblock {\em Intel Core Ultra Processors (Series 1)}, 2024.
+
+\bibitem{intel_npu}
+{Intel Corporation}.
+\newblock {\em Intel’s Neural Processing Unit}, 2024.
+
+\bibitem{nvidia_ada}
+{Klaus Hinum}.
+\newblock {\em NVIDIA GeForce RTX 4060 Laptop GPU Spec}, 2022.
+
+\bibitem{cuda_guide}
+{NVIDIA Corporation}.
+\newblock {\em CUDA C++ Programming Guide}, 2024.
+\newblock Release 13.1.
+
+\bibitem{cuda_streams}
+{Steve Rennich}.
+\newblock {\em CUDA C++ Streams and Concurrency}, 2024.
 
 \end{thebibliography}

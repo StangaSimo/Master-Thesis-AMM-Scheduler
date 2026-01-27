@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  26 JAN 2026 18:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  27 JAN 2026 16:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -710,7 +710,11 @@ Library (tcolorbox): 'tcbposter.code.tex' version '6.8.0'
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 104.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design_benchmark.aux) (./chapters/2_logical_design_scheduler.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+) (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux
+
+LaTeX Warning: Label `' multiply defined.
+
+) (./chapters/2_logical_design_benchmark.aux) (./chapters/2_logical_design_scheduler.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 104.
@@ -812,7 +816,7 @@ Package epstopdf Info: Source file: <images/Frontespizio/cherubinFrontespizio.ep
 (epstopdf)             Command: <repstopdf --outfile=images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf images/Frontespizio/cherubinFrontespizio.eps>
 (epstopdf)             \includegraphics on input line 4.
 Package epstopdf Info: Output file is already uptodate.
-<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=79, 288.07625pt x 294.09875pt>
+<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=95, 288.07625pt x 294.09875pt>
 File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file (type pdf)
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
@@ -906,7 +910,13 @@ Chapter 2.
 
 
 
-])
+]
+<images/core_ultra.png, id=149, 481.8pt x 481.8pt>
+File: images/core_ultra.png Graphic file (type png)
+<use images/core_ultra.png>
+Package pdftex.def Info: images/core_ultra.png  used on input line 20.
+(pdftex.def)             Requested size: 96.35829pt x 96.35829pt.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -914,7 +924,40 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[8]
+[8
+
+ <./images/core_ultra.png>]
+<images/rtx.png, id=165, 1505.625pt x 645.41125pt>
+File: images/rtx.png Graphic file (type png)
+<use images/rtx.png>
+Package pdftex.def Info: images/rtx.png  used on input line 40.
+(pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
+<images/cuda.jpg, id=168, 407.5225pt x 246.9225pt>
+File: images/cuda.jpg Graphic file (type jpg)
+<use images/cuda.jpg>
+Package pdftex.def Info: images/cuda.jpg  used on input line 58.
+(pdftex.def)             Requested size: 81.50305pt x 49.38362pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[9
+
+ <./images/rtx.png> <./images/cuda.jpg>])
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[10
+
+]
 \openout2 = `chapters/2_logical_design_benchmark.aux'.
 
 
@@ -932,7 +975,7 @@ No file chapters/2_logical_design_benchmark.tex.
 
  (./chapters/AppendiceA.tex
 Appendix A.
-) [9
+) [11
 
 
 
@@ -950,12 +993,12 @@ Appendix A.
 
 
 
-] (./main.bbl [10
+] (./main.bbl [12
 
 
 
 
-]) [11] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design_benchmark.aux) (./chapters/2_logical_design_scheduler.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+]) [13] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design_benchmark.aux) (./chapters/2_logical_design_scheduler.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-14>
@@ -965,22 +1008,25 @@ L3 programming layer <2025-11-14>
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 418CE42AB51FA657CE3264787AB9EE82;1336.
+(rerunfilecheck)             Checksum: D337005131F4117F2B121C29A6098ECF;1724.
  ) 
 Here is how much of TeX's memory you used:
- 31091 strings out of 467538
- 625564 string characters out of 5419551
- 1176064 words of memory out of 5000000
- 59383 multiletter control sequences out of 15000+600000
+ 31143 strings out of 467538
+ 626386 string characters out of 5419551
+ 1176556 words of memory out of 5000000
+ 59421 multiletter control sequences out of 15000+600000
  681862 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,11n,108p,548b,540s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,11n,108p,645b,515s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri12.pfb>
-Output written on main.pdf (11 pages, 163540 bytes).
+Output written on main.pdf (13 pages, 388074 bytes).
 PDF statistics:
- 178 PDF objects out of 1000 (max. 8388607)
- 128 compressed objects within 2 object streams
- 24 named destinations out of 1000 (max. 500000)
- 234 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 236 PDF objects out of 1000 (max. 8388607)
+ 179 compressed objects within 2 object streams
+ 38 named destinations out of 1000 (max. 500000)
+ 281 words of extra memory for PDF output out of 10000 (max. 10000000)
 
