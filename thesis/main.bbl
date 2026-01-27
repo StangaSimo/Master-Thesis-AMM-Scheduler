@@ -3,10 +3,12 @@
 \bibitem{intel_arc}
 {Intel Corporation}.
 \newblock {\em Intel Arc Graphics Xe-LPG Architecture}, 2023.
+\newblock https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/2023-2/intel-xe-gpu-architecture.html.
 
 \bibitem{intel_meteor_lake}
 {Intel Corporation}.
 \newblock {\em Intel Core Ultra Processors (Series 1)}, 2024.
+\newblock https://www.intel.com/content/www/us/en/products/sku/236849/intel-core-ultra-9-processor-185h-24m-cache-up-to-5-10-ghz/specifications.html.
 
 \bibitem{intel_npu}
 {Intel Corporation}.
@@ -15,14 +17,16 @@
 \bibitem{nvidia_ada}
 {Klaus Hinum}.
 \newblock {\em NVIDIA GeForce RTX 4060 Laptop GPU Spec}, 2022.
+\newblock https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-Laptop-GPU-Benchmarks-and-Specs.675692.0.html.
 
 \bibitem{cuda_guide}
 {NVIDIA Corporation}.
 \newblock {\em CUDA C++ Programming Guide}, 2024.
-\newblock Release 13.1.
+\newblock https://docs.nvidia.com/cuda/cuda-c-programming-guide/.
 
 \bibitem{cuda_streams}
 {Steve Rennich}.
 \newblock {\em CUDA C++ Streams and Concurrency}, 2024.
+\newblock https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf.
 
 \end{thebibliography}
