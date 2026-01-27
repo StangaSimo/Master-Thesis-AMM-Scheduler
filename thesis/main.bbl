@@ -14,6 +14,11 @@
 {Intel Corporation}.
 \newblock {\em Intel’s Neural Processing Unit}, 2024.
 
+\bibitem{libro_c}
+Brian Kernighan and Dennis Ritchie.
+\newblock {\em The C Programming Language}.
+\newblock Prentice Hall, 1988.
+
 \bibitem{nvidia_ada}
 {Klaus Hinum}.
 \newblock {\em NVIDIA GeForce RTX 4060 Laptop GPU Spec}, 2022.
@@ -28,5 +33,10 @@
 {Steve Rennich}.
 \newblock {\em CUDA C++ Streams and Concurrency}, 2024.
 \newblock https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf.
+
+\bibitem{libro_cpp}
+Bjarne Stroustrup.
+\newblock {\em The C++ Programming Language}.
+\newblock Addison-Wesley, 2013.
 
 \end{thebibliography}

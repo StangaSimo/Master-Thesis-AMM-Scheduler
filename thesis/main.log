@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  27 JAN 2026 17:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  27 JAN 2026 17:29
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -714,7 +714,13 @@ File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 LaTeX Warning: Label `' multiply defined.
 
-) (./chapters/2_logical_design_benchmark.aux) (./chapters/2_logical_design_scheduler.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+
+LaTeX Warning: Label `ov logo' multiply defined.
+
+
+LaTeX Warning: Label `ov logo' multiply defined.
+
+) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 104.
@@ -816,7 +822,7 @@ Package epstopdf Info: Source file: <images/Frontespizio/cherubinFrontespizio.ep
 (epstopdf)             Command: <repstopdf --outfile=images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf images/Frontespizio/cherubinFrontespizio.eps>
 (epstopdf)             \includegraphics on input line 4.
 Package epstopdf Info: Output file is already uptodate.
-<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=103, 288.07625pt x 294.09875pt>
+<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=115, 288.07625pt x 294.09875pt>
 File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file (type pdf)
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
@@ -906,7 +912,7 @@ Chapter 2.
 
 
 ]
-<images/core_ultra.png, id=159, 481.8pt x 481.8pt>
+<images/core_ultra.png, id=174, 481.8pt x 481.8pt>
 File: images/core_ultra.png Graphic file (type png)
 <use images/core_ultra.png>
 Package pdftex.def Info: images/core_ultra.png  used on input line 20.
@@ -922,12 +928,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [8
 
  <./images/core_ultra.png>]
-<images/rtx.png, id=176, 1505.625pt x 645.41125pt>
+<images/rtx.png, id=191, 1505.625pt x 645.41125pt>
 File: images/rtx.png Graphic file (type png)
 <use images/rtx.png>
 Package pdftex.def Info: images/rtx.png  used on input line 40.
 (pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
-<images/cuda.jpg, id=179, 407.5225pt x 246.9225pt>
+<images/cuda.jpg, id=194, 407.5225pt x 246.9225pt>
 File: images/cuda.jpg Graphic file (type jpg)
 <use images/cuda.jpg>
 Package pdftex.def Info: images/cuda.jpg  used on input line 58.
@@ -953,7 +959,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
 ]
-<images/openblass.jpg, id=197, 803.0pt x 548.0475pt>
+<images/openblass.jpg, id=212, 803.0pt x 548.0475pt>
 File: images/openblass.jpg Graphic file (type jpg)
 <use images/openblass.jpg>
 Package pdftex.def Info: images/openblass.jpg  used on input line 88.
@@ -969,7 +975,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [11
 
  <./images/openblass.jpg>]
-<images/sycl.jpg, id=203, 1104.125pt x 501.875pt>
+<images/sycl.jpg, id=218, 1104.125pt x 501.875pt>
 File: images/sycl.jpg Graphic file (type jpg)
 <use images/sycl.jpg>
 Package pdftex.def Info: images/sycl.jpg  used on input line 100.
@@ -985,7 +991,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [12
 
  <./images/sycl.jpg>]
-<images/openvino.jpg, id=209, 992.70876pt x 266.9975pt>
+<images/openvino.jpg, id=224, 992.70876pt x 266.9975pt>
 File: images/openvino.jpg Graphic file (type jpg)
 <use images/openvino.jpg>
 Package pdftex.def Info: images/openvino.jpg  used on input line 112.
@@ -1001,6 +1007,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [13
 
  <./images/openvino.jpg>]
+<images/C.jpeg, id=231, 803.0pt x 421.575pt>
+File: images/C.jpeg Graphic file (type jpg)
+<use images/C.jpeg>
+Package pdftex.def Info: images/C.jpeg  used on input line 124.
+(pdftex.def)             Requested size: 112.41924pt x 59.0201pt.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1010,7 +1022,13 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [14
 
-]
+ <./images/C.jpeg>]
+<images/cmake_logo.svg.png, id=242, 963.6pt x 964.60374pt>
+File: images/cmake_logo.svg.png Graphic file (type png)
+<use images/cmake_logo.svg.png>
+Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 155.
+(pdftex.def)             Requested size: 77.08957pt x 77.16988pt.
+)
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1020,36 +1038,43 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [15
 
-])
-\openout2 = `chapters/2_logical_design_benchmark.aux'.
+ <./images/cmake_logo.svg.png>]
+\openout2 = `chapters/2_logical_design.aux'.
+
+ (./chapters/2_logical_design.tex [16
 
 
-No file chapters/2_logical_design_benchmark.tex.
-\openout2 = `chapters/2_logical_design_scheduler.aux'.
 
-(./chapters/2_logical_design_scheduler.tex)
+
+
+]
+Chapter 3.
+) [17]
 \openout2 = `chapters/3_implementation.aux'.
 
- (./chapters/3_implementation.tex)
+ (./chapters/3_implementation.tex [18
+
+
+
+
+
+]
+Chapter 4.
+) [19]
 \openout2 = `chapters/4_results.aux'.
 
- (./chapters/4_results.tex)
+ (./chapters/4_results.tex [20
+
+
+
+
+
+]
+Chapter 5.
+) [21]
 \openout2 = `chapters/AppendiceA.aux'.
 
- (./chapters/AppendiceA.tex [16
-
-
-
-
-
-
-
-
-
-
-
-
-
+ (./chapters/AppendiceA.tex [22
 
 
 
@@ -1057,7 +1082,7 @@ No file chapters/2_logical_design_benchmark.tex.
 
 ]
 Appendix A.
-) [17] (./main.bbl [18
+) [23] (./main.bbl [24
 
 
 
@@ -1083,31 +1108,31 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--12
  []
 
 
-Underfull \hbox (badness 2556) in paragraph at lines 18--21
+Underfull \hbox (badness 2556) in paragraph at lines 23--26
 []\T1/lmr/m/n/13 Klaus Hinum.  \T1/lmr/m/it/13 NVIDIA GeForce RTX 4060 Lap-top GPU Spec\T1/lmr/m/n/13 ,
  []
 
 
-Underfull \hbox (badness 7397) in paragraph at lines 18--21
+Underfull \hbox (badness 7397) in paragraph at lines 23--26
 \T1/lmr/m/n/13 2022.  https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-
  []
 
 
-Underfull \hbox (badness 3746) in paragraph at lines 23--26
+Underfull \hbox (badness 3746) in paragraph at lines 28--31
 []\T1/lmr/m/n/13 NVIDIA Cor-po-ra-tion.  \T1/lmr/m/it/13 CUDA C++ Pro-gram-ming Guide\T1/lmr/m/n/13 , 2024.
  []
 
 
-Underfull \hbox (badness 4108) in paragraph at lines 28--31
+Underfull \hbox (badness 4108) in paragraph at lines 33--36
 []\T1/lmr/m/n/13 Steve Ren-nich.  \T1/lmr/m/it/13 CUDA C++ Streams and Con-cur-rency\T1/lmr/m/n/13 , 2024.
  []
 
 
-Overfull \hbox (120.55934pt too wide) in paragraph at lines 28--31
+Overfull \hbox (120.55934pt too wide) in paragraph at lines 33--36
 \T1/lmr/m/n/13 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
-) [19] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design_benchmark.aux) (./chapters/2_logical_design_scheduler.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+) [25] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-14>
@@ -1121,21 +1146,21 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: CE9CBCDBA21181C88008A57D5F537769;1884.
+(rerunfilecheck)             Checksum: E0B683AC6143B63A4C1F1F1FBB1C50AF;2194.
  ) 
 Here is how much of TeX's memory you used:
- 31182 strings out of 467538
- 627076 string characters out of 5419551
- 1176739 words of memory out of 5000000
- 59449 multiletter control sequences out of 15000+600000
+ 31196 strings out of 467538
+ 626339 string characters out of 5419551
+ 1176305 words of memory out of 5000000
+ 59455 multiletter control sequences out of 15000+600000
  681862 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,11n,108p,645b,515s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri12.pfb>
-Output written on main.pdf (19 pages, 511020 bytes).
+Output written on main.pdf (25 pages, 582107 bytes).
 PDF statistics:
- 280 PDF objects out of 1000 (max. 8388607)
- 213 compressed objects within 3 object streams
- 49 named destinations out of 1000 (max. 500000)
- 312 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 332 PDF objects out of 1000 (max. 8388607)
+ 256 compressed objects within 3 object streams
+ 62 named destinations out of 1000 (max. 500000)
+ 346 words of extra memory for PDF output out of 10000 (max. 10000000)
 
