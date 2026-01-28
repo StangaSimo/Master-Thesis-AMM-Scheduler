@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  28 JAN 2026 11:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  28 JAN 2026 13:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -160,40 +160,6 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthC=\skip65
 \f@nch@widthR=\skip66
 \@temptokenb=\toks22
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/lmodern.sty
-Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
-LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
-LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
-(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
-LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
-(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
-LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
-(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
-LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
-LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
-(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
-LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
-LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
-LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
-LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
-LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
-LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
-LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
-LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
@@ -706,11 +672,7 @@ File: tikzlibraryfadings.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 File: pgflibraryfadings.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbposter.code.tex
 Library (tcolorbox): 'tcbposter.code.tex' version '6.8.0'
-))
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 104.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd
-File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux
+)) (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux
 
 LaTeX Warning: Label `' multiply defined.
 
@@ -827,10 +789,35 @@ File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
 (pdftex.def)             Requested size: 144.03777pt x 147.04901pt.
- [1
 
 
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc} <./images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>])
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <22.46396> not available
+(Font)              size <20.74> substituted on input line 8.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <15.59996> not available
+(Font)              size <14.4> substituted on input line 10.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <22.46396> not available
+(Font)              size <20.74> substituted on input line 17.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <18.72003> not available
+(Font)              size <17.28> substituted on input line 17.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <13> not available
+(Font)              size <12> substituted on input line 24.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <15.59996> not available
+(Font)              size <14.4> substituted on input line 24.
+
+[1
+
+
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc} <./images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>])
 \openout2 = `chapters/Abstract.aux'.
 
 
@@ -843,32 +830,40 @@ No file chapters/Abstract.tex.
 
 
 
-] (./main.toc
+]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <32.34409> not available
+(Font)              size <29.86> substituted on input line 109.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <32.34409> not available
+(Font)              size <29.86> substituted on input line 109.
+
+(./main.toc
 LaTeX Font Info:    Calculating math sizes for size <13> on input line 3.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 3.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmr.fd
-File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
-File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 3.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omslmsy.fd
-File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 3.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omxlmex.fd
-File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <13> on input line 3.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9.09996> on input line 3.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6.5> on input line 3.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <6.5> not available
+(Font)              size <6> substituted on input line 3.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <13> not available
+(Font)              size <12> substituted on input line 3.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <6.5> not available
+(Font)              size <6> substituted on input line 3.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 3.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <6.5> not available
+(Font)              size <6> substituted on input line 3.
+
 LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
@@ -887,10 +882,27 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ]
 Chapter 1.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 9.
-(/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [5{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}])
+
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <26.96207> not available
+(Font)              size <24.88> substituted on input line 1.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <26.96207> not available
+(Font)              size <24.88> substituted on input line 1.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <18.72003> not available
+(Font)              size <17.28> substituted on input line 3.
+
+
+LaTeX Font Warning: Font shape `TS1/cmr/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 9.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/it' in size <13> not available
+(Font)              size <12> substituted on input line 16.
+
+[5{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}])
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -912,7 +924,7 @@ Chapter 2.
 
 
 ]
-<images/core_ultra.png, id=174, 481.8pt x 481.8pt>
+<images/core_ultra.png, id=180, 481.8pt x 481.8pt>
 File: images/core_ultra.png Graphic file (type png)
 <use images/core_ultra.png>
 Package pdftex.def Info: images/core_ultra.png  used on input line 21.
@@ -928,12 +940,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [8
 
  <./images/core_ultra.png>]
-<images/rtx.png, id=191, 1505.625pt x 645.41125pt>
+<images/rtx.png, id=197, 1505.625pt x 645.41125pt>
 File: images/rtx.png Graphic file (type png)
 <use images/rtx.png>
 Package pdftex.def Info: images/rtx.png  used on input line 41.
 (pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
-<images/cuda.jpg, id=194, 407.5225pt x 246.9225pt>
+<images/cuda.jpg, id=200, 407.5225pt x 246.9225pt>
 File: images/cuda.jpg Graphic file (type jpg)
 <use images/cuda.jpg>
 Package pdftex.def Info: images/cuda.jpg  used on input line 59.
@@ -959,20 +971,21 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
 ]
-<images/sycl.jpg, id=216, 1104.125pt x 501.875pt>
+<images/sycl.jpg, id=222, 1104.125pt x 501.875pt>
 File: images/sycl.jpg Graphic file (type jpg)
 <use images/sycl.jpg>
 Package pdftex.def Info: images/sycl.jpg  used on input line 94.
 (pdftex.def)             Requested size: 88.3318pt x 40.15082pt.
-<images/oneapi.png, id=218, 244.66406pt x 249.18094pt>
+<images/oneapi.png, id=224, 244.66406pt x 249.18094pt>
 File: images/oneapi.png Graphic file (type png)
 <use images/oneapi.png>
 Package pdftex.def Info: images/oneapi.png  used on input line 105.
 (pdftex.def)             Requested size: 48.93193pt x 49.8353pt.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 110.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
+
+
+LaTeX Font Warning: Font shape `T1/cmtt/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 110.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -983,7 +996,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [11
 
  <./images/sycl.jpg> <./images/oneapi.png>]
-<images/openvino.jpg, id=230, 992.70876pt x 266.9975pt>
+<images/openvino.jpg, id=236, 992.70876pt x 266.9975pt>
 File: images/openvino.jpg Graphic file (type jpg)
 <use images/openvino.jpg>
 Package pdftex.def Info: images/openvino.jpg  used on input line 120.
@@ -999,7 +1012,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [12
 
  <./images/openvino.jpg>]
-<images/openblass.jpg, id=240, 803.0pt x 548.0475pt>
+<images/openblass.jpg, id=246, 803.0pt x 548.0475pt>
 File: images/openblass.jpg Graphic file (type jpg)
 <use images/openblass.jpg>
 Package pdftex.def Info: images/openblass.jpg  used on input line 143.
@@ -1015,7 +1028,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [13
 
  <./images/openblass.jpg>]
-<images/C.jpeg, id=252, 803.0pt x 421.575pt>
+<images/C.jpeg, id=258, 803.0pt x 421.575pt>
 File: images/C.jpeg Graphic file (type jpg)
 <use images/C.jpeg>
 Package pdftex.def Info: images/C.jpeg  used on input line 162.
@@ -1031,7 +1044,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [14
 
  <./images/C.jpeg>]
-<images/cmake_logo.svg.png, id=263, 963.6pt x 964.60374pt>
+<images/cmake_logo.svg.png, id=269, 963.6pt x 964.60374pt>
 File: images/cmake_logo.svg.png Graphic file (type png)
 <use images/cmake_logo.svg.png>
 Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 193.
@@ -1096,83 +1109,88 @@ Appendix A.
 
 
 ]
+Underfull \hbox (badness 4765) in paragraph at lines 4--7
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 In-tel Arc Graph-ics Xe-LPG Ar-chi-tec-ture\T1/cmr/m/n/12 , 2023.
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 4--7
-\T1/lmr/m/n/13 https://www.intel.com/content/www/us/en/docs/oneapi/optimization-
+\T1/cmr/m/n/12 https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-
  []
 
 
-Underfull \hbox (badness 1253) in paragraph at lines 9--12
-[]\T1/lmr/m/n/13 Intel Cor-po-ra-tion.  \T1/lmr/m/it/13 In-tel Core Ul-tra Pro-ces-sors (Se-ries 1)\T1/lmr/m/n/13 , 2024.
- []
-
-
-Overfull \hbox (3.15086pt too wide) in paragraph at lines 9--12
-\T1/lmr/m/n/13 https://www.intel.com/content/www/us/en/products/sku/236849/intel-
+Underfull \hbox (badness 6461) in paragraph at lines 9--12
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 In-tel Core Ul-tra Pro-ces-sors (Se-ries 1)\T1/cmr/m/n/12 , 2024.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 9--12
-\T1/lmr/m/n/13 core-ultra-9-processor-185h-24m-cache-up-to-5-10-
+\T1/cmr/m/n/12 https://www.intel.com/content/www/us/en/products/sku/236849/intel-
  []
 
 
-Overfull \hbox (65.31152pt too wide) in paragraph at lines 14--17
-\T1/lmr/m/n/13 https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html. 
+Underfull \hbox (badness 1009) in paragraph at lines 14--17
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  In-tel oneapi: A uni-fied pro-gram-ming model, 2024.
+ []
+
+
+Overfull \hbox (27.73198pt too wide) in paragraph at lines 14--17
+\T1/cmr/m/n/12 https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html. 
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 23--26
-[]\T1/lmr/m/n/13 Intel Cor-po-ra-tion.  \T1/lmr/m/it/13 Open-vino Doc-u-men-ta-tion\T1/lmr/m/n/13 , 2025.
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 Open-vino Doc-u-men-ta-tion\T1/cmr/m/n/12 , 2025.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 33--36
-[]\T1/lmr/m/n/13 Kitware, Inc.  \T1/lmr/m/it/13 CMake Doc-u-men-ta-tion\T1/lmr/m/n/13 , 2025.
+[]\T1/cmr/m/n/12 Kitware, Inc.  \T1/cmr/m/it/12 CMake Doc-u-men-ta-tion\T1/cmr/m/n/12 , 2025.
  []
 
 
-Underfull \hbox (badness 1817) in paragraph at lines 38--41
-[]\T1/lmr/m/n/13 Klaus Hinum.  \T1/lmr/m/it/13 NVIDIA GeForce RTX 4060 Lap-top GPU Spec\T1/lmr/m/n/13 ,
+Underfull \hbox (badness 1400) in paragraph at lines 38--41
+[]\T1/cmr/m/n/12 Klaus Hinum.  \T1/cmr/m/it/12 NVIDIA GeForce RTX 4060 Lap-top GPU Spec\T1/cmr/m/n/12 , 2022.
  []
 
 
-Underfull \hbox (badness 3250) in paragraph at lines 38--41
-\T1/lmr/m/n/13 2022.  https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-
+Underfull \hbox (badness 10000) in paragraph at lines 38--41
+\T1/cmr/m/n/12 https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-Laptop-GPU-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 43--46
-[]\T1/lmr/m/n/13 NVIDIA Cor-po-ra-tion.  \T1/lmr/m/it/13 Cublas\T1/lmr/m/n/13 , 2025.
+Overfull \hbox (36.20584pt too wide) in paragraph at lines 43--46
+[]\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 Cublas\T1/cmr/m/n/12 , 2025.  https://docs.nvidia.com/cuda/cublas/index.html. 
  []
 
 
-Underfull \hbox (badness 2617) in paragraph at lines 48--51
-[]\T1/lmr/m/n/13 NVIDIA Cor-po-ra-tion.  \T1/lmr/m/it/13 CUDA C++ Pro-gram-ming Guide\T1/lmr/m/n/13 , 2025.
+Underfull \hbox (badness 10000) in paragraph at lines 48--51
+[]\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 CUDA C++ Pro-gram-ming Guide\T1/cmr/m/n/12 , 2025.
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 53--56
+[]\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 NVIDIA Man-age-ment Li-brary (NVML)\T1/cmr/m/n/12 , 2026.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 58--61
-[]\T1/lmr/m/n/13 OpenBLAS Team.  Open-blas github, 2024.
+[]\T1/cmr/m/n/12 OpenBLAS Team.  Open-blas github, 2024.
  []
 
 
-Underfull \hbox (badness 3019) in paragraph at lines 63--66
-[]\T1/lmr/m/n/13 Steve Ren-nich.  \T1/lmr/m/it/13 CUDA C++ Streams and Con-cur-rency\T1/lmr/m/n/13 , 2024.
+Underfull \hbox (badness 10000) in paragraph at lines 63--66
+[]\T1/cmr/m/n/12 Steve Ren-nich.  \T1/cmr/m/it/12 CUDA C++ Streams and Con-cur-rency\T1/cmr/m/n/12 , 2024.
  []
 
 
-Overfull \hbox (126.92392pt too wide) in paragraph at lines 63--66
-\T1/lmr/m/n/13 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
+Overfull \hbox (84.58885pt too wide) in paragraph at lines 63--66
+\T1/cmr/m/n/12 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
 [25]
-Underfull \hbox (badness 4726) in paragraph at lines 73--76
-[]\T1/lmr/m/n/13 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
- []
-
-
-Overfull \hbox (11.30067pt too wide) in paragraph at lines 78--81
-[]\T1/lmr/m/n/13 Zhang Xi-anyi.  Open-blas, 2025.  http://www.openmathlib.org/OpenBLAS/. 
+Underfull \hbox (badness 10000) in paragraph at lines 73--76
+[]\T1/cmr/m/n/12 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
  []
 
 )
@@ -1191,7 +1209,7 @@ L3 programming layer <2025-11-14>
 
 
 LaTeX Font Warning: Size substitutions with differences
-(Font)              up to 1.0pt have occurred.
+(Font)              up to 2.48409pt have occurred.
 
 
 LaTeX Warning: There were multiply-defined labels.
@@ -1200,18 +1218,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 5897974DC8B7EF00EF2E5B34EA1FAFF9;2194.
  ) 
 Here is how much of TeX's memory you used:
- 31267 strings out of 467538
- 627422 string characters out of 5419551
- 1177651 words of memory out of 5000000
- 59512 multiletter control sequences out of 15000+600000
- 682180 words of font info for 74 fonts, out of 8000000 for 9000
+ 31097 strings out of 467538
+ 623060 string characters out of 5419551
+ 1177440 words of memory out of 5000000
+ 59360 multiletter control sequences out of 15000+600000
+ 643081 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,11n,108p,794b,584s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (26 pages, 650820 bytes).
+ 108i,11n,108p,737b,580s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on main.pdf (26 pages, 732863 bytes).
 PDF statistics:
- 364 PDF objects out of 1000 (max. 8388607)
- 283 compressed objects within 3 object streams
+ 395 PDF objects out of 1000 (max. 8388607)
+ 301 compressed objects within 4 object streams
  72 named destinations out of 1000 (max. 500000)
  351 words of extra memory for PDF output out of 10000 (max. 10000000)
 
