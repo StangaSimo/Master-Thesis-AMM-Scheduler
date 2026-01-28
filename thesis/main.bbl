@@ -19,10 +19,20 @@
 {Intel Corporation}.
 \newblock {\em Intel’s Neural Processing Unit}, 2024.
 
+\bibitem{openvino}
+{Intel Corporation}.
+\newblock {\em Openvino Documentation}, 2025.
+\newblock https://docs.openvino.ai/2025/index.htm.
+
 \bibitem{libro_c}
 Brian Kernighan and Dennis Ritchie.
 \newblock {\em The C Programming Language}.
 \newblock Prentice Hall, 1988.
+
+\bibitem{cmake}
+{Kitware, Inc.}
+\newblock {\em CMake Documentation}, 2025.
+\newblock https://cmake.org/cmake/help/latest/.
 
 \bibitem{nvidia_ada}
 {Klaus Hinum}.
