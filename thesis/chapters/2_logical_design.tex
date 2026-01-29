@@ -20,7 +20,7 @@ It is important to note that the OpenBLAS backend for the CPU was not included i
 \subsection{Studying the Common Patterns}
 A crucial goal of this stage was to gain a deep, hands-on understanding of the specific libraries. Since technologies like CUDA, SYCL, and OpenVINO manage hardware in fundamentally different ways, so a first approach phase was necessary to see how their specific mechanisms works and the drivers interactions.
 
-This distinction is particularly evident in the case of OpenVINO. While CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra, consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a specific workaround was required. Instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to accomplish as an inference task.
+This distinction is particularly evident in the case of OpenVINO, while CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra, consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a workaround was required, instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to accomplish as an inference task (more on this in chapter \ref{implementation}).
 
 Despite these architectural differences, this preliminary study revealed a recurring pattern, the execution flow for every accelerator whether running a kernel or a simulated inference relies on four identical logical steps:
 
@@ -34,7 +34,7 @@ Despite these architectural differences, this preliminary study revealed a recur
 Recognizing this common structure for each library was fundamental for the design of the Abstraction Layer used in the scheduler.
 
 \subsection{Benchmarking}
-During this phase, benchmarking routines were implemented within the standalone applications. However, their purpose was distinct from the final experimental results presented in later chapters, in this context measuring execution time and power consumption served as a development tool to:
+During this phase, benchmarking routines were implemented within each of the standalone applications. However, their purpose was distinct from the final experimental results presented in later chapters, in this context measuring execution time and power consumption served as a development tool to:
 
 \begin{itemize}
     \item Verify the correctness of the implementation (e.g., ensuring the code was actually running on the accelerator and not falling back to the CPU).
@@ -42,9 +42,72 @@ During this phase, benchmarking routines were implemented within the standalone 
     \item Analyze the runtime behavior of the drivers, and identify architectural bottlenecks (such as PCIe transfer overheads or compilation latencies).
 \end{itemize}
 
-However, it must be noted that the performance profile observed in these isolated environments proved to be distinct from the behavior within the full scheduler. The concurrent execution of different workloads and the increased stress on system resources exposed new bottlenecks that were not visible during the standalone tests, consequently, the backend implementations were significantly evolved during the integration phase, and specific structures were introduced to mitigate these latencies. These optimizations and the specific issues encountered under high-load scenarios will be analyzed in detail in the Implementation Chapter (\ref{implementation}).
-
+However, it must be noted that the performance profile observed in these isolated environments proved to be different from the behavior within the full scheduler. The concurrent execution of different workloads and the increased stress on system resources exposed new bottlenecks that were not visible during the standalone tests, consequently, the backend implementations were significantly evolved during the integration phase, and specific structures were introduced to mitigate these latencies. These optimizations and the specific issues encountered under high-load scenarios will be analyzed in detail in the Implementation Chapter (\ref{implementation}).
 
 \clearpage
 \section{AMM Scheduler}
 \label{ammscheduler}
+The core of the project is the AMM Scheduler, that stands for Asymettric Matrix Multiplication Scheduler. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.29]{images/grafico.png} 
+    \caption{AMM Scheduler Components}
+    \label{ammfigure}
+\end{figure}
+
+
+As illustrated in figure \ref{ammfigure}, the architecture implements the producer and consumer paradigm.
+
+In this model, the host application acts as the producer, generating computational tasks for the scheduler, that functions as the consumer, processing these requests asynchronously. The execution logic follows the farm pattern: a central coordinator retrieves the tasks and distributes them among the available worker nodes. To enable parallel execution, the coordinator and each worker operate as independent threads. 
+
+As shown in the diagram, Workers communicate with the Coordinator using atomic variables. This mechanism signals when a Worker is idle or updates the count of completed tasks, this ensures that the scheduler's wait function can correctly determine when all tasks are finished.
+
+\clearpage
+
+ Now we will examine each component in the diagram and explain a bit deeper its function:
+
+\begin{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.1]{images/ringbuffer.png} 
+    \caption{Ring Buffer Rappresentation}
+    \label{ringfigure}
+\end{figure}
+
+    \item \textbf{Ring Buffers}: The key to this asynchronous pattern is the ring buffer (rappresented in the figure \ref{ringfigure} as the arrows marked with a circle), which decouples the Host from the Coordinator, designed ad-hoc for the scheduler, this structure enables extremely fast communication with minimal overhead, using atomic variables instead of locks. As the graph illustrates, this mechanism also serve the communication between the Coordinator and the Workers, minimizing overhead and maximizing speed during task distribution. More on the code implementation in chapter \ref{TODO}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.1]{images/coordinator.png} 
+    \caption{Coordinator Rappresentation}
+    \label{ringfigure}
+\end{figure}
+
+    \item \textbf{Coordinator}: The Coordinator acts as the brain of the scheduler, it decides how to dispatch tasks and implements different strategies to demonstrate various resource management techniques. 
+
+    It features distinct scheduling logics, based on the type of workload that the host have to compute, the main logics that shape the design of the scheduler are the static one, the first, Static stream, handles static homogeneous workloads (tasks of identical matrices). By using a Performance Map (a custom data structure containing heuristics and execution time estimates) the coordinator predicts how long a task will take on a specific accelerator and based on this, it performs a static dispatch of the tasks in a batch style (see section static partitioning \ref{TODO}).  
+
+    The second logic, Static Hetero, work in a similar way but for static heterogeneous workloads (matrices of different sizes), the coordinator uses the same performance map to calculate the optimal distribution, ensuring the workload is balanced across all accelerators (see section static hetero partitioning \ref{TODO}).
+
+    To evaluate these strategies, we also implemented a Dynamic logicl This approach assigns tasks to the first available Worker (idle state) and serves as a baseline to verify the efficiency of our static methods.
+
+    Finally, the Coordinator supports Task Splitting, if a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks to be distributed across multiple accellerator.
+
+
+    \item \textbf{Workers}:
+    \item \textbf{Benchmarks and Performance Maps}:
+    \item \textbf{Profiler}:
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+

@@ -122,7 +122,7 @@ void test_large_matrix_split() {
 int main() {
     test_accellerators();
 
-    //test_scheduler_logics();
+    test_scheduler_logics();
     //test_large_matrix_split();
 
     //test_hetero_logic();

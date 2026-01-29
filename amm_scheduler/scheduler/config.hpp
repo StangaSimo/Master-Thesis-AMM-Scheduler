@@ -11,7 +11,8 @@
 #define N_ 4092
 #define K_ 4092 
 #define N_MATRIX 100 
-enum {BATCH_SIZE = 30};
+
+inline int BATCH_SIZE = 30;
 
 //#define M_ 1024
 //#define N_ 1024
