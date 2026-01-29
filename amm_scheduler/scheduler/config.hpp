@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <string>
+
 /********** debug ************/
 //#define DEBUG
 #define ENABLE_PROFILING           /* profiler for timing the scheduler */
@@ -13,13 +15,8 @@
 #define N_MATRIX 100 
 
 inline int BATCH_SIZE = 30;
-
-//#define M_ 1024
-//#define N_ 1024
-//#define K_ 512 
-//#define N_MATRIX 800 
-//enum {BATCH_SIZE = 50};
-
+inline int BATCH_SIZE_HETERO = 40;
+inline std::string csvname = "bin/csv/results.csv";
 
 #define M_split 14000 /* big matrix split size, max is MAX_SIZE/4 */
 #define N_split 4000 
@@ -31,7 +28,7 @@ inline int BATCH_SIZE = 30;
 #define JIT_MS_SYCL 140  /* mitigate jit time for sycl */
 
 //enum {BATCH_SIZE = 50};                  /* static partitioning batch size */
-enum {BATCH_SIZE_HETERO = 40};           
+//enum {BATCH_SIZE_HETERO = 40};           
 enum {SPLIT_MATRIX_ITERATION = 3};       
 
 /********** buffers ************/

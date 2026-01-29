@@ -312,7 +312,7 @@ class Profiler {
             double total_ms, double avg_ms, double min_ms, double max_ms, 
             const std::vector<BT>& bts, const EnergyConsumption& en) {
 
-        std::string filename = "bin/csv/results_full.csv";
+        std::string filename = csvname;
 
         std::filesystem::path path(filename);
         if (path.has_parent_path() && !std::filesystem::exists(path.parent_path())) {

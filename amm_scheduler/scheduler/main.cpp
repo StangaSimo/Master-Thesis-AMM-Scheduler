@@ -7,34 +7,7 @@
 #include "tests.hpp"
 #include "opencv_test.hpp"
 
-/*
- * TODO: MEMORY ORDERING
- *
- * test jit, prova senza blas, prova meno cpu a blas, benchamark aggiornati (sbagliati per openvino, funzioan solo se le matrici sono ordine), performance map aggiornata,  risolto
- *
- * test prima con openvino scheduler logic (sia matrici 2048 che 4096) e large matrix mul
- *
- *
- * poi ethero 
- * poi ethero senza openvino 
- *
- *
- * MA PERCHE SYCL VA PIU VELOCE CON DYNAMIC NEL TEST SCHEDULER LOGIC????????
- *
- *
- * Asymetric Matrix Multiplication Scheduler 
- *
- *  Design and Implementation of a Unified Heterogeneous Scheduler for CPU, GPU, and NPU Architectures
- *
- *  Development of a Cross-Platform Heterogeneous Scheduler: Bridging Proprietary and Open Standards in Modern Computing
- *
- * "AMM_SCHEDULER: Architecting a runtime scheduling System for Asymmetric Heterogeneous Computing"
- *
- * "AMM_SCHEDULER: Architecting a Scheduling System for Asymmetric Heterogeneous Workloads
- *
- *
- *
- * */
+using namespace std;
 
 void test_hetero_logic() {
     size_t n_matrix = 80;
@@ -52,7 +25,7 @@ void test_hetero_logic() {
         scheduler.do_tasks(task_array, n_matrix);
         scheduler.wait();
 
-        //test_compare_task(task_array, num_matrix);
+        /* test_compare_task(task_array, num_matrix); */
         scheduler.print_stats(task_array,n_matrix);
 
     }
@@ -100,7 +73,7 @@ void test_scheduler_logics() {
             AMScheduler scheduler = AMScheduler(l);
             scheduler.do_tasks(task_array, n_matrix);
             scheduler.wait();
-            //test_compare_task(task_array, num_matrix);
+            /* test_compare_task(task_array, num_matrix); */
             scheduler.print_stats(task_array,n_matrix);
             clean_tasks(task_array, n_matrix);
         } 
@@ -115,25 +88,150 @@ void test_large_matrix_split() {
     scheduler.do_tasks(big_task, 1);
     scheduler.wait();
     scheduler.print_stats(nullptr,1);
-    //test_compare_task(big_task, 1);
+    /* test_compare_task(big_task, 1); */
     clean_tasks(big_task, 1);
+}
+
+/************************ real benchmarks *****************************/
+
+const size_t RAM_LIMIT = 20ULL * 1024 * 1024 * 1024;
+const size_t RAM_LIMIT_SAFE = 18ULL * 1024 * 1024 * 1024;
+
+size_t check_mem(int n_tasks, int M, int N, int K) {
+    size_t elem = (size_t)M * K + (size_t)K * N + (size_t)M * N;
+    return n_tasks * elem * 4;
+}
+
+void bench_static_partitioning() {
+    int sizes[] = {512, 1024, 2048, 4096};
+    
+    for (int s : sizes) {
+        for (int b = 10; b <= 50; b += 10) {
+            BATCH_SIZE = b;
+
+            for (int t = 10; ; t += 50) {
+                if (check_mem(t, s, s, s) > RAM_LIMIT) {
+                    cout << "RAM limit reached (" << t << " tasks)\n";
+                    break;
+                }
+
+                csvname = "bin/csv/static_part_S" + to_string(s) + "_B" + to_string(b) + ".csv";
+                cout << "Static Part | Size: " << s << " | Batch: " << b << " | Tasks: " << t << endl;
+
+                task* tasks = init_tasks(t, s, s, s, Type::FLOAT);
+                AMScheduler sched(Logic::STATIC_PARTITIONING);
+                sched.do_tasks(tasks, t);
+                sched.wait();
+                sched.print_stats(tasks, t);
+                clean_tasks(tasks, t);
+            }
+        }
+    }
+}
+
+void bench_static_hetero() {
+    for (int b = 10; b <= 50; b += 10) {
+        BATCH_SIZE_HETERO = b;
+
+        for (int t = 10; ; t += 50) {
+            if (check_mem(t, MAX_SIZE, MAX_SIZE, MAX_SIZE) > RAM_LIMIT_SAFE) {
+                cout << "Safe RAM limit reached (" << t << " tasks)\n";
+                break;
+            }
+
+            csvname = "bin/csv/static_hetero_B" + to_string(b) + ".csv";
+            cout << "Static Hetero | Batch: " << b << " | Tasks: " << t << endl;
+
+            task* tasks = init_hetero_tasks(t, Type::FLOAT);
+            AMScheduler sched(Logic::STATIC_HETERO_PARTITIONING);
+            sched.do_tasks(tasks, t);
+            sched.wait();
+            sched.print_stats(tasks, t);
+            clean_tasks(tasks, t);
+        }
+    }
+}
+
+void bench_dynamic_logic() {
+    int sizes[] = {512, 1024, 2048, 4096};
+
+    for (int s : sizes) {
+        for (int t = 10; ; t += 50) {
+            if (check_mem(t, s, s, s) > RAM_LIMIT) {
+                cout << "RAM limit reached (" << t << " tasks)\n";
+                break;
+            }
+
+            csvname = "bin/csv/dynamic_homo_S" + to_string(s) + ".csv";
+            cout << "Dynamic Homo | Size: " << s << " | Tasks: " << t << endl;
+
+            task* tasks = init_tasks(t, s, s, s, Type::FLOAT);
+            AMScheduler sched(Logic::DYNAMIC);
+            sched.do_tasks(tasks, t);
+            sched.wait();
+            sched.print_stats(tasks, t);
+            clean_tasks(tasks, t);
+        }
+    }
+
+    for (int t = 10; ; t += 50) {
+        if (check_mem(t, MAX_SIZE, MAX_SIZE, MAX_SIZE) > RAM_LIMIT_SAFE) {
+            cout << "Safe RAM limit reached (" << t << " tasks)\n";
+            break;
+        }
+
+        csvname = "bin/csv/dynamic_hetero.csv";
+        cout << "Dynamic Hetero | Tasks: " << t << endl;
+
+        task* tasks = init_hetero_tasks(t, Type::FLOAT);
+        AMScheduler sched(Logic::DYNAMIC);
+        sched.do_tasks(tasks, t);
+        sched.wait();
+        sched.print_stats(tasks, t);
+        clean_tasks(tasks, t);
+    }
+}
+
+void bench_large_matrix() {
+    int N = 4000;
+    int K = 4000;
+    int start_M = 5000;
+    
+    csvname = "bin/csv/large_matrix.csv";
+
+    for (int M = start_M; ; M += 1000) {
+        if (check_mem(1, M, N, K) > RAM_LIMIT) {
+            cout << "RAM limit reached (M=" << M << ")\n";
+            break;
+        }
+
+        cout << "Large Matrix | M: " << M << " N: " << N << " K: " << K << endl;
+
+        task* t = init_tasks(1, M, N, K, Type::FLOAT);
+        AMScheduler sched(Logic::LARGE_MATRIX_SPLIT);
+        sched.do_tasks(t, 1);
+        sched.wait();
+        sched.print_stats(nullptr, 1);
+        clean_tasks(t, 1);
+    }
 }
 
 int main() {
     test_accellerators();
-
-    test_scheduler_logics();
+    //test_scheduler_logics();
     //test_large_matrix_split();
-
     //test_hetero_logic();
-
     //test_dynamic();
-
-
     //test_jit_times();
     /* remove openvino */
     //test_video_filter(Logic::CUDA_ONLY, false);
     //test_video_filter(Logic::STATIC_PARTITIONING, false);
-    test_video_filter(Logic::DYNAMIC, true);
+    //test_video_filter(Logic::DYNAMIC, true);
+    
+    bench_static_partitioning();
+    //bench_static_hetero();
+    //bench_dynamic_logic();
+    //bench_large_matrix();
+
     return 0;
 }
