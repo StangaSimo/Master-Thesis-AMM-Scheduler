@@ -81,7 +81,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.1]{images/coordinator.png} 
-    \caption{Coordinator Rappresentation}
+    \caption{Coordinator}
     \label{ringfigure}
 \end{figure}
 
@@ -91,14 +91,38 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
 
     The second logic, Static Hetero, work in a similar way but for static heterogeneous workloads (matrices of different sizes), the coordinator uses the same performance map to calculate the optimal distribution, ensuring the workload is balanced across all accelerators (see section static hetero partitioning \ref{TODO}).
 
-    To evaluate these strategies, we also implemented a Dynamic logicl This approach assigns tasks to the first available Worker (idle state) and serves as a baseline to verify the efficiency of our static methods.
+    To evaluate these strategies, we also implemented a Dynamic logicl This approach assigns tasks to the first available Worker (idle state) and serves as a baseline to verify the efficiency of our static methods (see section dynamic \ref{TODO}).
 
-    Finally, the Coordinator supports Task Splitting, if a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks to be distributed across multiple accellerator.
+    Finally, the Coordinator supports Task Splitting, if a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks to be distributed across multiple accellerator (see section large matrix split \ref{TODO}).
 
 
-    \item \textbf{Workers}:
-    \item \textbf{Benchmarks and Performance Maps}:
-    \item \textbf{Profiler}:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.14]{images/workers.png} 
+    \caption{workers}
+    \label{workerfigure}
+\end{figure}
+
+    \item \textbf{Workers}: Workers are threads that utilize the abstraction layers defined in the preliminary phase \ref{preliminary}. Their internal logic is straightforward: they retrieve available tasks and execute them on their assigned accelerator. All low-level details regarding the accelerator libraries are completely hidden from the Worker prospective (see Section \ref{TODO}).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.14]{images/performancemap.png} 
+    \caption{benchmark and performance maps rapresentation}
+    \label{performancemapfigure}
+\end{figure}
+
+    \item \textbf{Benchmarks and Performance Maps}: Internally, the scheduler utilizes a data structure called the Performance Map to determine the execution time of every single task for each individual accelerator. To achieve this, the structure contains heuristics and data loaded from CSV files (specifically one file for each accelerator). These files are created by a benchmark routine developed directly within the scheduler; if this data is missing, the routine activates automatically to generate the necessary information for the Performance Map. It utilizes the accelerator libraries, testing them by executing precise tasks in a specific manner to gather this data as accurately as possible. Furthermore, the Performance Map is an extremely fast structure: it is equipped with caching and highly optimized internal data structures to minimize overhead on the Coordinator's logic, which is the only component that accesses this structure (see Section \ref{TODO performance map}).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.14]{images/profiler.png} 
+    \caption{profiler}
+    \label{profilerfigure}
+\end{figure}
+
+
+\item \textbf{Profiler}: To conduct an extensive and precise study of how the scheduler behaves across all workloads, a component called the Profiler was developed directly within the scheduler. It is responsible for profiling all operational strategies and recording all execution times for both the scheduler and the workers. It returns all these metrics in an organized and readable manner in the form of CSV files. These metrics include the power consumption of the entire system and of each individual accelerator, as well as the specific overhead for every single phase of the scheduler's logic and a lot of more information (see Section \ref{TODO}). 
 \end{itemize}
 
 
