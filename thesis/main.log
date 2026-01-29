@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  28 JAN 2026 13:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  29 JAN 2026 12:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -784,7 +784,7 @@ Package epstopdf Info: Source file: <images/Frontespizio/cherubinFrontespizio.ep
 (epstopdf)             Command: <repstopdf --outfile=images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf images/Frontespizio/cherubinFrontespizio.eps>
 (epstopdf)             \includegraphics on input line 4.
 Package epstopdf Info: Output file is already uptodate.
-<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=115, 288.07625pt x 294.09875pt>
+<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=131, 288.07625pt x 294.09875pt>
 File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file (type pdf)
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
@@ -869,18 +869,22 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-))
+) [3])
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
- [3]
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[4]
 \openout2 = `chapters/0_introduction.aux'.
 
- (./chapters/0_introduction.tex [4
-
-
-
-]
+ (./chapters/0_introduction.tex
 Chapter 1.
 
 LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <26.96207> not available
@@ -902,7 +906,11 @@ LaTeX Font Warning: Font shape `TS1/cmr/m/n' in size <13> not available
 LaTeX Font Warning: Font shape `T1/cmr/m/it' in size <13> not available
 (Font)              size <12> substituted on input line 16.
 
-[5{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}])
+[5
+
+
+
+{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}])
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -924,7 +932,7 @@ Chapter 2.
 
 
 ]
-<images/core_ultra.png, id=180, 481.8pt x 481.8pt>
+<images/core_ultra.png, id=201, 481.8pt x 481.8pt>
 File: images/core_ultra.png Graphic file (type png)
 <use images/core_ultra.png>
 Package pdftex.def Info: images/core_ultra.png  used on input line 21.
@@ -940,12 +948,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [8
 
  <./images/core_ultra.png>]
-<images/rtx.png, id=197, 1505.625pt x 645.41125pt>
+<images/rtx.png, id=217, 1505.625pt x 645.41125pt>
 File: images/rtx.png Graphic file (type png)
 <use images/rtx.png>
 Package pdftex.def Info: images/rtx.png  used on input line 41.
 (pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
-<images/cuda.jpg, id=200, 407.5225pt x 246.9225pt>
+<images/cuda.jpg, id=220, 407.5225pt x 246.9225pt>
 File: images/cuda.jpg Graphic file (type jpg)
 <use images/cuda.jpg>
 Package pdftex.def Info: images/cuda.jpg  used on input line 59.
@@ -971,12 +979,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
 ]
-<images/sycl.jpg, id=222, 1104.125pt x 501.875pt>
+<images/sycl.jpg, id=242, 1104.125pt x 501.875pt>
 File: images/sycl.jpg Graphic file (type jpg)
 <use images/sycl.jpg>
 Package pdftex.def Info: images/sycl.jpg  used on input line 94.
 (pdftex.def)             Requested size: 88.3318pt x 40.15082pt.
-<images/oneapi.png, id=224, 244.66406pt x 249.18094pt>
+<images/oneapi.png, id=244, 244.66406pt x 249.18094pt>
 File: images/oneapi.png Graphic file (type png)
 <use images/oneapi.png>
 Package pdftex.def Info: images/oneapi.png  used on input line 105.
@@ -996,7 +1004,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [11
 
  <./images/sycl.jpg> <./images/oneapi.png>]
-<images/openvino.jpg, id=236, 992.70876pt x 266.9975pt>
+<images/openvino.jpg, id=256, 992.70876pt x 266.9975pt>
 File: images/openvino.jpg Graphic file (type jpg)
 <use images/openvino.jpg>
 Package pdftex.def Info: images/openvino.jpg  used on input line 120.
@@ -1012,7 +1020,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [12
 
  <./images/openvino.jpg>]
-<images/openblass.jpg, id=246, 803.0pt x 548.0475pt>
+<images/openblass.jpg, id=266, 803.0pt x 548.0475pt>
 File: images/openblass.jpg Graphic file (type jpg)
 <use images/openblass.jpg>
 Package pdftex.def Info: images/openblass.jpg  used on input line 143.
@@ -1028,7 +1036,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [13
 
  <./images/openblass.jpg>]
-<images/C.jpeg, id=258, 803.0pt x 421.575pt>
+<images/C.jpeg, id=278, 803.0pt x 421.575pt>
 File: images/C.jpeg Graphic file (type jpg)
 <use images/C.jpeg>
 Package pdftex.def Info: images/C.jpeg  used on input line 162.
@@ -1044,7 +1052,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [14
 
  <./images/C.jpeg>]
-<images/cmake_logo.svg.png, id=269, 963.6pt x 964.60374pt>
+<images/cmake_logo.svg.png, id=289, 963.6pt x 964.60374pt>
 File: images/cmake_logo.svg.png Graphic file (type png)
 <use images/cmake_logo.svg.png>
 Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 193.
@@ -1070,21 +1078,53 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 ]
 Chapter 3.
-) [17]
+[17]
+Overfull \hbox (2.1807pt too wide) in paragraph at lines 29--30
+[]\T1/cmr/bx/n/12 Memory Man-age-ment\T1/cmr/m/n/12 : al-lo-cat-ing buffers and man-ag-ing host-to-device trans-
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[18
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[19])
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[20
+
+]
 \openout2 = `chapters/3_implementation.aux'.
 
- (./chapters/3_implementation.tex [18
+ (./chapters/3_implementation.tex
+Chapter 4.
+) [21
 
 
 
 
 
 ]
-Chapter 4.
-) [19]
 \openout2 = `chapters/4_results.aux'.
 
- (./chapters/4_results.tex [20
+ (./chapters/4_results.tex [22
 
 
 
@@ -1092,10 +1132,10 @@ Chapter 4.
 
 ]
 Chapter 5.
-) [21]
+) [23]
 \openout2 = `chapters/AppendiceA.aux'.
 
- (./chapters/AppendiceA.tex [22
+ (./chapters/AppendiceA.tex [24
 
 
 
@@ -1103,7 +1143,7 @@ Chapter 5.
 
 ]
 Appendix A.
-) [23] (./main.bbl [24
+) [25] (./main.bbl [26
 
 
 
@@ -1188,7 +1228,7 @@ Overfull \hbox (84.58885pt too wide) in paragraph at lines 63--66
 \T1/cmr/m/n/12 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
-[25]
+[27]
 Underfull \hbox (badness 10000) in paragraph at lines 73--76
 []\T1/cmr/m/n/12 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
  []
@@ -1201,7 +1241,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[26] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+[28] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-14>
@@ -1215,21 +1255,21 @@ LaTeX Font Warning: Size substitutions with differences
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 5897974DC8B7EF00EF2E5B34EA1FAFF9;2194.
+(rerunfilecheck)             Checksum: 8BBDE270ECB5346C9D42DDE7EF65365F;2793.
  ) 
 Here is how much of TeX's memory you used:
- 31097 strings out of 467538
- 623060 string characters out of 5419551
- 1177440 words of memory out of 5000000
- 59360 multiletter control sequences out of 15000+600000
+ 31109 strings out of 467538
+ 623217 string characters out of 5419551
+ 1178532 words of memory out of 5000000
+ 59366 multiletter control sequences out of 15000+600000
  643081 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,11n,108p,737b,580s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,11n,108p,827b,629s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (26 pages, 732863 bytes).
+Output written on main.pdf (28 pages, 741387 bytes).
 PDF statistics:
- 395 PDF objects out of 1000 (max. 8388607)
- 301 compressed objects within 4 object streams
- 72 named destinations out of 1000 (max. 500000)
- 351 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 430 PDF objects out of 1000 (max. 8388607)
+ 334 compressed objects within 4 object streams
+ 78 named destinations out of 1000 (max. 500000)
+ 383 words of extra memory for PDF output out of 10000 (max. 10000000)
 

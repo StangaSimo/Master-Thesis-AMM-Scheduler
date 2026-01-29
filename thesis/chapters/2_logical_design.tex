@@ -1,2 +1,50 @@
 \chapter{Logical Design}
 \label{logical design}
+
+This chapter describes the logical structure of the project, the design process was divided into two main phases:
+
+\begin{itemize}
+    \item The first part of the chapter (\ref{preliminary}) presents the Independent Benchmarks. Before developing the centralized scheduler, standalone applications were created for each accelerator. This phase was essential to verify the feasibility of the project and to understand how to effectively control the specific hardware using the selected libraries. 
+
+    \item  The second part (\ref{ammscheduler}) provides a comprehensive overview of the AMM Scheduler. This section describes the high-level operation of all the components of the scheduler, it illustrates the architectural design of the main project and explains how the various logical blocks interact to enable the scheduler's functionality, detailing the specific operational logic that governs the system.
+\end{itemize}
+
+\clearpage
+
+\section{Preliminary Phase}
+\label{preliminary}
+Before designing the centralized scheduler, the project required a preliminary phase focused on the independent analysis of each software stack. Three standalone applications were developed, targeting the NVIDIA GPU, the Intel iGPU, and the NPU respectively. The primary objective of this phase to gain a deep understanding of the specific libraries (CUDA, SYCL, and OpenVINO) and their interaction with the hardware.
+
+It is important to note that the OpenBLAS backend for the CPU was not included in this preliminary phase. This component was introduced directly during the development of the scheduler (described in the next section \ref{ammscheduler}) with a specific goal: to maximize the degree of heterogeneity of the system, by treating the CPU as an additional accelerator rather than just a coordinator. Moreover unlike the GPU and NPU, which required a specific study of their asynchronous drivers and memory models, the CPU integration relies on standard synchronous function calls, consequently, a dedicated standalone analysis deemed unnecessary. The technical details of this integration will be discussed in the implementation chapter (\ref{implementation}).
+
+\subsection{Studying the Common Patterns}
+A crucial goal of this stage was to gain a deep, hands-on understanding of the specific libraries. Since technologies like CUDA, SYCL, and OpenVINO manage hardware in fundamentally different ways, so a first approach phase was necessary to see how their specific mechanisms works and the drivers interactions.
+
+This distinction is particularly evident in the case of OpenVINO. While CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra, consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a specific workaround was required. Instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to accomplish as an inference task.
+
+Despite these architectural differences, this preliminary study revealed a recurring pattern, the execution flow for every accelerator whether running a kernel or a simulated inference relies on four identical logical steps:
+
+\begin{itemize}
+    \item \textbf{Context Initialization}: setting up the driver handles like context, queue, and so on.
+    \item \textbf{Memory Management}: allocating buffers and managing host-to-device transfers.
+    \item \textbf{Kernel Execution}: triggering the asynchronous computation.
+    \item \textbf{Synchronization}: waiting for the hardware to complete the task.
+\end{itemize}
+
+Recognizing this common structure for each library was fundamental for the design of the Abstraction Layer used in the scheduler.
+
+\subsection{Benchmarking}
+During this phase, benchmarking routines were implemented within the standalone applications. However, their purpose was distinct from the final experimental results presented in later chapters, in this context measuring execution time and power consumption served as a development tool to:
+
+\begin{itemize}
+    \item Verify the correctness of the implementation (e.g., ensuring the code was actually running on the accelerator and not falling back to the CPU).
+
+    \item Analyze the runtime behavior of the drivers, and identify architectural bottlenecks (such as PCIe transfer overheads or compilation latencies).
+\end{itemize}
+
+However, it must be noted that the performance profile observed in these isolated environments proved to be distinct from the behavior within the full scheduler. The concurrent execution of different workloads and the increased stress on system resources exposed new bottlenecks that were not visible during the standalone tests, consequently, the backend implementations were significantly evolved during the integration phase, and specific structures were introduced to mitigate these latencies. These optimizations and the specific issues encountered under high-load scenarios will be analyzed in detail in the Implementation Chapter (\ref{implementation}).
+
+
+\clearpage
+\section{AMM Scheduler}
+\label{ammscheduler}

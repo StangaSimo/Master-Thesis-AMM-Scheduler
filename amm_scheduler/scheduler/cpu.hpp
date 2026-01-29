@@ -68,6 +68,7 @@ inline void cpu_gemm_16bit(void* A, void* B, void* C, int M, int N, int K) {
     for (int i = 0; i < K * N; ++i) {
         B_f32[i] = half_to_float(pB[i]);
     }
+
     cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
                 M, N, K,
                 1.0f,
