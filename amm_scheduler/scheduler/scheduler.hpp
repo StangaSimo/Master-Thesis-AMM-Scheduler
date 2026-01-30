@@ -344,7 +344,16 @@ class AMScheduler {
                         for (int j=0; j<bts_len; j++) {
                             int r = (rows[j] > 0) ? rows[j] : 1;
 
-                            double ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type, false);
+                            double ms = 0.0;
+
+                            ms = bts_map[bts[j]]->query(r, single_task->N, single_task->K, single_task->type, false);
+
+                            /* update time if r exceed max size */
+                            if (r > MAX_SIZE){
+                                double max_ms = bts_map[bts[j]]->query(MAX_SIZE, single_task->N, single_task->K, single_task->type, false);
+                                ms = max_ms * ((double)r / (double)MAX_SIZE);
+                            }
+
 
                             cout << "acc " << j << " ms " <<  ms << " for M: " << r << " N: " << single_task->N << " K: " << single_task->K << " \n";
 
