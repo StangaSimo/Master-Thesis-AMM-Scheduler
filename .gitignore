@@ -4,7 +4,9 @@ npu_benchmark/benchmark
 gpu_benchmark/build/
 sycl_benchmark/build/
 
-amm_scheduler/bin/
+amm_scheduler/bin/scheduler
+amm_scheduler/bin/include/
+amm_scheduler/bin/lib/
 amm_scheduler/test.mp4
 amm_scheduler/build/
 
