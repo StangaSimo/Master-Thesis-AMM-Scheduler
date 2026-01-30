@@ -20,7 +20,9 @@ It is important to note that the OpenBLAS backend for the CPU was not included i
 \subsection{Studying the Common Patterns}
 A crucial goal of this stage was to gain a deep, hands-on understanding of the specific libraries. Since technologies like CUDA, SYCL, and OpenVINO manage hardware in fundamentally different ways, so a first approach phase was necessary to see how their specific mechanisms works and the drivers interactions.
 
-This distinction is particularly evident in the case of OpenVINO, while CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra, consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a workaround was required, instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to accomplish as an inference task (more on this in chapter \ref{implementation}).
+This distinction is particularly evident in the case of OpenVINO, while CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra, consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a workaround was required, instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to accomplish as an inference task (more on this in section \ref{TODO}).
+
+\clearpage
 
 Despite these architectural differences, this preliminary study revealed a recurring pattern, the execution flow for every accelerator whether running a kernel or a simulated inference relies on four identical logical steps:
 
@@ -87,14 +89,15 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
 
     \item \textbf{Coordinator}: The Coordinator acts as the brain of the scheduler, it decides how to dispatch tasks and implements different strategies to demonstrate various resource management techniques. 
 
-    It features distinct scheduling logics, based on the type of workload that the host have to compute, the main logics that shape the design of the scheduler are the static one, the first, Static stream, handles static homogeneous workloads (tasks of identical matrices). By using a Performance Map (a custom data structure containing heuristics and execution time estimates) the coordinator predicts how long a task will take on a specific accelerator and based on this, it performs a static dispatch of the tasks in a batch style (see section static partitioning \ref{TODO}).  
+    It features distinct scheduling logics, based on the type of workload that the host have to compute, the main logics that shape the design of the scheduler are the static one. 
+
+    The first logic, Static stream, handles static homogeneous workloads (tasks of identical matrices), by using a Performance Map (a custom data structure containing heuristics and execution time estimates) the coordinator predicts how long a task will take on a specific accelerator and based on this, it performs a static dispatch of the tasks in a batch style manner (see section static partitioning \ref{TODO}).  
 
     The second logic, Static Hetero, work in a similar way but for static heterogeneous workloads (matrices of different sizes), the coordinator uses the same performance map to calculate the optimal distribution, ensuring the workload is balanced across all accelerators (see section static hetero partitioning \ref{TODO}).
 
-    To evaluate these strategies, we also implemented a Dynamic logicl This approach assigns tasks to the first available Worker (idle state) and serves as a baseline to verify the efficiency of our static methods (see section dynamic \ref{TODO}).
+    To evaluate these strategies, we also implemented a dynamic tasks dispatch logic. This approach assigns tasks to the first available Worker (in idle state) and serves as a baseline to verify the efficiency of our static methods (see section dynamic \ref{TODO}).
 
-    Finally, the Coordinator supports Task Splitting, if a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks to be distributed across multiple accellerator (see section large matrix split \ref{TODO}).
-
+    Finally, the Coordinator supports the logic of Task Splitting, if a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks to be distributed across multiple accellerators (see section large matrix split \ref{TODO}).
 
 \begin{figure}[h!]
     \centering
@@ -112,7 +115,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
     \label{performancemapfigure}
 \end{figure}
 
-    \item \textbf{Benchmarks and Performance Maps}: Internally, the scheduler utilizes a data structure called the Performance Map to determine the execution time of every single task for each individual accelerator. To achieve this, the structure contains heuristics and data loaded from CSV files (specifically one file for each accelerator). These files are created by a benchmark routine developed directly within the scheduler; if this data is missing, the routine activates automatically to generate the necessary information for the Performance Map. It utilizes the accelerator libraries, testing them by executing precise tasks in a specific manner to gather this data as accurately as possible. Furthermore, the Performance Map is an extremely fast structure: it is equipped with caching and highly optimized internal data structures to minimize overhead on the Coordinator's logic, which is the only component that accesses this structure (see Section \ref{TODO performance map}).
+    \item \textbf{Benchmarks and Performance Maps}: Internally, the scheduler utilizes a data structure called the Performance Map to determine the execution time of every single task for each individual accelerator. To achieve this, the structure contains heuristics and data loaded from CSV files (specifically one file for each accelerator). These files are created by a benchmark routine developed directly within the scheduler; if the csv for one or more accellerators is missing so that there are no data for the performance maps, the routine activates automatically to generate the necessary information stored in the csv files, it utilizes the accelerator libraries, testing them by executing precise tasks in a specific manner to gather this data as accurately as possible. Furthermore, the Performance Map is an extremely fast structure: it is equipped with caching and highly optimized internal data structures to minimize overhead on the Coordinator's logic, which is the only component that accesses this structure (see Section \ref{TODO performance map}).
 
 \begin{figure}[h!]
     \centering
@@ -122,7 +125,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
 \end{figure}
 
 
-\item \textbf{Profiler}: To conduct an extensive and precise study of how the scheduler behaves across all workloads, a component called the Profiler was developed directly within the scheduler. It is responsible for profiling all operational strategies and recording all execution times for both the scheduler and the workers. It returns all these metrics in an organized and readable manner in the form of CSV files. These metrics include the power consumption of the entire system and of each individual accelerator, as well as the specific overhead for every single phase of the scheduler's logic and a lot of more information (see Section \ref{TODO}). 
+\item \textbf{Profiler}: To conduct an extensive and precise study of how the scheduler behaves across all workloads, a component called the Profiler was developed directly within the scheduler. It is responsible for profiling all operational strategies and recording all execution times for both the scheduler and the workers. It returns all these metrics in an organized and readable manner in the form of CSV file. These metrics include the power consumption of the entire system and of each individual accelerator, as well as the specific overhead for every single phase of the scheduler's logic and a lot of more information that will be described later (see Section \ref{TODO}). 
 \end{itemize}
 
 

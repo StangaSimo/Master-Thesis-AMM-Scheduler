@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  29 JAN 2026 18:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  30 JAN 2026 10:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1083,9 +1083,8 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 ]
 Chapter 3.
 [17]
-Overfull \hbox (2.1807pt too wide) in paragraph at lines 29--30
-[]\T1/cmr/bx/n/12 Memory Man-age-ment\T1/cmr/m/n/12 : al-lo-cat-ing buffers and man-ag-ing host-to-device trans-
- []
+
+LaTeX Warning: Reference `TODO' on page 18 undefined on input line 23.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1097,6 +1096,10 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [18
 
 ]
+Overfull \hbox (2.1807pt too wide) in paragraph at lines 31--32
+[]\T1/cmr/bx/n/12 Memory Man-age-ment\T1/cmr/m/n/12 : al-lo-cat-ing buffers and man-ag-ing host-to-device trans-
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1104,11 +1107,13 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[19]
-<images/grafico.png, id=321, 1468.73718pt x 1006.51031pt>
+[19
+
+]
+<images/grafico.png, id=320, 1468.73718pt x 1006.51031pt>
 File: images/grafico.png Graphic file (type png)
 <use images/grafico.png>
-Package pdftex.def Info: images/grafico.png  used on input line 54.
+Package pdftex.def Info: images/grafico.png  used on input line 56.
 (pdftex.def)             Requested size: 425.92288pt x 291.88051pt.
 
 
@@ -1121,28 +1126,28 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [20
 
  <./images/grafico.png>]
-<images/ringbuffer.png, id=330, 527.72156pt x 173.89969pt>
+<images/ringbuffer.png, id=329, 527.72156pt x 173.89969pt>
 File: images/ringbuffer.png Graphic file (type png)
 <use images/ringbuffer.png>
-Package pdftex.def Info: images/ringbuffer.png  used on input line 74.
+Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
 (pdftex.def)             Requested size: 52.77524pt x 17.39098pt.
 
 
-LaTeX Warning: Reference `TODO' on page 21 undefined on input line 79.
+LaTeX Warning: Reference `TODO' on page 21 undefined on input line 81.
 
-<images/coordinator.png, id=332, 688.82344pt x 1069.74657pt>
+<images/coordinator.png, id=331, 688.82344pt x 1069.74657pt>
 File: images/coordinator.png Graphic file (type png)
 <use images/coordinator.png>
-Package pdftex.def Info: images/coordinator.png  used on input line 83.
+Package pdftex.def Info: images/coordinator.png  used on input line 85.
 (pdftex.def)             Requested size: 68.88637pt x 106.98091pt.
 
-LaTeX Warning: Reference `TODO' on page 21 undefined on input line 90.
-
-
-LaTeX Warning: Reference `TODO' on page 21 undefined on input line 92.
-
-
 LaTeX Warning: Reference `TODO' on page 21 undefined on input line 94.
+
+
+LaTeX Warning: Reference `TODO' on page 21 undefined on input line 96.
+
+
+LaTeX Warning: Reference `TODO' on page 21 undefined on input line 98.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1155,23 +1160,23 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
  <./images/ringbuffer.png> <./images/coordinator.png>]
 
-LaTeX Warning: Reference `TODO' on page 22 undefined on input line 96.
+LaTeX Warning: Reference `TODO' on page 22 undefined on input line 100.
 
-<images/workers.png, id=341, 580.41844pt x 822.82407pt>
+<images/workers.png, id=340, 580.41844pt x 822.82407pt>
 File: images/workers.png Graphic file (type png)
 <use images/workers.png>
-Package pdftex.def Info: images/workers.png  used on input line 101.
+Package pdftex.def Info: images/workers.png  used on input line 104.
 (pdftex.def)             Requested size: 81.25803pt x 115.19458pt.
 
-LaTeX Warning: Reference `TODO' on page 22 undefined on input line 106.
+LaTeX Warning: Reference `TODO' on page 22 undefined on input line 109.
 
-<images/performancemap.png, id=343, 697.8572pt x 538.26094pt>
+<images/performancemap.png, id=342, 697.8572pt x 538.26094pt>
 File: images/performancemap.png Graphic file (type png)
 <use images/performancemap.png>
-Package pdftex.def Info: images/performancemap.png  used on input line 110.
+Package pdftex.def Info: images/performancemap.png  used on input line 113.
 (pdftex.def)             Requested size: 97.69934pt x 75.35602pt.
 
-LaTeX Warning: Reference `TODO performance map' on page 22 undefined on input line 115.
+LaTeX Warning: Reference `TODO performance map' on page 22 undefined on input line 118.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1181,14 +1186,14 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [22 <./images/workers.png> <./images/performancemap.png>]
-<images/profiler.png, id=352, 356.0803pt x 590.95781pt>
+<images/profiler.png, id=351, 356.0803pt x 590.95781pt>
 File: images/profiler.png Graphic file (type png)
 <use images/profiler.png>
-Package pdftex.def Info: images/profiler.png  used on input line 119.
+Package pdftex.def Info: images/profiler.png  used on input line 122.
 (pdftex.def)             Requested size: 49.85089pt x 82.73352pt.
 
 
-LaTeX Warning: Reference `TODO' on page 23 undefined on input line 125.
+LaTeX Warning: Reference `TODO' on page 23 undefined on input line 128.
 
 )
 
@@ -1355,12 +1360,12 @@ Here is how much of TeX's memory you used:
  59415 multiletter control sequences out of 15000+600000
  643081 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,12n,108p,1069b,629s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,11n,108p,1148b,629s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (32 pages, 1127459 bytes).
+Output written on main.pdf (32 pages, 1127552 bytes).
 PDF statistics:
- 471 PDF objects out of 1000 (max. 8388607)
- 359 compressed objects within 4 object streams
+ 470 PDF objects out of 1000 (max. 8388607)
+ 358 compressed objects within 4 object streams
  88 named destinations out of 1000 (max. 500000)
  413 words of extra memory for PDF output out of 10000 (max. 10000000)
 
