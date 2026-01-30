@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  30 JAN 2026 10:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  30 JAN 2026 14:05
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -403,17 +403,36 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 \ULC@box=\box60
 Package: ulem 2019/11/18
 \ULdepth=\dimen179
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/dirtree/dirtree.sty
+Package: dirtree 2012/12/11 v0.32 package wrapper for dirtree
+ (/usr/local/texlive/2025/texmf-dist/tex/generic/dirtree/dirtree.tex `dirtree' v0.32, 2012/12/11 (jcc)
+\DT@offset=\dimen180
+\DT@width=\dimen181
+\DT@sep=\dimen182
+\DT@all=\dimen183
+\DT@rulewidth=\dimen184
+\DT@dotwidth=\dimen185
+\DTbaselineskip=\dimen186
+\DT@counti=\count328
+\DT@countii=\count329
+\DT@countiii=\count330
+\DT@countiv=\count331
+\DT@indent=\dimen187
+\DT@parskip=\dimen188
+\DT@baselineskip=\dimen189
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 81.
-\c@definition=\count328
-\c@theorem=\count329
+File: dirtree.tex 2012/12/11 v0.32 `dirtree' (jcc)
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 83.
+\c@definition=\count332
+\c@theorem=\count333
  (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcolorbox.sty
 Package: tcolorbox 2025/09/09 version 6.8.0 text color boxes
- (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
 \pgfutil@everybye=\toks37
-\pgfutil@tempdima=\dimen180
-\pgfutil@tempdimb=\dimen181
+\pgfutil@tempdima=\dimen190
+\pgfutil@tempdimb=\dimen191
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
 \pgfutil@abb=\box61
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
@@ -428,26 +447,26 @@ Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex
 \pgfkeys@tmptoks=\toks40
 ))
-\pgf@x=\dimen182
-\pgf@y=\dimen183
-\pgf@xa=\dimen184
-\pgf@ya=\dimen185
-\pgf@xb=\dimen186
-\pgf@yb=\dimen187
-\pgf@xc=\dimen188
-\pgf@yc=\dimen189
-\pgf@xd=\dimen190
-\pgf@yd=\dimen191
+\pgf@x=\dimen192
+\pgf@y=\dimen193
+\pgf@xa=\dimen194
+\pgf@ya=\dimen195
+\pgf@xb=\dimen196
+\pgf@yb=\dimen197
+\pgf@xc=\dimen198
+\pgf@yc=\dimen199
+\pgf@xd=\dimen256
+\pgf@yd=\dimen257
 \w@pgf@writea=\write3
 \r@pgf@reada=\read3
-\c@pgf@counta=\count330
-\c@pgf@countb=\count331
-\c@pgf@countc=\count332
-\c@pgf@countd=\count333
+\c@pgf@counta=\count334
+\c@pgf@countb=\count335
+\c@pgf@countc=\count336
+\c@pgf@countd=\count337
 \t@pgf@toka=\toks41
 \t@pgf@tokb=\toks42
 \t@pgf@tokc=\toks43
-\pgf@sys@id@count=\count334
+\pgf@sys@id@count=\count338
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
 )
@@ -458,60 +477,60 @@ File: pgfsys-pdftex.def 2025-08-29 v3.1.11a (3.1.11a)
 File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
 ))) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
 File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfsyssoftpath@smallbuffer@items=\count335
-\pgfsyssoftpath@bigbuffer@items=\count336
+\pgfsyssoftpath@smallbuffer@items=\count339
+\pgfsyssoftpath@bigbuffer@items=\count340
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
 File: pgfsysprotocol.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 )) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen192
-\pgfmath@count=\count337
+\pgfmath@dimen=\dimen258
+\pgfmath@count=\count341
 \pgfmath@box=\box62
 \pgfmath@toks=\toks44
 \pgfmath@stack@operand=\toks45
 \pgfmath@stack@operation=\toks46
-) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count338
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count342
 )) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
 File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@picminx=\dimen193
-\pgf@picmaxx=\dimen194
-\pgf@picminy=\dimen195
-\pgf@picmaxy=\dimen196
-\pgf@pathminx=\dimen197
-\pgf@pathmaxx=\dimen198
-\pgf@pathminy=\dimen199
-\pgf@pathmaxy=\dimen256
-\pgf@xx=\dimen257
-\pgf@xy=\dimen258
-\pgf@yx=\dimen259
-\pgf@yy=\dimen260
-\pgf@zx=\dimen261
-\pgf@zy=\dimen262
+\pgf@picminx=\dimen259
+\pgf@picmaxx=\dimen260
+\pgf@picminy=\dimen261
+\pgf@picmaxy=\dimen262
+\pgf@pathminx=\dimen263
+\pgf@pathmaxx=\dimen264
+\pgf@pathminy=\dimen265
+\pgf@pathmaxy=\dimen266
+\pgf@xx=\dimen267
+\pgf@xy=\dimen268
+\pgf@yx=\dimen269
+\pgf@yy=\dimen270
+\pgf@zx=\dimen271
+\pgf@zy=\dimen272
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@path@lastx=\dimen263
-\pgf@path@lasty=\dimen264
+\pgf@path@lastx=\dimen273
+\pgf@path@lasty=\dimen274
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
 File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@shorten@end@additional=\dimen265
-\pgf@shorten@start@additional=\dimen266
+\pgf@shorten@end@additional=\dimen275
+\pgf@shorten@start@additional=\dimen276
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfpic=\box63
 \pgf@hbox=\box64
 \pgf@layerbox@main=\box65
-\pgf@picture@serial@count=\count339
+\pgf@picture@serial@count=\count343
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgflinewidth=\dimen267
+\pgflinewidth=\dimen277
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
 File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@pt@x=\dimen268
-\pgf@pt@y=\dimen269
-\pgf@pt@temp=\dimen270
+\pgf@pt@x=\dimen278
+\pgf@pt@y=\dimen279
+\pgf@pt@temp=\dimen280
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
@@ -520,25 +539,25 @@ File: pgfcoreobjects.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
 File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfarrowsep=\dimen271
+\pgfarrowsep=\dimen281
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@max=\dimen272
-\pgf@sys@shading@range@num=\count340
-\pgf@shadingcount=\count341
+\pgf@max=\dimen282
+\pgf@sys@shading@range@num=\count344
+\pgf@shadingcount=\count345
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
 File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfexternal@startupbox=\box66
-) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
 File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
 File: pgfcoretransparency.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
 File: pgfcorepatterns.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-)
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
 File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ))) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
 File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
@@ -547,46 +566,46 @@ File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@nodesepstart=\dimen273
-\pgf@nodesepend=\dimen274
+\pgf@nodesepstart=\dimen283
+\pgf@nodesepend=\dimen284
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
 Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
 )) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/math/pgfmath.sty (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
 Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
-\pgffor@iter=\dimen275
-\pgffor@skip=\dimen276
+\pgffor@iter=\dimen285
+\pgffor@skip=\dimen286
 \pgffor@stack=\toks47
 \pgffor@toks=\toks48
 )) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
 Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@plot@mark@count=\count342
-\pgfplotmarksize=\dimen277
+\pgf@plot@mark@count=\count346
+\pgfplotmarksize=\dimen287
 )
-\tikz@lastx=\dimen278
-\tikz@lasty=\dimen279
-\tikz@lastxsaved=\dimen280
-\tikz@lastysaved=\dimen281
-\tikz@lastmovetox=\dimen282
-\tikz@lastmovetoy=\dimen283
-\tikzleveldistance=\dimen284
-\tikzsiblingdistance=\dimen285
+\tikz@lastx=\dimen288
+\tikz@lasty=\dimen289
+\tikz@lastxsaved=\dimen290
+\tikz@lastysaved=\dimen291
+\tikz@lastmovetox=\dimen292
+\tikz@lastmovetoy=\dimen293
+\tikzleveldistance=\dimen294
+\tikzsiblingdistance=\dimen295
 \tikz@figbox=\box68
 \tikz@figbox@bg=\box69
 \tikz@tempbox=\box70
 \tikz@tempbox@bg=\box71
-\tikztreelevel=\count343
-\tikznumberofchildren=\count344
-\tikznumberofcurrentchild=\count345
-\tikz@fig@count=\count346
+\tikztreelevel=\count347
+\tikznumberofchildren=\count348
+\tikznumberofcurrentchild=\count349
+\tikz@fig@count=\count350
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfmatrixcurrentrow=\count347
-\pgfmatrixcurrentcolumn=\count348
-\pgf@matrix@numberofcolumns=\count349
+\pgfmatrixcurrentrow=\count351
+\pgfmatrixcurrentcolumn=\count352
+\pgf@matrix@numberofcolumns=\count353
 )
-\tikz@expandcount=\count350
+\tikz@expandcount=\count354
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty
@@ -603,21 +622,21 @@ Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 \tcb@upperbox=\box73
 \tcb@lowerbox=\box74
 \tcb@phantombox=\box75
-\c@tcbbreakpart=\count351
-\c@tcblayer=\count352
-\c@tcolorbox@number=\count353
+\c@tcbbreakpart=\count355
+\c@tcblayer=\count356
+\c@tcolorbox@number=\count357
 \l__tcobox_tmpa_box=\box76
-\l__tcobox_tmpa_dim=\dimen286
+\l__tcobox_tmpa_dim=\dimen296
 \tcb@temp=\box77
 \tcb@temp=\box78
 \tcb@temp=\box79
 \tcb@temp=\box80
  (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbraster.code.tex
 Library (tcolorbox): 'tcbraster.code.tex' version '6.8.0'
-\c@tcbrastercolumn=\count354
-\c@tcbrasterrow=\count355
-\c@tcbrasternum=\count356
-\c@tcbraster=\count357
+\c@tcbrastercolumn=\count358
+\c@tcbrasterrow=\count359
+\c@tcbrasternum=\count360
+\c@tcbraster=\count361
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbskins.code.tex
 Library (tcolorbox): 'tcbskins.code.tex' version '6.8.0'
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tikzfill/tikzfill.image.sty
@@ -644,10 +663,10 @@ Library (tcolorbox): 'tcbhooks.code.tex' version '6.8.0'
 Library (tcolorbox): 'tcbtheorems.code.tex' version '6.8.0'
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbfitting.code.tex
 Library (tcolorbox): 'tcbfitting.code.tex' version '6.8.0'
-\tcbfitdim=\dimen287
-\tcb@lowerfitdim=\dimen288
-\tcb@upperfitdim=\dimen289
-\tcb@cur@hbadness=\count358
+\tcbfitdim=\dimen297
+\tcb@lowerfitdim=\dimen298
+\tcb@upperfitdim=\dimen299
+\tcb@cur@hbadness=\count362
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcblistingsutf8.code.tex
 Library (tcolorbox): 'tcblistingsutf8.code.tex' version '6.8.0'
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcblistings.code.tex
@@ -657,7 +676,7 @@ Library (tcolorbox): 'tcblistingscore.code.tex' version '6.8.0'
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbprocessing.code.tex
 Library (tcolorbox): 'tcbprocessing.code.tex' version '6.8.0'
 )
-\c@tcblisting=\count359
+\c@tcblisting=\count363
 )) (/usr/local/texlive/2025/texmf-dist/tex/latex/listingsutf8/listingsutf8.sty
 Package: listingsutf8 2019-12-10 v1.5 Allow UTF-8 in listings input (HO)
 )) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbexternal.code.tex
@@ -689,24 +708,24 @@ LaTeX Warning: Label `ringfigure' multiply defined.
 ) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -753,16 +772,16 @@ babelbib: Load BibTeX extensions \bibsenglish for english
 babelbib: Set language for keywords in the bibliography fixed to english
 (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count360
-\scratchdimen=\dimen290
+\scratchcounter=\count364
+\scratchdimen=\dimen300
 \scratchbox=\box85
-\nofMPsegments=\count361
-\nofMParguments=\count362
+\nofMPsegments=\count365
+\nofMParguments=\count366
 \everyMPshowfont=\toks51
-\MPscratchCnt=\count363
-\MPscratchDim=\dimen291
-\MPnumerator=\count364
-\makeMPintoPDFobject=\count365
+\MPscratchCnt=\count367
+\MPscratchDim=\dimen301
+\MPnumerator=\count368
+\makeMPintoPDFobject=\count369
 \everyMPtoPDFconversion=\toks52
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -770,8 +789,8 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-\c@lstlisting=\count366
-Package hyperref Info: Link coloring ON on input line 104.
+\c@lstlisting=\count370
+Package hyperref Info: Link coloring ON on input line 106.
  (./main.out) (./main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
@@ -788,7 +807,7 @@ Package epstopdf Info: Source file: <images/Frontespizio/cherubinFrontespizio.ep
 (epstopdf)             Command: <repstopdf --outfile=images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf images/Frontespizio/cherubinFrontespizio.eps>
 (epstopdf)             \includegraphics on input line 4.
 Package epstopdf Info: Output file is already uptodate.
-<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=131, 288.07625pt x 294.09875pt>
+<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=143, 288.07625pt x 294.09875pt>
 File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file (type pdf)
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
@@ -837,11 +856,11 @@ No file chapters/Abstract.tex.
 ]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <32.34409> not available
-(Font)              size <29.86> substituted on input line 109.
+(Font)              size <29.86> substituted on input line 111.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <32.34409> not available
-(Font)              size <29.86> substituted on input line 109.
+(Font)              size <29.86> substituted on input line 111.
 
 (./main.toc
 LaTeX Font Info:    Calculating math sizes for size <13> on input line 3.
@@ -936,7 +955,7 @@ Chapter 2.
 
 
 ]
-<images/core_ultra.png, id=201, 481.8pt x 481.8pt>
+<images/core_ultra.png, id=216, 481.8pt x 481.8pt>
 File: images/core_ultra.png Graphic file (type png)
 <use images/core_ultra.png>
 Package pdftex.def Info: images/core_ultra.png  used on input line 21.
@@ -952,12 +971,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [8
 
  <./images/core_ultra.png>]
-<images/rtx.png, id=217, 1505.625pt x 645.41125pt>
+<images/rtx.png, id=232, 1505.625pt x 645.41125pt>
 File: images/rtx.png Graphic file (type png)
 <use images/rtx.png>
 Package pdftex.def Info: images/rtx.png  used on input line 41.
 (pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
-<images/cuda.jpg, id=220, 407.5225pt x 246.9225pt>
+<images/cuda.jpg, id=235, 407.5225pt x 246.9225pt>
 File: images/cuda.jpg Graphic file (type jpg)
 <use images/cuda.jpg>
 Package pdftex.def Info: images/cuda.jpg  used on input line 59.
@@ -983,12 +1002,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
 ]
-<images/sycl.jpg, id=242, 1104.125pt x 501.875pt>
+<images/sycl.jpg, id=257, 1104.125pt x 501.875pt>
 File: images/sycl.jpg Graphic file (type jpg)
 <use images/sycl.jpg>
 Package pdftex.def Info: images/sycl.jpg  used on input line 94.
 (pdftex.def)             Requested size: 88.3318pt x 40.15082pt.
-<images/oneapi.png, id=244, 244.66406pt x 249.18094pt>
+<images/oneapi.png, id=259, 244.66406pt x 249.18094pt>
 File: images/oneapi.png Graphic file (type png)
 <use images/oneapi.png>
 Package pdftex.def Info: images/oneapi.png  used on input line 105.
@@ -1008,7 +1027,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [11
 
  <./images/sycl.jpg> <./images/oneapi.png>]
-<images/openvino.jpg, id=256, 992.70876pt x 266.9975pt>
+<images/openvino.jpg, id=271, 992.70876pt x 266.9975pt>
 File: images/openvino.jpg Graphic file (type jpg)
 <use images/openvino.jpg>
 Package pdftex.def Info: images/openvino.jpg  used on input line 120.
@@ -1024,7 +1043,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [12
 
  <./images/openvino.jpg>]
-<images/openblass.jpg, id=266, 803.0pt x 548.0475pt>
+<images/openblass.jpg, id=281, 803.0pt x 548.0475pt>
 File: images/openblass.jpg Graphic file (type jpg)
 <use images/openblass.jpg>
 Package pdftex.def Info: images/openblass.jpg  used on input line 143.
@@ -1040,7 +1059,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [13
 
  <./images/openblass.jpg>]
-<images/C.jpeg, id=278, 803.0pt x 421.575pt>
+<images/C.jpeg, id=293, 803.0pt x 421.575pt>
 File: images/C.jpeg Graphic file (type jpg)
 <use images/C.jpeg>
 Package pdftex.def Info: images/C.jpeg  used on input line 162.
@@ -1056,7 +1075,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [14
 
  <./images/C.jpeg>]
-<images/cmake_logo.svg.png, id=289, 963.6pt x 964.60374pt>
+<images/cmake_logo.svg.png, id=304, 963.6pt x 964.60374pt>
 File: images/cmake_logo.svg.png Graphic file (type png)
 <use images/cmake_logo.svg.png>
 Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 193.
@@ -1110,7 +1129,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [19
 
 ]
-<images/grafico.png, id=320, 1468.73718pt x 1006.51031pt>
+<images/grafico.png, id=336, 1468.73718pt x 1006.51031pt>
 File: images/grafico.png Graphic file (type png)
 <use images/grafico.png>
 Package pdftex.def Info: images/grafico.png  used on input line 56.
@@ -1126,7 +1145,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [20
 
  <./images/grafico.png>]
-<images/ringbuffer.png, id=329, 527.72156pt x 173.89969pt>
+<images/ringbuffer.png, id=344, 527.72156pt x 173.89969pt>
 File: images/ringbuffer.png Graphic file (type png)
 <use images/ringbuffer.png>
 Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
@@ -1135,7 +1154,7 @@ Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
 
 LaTeX Warning: Reference `TODO' on page 21 undefined on input line 81.
 
-<images/coordinator.png, id=331, 688.82344pt x 1069.74657pt>
+<images/coordinator.png, id=346, 688.82344pt x 1069.74657pt>
 File: images/coordinator.png Graphic file (type png)
 <use images/coordinator.png>
 Package pdftex.def Info: images/coordinator.png  used on input line 85.
@@ -1162,7 +1181,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 LaTeX Warning: Reference `TODO' on page 22 undefined on input line 100.
 
-<images/workers.png, id=340, 580.41844pt x 822.82407pt>
+<images/workers.png, id=355, 580.41844pt x 822.82407pt>
 File: images/workers.png Graphic file (type png)
 <use images/workers.png>
 Package pdftex.def Info: images/workers.png  used on input line 104.
@@ -1170,7 +1189,7 @@ Package pdftex.def Info: images/workers.png  used on input line 104.
 
 LaTeX Warning: Reference `TODO' on page 22 undefined on input line 109.
 
-<images/performancemap.png, id=342, 697.8572pt x 538.26094pt>
+<images/performancemap.png, id=357, 697.8572pt x 538.26094pt>
 File: images/performancemap.png Graphic file (type png)
 <use images/performancemap.png>
 Package pdftex.def Info: images/performancemap.png  used on input line 113.
@@ -1186,7 +1205,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [22 <./images/workers.png> <./images/performancemap.png>]
-<images/profiler.png, id=351, 356.0803pt x 590.95781pt>
+<images/profiler.png, id=366, 356.0803pt x 590.95781pt>
 File: images/profiler.png Graphic file (type png)
 <use images/profiler.png>
 Package pdftex.def Info: images/profiler.png  used on input line 122.
@@ -1214,10 +1233,52 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 ]
 Chapter 4.
-) [25]
+[25]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[26
+
+]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 73.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <6.5> not available
+(Font)              size <6> substituted on input line 74.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[27
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[28])
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[29]
 \openout2 = `chapters/4_results.aux'.
 
- (./chapters/4_results.tex [26
+ (./chapters/4_results.tex [30
 
 
 
@@ -1225,10 +1286,10 @@ Chapter 4.
 
 ]
 Chapter 5.
-) [27]
+) [31]
 \openout2 = `chapters/AppendiceA.aux'.
 
- (./chapters/AppendiceA.tex [28
+ (./chapters/AppendiceA.tex [32
 
 
 
@@ -1236,7 +1297,7 @@ Chapter 5.
 
 ]
 Appendix A.
-) [29] (./main.bbl [30
+) [33] (./main.bbl [34
 
 
 
@@ -1321,7 +1382,7 @@ Overfull \hbox (84.58885pt too wide) in paragraph at lines 63--66
 \T1/cmr/m/n/12 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
-[31]
+[35]
 Underfull \hbox (badness 10000) in paragraph at lines 73--76
 []\T1/cmr/m/n/12 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
  []
@@ -1334,7 +1395,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[32] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+[36] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-14>
@@ -1351,21 +1412,21 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 8BBDE270ECB5346C9D42DDE7EF65365F;2793.
+(rerunfilecheck)             Checksum: 4FC629648DFF5BCAD398E2AFB06E3A17;3411.
  ) 
 Here is how much of TeX's memory you used:
- 31168 strings out of 467538
- 624557 string characters out of 5419551
- 1178762 words of memory out of 5000000
- 59415 multiletter control sequences out of 15000+600000
- 643081 words of font info for 74 fonts, out of 8000000 for 9000
+ 31659 strings out of 467538
+ 630790 string characters out of 5419551
+ 1449865 words of memory out of 5000000
+ 59782 multiletter control sequences out of 15000+600000
+ 644930 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,11n,108p,1148b,629s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (32 pages, 1127552 bytes).
+ 108i,12n,108p,1148b,2000s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on main.pdf (36 pages, 1205070 bytes).
 PDF statistics:
- 470 PDF objects out of 1000 (max. 8388607)
- 358 compressed objects within 4 object streams
- 88 named destinations out of 1000 (max. 500000)
- 413 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 644 PDF objects out of 1000 (max. 8388607)
+ 522 compressed objects within 6 object streams
+ 203 named destinations out of 1000 (max. 500000)
+ 437 words of extra memory for PDF output out of 10000 (max. 10000000)
 

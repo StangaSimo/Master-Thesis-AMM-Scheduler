@@ -19,5 +19,8 @@
 \contentsline {subsection}{\numberline {3.1.2}Benchmarking}{19}{subsection.3.1.2}%
 \contentsline {section}{\numberline {3.2}AMM Scheduler}{20}{section.3.2}%
 \contentsline {chapter}{\numberline {4}Implementation}{25}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Results}{27}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{29}{appendix.A}%
+\contentsline {section}{\numberline {4.1}Project Structure and Compilation}{26}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Compilation Process}{27}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Project Structure and Compilation}{29}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Results}{31}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{33}{appendix.A}%

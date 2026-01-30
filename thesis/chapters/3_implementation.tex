@@ -1,2 +1,188 @@
 \chapter{Implementation}
 \label{implementation}
+
+In this chapter, after having seen a general explanation of how the scheduler works in the previous sections, we are going to look at and explain all its components in detail.
+
+In the first section, we will explain the structure of the project files and the reason why they are organized this way, and we will also give a view of the entire compilation process of the scheduler.
+
+Subsequently, we will explain each of the abstraction layers used to target the accelerators, and then to conclude, we will see in detail all the components that make the scheduler logic work.
+
+\clearpage 
+
+\section{Project Structure and Compilation}
+The figure below provides a view of the project's file and folder structure:
+
+\vspace{0.5cm}
+
+\begin{figure}[h!]
+\centering
+\begin{tcolorbox}[
+    colback=white,      
+    colframe=black!75,  
+    title=\textbf{Project Tree},
+    arc=2mm        
+]
+
+\begin{verbatim}
+|-- bin/
+|-- build/
+|-- cuda/
+|   |-- runner.cu
+|   |-- cuda_wrapper.h
+|   |-- CMakeLists.txt
+|-- sycl/
+|   |-- runner.cpp
+|   |-- sycl_wrapper.h
+|   |-- CMakeLists.txt
+|-- openvino/
+|   |-- runner.cpp
+|   |-- ov_wrapper.h
+|   |-- CMakeLists.txt
+|-- scheduler/
+|   |-- main.cpp
+|   |-- scheduler.hpp
+|   |-- performancemap.hpp
+|   |-- sharedbuffer.hpp
+|   |-- cpu.hpp
+|   |-- profiler.hpp
+|   |-- tasks.hpp
+|   |-- tests.hpp
+|   |-- config.hpp
+|   |-- CMakeLists.txt
+|-- CMakeLists.txt
+|-- make_run.sh
+|-- setup.txt
+\end{verbatim}
+\end{tcolorbox}
+\caption{Visual representation of the project structure}
+\label{fig:tree_verbatim}
+\end{figure}
+
+\clearpage 
+
+The codebase of this project was designed with a specific goal: modularity. Since the project works with very different hardware architectures, writing all the code in a single environment is not feasible. Each accelerator requires its own specific compiler and libraries: NVIDIA GPUs need the nvcc compiler, Intel GPUs need the icpx compiler for SYCL, and the NPU relies on OpenVINO libraries.
+
+To solve this compatibility issue, the architecture was decomposed into independent dynamic libraries. Each hardware backend (CUDA, SYCL, OpenVINO) is compiled into a separate shared object file (.so), and each of these libraries expose a standard C ABI (Application Binary Interface). This design is mandatory because the C ABI acts as a universal language that allows the main scheduler to communicate with the accelerators without needing to understand their specific C++ implementations or complex driver dependencies, moreover the real problem was with the version of the compilers utilized with each specific library, so the standard approach is to unify all the interfaces with the help of the C language.
+
+
+\subsection{Compilation Process}
+The tool CMake was used in this project to manage this complex build process, the build is not performed all at once. 
+
+Below is the CMakeLists.txt file in the root directory:
+
+\begin{lstlisting}[caption={CMakeLists.txt root directory}]
+cmake_minimum_required(VERSION 3.15)
+project(amm_scheduler)
+
+include(ExternalProject)
+
+set(LIB_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/bin)
+file(MAKE_DIRECTORY ${LIB_OUTPUT_DIR})
+
+# CUDA SYCL OPENVINO
+option(USE_CUDA "CUDA ON" OFF) 
+option(USE_SYCL "SYCL ON" OFF)
+option(USE_OPENVINO "OpenVINO ON" OFF)
+option(USE_OPENBLAS "OpenBLAS ON" OFF)
+option(USE_OPENCV "OpenCV ON" OFF)
+
+set(SCHEDULER_DEPS "") # depends variable 
+
+set(OPT_FLAGS "-O2 -DNDEBUG")
+
+# CUDA
+if(USE_CUDA)
+    message(STATUS "CUDA Backend ON")
+    ExternalProject_Add(build_cuda
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/cuda
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
+            -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            -DCMAKE_CXX_FLAGS_RELEASE=${OPT_FLAGS}
+            -DCMAKE_CUDA_FLAGS_RELEASE=${OPT_FLAGS}
+            #BUILD_ALWAYS 1
+    )
+
+    list(APPEND SCHEDULER_DEPS build_cuda)
+else()
+    message(STATUS "CUDA Backend OFF")
+endif()
+
+# SYCL 
+if(USE_SYCL)
+    message(STATUS "SYCL Backend: ON")
+    ExternalProject_Add(build_sycl
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/sycl
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
+            -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            -DCMAKE_CXX_COMPILER=icpx 
+            -DCMAKE_CXX_FLAGS_RELEASE=${OPT_FLAGS}
+            #BUILD_ALWAYS 1
+    )
+    list(APPEND SCHEDULER_DEPS build_sycl)
+else()
+    message(STATUS "SYCL Backend: OFF")
+endif()
+
+# OPENVINO
+if(USE_OPENVINO)
+    message(STATUS "OPENVINO Backend: ON")
+    ExternalProject_Add(build_openvino
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/openvino
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
+            -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            -DCMAKE_CXX_FLAGS_RELEASE=${OPT_FLAGS}
+            #BUILD_ALWAYS 1
+    )
+    list(APPEND SCHEDULER_DEPS build_openvino)
+else()
+    message(STATUS "OPENVINO Backend: OFF")
+endif()
+
+# scheduler
+ExternalProject_Add(build_scheduler
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/scheduler
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
+        -DCMAKE_BUILD_TYPE=Release
+        -DLIBS_DIR=${LIB_OUTPUT_DIR}
+        -DCMAKE_CXX_FLAGS_RELEASE=${OPT_FLAGS}
+
+        -DCUDA_SRC_DIR=${CMAKE_SOURCE_DIR}/cuda
+        -DSYCL_SRC_DIR=${CMAKE_SOURCE_DIR}/sycl
+        -DOPEN_SRC_DIR=${CMAKE_SOURCE_DIR}/openvino
+
+        -DENABLE_CUDA=${USE_CUDA} # USE_CUDA
+        -DENABLE_SYCL=${USE_SYCL} # USE_SYCL
+        -DENABLE_OPENVINO=${USE_OPENVINO} # USE_OPENVINO
+        -DENABLE_OPENBLAS=${USE_OPENBLAS} # USE_OPENBLAS
+        -DENABLE_OPENCV=${USE_OPENCV} # USE_OPENCV
+
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON # for clangd
+    DEPENDS ${SCHEDULER_DEPS}
+    #BUILD_ALWAYS 1
+)
+
+add_custom_target(UpdateLSP
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E echo "update LSP..."
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/merge_clangd.py
+    COMMENT "merge compile_commands.json for clangd"
+    DEPENDS build_scheduler 
+)
+\end{lstlisting}
+\label{code cmake}
+
+As the code in the figure \ref{code cmake} show, the \texttt{ExternalProject\_Add } feature of cmake is utilized to keep the compilation steps isolated. The main \texttt{CMakeLists.txt} file in the root directory acts as a manager. It does not compile the code directly, instead, it checks the configuration flags (such as \texttt{USE\_CUDA}, \texttt{USE\_SYCL} and \texttt{USE\_OPENVINO}) and triggers a separate build process for each active module. The process is the following:
+
+\begin{enumerate}
+    \item  First, CMake enters the accellerators sub-directories, \texttt{cuda/}, \texttt{sycl/}, \texttt{openvino/}, and builds them as standalone projects.
+    \item  Each sub-project uses its specific compiler to generate a dynamic library, e.g., \texttt{libcuda\_lib.so}, \texttt{libsycl\_lib.so}).
+\end{enumerate}
+
+\section{Project Structure and Compilation}
