@@ -513,6 +513,15 @@ INPUT chapters/3_implementation.tex
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ectt1095.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecrm1095.tfm
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecrm0600.tfm
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
+INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
 INPUT ./chapters/4_results.tex
 OUTPUT chapters/4_results.aux
 INPUT ./chapters/4_results.tex

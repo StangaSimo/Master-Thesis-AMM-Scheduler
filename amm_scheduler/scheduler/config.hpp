@@ -25,7 +25,7 @@ inline std::string csvname = "bin/csv/results.csv";
 /********** scheduler ************/
 #define MAX_SIZE 4092
 
-#define JIT_MS_SYCL 140  /* mitigate jit time for sycl */
+#define JIT_MS_SYCL 50  /* mitigate jit time for sycl */
 
 //enum {BATCH_SIZE = 50};                  /* static partitioning batch size */
 //enum {BATCH_SIZE_HETERO = 40};           

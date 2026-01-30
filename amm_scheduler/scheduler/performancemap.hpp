@@ -170,7 +170,7 @@ public:
             if (bt == BT::OPENVINO) {
 
                 /* mitigate overhead when other accellerator are running */
-                time_ms += time_ms * 0.3;
+                time_ms += time_ms * 0.1;
 
                 if (jit_cache->find(key) == jit_cache->end()){
                     if (add_jit)

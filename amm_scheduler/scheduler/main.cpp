@@ -102,21 +102,44 @@ size_t check_mem(int n_tasks, int M, int N, int K) {
     return n_tasks * elem * 4;
 }
 
+int get_max_tasks(int M, int N, int K) {
+    size_t elem = (size_t)M * K + (size_t)K * N + (size_t)M * N;
+    size_t task_size = elem * 4; 
+    return (int)(RAM_LIMIT / task_size);
+}
+
 void bench_static_partitioning() {
     int sizes[] = {1024, 2048, 4096};
     
     for (int s : sizes) {
+        int step;
+        if (s == 1024) step = 250;      
+        else if (s == 2048) step = 50;  
+        else step = 10;                 
+
+        int max_possible = get_max_tasks(s, s, s);
+
         for (int b = 20; b <= 100; b += 10) {
             BATCH_SIZE = b;
 
-            for (int t = 10; ; t += 50) {
-                if (check_mem(t, s, s, s) > RAM_LIMIT) {
-                    cout << "RAM limit reached (" << t << " tasks)\n";
-                    break;
+            int t = step; 
+            bool last_run = false;
+
+            while (!last_run) {
+                if (t >= max_possible) {
+                    t = max_possible;
+                    last_run = true;
                 }
 
                 csvname = "bin/csv/static_part_S" + to_string(s) + "_B" + to_string(b) + ".csv";
-                cout << "Static Part | Size: " << s << " | Batch: " << b << " | Tasks: " << t << endl;
+                
+                if (check_mem(t, s, s, s) > RAM_LIMIT) {
+                    break;
+                }
+
+                cout << "Static Part | Size: " << s << " | Batch: " << b << " | Tasks: " << t;
+                if (last_run) cout << " (MAX RAM)";
+                cout << endl;
 
                 task* tasks = init_tasks(t, s, s, s, Type::FLOAT);
                 AMScheduler sched(Logic::STATIC_PARTITIONING);
@@ -124,6 +147,8 @@ void bench_static_partitioning() {
                 sched.wait();
                 sched.print_stats(tasks, t);
                 clean_tasks(tasks, t);
+
+                t += step;
             }
         }
     }
@@ -135,14 +160,26 @@ void bench_dynamic_homo() {
     cout << "\n=== START DYNAMIC HOMOGENEOUS BENCHMARK ===\n";
 
     for (int s : sizes) {
-        for (int t = 20; ; t += 60) {
-            if (check_mem(t, s, s, s) > RAM_LIMIT) {
-                cout << "RAM limit reached for Size " << s << " (" << t << " tasks)\n";
-                break;
+        int step;
+        if (s == 1024) step = 250;
+        else if (s == 2048) step = 50;
+        else step = 10;
+
+        int max_possible = get_max_tasks(s, s, s);
+        int t = step;
+        bool last_run = false;
+
+        while (!last_run) {
+            if (t >= max_possible) {
+                t = max_possible;
+                last_run = true;
             }
 
             csvname = "bin/csv/dynamic_homo_S" + to_string(s) + ".csv";
-            cout << "Dynamic Homo | Size: " << s << " | Tasks: " << t << endl;
+            
+            cout << "Dynamic Homo | Size: " << s << " | Tasks: " << t;
+            if (last_run) cout << " (MAX RAM)";
+            cout << endl;
 
             task* tasks = init_tasks(t, s, s, s, Type::FLOAT);
             AMScheduler sched(Logic::DYNAMIC);
@@ -150,6 +187,8 @@ void bench_dynamic_homo() {
             sched.wait();
             sched.print_stats(tasks, t);
             clean_tasks(tasks, t);
+
+            t += step;
         }
     }
 }
@@ -157,39 +196,64 @@ void bench_dynamic_homo() {
 void bench_hetero_comparison() {
     cout << "\n=== START HETERO COMPARISON BENCHMARK ===\n";
 
-    int max_total_tasks = 20;
-    while (check_mem(max_total_tasks + 60, MAX_SIZE, MAX_SIZE, MAX_SIZE) <= RAM_LIMIT_SAFE) {
-        max_total_tasks += 60;
-    }
+    int max_total_tasks = get_max_tasks(MAX_SIZE, MAX_SIZE, MAX_SIZE);
+    
+    max_total_tasks = (int)(max_total_tasks * 0.9); 
 
-    cout << "Allocating " << max_total_tasks << " mixed tasks ONCE for fair comparison..." << endl;
+    cout << "Allocating " << max_total_tasks << " mixed tasks ONCE..." << endl;
     
     task* shared_tasks = init_hetero_tasks(max_total_tasks, Type::FLOAT);
 
+    int step = 20;
+
     for (int b = 20; b <= 100; b += 10) {
         BATCH_SIZE_HETERO = b;
+        
+        int t = step;
+        bool last_run = false;
 
-        for (int t = 20; t <= max_total_tasks; t += 60) {
+        while (!last_run) {
+            if (t >= max_total_tasks) {
+                t = max_total_tasks;
+                last_run = true;
+            }
+
             csvname = "bin/csv/static_hetero_B" + to_string(b) + ".csv";
-            cout << "Static Hetero | Batch: " << b << " | Tasks: " << t << endl;
+            cout << "Static Hetero | Batch: " << b << " | Tasks: " << t;
+            if (last_run) cout << " (MAX ALLOC)";
+            cout << endl;
 
             AMScheduler sched(Logic::STATIC_HETERO_PARTITIONING);
             sched.do_tasks(shared_tasks, t); 
             sched.wait();
             sched.print_stats(shared_tasks, t);
+
+            t += step;
         }
     }
 
-    cout << "\nDynamic Logic on ethero ---\n";
+    cout << "\n--- Dynamic Logic on Hetero ---\n";
     
-    for (int t = 20; t <= max_total_tasks; t += 60) {
+    int t = step;
+    bool last_run = false;
+
+    while (!last_run) {
+        if (t >= max_total_tasks) {
+            t = max_total_tasks;
+            last_run = true;
+        }
+
         csvname = "bin/csv/dynamic_hetero.csv";
-        cout << "Dynamic Hetero | Tasks: " << t << endl;
+        cout << "Dynamic Hetero | Tasks: " << t;
+        if (last_run) cout << " (MAX ALLOC)";
+        cout << endl;
 
         AMScheduler sched(Logic::DYNAMIC);
         sched.do_tasks(shared_tasks, t);
         sched.wait();
         sched.print_stats(shared_tasks, t);
+
+        t += step;
     }
 
     cout << "Cleaning up shared tasks...\n";
@@ -232,10 +296,10 @@ int main() {
     //test_video_filter(Logic::STATIC_PARTITIONING, false);
     //test_video_filter(Logic::DYNAMIC, true);
     
-    bench_static_partitioning();
+    //bench_static_partitioning();
     //bench_dynamic_homo();
     //bench_hetero_comparison();
-    //bench_large_matrix();
+    bench_large_matrix();
 
     return 0;
 }

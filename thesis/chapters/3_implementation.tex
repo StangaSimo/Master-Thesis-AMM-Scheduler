@@ -7,6 +7,8 @@ In the first section, we will explain the structure of the project files and the
 
 Subsequently, we will explain each of the abstraction layers used to target the accelerators, and then to conclude, we will see in detail all the components that make the scheduler logic work.
 
+As mentioned in Chapter \ref{logical design}, the code developed during the preliminary phase is not analyzed in this section. This avoids repetition, as the evolved version of this code, which is integrated into the scheduler, will be explained in detail later. However, the original code is available in Appendix \ref{TODO}.
+
 \clearpage 
 
 \section{Project Structure and Compilation}
@@ -51,11 +53,12 @@ The figure below provides a view of the project's file and folder structure:
 |   |-- CMakeLists.txt
 |-- CMakeLists.txt
 |-- make_run.sh
+|-- merge_clangd.py
 |-- setup.txt
 \end{verbatim}
 \end{tcolorbox}
-\caption{Visual representation of the project structure}
-\label{fig:tree_verbatim}
+\caption{Project Dir Tree}
+\label{code_tree}
 \end{figure}
 
 \clearpage 
@@ -63,6 +66,8 @@ The figure below provides a view of the project's file and folder structure:
 The codebase of this project was designed with a specific goal: modularity. Since the project works with very different hardware architectures, writing all the code in a single environment is not feasible. Each accelerator requires its own specific compiler and libraries: NVIDIA GPUs need the nvcc compiler, Intel GPUs need the icpx compiler for SYCL, and the NPU relies on OpenVINO libraries.
 
 To solve this compatibility issue, the architecture was decomposed into independent dynamic libraries. Each hardware backend (CUDA, SYCL, OpenVINO) is compiled into a separate shared object file (.so), and each of these libraries expose a standard C ABI (Application Binary Interface). This design is mandatory because the C ABI acts as a universal language that allows the main scheduler to communicate with the accelerators without needing to understand their specific C++ implementations or complex driver dependencies, moreover the real problem was with the version of the compilers utilized with each specific library, so the standard approach is to unify all the interfaces with the help of the C language.
+
+As shown in Figure \ref{code_tree}, the project includes a dedicated folder for each library (\texttt{sycl/}, \texttt{openvino/}, and \texttt{cuda/}) containing their specific implementations, finally, the \texttt{scheduler/} directory containing all the internal dependencies used by the scheduler logic, which will be explained in section \ref{TODO}.
 
 
 \subsection{Compilation Process}
@@ -183,6 +188,110 @@ As the code in the figure \ref{code cmake} show, the \texttt{ExternalProject\_Ad
 \begin{enumerate}
     \item  First, CMake enters the accellerators sub-directories, \texttt{cuda/}, \texttt{sycl/}, \texttt{openvino/}, and builds them as standalone projects.
     \item  Each sub-project uses its specific compiler to generate a dynamic library, e.g., \texttt{libcuda\_lib.so}, \texttt{libsycl\_lib.so}).
+    \item  Finally, the \texttt{scheduler/} directory is compiled. Because of the standard C ABI, the scheduler does not need to know how the hardware works or which compiler was used for the accelerators, it simply links against these shared libraries at runtime.
 \end{enumerate}
 
-\section{Project Structure and Compilation}
+This separation ensures that the specific code for one hardware component does not interfere with the others, for example, the scheduler compiler does not need to handle CUDA Kernels, it only sees standard C functions. 
+
+Based on the flags passed to CMake during compilation, specific preprocessor definitions are passed to the C++ code. This allows the program to enable or disable dependencies on specific libraries directly inside the source code.
+
+Consequently, the scheduler logic knows exactly which accelerators are available. This approach makes the system flexible, if a specific accelerator or library is missing on the current machine where the project have to be compiled, it can be disabled simply by using a flag.
+
+Below the following snippet from the scheduler's build configuration shows how the flags trigger the injection of preprocessor definitions and the linking of specific libraries:
+
+
+\begin{lstlisting}[caption={Part of CMakeLists.txt scheduler directory}]
+# CUDA
+if(NOT DEFINED ENABLE_CUDA)
+    message("[SCHEDULER] CUDA off on scheduler")
+    set(ENABLE_CUDA OFF)
+endif()
+
+# SYCL 
+if(NOT DEFINED ENABLE_SYCL) 
+    message("[SCHEDULER] SYCL off on scheduler")
+    set(ENABLE_SYCL OFF) 
+endif()
+
+# OPENVINO 
+if(NOT DEFINED ENABLE_OPENVINO) 
+    set(ENABLE_OPENVINO OFF) 
+endif()
+
+#OPENBLAS
+if(NOT DEFINED ENABLE_OPENBLAS)
+    message("[SCHEDULER] OpenBLAS off on scheduler")
+    set(ENABLE_OPENBLAS OFF)
+endif()
+\end{lstlisting}
+\label{code scheduler cmake}
+
+The command \texttt{target\_compile\_definitions} passes a macro (e.g., \texttt{ENABLE\_CUDA}) to the compiler, which the C++ code effectively uses to enable or disable code blocks via \texttt{\#ifdef} directives. Simultaneously, \texttt{target\_link\_libraries} ensures that the scheduler only links against the dynamic libraries that are actually present. 
+
+The compilation process for the accelerator backends follows a standard pattern. As an example, the configuration file for the OpenVINO library is presented below:
+
+\begin{lstlisting}[caption={CMakeLists.txt OpenVINO directory}]
+cmake_minimum_required(VERSION 3.20)
+project(OpenVinoPart LANGUAGES CXX)
+
+message("\n--------------- OPENVINO COMPILING \n")
+
+find_package(OpenVINO REQUIRED)
+
+add_library(ov_lib SHARED runner.cpp)
+
+set_target_properties(ov_lib PROPERTIES PUBLIC_HEADER ov_wrapper.h)
+
+# C++17 needed OpenVINO
+target_compile_features(ov_lib PRIVATE cxx_std_17)
+
+target_link_libraries(ov_lib PRIVATE openvino::runtime)
+
+install(TARGETS ov_lib 
+    LIBRARY DESTINATION lib
+    PUBLIC_HEADER DESTINATION include
+)
+\end{lstlisting}
+\label{code cmake openvino}
+
+First this script locates the necessary dependencies on the host system using \texttt{find\_package}, then, it defines a shared library named \texttt{ov\_lib} using the source file \texttt{runner.cpp}. The \texttt{SHARED} keyword is fundamental because it instructs the compiler to generate a dynamic library instead of a standard executable.
+
+Finally, the script links the specific runtime (in this case, \texttt{openvino::runtime}) and specifies the installation rules. The \texttt{install} command ensures that the resulting binary and the public header (\texttt{ov\_wrapper.h}) are placed in the correct output directories, making them accessible to the main scheduler.
+
+The CUDA and SYCL modules utilize an identical structure, differing only in the specific compilers and libraries linked.
+
+Finally, when the compilation finishes, all the resulting files are placed in a \texttt{ bin/} directory. This folder contains the final executable named scheduler, the csv that the scheduler will create at runtime, and all the dynamic libraries it needs to run.
+
+To speed up the development process, a script named \texttt{make\_run.sh} was created. This script automates the entire workflow that consist of cleaning the bin and build dir, runs CMake with the correct options to enable all accelerators, compiles the project using all available CPU cores, and finally executes the program.
+
+Additionally, the project includes a Python script named \texttt{merge\_clangd.py}. Since multiple independent builds are used, the LSP of the code editing tools often don't work with these many libraries, this script collects the compilation commands from all the different modules and merges them into a single file, ensuring that code completion and error highlighting work correctly across the entire project. This file will be executed after all the compilation steps are done. 
+
+\clearpage
+\section{Accellerators Abstraction Layers}
+Before diving into the architectural details in the following sections, it is important to clarify the supported data types. The scheduler is fully capable of managing both 32-bit and 16-bit matrix operations, furthermore thanks to the modular and flexible design of the codebase, the architecture is already provisioned to support 8-bit matrices as well. However, as 8-bit operations are not supported by all target accelerators and were not required to achieve the objectives of this thesis, their implementation has not been finalized across all backends.
+
+
+\subsection{Cuda}
+The CUDA abstraction layer is designed to manage the NVIDIA discrete GPU available in the system. As previously discussed, the interaction between the C++ scheduler and the NVIDIA compiler (\texttt{nvcc}) is mediated by a C interface.
+
+The header file \texttt{cuda\_wrapper.h} defines the Application Binary Interface exposed to the scheduler. It declares the necessary functions for initialization, memory cleanup, and the execution of matrix multiplication across different data types, 32-bit floating point, 16-bit floating point, and 8-bit integer.
+
+\begin{lstlisting}[caption={cuda\_wrapper.h interface}, language=C++] 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    void cuda_init();
+    void cuda_free();
+    void cuda_gemm_32bit(void* A, void* B, void* C, int M, int N, int K);
+    void cuda_gemm_16bit(void* A, void* B, void* C, int M, int N, int K);
+    void cuda_gemm_8bit(void* A, void* B, void* C, int M, int N, int K);
+
+#ifdef __cplusplus
+}
+#endif
+\end{lstlisting}
+
+
+
+
