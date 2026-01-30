@@ -103,10 +103,10 @@ size_t check_mem(int n_tasks, int M, int N, int K) {
 }
 
 void bench_static_partitioning() {
-    int sizes[] = {512, 1024, 2048, 4096};
+    int sizes[] = {1024, 2048, 4096};
     
     for (int s : sizes) {
-        for (int b = 10; b <= 50; b += 10) {
+        for (int b = 20; b <= 100; b += 10) {
             BATCH_SIZE = b;
 
             for (int t = 10; ; t += 50) {
@@ -129,36 +129,15 @@ void bench_static_partitioning() {
     }
 }
 
-void bench_static_hetero() {
-    for (int b = 10; b <= 50; b += 10) {
-        BATCH_SIZE_HETERO = b;
+void bench_dynamic_homo() {
+    int sizes[] = {1024, 2048, 4096};
 
-        for (int t = 10; ; t += 50) {
-            if (check_mem(t, MAX_SIZE, MAX_SIZE, MAX_SIZE) > RAM_LIMIT_SAFE) {
-                cout << "Safe RAM limit reached (" << t << " tasks)\n";
-                break;
-            }
-
-            csvname = "bin/csv/static_hetero_B" + to_string(b) + ".csv";
-            cout << "Static Hetero | Batch: " << b << " | Tasks: " << t << endl;
-
-            task* tasks = init_hetero_tasks(t, Type::FLOAT);
-            AMScheduler sched(Logic::STATIC_HETERO_PARTITIONING);
-            sched.do_tasks(tasks, t);
-            sched.wait();
-            sched.print_stats(tasks, t);
-            clean_tasks(tasks, t);
-        }
-    }
-}
-
-void bench_dynamic_logic() {
-    int sizes[] = {512, 1024, 2048, 4096};
+    cout << "\n=== START DYNAMIC HOMOGENEOUS BENCHMARK ===\n";
 
     for (int s : sizes) {
-        for (int t = 10; ; t += 50) {
+        for (int t = 20; ; t += 60) {
             if (check_mem(t, s, s, s) > RAM_LIMIT) {
-                cout << "RAM limit reached (" << t << " tasks)\n";
+                cout << "RAM limit reached for Size " << s << " (" << t << " tasks)\n";
                 break;
             }
 
@@ -173,23 +152,48 @@ void bench_dynamic_logic() {
             clean_tasks(tasks, t);
         }
     }
+}
 
-    for (int t = 10; ; t += 50) {
-        if (check_mem(t, MAX_SIZE, MAX_SIZE, MAX_SIZE) > RAM_LIMIT_SAFE) {
-            cout << "Safe RAM limit reached (" << t << " tasks)\n";
-            break;
+void bench_hetero_comparison() {
+    cout << "\n=== START HETERO COMPARISON BENCHMARK ===\n";
+
+    int max_total_tasks = 20;
+    while (check_mem(max_total_tasks + 60, MAX_SIZE, MAX_SIZE, MAX_SIZE) <= RAM_LIMIT_SAFE) {
+        max_total_tasks += 60;
+    }
+
+    cout << "Allocating " << max_total_tasks << " mixed tasks ONCE for fair comparison..." << endl;
+    
+    task* shared_tasks = init_hetero_tasks(max_total_tasks, Type::FLOAT);
+
+    for (int b = 20; b <= 100; b += 10) {
+        BATCH_SIZE_HETERO = b;
+
+        for (int t = 20; t <= max_total_tasks; t += 60) {
+            csvname = "bin/csv/static_hetero_B" + to_string(b) + ".csv";
+            cout << "Static Hetero | Batch: " << b << " | Tasks: " << t << endl;
+
+            AMScheduler sched(Logic::STATIC_HETERO_PARTITIONING);
+            sched.do_tasks(shared_tasks, t); 
+            sched.wait();
+            sched.print_stats(shared_tasks, t);
         }
+    }
 
+    cout << "\nDynamic Logic on ethero ---\n";
+    
+    for (int t = 20; t <= max_total_tasks; t += 60) {
         csvname = "bin/csv/dynamic_hetero.csv";
         cout << "Dynamic Hetero | Tasks: " << t << endl;
 
-        task* tasks = init_hetero_tasks(t, Type::FLOAT);
         AMScheduler sched(Logic::DYNAMIC);
-        sched.do_tasks(tasks, t);
+        sched.do_tasks(shared_tasks, t);
         sched.wait();
-        sched.print_stats(tasks, t);
-        clean_tasks(tasks, t);
+        sched.print_stats(shared_tasks, t);
     }
+
+    cout << "Cleaning up shared tasks...\n";
+    clean_tasks(shared_tasks, max_total_tasks);
 }
 
 void bench_large_matrix() {
@@ -229,8 +233,8 @@ int main() {
     //test_video_filter(Logic::DYNAMIC, true);
     
     bench_static_partitioning();
-    //bench_static_hetero();
-    //bench_dynamic_logic();
+    //bench_dynamic_homo();
+    //bench_hetero_comparison();
     //bench_large_matrix();
 
     return 0;

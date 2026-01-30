@@ -177,6 +177,8 @@ public:
                         jit_cache->insert(key);
 
                     time_ms += jit_ms * 1.3;
+                    //time_ms += jit_ms;
+
                 }
             }
 
@@ -198,7 +200,7 @@ public:
             
             /* mitigate openblas error in bencharks  */
             if (bt == BT::OPENBLAS)
-                time_ms = time_ms/2;
+                time_ms = time_ms * 0.5;
             
             data->last_K = time_ms;
             return time_ms;
