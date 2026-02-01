@@ -25,6 +25,5 @@
 \contentsline {subsection}{\numberline {4.2.1}Cuda}{33}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}OpenVINO}{38}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}SYCL}{43}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}OpenBLAS}{43}{subsection.4.2.4}%
-\contentsline {chapter}{\numberline {5}Results}{45}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{47}{appendix.A}%
+\contentsline {chapter}{\numberline {5}Results}{49}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{51}{appendix.A}%

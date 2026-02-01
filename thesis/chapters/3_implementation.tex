@@ -590,16 +590,165 @@ extern "C" {
 
 A notable difference compared to the CUDA implementation is the \texttt{ov\_free} function, which is empty. This is because the OpenVINO runtime relies on modern C++ features, specifically RAII and smart pointers, so when the program terminates or the objects go out of scope, the destructors for the \texttt{ov::Core} and the cached requests are invoked automatically, releasing the NPU resources explicit cleanup.
 
-
-
-
-
-
-
-
 \clearpage
 
 \subsection{SYCL}
+The SYCL abstraction layer is designed to manage Intel GPUs. In this project, SYCL is utilized in conjunction with the Intel oneAPI Math Kernel Library (oneMKL) to perform high-performance matrix operations. 
 
+Just like the previous modules, the interaction with the scheduler is mediated by a pure C interface to ensure ABI compatibility.
 
-\subsection{OpenBLAS}
+\begin{lstlisting}[caption={sycl\_wrapper.h interface}, language=C++] 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    void ov_init();
+
+    void ov_gemm_32bit(void* A, void* B, void* C, int M, int N, int K);
+    void ov_gemm_16bit(void* A, void* B, void* C, int M, int N, int K);
+    void ov_gemm_8bit(void* A, void* B, void* C, int M, int N, int K);
+
+    void ov_free();
+
+#ifdef __cplusplus
+}
+#endif
+\end{lstlisting}
+
+The header file \texttt{sycl\_wrapper.h} defines the standard functions for initialization, execution (32-bit and 16-bit), and cleanup. 
+
+The implementation logic begins with the initialization phase:
+
+\begin{lstlisting}[caption={sycl runner.cpp init}, language=C++] 
+void init() {
+    try {
+
+        /* persisten streams */
+        for(int i=0; i<N_STREAMS; i++) {
+            streams.push_back(std::make_unique<SYCLStream>(MAX));
+        }
+
+    } catch (sycl::exception const& e) {
+        std::cerr << "[SYCL ERROR] Init: " << e.what() << "\n";
+        exit(1);
+    }
+}
+
+\end{lstlisting}
+
+The primary task of the \texttt{init} function is to populate the global vector named \texttt{streams} with instances of \texttt{SYCLStream}. By iterating \texttt{N\_STREAMS} times, it creates multiple independent execution contexts, allowing the scheduler to submit tasks in a round-robin manner.
+
+Since SYCL is a higher-level C++ abstraction, the resource management is encapsulated in a dedicated struct named \texttt{SYCLStream}.
+
+\begin{lstlisting}[caption={sycl runner.cpp global data}, language=C++] 
+#define N_STREAMS 2
+
+using namespace std;
+
+struct SYCLStream {
+    sycl::queue q;
+    float *d_A_f, *d_B_f, *d_C_f;     
+    sycl::half *d_A_h, *d_B_h, *d_C_h;
+    
+    SYCLStream(size_t max_elements) : q(sycl::gpu_selector_v, sycl::property::queue::in_order()) {
+        d_A_f = sycl::malloc_device<float>(max_elements, q);
+        d_B_f = sycl::malloc_device<float>(max_elements, q);
+        d_C_f = sycl::malloc_device<float>(max_elements, q);
+        
+        d_A_h = sycl::malloc_device<sycl::half>(max_elements, q);
+        d_B_h = sycl::malloc_device<sycl::half>(max_elements, q);
+        d_C_h = sycl::malloc_device<sycl::half>(max_elements, q);
+
+        if (q.get_device().get_info<sycl::info::device::name>()  != "Intel(R) Arc(TM) Graphics") {
+            std::cout << "Intel GPU NOT PRESENT\n";
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    ~SYCLStream() {
+        sycl::free(d_A_f, q); sycl::free(d_B_f, q); sycl::free(d_C_f, q);
+        sycl::free(d_A_h, q); sycl::free(d_B_h, q); sycl::free(d_C_h, q);
+    }
+};
+
+//static unique_ptr<sycl::queue> global_q;
+static std::vector<std::unique_ptr<SYCLStream>> streams;
+static int current_stream = 0;
+static size_t MAX = (size_t)4096 * 4096;
+\end{lstlisting}
+
+The \texttt{SYCLStream} struct acts as a container that holds the state necessary for execution.
+
+First, it contains a \texttt{sycl::queue}, which is the object used to submit commands to the device. The queue then is initialized with \texttt{in\_order}, which simplifies the execution by ensuring that commands submitted to this queue are executed sequentially.
+
+In the constructor, the device memory is pre-allocated using \texttt{sycl::malloc\_device}, following the same optimization strategy used in the CUDA backend to avoid runtime allocation overhead. A specific check is also performed to verify that the code is running on the Intel GPU specifically, if the GPU is not found, the program aborts.
+
+Finally, the struct includes a destructor, so that when the stream object is destroyed, all the memory buffers associated with it are explicitly freed, preventing memory leaks.
+
+The execution logic is implemented in the following functions:
+
+\begin{lstlisting}[caption={sycl runner.cpp execution}, language=C++] 
+void sycl_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K) {
+    SYCLStream& s = *streams[current_stream];
+
+    s.q.memcpy(s.d_A_f, A, M * K * sizeof(float));
+    s.q.memcpy(s.d_B_f, B, K * N * sizeof(float));
+
+    float alpha = 1.0f, beta = 0.0f;
+    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, 
+            M, N, K, alpha, s.d_A_f, K, s.d_B_f, N, beta, s.d_C_f, N);
+
+    s.q.memcpy(C, s.d_C_f, M * N * sizeof(float));
+    s.q.wait(); 
+
+    current_stream = (current_stream + 1) % N_STREAMS;
+}
+
+void sycl_gemm_16bit_p(sycl::half *A, sycl::half *B, sycl::half *C, int M, int N, int K) {
+    SYCLStream& s = *streams[current_stream];
+
+    s.q.memcpy(s.d_A_h, A, M * K * sizeof(sycl::half));
+    s.q.memcpy(s.d_B_h, B, K * N * sizeof(sycl::half));
+
+    sycl::half alpha = 1.0f, beta = 0.0f;
+    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, 
+            M, N, K, alpha, s.d_A_h, K, s.d_B_h, N, beta, s.d_C_h, N);
+
+    s.q.memcpy(C, s.d_C_h, M * N * sizeof(sycl::half));
+    s.q.wait();
+
+    current_stream = (current_stream + 1) % N_STREAMS;
+}
+\end{lstlisting}
+
+The \texttt{sycl\_gemm\_32bit\_p} function orchestrates execution of the tasks, first, it selects the current stream and copies the input data from the host to the pre-allocated device buffers using \texttt{memcpy}.
+
+Next, it invokes the matrix multiplication using the oneMKL library, thanks to this library the matrices A and B in this case can be passed directly with the \texttt{nontrans} flag, without needing to swap operands.
+
+Finally, the result is copied back to the host, and \texttt{s.q.wait()} is called to block the execution until all operations in the queue are complete.
+
+The 16-bit implementation is structurally identical but operates on the \texttt{sycl::half} data type. This allows the hardware to utilize half-precision units on the GPU, improving throughput.
+
+\begin{lstlisting}[caption={sycl runner.cpp wrapper}, language=C++] 
+extern "C" {
+    void sycl_init() {
+        init();
+    }
+
+    void sycl_gemm_32bit(void *A, void *B, void *C, int M, int N, int K) {
+        sycl_gemm_32bit_p((float*)A, (float*)B, (float*)C, M, N, K);
+    }
+
+    void sycl_gemm_16bit(void *A, void *B, void *C, int M, int N, int K) {
+        sycl_gemm_16bit_p((sycl::half*)A, (sycl::half*)B, (sycl::half*)C, M, N, K);
+    }
+
+    void sycl_free() {
+        streams.clear();
+    }
+}
+\end{lstlisting}
+
+The code concludes with the C-compatible wrappers. These functions simply cast the generic \texttt{void*} pointers to the appropriate C++ types (float* or sycl::half*) and forward the call.
+
+The \texttt{sycl\_free} function simply calls \texttt{streams.clear()}. Because the system uses smart pointers (std::unique\_ptr) and the SYCLStream struct has a defined destructor, clearing the vector automatically triggers the destruction of all stream objects.
