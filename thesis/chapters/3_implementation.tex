@@ -318,7 +318,7 @@ int i = 0; /* stream id*/
 
 To ensure that the execution goes without errors, the code utilizes two macros: \texttt{CHECK\_CUDA} and \texttt{CHECK\_CUBLAS}. These are used to wrap every API call to the CUDA runtime and the cuBLAS library, respectively, if an operation fails the macro immediately prints the specific error code along with the file name and line number where the failure occurred.
 
-Regarding the state management, the system relies on CUDA Streams. A macro \texttt{N\_STREAM} defines the number of parallel execution queues. Streams, enable the GPU to allows the overlap of memory transfers with computation, or the concurrent execution of multiple kernels. To support this concurrency, the device resources are replicated for each stream. The memory pointers (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}) are defined as arrays, meaning that each stream possesses its own independent pre-allocated memory buffers. Finally, a global integer \texttt{i} acts as counter, used to cycle through the available streams when dispatching new tasks.
+Regarding the state management, the system relies on CUDA Streams, a macro \texttt{N\_STREAM} defines the number of parallel execution queues. Streams, enable the GPU to allows the overlap of memory transfers with computation, or the concurrent execution of multiple kernels. To support this concurrency, the device resources are replicated for each stream. The memory pointers (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}) are defined as arrays, meaning that each stream possesses its own independent pre-allocated memory buffers. Finally, a global integer \texttt{i} acts as counter, used to cycle through the available streams when dispatching new tasks.
 
 The design focuses on minimizing the overhead during the runtime by performing expensive operations only once during the startup.  The \texttt{cuda\_init} function is responsible for preparing the GPU environment before any task is processed. Its primary goal is to eliminate the latency associated with running the dynamic memory allocation istrunctions. Allocating memory on the GPU using \texttt{cudaMalloc} is a slow operation compare to the others, infact if the system were to allocate and free memory for every single matrix multiplication task, the overhead would significantly impact the performance. To solve this, the initialization function adopts a simple pre-allocation strategy. Below the implementation of the \texttt{cuda\_init} function:
 
@@ -378,7 +378,7 @@ void cuda_gemm_16bit(void* A, void* B, void* C, int M, int N, int K) {
 
 The actual computational logic is implemented in the private functions, such as \texttt{cuda\_gemm\_32bit\_p}. This functions orchestrates the entire lifecycle of a single GPU task.
 
-\begin{lstlisting}[caption={cuda\_runner.cu 32-bit execution logic}, language=C++] 
+\begin{lstlisting}[caption={cuda\_runner.cu 32-bit logic}, language=C++] 
 void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
 
         cublasSetStream(handle, streams[i]);
@@ -407,5 +407,199 @@ void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
 
 The function begins by associating the global cuBLAS handle with the current stream (\texttt{streams[i]}), this ensures that all subsequent library calls are queued into this specific stream. 
 
-The execution begins by asynchronously copying the inputs A and B to the GPU buffers using the \texttt{cudaMemcpyAsync}, next, the matrix multiplication is triggered via \texttt{cublasGemmEx}, configured to utilize Tensor Cores. Once computed, the result is copied back to the host. The process concludes with \texttt{cudaStreamSynchronize}, which blocks the thread to ensure data validity and accurate timing, followed by an update of the stream index for the next stream.
+The execution begins by asynchronously copying the inputs A and B to the GPU buffers using the \texttt{cudaMemcpyAsync}, next, the matrix multiplication is triggered via \texttt{cublasGemmEx}, this function is chosen over standard BLAS calls because it offers more flexibility for high-performance computing. 
 
+It enables the \texttt{CUBLAS\_GEMM\_DEFAULT\_TENSOR\_OP} flag, explicitly instructing the GPU to utilize tensor tores whenever is possible (with 16 bit and 8 bit, in more modern GPUs from the Ampere architecture, even 32 bit). 
+
+Notably, the input operands are swapped in the function call, this operation ensure the matematical correctness compensating the layout difference between C++ and cuBLAS that are using two different storing method of the matrix, respectively row-major and column-major, with this simple method the function multiply two matrices without requiring an expensive physical transpose
+
+Once computed, the result is copied back to the host. The process concludes with \texttt{cudaStreamSynchronize}, which blocks the thread to ensure data validity and accurate timing, followed by an update of the stream index for the next stream.
+
+Below the implementation for the 16-bit cuda gemm:
+
+\begin{lstlisting}[caption={cuda\_runner.cu 16-bit logic}, language=C++] 
+void cuda_gemm_16bit_p(__half* A, __half* B, __half* C, int M, int N, int K) {
+    cublasSetStream(handle, streams[i]);
+
+    CHECK_CUDA(cudaMemcpyAsync(d_A[i], A, M * K * sizeof(__half), cudaMemcpyHostToDevice, streams[i]));
+    CHECK_CUDA(cudaMemcpyAsync(d_B[i], B, K * N * sizeof(__half), cudaMemcpyHostToDevice, streams[i]));
+
+    float a = 1.0f, b = 0.0f;
+
+    cublasGemmEx(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+                 N, M, K, 
+                 &a, 
+                 d_B[i], CUDA_R_16F, N,
+                 d_A[i], CUDA_R_16F, K,
+                 &b, 
+                 d_C[i], CUDA_R_16F, N, 
+                 CUBLAS_COMPUTE_32F,
+                 CUBLAS_GEMM_DEFAULT_TENSOR_OP);
+
+    CHECK_CUDA(cudaMemcpyAsync(C, d_C[i], M * N * sizeof(__half), cudaMemcpyDeviceToHost, streams[i]));
+    CHECK_CUDA(cudaStreamSynchronize(streams[i]));
+
+    i = (i + 1) % N_STREAM;
+}
+\end{lstlisting}
+
+The logic remains identical to the 32-bit version, but it introduces changes to handle half-precision data. First the pointer types are replaced with the specific \texttt{\_\_half} type. Consequently, the \texttt{cublasGemmEx} function is configured with the \texttt{CUDA\_R\_16F} flag for the input and output data. However, it is worth noting that the computation type is kept as \texttt{CUBLAS\_COMPUTE\_32F}, this is a standard practice to ensures that while the data storage is compressed to 16-bit, the internal mathematical computation happens in 32-bit to prevent overflows.
+
+The implementation for 8-bit integer matrices follows the exact same architectural pattern, differing only in data types, \texttt{int8\_t} and flags \texttt{CUDA\_R\_8I}. The code can be found in full in Appendix \ref{TODO}.
+
+\subsection{OpenVINO}
+The OpenVINO abstraction layer is designed to target the Intel NPU, just like the CUDA backend, the interaction between the C++ scheduler and the OpenVINO runtime is mediated by a standard C interface to ensure the ABI compatibility.
+
+\begin{lstlisting}[caption={ov\_wrapper.h interface}, language=C++] 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    void ov_init();
+
+    void ov_gemm_32bit(void* A, void* B, void* C, int M, int N, int K);
+    void ov_gemm_16bit(void* A, void* B, void* C, int M, int N, int K);
+    void ov_gemm_8bit(void* A, void* B, void* C, int M, int N, int K);
+
+    void ov_free();
+
+#ifdef __cplusplus
+}
+#endif
+\end{lstlisting}
+
+The header file \texttt{ov\_wrapper.h} defines the interface exposed to the scheduler. It's the identical structure used for the other accelerators, declaring functions for initialization, cleanup, and matrix multiplication for 32-bit, 16-bit, and 8-bit data types.
+
+The implementation resides in the \texttt{runner.cpp} file. While the function signatures are similar to the CUDA implementation, the internal logic is fundamentally different due to how OpenVINO function, unlike CUDA, which have all pre-compiled kernels, OpenVINO works by building a so call computational graph and compiling it for the specific target device at runtime.
+
+Compiling a model is an expensive and time consuming operation, it cannot be performed for every single task. To solve this, the system implements a simple caching mechanism.
+
+\begin{lstlisting}[caption={ov runner.cpp chaching}, language=C++] 
+ov::Core core;
+
+using namespace std;
+
+/* cache for compiled models */
+static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_32bit;
+static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_16bit;
+static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_8bit;
+
+const size_t MAX_MAP_SIZE = 20; 
+size_t map_size_32bit=0;
+size_t map_size_16bit=0;
+size_t map_size_8bit=0;
+\end{lstlisting}
+
+The global variable \texttt{core} represents OpenVINO runtime, it will be utilized for discovering available devices and compiling the models.
+
+To implement the caching mechanism, the system utilizes standard C++ maps for associating a specific set of matrix dimensions (represented by a tuple (M,N,K)) with a already compiled ov::InferRequest. This means that if the scheduler requests a matrix multiplication with dimensions that have been seen before, the system can retrieve the pre-compiled request immediately, skipping the expensive compilation step for already seen matrices.
+
+Finally, to manage memory usage and prevent the cache from growing indefinitely in case there are many different matrices, a simple eviction policy is enforced using the \texttt{MAX\_MAP\_SIZE} constant and associated counters and if the number of cached models exceeds this limit, the cache is cleared to make room for new entries.
+
+\begin{lstlisting}[caption={ov runner.cpp init}, language=C++] 
+void ov_init_p() {
+    bool available = false;
+
+    for (auto &d : core.get_available_devices())
+        if (d.find("NPU") != string::npos)
+            available = true;
+
+    if (!available) {
+        cout << "[OPENVINO] NPU not present, aborting \n";
+        exit(EXIT_FAILURE); /* shut down something is wrong */
+    }
+}
+\end{lstlisting}
+
+The init function simply queries the OpenVINO Core to verify the presence of the NPU device. If the hardware is not found, the system aborts to prevent runtime failures during execution.
+
+The core logic of the OpenVINO backend is found in the caching functions, such as \texttt{cache\_32bit}. This function is responsible for constructing the neural network graph that represents a matrix multiplication.
+
+\begin{lstlisting}[caption={ov runner.cpp caching function}, language=C++] 
+void cache_32bit(tuple<int, int, int> key) {
+    if (request_cache_32bit.find(key) == request_cache_32bit.end()) {
+        map_size_32bit++;
+        if (map_size_32bit >= MAX_MAP_SIZE) {
+            request_cache_32bit.clear();
+            map_size_32bit = 1;
+        }
+        auto A_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)get<0>(key), (size_t)get<2>(key)});
+        auto B_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)get<2>(key), (size_t)get<1>(key)});
+
+        auto matmul = std::make_shared<ov::op::v0::MatMul>(A_ov, B_ov);
+        auto result = std::make_shared<ov::op::v0::Result>(matmul);
+
+        auto model = std::make_shared<ov::Model>(result, ov::ParameterVector{A_ov, B_ov});
+
+        ov::CompiledModel compiled_model = core.compile_model(model, "NPU");
+        ov::InferRequest request = compiled_model.create_infer_request();
+
+        request_cache_32bit[key] = request;
+    }
+}
+\end{lstlisting}
+
+The graph construction consist in three steps, first two input nodes are created with the specific shape and precision in this case 32-bit float. Second, a \texttt{MatMul} node is instantiated taking these parameters as inputs, defining the GEMM Operation. Finally, the graph is wrapped into an \texttt{ov::Model} object and compiled for the NPU device. This step optimizes the graph for the specific hardware architecture, and the resulting request object is stored in the cache map.
+
+Once the model is cached, the execution of the task is handled by the \texttt{ov\_gemm\_32bit\_p} function.
+
+\begin{lstlisting}[caption={ov runner.cpp gemm 32 bit}, language=C++] 
+void ov_gemm_32bit_p(void *A, void *B, void *C, int M, int N, int K){
+    auto key = std::make_tuple(M, N, K);
+    cache_32bit(key); 
+
+    ov::InferRequest& infer_request = request_cache_32bit[key];
+
+    ov::Tensor tensor_A(ov::element::f32, ov::Shape{(size_t)M, (size_t)K}, A);
+    ov::Tensor tensor_B(ov::element::f32, ov::Shape{(size_t)K, (size_t)N}, B);
+    ov::Tensor tensor_C(ov::element::f32, ov::Shape{(size_t)M, (size_t)N}, C);
+
+    infer_request.set_input_tensor(0, tensor_A);
+    infer_request.set_input_tensor(1, tensor_B);
+    infer_request.set_output_tensor(0, tensor_C);
+
+    infer_request.infer();
+}
+\end{lstlisting}
+
+This function first calls the cache function to ensure the request object is available. Then, it wraps the raw pointers provided by the scheduler (A, B, C) into \texttt{ov::Tensor} objects. Notably this constructor uses the existing memory pointers without allocating new buffers or copying data (zero-copy). Finally, the tensors are bound to the input/output ports of the model, and the \texttt{infer()} method is called to trigger the execution on the NPU.
+
+Finally, the code exposes the public C ABI by wrapping the internal C++ functions. This structure mirrors the approach used in the CUDA backend, ensuring that the scheduler sees a uniform interface across all accelerators.
+
+\begin{lstlisting}[caption={ov runner.cpp wrappers}, language=C++] 
+extern "C" {
+    void ov_init() {
+        ov_init_p();
+    }
+
+    void ov_gemm_32bit(void *A, void *B, void *C, int M, int N, int K){
+        ov_gemm_32bit_p(A, B, C, M, N, K);
+    }
+
+    void ov_gemm_16bit(void *A, void *B, void *C, int M, int N, int K){
+        ov_gemm_16bit_p(A, B, C, M, N, K);
+    }
+
+    void ov_gemm_8bit(void *A, void *B, void *C, int M, int N, int K){
+        ov_gemm_8bit_p(A, B, C, M, N, K);
+    }
+    void ov_free() {
+    }
+}
+\end{lstlisting}
+
+A notable difference compared to the CUDA implementation is the \texttt{ov\_free} function, which is empty. This is because the OpenVINO runtime relies on modern C++ features, specifically RAII and smart pointers, so when the program terminates or the objects go out of scope, the destructors for the \texttt{ov::Core} and the cached requests are invoked automatically, releasing the NPU resources explicit cleanup.
+
+
+
+
+
+
+
+
+\clearpage
+
+\subsection{SYCL}
+
+
+\subsection{OpenBLAS}

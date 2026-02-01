@@ -23,5 +23,8 @@
 \contentsline {subsection}{\numberline {4.1.1}Compilation Process}{27}{subsection.4.1.1}%
 \contentsline {section}{\numberline {4.2}Accellerators Abstraction Layers}{33}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Cuda}{33}{subsection.4.2.1}%
-\contentsline {chapter}{\numberline {5}Results}{39}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{41}{appendix.A}%
+\contentsline {subsection}{\numberline {4.2.2}OpenVINO}{38}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}SYCL}{43}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}OpenBLAS}{43}{subsection.4.2.4}%
+\contentsline {chapter}{\numberline {5}Results}{45}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{47}{appendix.A}%
