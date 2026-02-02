@@ -752,3 +752,117 @@ extern "C" {
 The code concludes with the C-compatible wrappers. These functions simply cast the generic \texttt{void*} pointers to the appropriate C++ types (float* or sycl::half*) and forward the call.
 
 The \texttt{sycl\_free} function simply calls \texttt{streams.clear()}. Because the system uses smart pointers (std::unique\_ptr) and the SYCLStream struct has a defined destructor, clearing the vector automatically triggers the destruction of all stream objects.
+
+\subsection{OpenBLASS}
+Finally, the project includes a backend to target the host CPU. Unlike the other accelerators which required complex compilation and separate dynamic libraries to ensure compatibility, the CPU implementation was introduced directly into the scheduler codebase.
+
+As already said in this thesis, this library was the last addition to the project, and since the scheduler and the OpenBLASS library share the same compiler, there were no compatibility issues to solve, infact, the implementation is located directly in the header file \texttt{cpu.hpp} inside the \texttt{scheduler/} directory.
+
+The complete implementation is presented below:
+
+\begin{lstlisting}[caption={OpenBLAS CPU Implementation}, language=C++] 
+inline void cpu_init() {
+    openblas_set_num_threads(N_CORES);
+    omp_set_num_threads(N_CORES);
+}
+
+inline void cpu_gemm_32bit(void* A, void* B, void* C, int M, int N, int K) {
+    float* A_ = (float*) A;
+    float* B_ = (float*) B;
+    float* C_ = (float*) C;
+
+    cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                M, N, K,
+                1.0f,
+                A_, K,
+                B_, N,
+                0.0f,
+                C_, N);
+}
+
+inline void cpu_gemm_16bit(void* A, void* B, void* C, int M, int N, int K) {
+    uint16_t* pA = (uint16_t*)A;
+    uint16_t* pB = (uint16_t*)B;
+    uint16_t* pC = (uint16_t*)C;
+
+    std::vector<float> A_f32(M*K);
+    std::vector<float> B_f32(K*N);
+    std::vector<float> C_f32(M*N);
+
+    /* large overhead but we need it, not all cpus have 16 bit */
+    #pragma omp parallel for
+    for (int i = 0; i < M * K; ++i) {
+        A_f32[i] = half_to_float(pA[i]);
+    }
+
+    for (int i = 0; i < K * N; ++i) {
+        B_f32[i] = half_to_float(pB[i]);
+    }
+
+    cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
+                M, N, K,
+                1.0f,
+                A_f32.data(), K,
+                B_f32.data(), N,
+                0.0f,
+                C_f32.data(), N);
+
+    #pragma omp parallel for
+    for (int i = 0; i < M * N; ++i) {
+        pC[i] = float_to_half(C_f32[i]);
+    }
+}
+\end{lstlisting}
+
+The initialization function, \texttt{cpu\_init}, is straightforward, it set the number of thread to use using \texttt{openblas\_set\_num\_threads} and for OpenMP \texttt{omp\_set\_num\_threads}. This ensures that the CPU utilizes all the available physical cores defined by the \texttt{N\_CORES} macro.
+
+For the 32 bit execution, the function \texttt{cpu\_gemm\_32bit} acts as a direct wrapper around the standard BLAS routine \texttt{cblas\_sgemm}. It casts the generic pointers to \texttt{float*} and invokes the library function \texttt{CblasRowMajor}, which handles the input layout without transposition.
+
+The 16-bit implementation (cpu\_gemm\_16bit), however, requires a workaround. Since the OpenBLAS library does not support half-precision arithmetic, the function performs a manual conversion. The logic is simple: first convert to Float, 
+
+\begin{enumerate}
+    \item Convert to float: the input 16 bit matrices are converted to standard 32 bit floats.
+    \item Compute: matrix multiplication is performed using the already available 32-bit routine.
+    \item Convert to half: The result is converted back to 16 bit.
+\end{enumerate}
+
+To mitigate the performance cost of these conversions, the loops are parallelized using OpenMP (\texttt{\#pragma omp parallel for}).
+
+To handle the bitwise conversion between 16 bit and 32 bit formats without introducing dependencies, two standard IEEE 754 compliant functions were included in the project, these are well-known algorithms already widely used in the open-source community:
+
+\begin{lstlisting}[caption={IEEE 754 Bitwise Conversion Helpers}, language=C++] 
+inline float half_to_float(uint16_t h) {
+    uint32_t s = (h >> 15) & 0x00000001;
+    uint32_t e = (h >> 10) & 0x0000001f;
+    uint32_t m = h & 0x000003ff;
+    
+    if (e == 0) {
+        if (m == 0) {
+            uint32_t res = s << 31;
+            float f; memcpy(&f, &res, 4); return f;
+        } else {
+            while (!(m & 0x00000400)) { m <<= 1; e -= 1; }
+            e += 1; m &= ~0x00000400;
+        }
+    } else if (e == 31) {
+        if (m == 0) { // Inf
+             uint32_t res = (s << 31) | 0x7f800000;
+             float f; memcpy(&f, &res, 4); return f;
+        } else { // NaN
+             uint32_t res = (s << 31) | 0x7f800000 | (m << 13);
+             float f; memcpy(&f, &res, 4); return f;
+        }
+    }
+    
+    e = e + (127 - 15);
+    m = m << 13;
+    uint32_t res = (s << 31) | (e << 23) | m;
+    float f; memcpy(&f, &res, 4); return f;
+}
+\end{lstlisting}
+
+The \texttt{float\_to\_half} function (omitted for brevity, but available in the Appendix ) performs the inverse operation.
+
+
+
+
