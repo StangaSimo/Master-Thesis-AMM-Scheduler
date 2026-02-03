@@ -678,7 +678,7 @@ class AMScheduler {
         /**********************************  Public Interface ***********************************/
 
     public: 
-        /* constructur init threads, benchmark files, regression models */
+        /* constructur init threads, benchmark files, perfomanceMaps */
         AMScheduler(Logic logic) : threads_keep_running(true), strategy(logic) {
             get_logic_string(logic);
             init_threads();            

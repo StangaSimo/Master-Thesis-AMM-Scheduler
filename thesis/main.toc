@@ -26,5 +26,9 @@
 \contentsline {subsection}{\numberline {4.2.2}OpenVINO}{38}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}SYCL}{43}{subsection.4.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}OpenBLASS}{47}{subsection.4.2.4}%
-\contentsline {chapter}{\numberline {5}Results}{51}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{53}{appendix.A}%
+\contentsline {section}{\numberline {4.3}AMM Scheduler}{50}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{52}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Workers}{53}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{56}{subsection.4.3.3}%
+\contentsline {chapter}{\numberline {5}Results}{61}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{63}{appendix.A}%

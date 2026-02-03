@@ -861,7 +861,398 @@ inline float half_to_float(uint16_t h) {
 }
 \end{lstlisting}
 
-The \texttt{float\_to\_half} function (omitted for brevity, but available in the Appendix ) performs the inverse operation.
+The \texttt{float\_to\_half} function (available in the Appendix \ref{TODO}) performs the inverse operation.
+
+
+\section{AMM Scheduler}
+The core of this project is the \texttt{AMScheduler} class. While the underlying system involves thread management, synchronization, and hardware interactions, the design goal was to encapsulate all this complexity behind a simple interface. 
+
+The scheduler is implemented as a C++ class defined in \texttt{scheduler.hpp}, it adheres to the \textbf{RAII} pattern. This ensures that the lifecycle of the execution environment  including worker threads, shared buffers, and hardware contexts is tied to the lifecycle of the scheduler object itself. However, it is important to note that while standard C++ smart pointers are used for the threads and maps, explicit memory management is maintained for performance critical data structures, such as the task arrays and the internal shared buffers allowing the system to minimize overhead and ensuring that the developer has full visibility into the exact behavior of the memory.
+
+The public interface is minimal, consisting of a constructor, a destructor, and two primary methods for task submission and synchronization:
+
+\begin{lstlisting}[caption={Scheduler Public Interface}, language=C++] 
+class AMScheduler { 
+
+public: 
+
+    /* Constructor: initializes threads, benchmarks if needed and performancemaps */ 
+    AMScheduler(Logic logic) {
+        init_threads();            
+        init_benchmarks();            
+        init_maps();
+    }
+
+    /* Destructor: stops threads and cleans up resources */
+    ~AMScheduler() {
+        stop_threads();
+    }
+
+    /* Non blocking: pushes tasks to the coordinator */
+    void do_tasks(task* tasks, size_t n) {
+        pending_tasks += n;
+        for (int i=0; i<n; i++) {
+            tasks[i].start_time = chrono::high_resolution_clock::now();                
+            shared_buffers[BT::CORDINATOR]->put(&tasks[i]);
+        }
+    }
+
+    /* Blocking: waits until all pending tasks are completed */
+    void wait();
+
+    /* Prints execution statistics */
+    void print_stats(task* tasks, int num_tasks);
+
+};
+\end{lstlisting}
+
+The constructor takes a \texttt{Logic} parameter, which decide the scheduling strategy to be used. Upon instantiation, the scheduler perform three operations: it initializes the worker threads and their contexts, loads the benchmark data if presents, and prepares the performance maps. The destructor ensures a clean shutdown of the system, it invokes the \texttt{stop\_threads} function, which signals all active threads to terminate, waits for them to join, and all all the backends clean functins.
+
+The \texttt{do\_tasks} method serves as the entry point for workload. Before pushing the task into the system, it records the current timestamp into each task. This timestamp is crucial for the profiler to accurately measure the end-to-end latency of each task. Once timestamped, the task pointer is pushed into the coordinator's shared buffer.
+
+Below is an example of how the scheduler is utilized in the main.cpp file:
+
+\begin{lstlisting}[caption={Example usage}, language=C++] 
+void test_scheduler() { 
+
+    /* 1. Instantiate Scheduler (starts threads) */
+    AMScheduler scheduler(Logic::DYNAMIC);
+    
+    /* 2. Submit work */
+    scheduler.do_tasks(task_array, n_tasks);
+    
+    /* ...... */
+    
+    /* 3. Wait for completion */
+    scheduler.wait();
+    
+    /* 4. Analyze profiler results */
+    scheduler.print_stats(task_array, n_matrix);
+}
+\end{lstlisting}
+
+The usage of the scheduler is extremely simple, the developer only needs to instantiate the class passing the logic and submit the array of tasks. The scheduler handles all the complexity of thread management and hardware dispatching internally.
+
+
+\subsection{Thread Initialization}
+he \texttt{init\_threads} function is responsible for setting up the environment based on the available hardware:
+
+\begin{lstlisting}[caption={Init Thread}, language=C++] 
+void init_threads() {
+
+    /* from the fastest to the slowest */
+    /* init here and not in the threads */
+#ifdef ENABLE_CUDA
+        init_acc(BT::CUDA);
+        bts.push_back(BT::CUDA);
+#endif
+#ifdef ENABLE_SYCL
+            init_acc(BT::SYCL);
+            bts.push_back(BT::SYCL);
+#endif
+#ifdef ENABLE_OPENVINO
+            init_acc(BT::OPENVINO); 
+            bts.push_back(BT::OPENVINO);
+#endif
+#ifdef ENABLE_OPENBLAS
+            init_acc(BT::OPENBLAS); 
+            bts.push_back(BT::OPENBLAS);
+#endif
+
+    /* initialize atomics for dynamic strategy */
+    if(strategy == Logic::DYNAMIC) {
+        #ifdef SLEEP 
+        cout("[SCHEDULER] ERROR remove "#define SLEEP" with Dynamic logic")
+        exit(FAILUREEXIT_FAILURE);
+        #endif
+        for (int i=0; i<bts.size(); i++) {
+            busy[bts[i]] = new atomic<bool>;
+            *busy[bts[i]] = false;
+        }
+    }
+
+    for (BT i : bts) {
+        shared_buffers[i] = make_unique<SharedBuffer>(BUFFER_LENGHT);
+        threads[i] = make_unique<thread>(&AMScheduler::worker_thread, this, 
+                                            i, shared_buffers[i].get());
+    }
+
+    if (bts.size() == 0) {PRINT("[SCHEDULER] ATTENTION, no accellerator\n"); exit(EXIT_FAILURE);}
+
+    /* coordinator thread */
+    shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
+    threads[BT::CORDINATOR] = make_unique<thread>(&AMScheduler::coordinator_thread,this, 
+                                ref(shared_buffers)); /* ref because the thread function try to copy all the parameters */
+}
+\end{lstlisting}
+
+This function first checks which accelerators were enabled during compilation using preprocessor macros passed with CMake. For each enabled backend, it calls the specific initialization function for each backend, inside the dynamic libraries, and adds the backend type to the active list \texttt{bts}. After it iterates through the active backends to create the worker threads. For each accelerator, a dedicated \texttt{SharedBuffer} is instantiated to hold its incoming tasks, and a standard C++ \texttt{std::thread} is spawned to run the \texttt{worker\_thread} function.
+
+Finally, the function initializes the \textbf{Coordinator Thread}. This thread is equipped with its own input buffer and is responsible for fetching tasks from the user and dispatching them to the workers (for implementation see section \ref{TODO}). The reference to the shared buffers map is passed to the coordinator to allow it to push tasks to any worker inside the logics.
+
+\subsection{Workers}
+While the Coordinator thread manages the complexity of deciding where to send the data, the worker threads are designed to be extremely lightweight and simple. Their only purpose is to retrieve a task from their buffer, execute it, and signal the completion.
+
+Below the implementation of the worker function: 
+
+\begin{lstlisting}[caption={Worker Thread Implementation}, language=C++] 
+void worker_thread(BT bt, SharedBuffer *buffer) { 
+    task* task = nullptr;
+    PROF(profiler.init_last_work(bt));
+
+    if (strategy == Logic::DYNAMIC) {
+
+        /* Dynamic execution */
+        while (threads_keep_running) { 
+
+            task = buffer->get();
+            if (!task) {continue;}
+
+            PROF(profiler.start_worker(bt));                 
+            handle_task(bt, task);
+            PROF(profiler.end_worker(bt));                 
+
+            *busy[bt] = false;
+            pending_tasks--;
+        }
+
+    } else {
+
+        /* Static execution */
+        while (threads_keep_running) { 
+
+            task = buffer->get();
+
+            /* if there isn't a task we check if we have to shutdown */
+            if (!task) {continue;}
+
+            PROF(profiler.start_worker(bt));                 
+            handle_task(bt, task);
+            PROF(profiler.end_worker(bt));                 
+            pending_tasks--;
+        }
+
+    }
+} 
+\end{lstlisting}
+
+The implementation is a continuous loop that retrieves a task from the shared buffer and processes it. The function \texttt{buffer->get()} is the entry point. As detailed in the Shared Buffer section (see Section \ref{TODO}), if the macro \texttt{SLEEP} is defined, this function blocks the thread and puts it to sleep until a new task arrives. This prevents the worker from consuming CPU cycles while waiting. If \texttt{SLEEP} is not defined, the thread spins (busy wait) to react faster.
+
+The behavior is slightly different based on the scheduler strategy: 
+
+\begin{itemize} 
+    \item \textbf{Static:} The worker simply processes its queue as fast as possible without signaling. 
+
+    \item \textbf{Dynamic:} The worker notify the Coordinator when it finishes a task. It sets the atomic flag \texttt{*busy[bt]} to false so the Coordinator knows this accelerator is ready for a new task. 
+\end{itemize}
+
+The \texttt{handle\_task} function acts as a wrapper, isolating the scheduler from the specific backend implementations offered by the dynamic libraries linked at runtime.
+
+\begin{lstlisting}[caption={Task Handler}, language=C++] 
+/* task handler for the workers, choose the right backend_type */
+inline void handle_task(BT backend_type, task *task) {
+    switch (backend_type) {
+    case BT::CUDA:
+#ifdef ENABLE_CUDA
+        if (task->type == Type::FLOAT)
+            cuda_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            cuda_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
+        break;    
+
+    case BT::SYCL:
+#ifdef ENABLE_SYCL
+        if (task->type == Type::FLOAT)
+            sycl_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            sycl_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
+        break;    
+
+    case BT::OPENVINO:
+#ifdef ENABLE_OPENVINO
+        if (task->type == Type::FLOAT)
+            ov_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            ov_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
+        break;    
+
+    case BT::OPENBLAS:
+#ifdef ENABLE_OPENBLAS
+        if (task->type == Type::FLOAT)
+            cpu_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+        if (task->type == Type::HALF)
+            cpu_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+#endif 
+        break;    
+
+    default: 
+        cerr << "[SCHEDULER] ERROR handle task\n";
+        exit(EXIT_FAILURE);
+    }
+
+    task->end_time = chrono::high_resolution_clock::now();
+}
+\end{lstlisting}
+
+This function performs three simple steps, it checks the \texttt{backend\_type} enum to decide which accelerator to use, then checks if the task requires 32-bit or 16-bit  precision and calls the corresponding C-wrapper function from the dynamic libraries.Immediately after the computation finishes, it saves the current time into \texttt{task->end\_time}, this gives the precise execution time for the metrics.
+
+
+
+\subsection{Benchmarks Routines}
+Once the threads are running, the coordinator thread needs specific data to make decisions inside the static logics (see section \ref{TODO}). This data comes from the data profiling saved in CSV files create by \texttt{init\_benchmarks} function and later uploaded inside the \texttt{PerformanceMap} structure (see section \ref{TODO}) by the \texttt{init\_maps} function.
+
+\begin{lstlisting}[caption={Init Thread}, language=C++] 
+/* upload the banchmark files and generate them if not presents */
+void init_benchmarks() {
+    for (BT i : bts) {
+
+        string filename_f; 
+        string filename_h; 
+
+        filename_f = get_benchmark_filename(i, Type::FLOAT); 
+        filename_h = get_benchmark_filename(i, Type::HALF); 
+
+        if (filesystem::exists(filename_f)) {
+             PRINT("[SCHEDULER] File: " << filename_f <<  " opened.\n"); 
+        } else {
+             PRINT("[SCHEDULER] File: " << filename_f <<  " not present\n"); 
+             benchmark(i, Type::FLOAT ,filename_f);
+             PRINT("[SCHEDULER] Benchmark file created\n"); 
+        }
+
+        if (filesystem::exists(filename_h)){
+             PRINT("[SCHEDULER] File: " << filename_h <<  " opened.\n"); 
+        } else {
+             PRINT("[SCHEDULER] File: " << filename_h <<  " not present\n"); 
+             benchmark(i, Type::HALF ,filename_h);
+             PRINT("[SCHEDULER] Benchmark file created\n"); 
+        }
+    }
+}
+
+/* create the map for each accellerator */
+void init_maps() {
+    for (BT i : bts) {
+        string filename_f; 
+        string filename_h; 
+        filename_f = get_benchmark_filename(i, Type::FLOAT); 
+        filename_h = get_benchmark_filename(i, Type::HALF); 
+
+        if (filesystem::exists(filename_f) && filesystem::exists(filename_h)) {
+            bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE, i, filename_f, filename_h);
+        } else {
+             cerr << "[SCHEDULER] File: " << filename_f <<  " or " << filename_h << " not found for map init\n"; 
+             exit(EXIT_FAILURE);
+        }
+   }
+}
+\end{lstlisting}
+
+The \texttt{init\_benchmarks} function ensures that the data exists. It iterates through the list of active accelerators and checks for the existence of specific CSV files for both 32 and 16 bit data types. If a file is found, the system proceeds, if a file is missing, the system automatically triggers the benchmarking routine to generate the data from scratch.
+
+Subsequently, again by the constructor, the \texttt{init\_maps} function is called. Its role is to load the data from the disk into the memory. It reads the CSV files generated in the previous step and populates the \texttt{PerformanceMap} objects for each accelerator. This ensures that when the scheduler is running, it can query the expected execution time of a matrix multiplication in constant time O(1) without needing to read from the disk again. If a file is missing at this stage, the system considers it a critical error and shuts down, as the scheduler cannot function without its performance models. If a file is missing at this stage, the system shuts down, as the scheduler cannot function without its performance models.
+
+The accuracy of the scheduler depends entirely on the quality of the data collected during the benchmarking phase (and small tweaks inside performanceMaps). This process is managed by the \texttt{benchmark} and \texttt{benchmark\_acc} functions.
+
+\begin{lstlisting}[caption={Benchmark Function}, language=C++] 
+/* call benchmark_acc for each test matrix*/
+inline void benchmark(BT bt, Type type, string filename) {
+    vector<int> dims;
+
+    for (int d = STEP_SIZE; d <= STEP_SIZE*STEP_TOTAL; d += STEP_SIZE) 
+        dims.push_back(d);
+
+    for (int m : dims) 
+        for (int n : dims) 
+            for (int k : dims) 
+                benchmark_acc(bt, type, filename, m, n, k);
+
+    PRINT("[SCHEDULER] Benchmark ===\n");
+    PRINT("Results saved in bin/csv/" << filename << "\n");
+}
+\end{lstlisting}
+
+The \texttt{benchmark} function acts as the driver. It defines the search space for the matrix dimensions (M, N, K) based on a \texttt{STEP\_SIZE} (defined in the file \texttt{ config.hpp}). It uses three nested loops to iterate through all possible combinations of dimensions, calling the measurement function for each configuration.
+
+The measurement logic is implemented in \texttt{benchmark\_acc}:
+
+\begin{lstlisting}[caption={Benchmark Accellerator Function}, language=C++] 
+/* benchmark the accellerator and write in the csv*/
+inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K) {
+    chrono::high_resolution_clock::time_point start_time;
+    chrono::high_resolution_clock::time_point end_time;
+    chrono::duration<double, std::milli> duration;
+
+    const int N_RUNS = 4;
+    const int N_TASKS = N_RUNS + 2;
+
+    double total_ms = 0.0;
+    double jit_ms = 0.0;
+    double no_jit_ms = 0.0;
+
+    /* we simulate a thread */
+    task* tasks = init_tasks(N_TASKS, M, N, K, type);
+
+    /* warmup | jit detection */
+    start_time = chrono::high_resolution_clock::now();
+    handle_task(bt, &tasks[0]);
+    end_time = chrono::high_resolution_clock::now();
+    duration = end_time - start_time;
+    jit_ms = duration.count();
+
+    start_time = chrono::high_resolution_clock::now();
+    handle_task(bt, &tasks[1]);
+    end_time = chrono::high_resolution_clock::now();
+    duration = end_time - start_time;
+    jit_ms = jit_ms - duration.count();
+
+    /* runs */
+    for (int i = 2; i < N_TASKS; i++) {
+        start_time = chrono::high_resolution_clock::now();
+        handle_task(bt, &tasks[i]);
+        end_time = chrono::high_resolution_clock::now();
+        duration = end_time - start_time;
+        total_ms += duration.count();
+    }
+
+    clean_tasks(tasks, N_TASKS);
+    
+    double avg_ms = total_ms/N_RUNS;
+
+    ofstream file(filename, ios::app);
+
+    if (file.is_open()) {
+        if (filesystem::file_size(filename) == 0) 
+            file << "Accelerator,DataType,M,N,K,Avg_Time_ms,Jit_Time_ms\n";
+        
+        string acc_str = get_acc_string(bt);
+        file << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "," << jit_ms << "\n";
+        
+        PRINT("result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "," << jit_ms << "\n");
+        file.close();
+    } else {
+        cerr << "[SCEDULER] ERROR Cannot open file: " << filename << "\n";
+    }
+}
+\end{lstlisting}
+
+Measuring the performance of accelerators like GPUs or NPUs is not trivial because these frameworks often perform a just in time compilation (JIT). This means that the very first time a specific matrix operation is executed, the driver must compile the kernel for the hardware, resulting in a significantly higher execution time compared to subsequent runs.
+
+To handle this and isolate the overhead, the function uses a specific strategy, it allocates an array of tasks instead of reusing a single task object. This is done to prevent unrealistic CPU cache hits that might occur if the exact same memory pointers were reused constantly.
+
+The measurement proceeds in three steps: The first task is executed. This run includes the time required for data transfer, computation, and any kernel compilation or driver initialization overhead. The second task is executed immediately after. Since the kernel is already compiled, this run represents the execution time without the JIT expenses, then the system calculates the \textbf{JIT time} by subtracting the duration of the second run from the duration of the first run. 
+    
+The remaining tasks are executed in a loop, their durations are summed and divided by the number of runs to obtain a stable average execution time (\texttt{Avg\_Time\_ms}). 
+
+Finally, the results including the accelerator name, data type, matrix dimensions, average time, and JIT time are appended to the corresponding CSV file. This distinction between JIT time and execution time is crucial for the scheduler: during the first few iterations of an algorithm, the scheduler must account for the JIT overhead, and all of this complexity is hidden in the \texttt{PerformanceMap}.
+
+
+
+
+
 
 
 
