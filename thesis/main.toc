@@ -26,9 +26,12 @@
 \contentsline {subsection}{\numberline {4.2.2}OpenVINO}{37}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}SYCL}{41}{subsection.4.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}OpenBLASS}{44}{subsection.4.2.4}%
-\contentsline {section}{\numberline {4.3}AMM Scheduler}{48}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{49}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Workers}{51}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{53}{subsection.4.3.3}%
-\contentsline {chapter}{\numberline {5}Results}{57}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{59}{appendix.A}%
+\contentsline {section}{\numberline {4.3}AMM Scheduler}{47}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{48}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Workers}{50}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{52}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Tasks}{56}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{59}{subsection.4.3.5}%
+\contentsline {subsection}{\numberline {4.3.6}PerformanceMap}{61}{subsection.4.3.6}%
+\contentsline {chapter}{\numberline {5}Results}{63}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{65}{appendix.A}%

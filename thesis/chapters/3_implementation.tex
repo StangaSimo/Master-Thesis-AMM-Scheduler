@@ -321,7 +321,11 @@ To ensure that the execution goes without errors, the code utilizes two macros: 
 
 Regarding the state management, the system relies on CUDA Streams, a macro \texttt{N\_STREAM} defines the number of parallel execution queues. Streams, enable the GPU to allows the overlap of memory transfers with computation, or the concurrent execution of multiple kernels. To support this concurrency, the device resources are replicated for each stream. The memory pointers (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}) are defined as arrays, meaning that each stream possesses its own independent pre-allocated memory buffers. Finally, a global integer \texttt{i} acts as counter, used to cycle through the available streams when dispatching new tasks.
 
-The design focuses on minimizing the overhead during the runtime by performing expensive operations only once during the startup.  The \texttt{cuda\_init} function is responsible for preparing the GPU environment before any task is processed. Its primary goal is to eliminate the latency associated with running the dynamic memory allocation istrunctions. Allocating memory on the GPU using \texttt{cudaMalloc} is a slow operation compare to the others, infact if the system were to allocate and free memory for every single matrix multiplication task, the overhead would significantly impact the performance. To solve this, the initialization function adopts a simple pre-allocation strategy. Below the implementation of the \texttt{cuda\_init} function:
+The design focuses on minimizing the overhead during the runtime by performing expensive operations only once during the startup.  The \texttt{cuda\_init} function is responsible for preparing the GPU environment before any task is processed. Its primary goal is to eliminate the latency associated with running the dynamic memory allocation istrunctions. Allocating memory on the GPU using \texttt{cudaMalloc} is a slow operation compare to the others, infact if the system were to allocate and free memory for every single matrix multiplication task, the overhead would significantly impact the performance. To solve this, the initialization function adopts a simple pre-allocation strategy. 
+
+\clearpage
+
+Below the implementation of the \texttt{cuda\_init} function:
 
 \begin{lstlisting}[caption={cuda\_runner.cu init}, language=C++] 
 void cuda_init() {
@@ -599,27 +603,7 @@ A notable difference compared to the CUDA implementation is the \texttt{ov\_free
 \subsection{SYCL}
 The SYCL abstraction layer is designed to manage Intel GPUs. In this project, SYCL is utilized in conjunction with the Intel oneAPI Math Kernel Library (oneMKL) to perform high-performance matrix operations. 
 
-Just like the previous modules, the interaction with the scheduler is mediated by a pure C interface to ensure ABI compatibility.
-
-\begin{lstlisting}[caption={sycl\_wrapper.h interface}, language=C++] 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-    void ov_init();
-
-    void ov_gemm_32bit(void* A, void* B, void* C, int M, int N, int K);
-    void ov_gemm_16bit(void* A, void* B, void* C, int M, int N, int K);
-    void ov_gemm_8bit(void* A, void* B, void* C, int M, int N, int K);
-
-    void ov_free();
-
-#ifdef __cplusplus
-}
-#endif
-\end{lstlisting}
-
-The header file \texttt{sycl\_wrapper.h} defines the standard functions for initialization, execution (32-bit and 16-bit), and cleanup. 
+Just like the previous modules, the interaction with the scheduler is mediated by a pure C interface to ensure ABI compatibility. The header file \texttt{sycl\_wrapper.h} defines the standard functions for initialization, execution (32-bit and 16-bit), and cleanup. 
 
 The implementation logic begins with the initialization phase:
 
@@ -637,7 +621,6 @@ void init() {
         exit(1);
     }
 }
-
 \end{lstlisting}
 
 The primary task of the \texttt{init} function is to populate the global vector named \texttt{streams} with instances of \texttt{SYCLStream}. By iterating \texttt{N\_STREAMS} times, it creates multiple independent execution contexts, allowing the scheduler to submit tasks in a round-robin manner.
@@ -924,7 +907,6 @@ public:
 
     /* Prints execution statistics */
     void print_stats(task* tasks, int num_tasks);
-
 };
 \end{lstlisting}
 
@@ -999,13 +981,18 @@ void init_threads() {
                                             i, shared_buffers[i].get());
     }
 
-    if (bts.size() == 0) {PRINT("[SCHEDULER] ATTENTION, no accellerator\n"); exit(EXIT_FAILURE);}
+    if (bts.size() == 0) {
+        PRINT("[SCHEDULER] ATTENTION, no accellerator\n"); 
+        exit(EXIT_FAILURE);
+    }
 
     /* coordinator thread */
     shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
-    threads[BT::CORDINATOR] = make_unique<thread>(&AMScheduler::coordinator_thread,this, 
-                                ref(shared_buffers)); 
-                                /* ref because the thread function try to copy all the parameters */
+
+    /* ref because the thread function try to copy all the parameters */
+    threads[BT::CORDINATOR] = make_unique<thread>(
+                                &AMScheduler::coordinator_thread,
+                                this, ref(shared_buffers)); 
 }
 \end{lstlisting}
 
@@ -1215,10 +1202,10 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
     double jit_ms = 0.0;
     double no_jit_ms = 0.0;
 
-    /* we simulate a thread */
+    /* tasks init */
     task* tasks = init_tasks(N_TASKS, M, N, K, type);
 
-    /* warmup | jit detection */
+    /* warmup and jit detection */
     start_time = chrono::high_resolution_clock::now();
     handle_task(bt, &tasks[0]);
     end_time = chrono::high_resolution_clock::now();
@@ -1251,9 +1238,10 @@ inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K
             file << "Accelerator,DataType,M,N,K,Avg_Time_ms,Jit_Time_ms\n";
         
         string acc_str = get_acc_string(bt);
-        file << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "," << jit_ms << "\n";
-        
-        PRINT("result: " << acc_str << "," << type << "," << M << "," << N << "," << K << "," << avg_ms << "," << jit_ms << "\n");
+
+        file << acc_str << "," << type << "," << M << "," << N << 
+                "," << K << "," << avg_ms << "," << jit_ms << "\n";
+
         file.close();
     } else {
         cerr << "[SCEDULER] ERROR Cannot open file: " << filename << "\n";
@@ -1269,11 +1257,178 @@ The measurement proceeds in three steps: The first task is executed. This run in
     
 The remaining tasks are executed in a loop, their durations are summed and divided by the number of runs to obtain a stable average execution time (\texttt{Avg\_Time\_ms}). 
 
-Finally, the results including the accelerator name, data type, matrix dimensions, average time, and JIT time are appended to the corresponding CSV file. This distinction between JIT time and execution time is crucial for the scheduler: during the first few iterations of an algorithm, the scheduler must account for the JIT overhead, and all of this complexity is hidden in the \texttt{PerformanceMap}.
+Finally, the results including the accelerator name, data type, matrix dimensions, average time, and JIT time are appended to the corresponding CSV file. This distinction between JIT time and execution time is crucial for the scheduler: during the first few iterations of an algorithm, the scheduler must account for the JIT overhead, and all of this complexity is hidden in the \texttt{PerformanceMap}. 
+
+\clearpage 
+
+\subsection{Tasks}
+To allow the scheduler to manage workloads efficiently without being tied to a specific data type, the project introduces an  abstraction called \texttt{Task}.
+
+The definition of the task structure is below: 
+
+\begin{lstlisting}[caption={Task Structure}, language=C++] 
+enum Type : int { FLOAT, HALF, UINT8, };
+
+typedef struct { 
+
+    void *A; 
+    void *B; 
+    void *C;
+    
+    Type type; /* 1 float, 2 half, 3 8bit */
+    int M; 
+    int N; 
+    int K; 
+    
+    /* benchmarking */
+    chrono::high_resolution_clock::time_point start_time;
+    chrono::high_resolution_clock::time_point end_time;
+
+} task; 
+\end{lstlisting}
+
+The structure utilizes generic pointers (void *) for the matrices A, B, and C so it allows the same code to handle data type supported uniformly. The specific interpretation of the data is determined by the Type enum field.
+
+Furthermore, the task structure plays a crucial role in profiling, containing two high-resolution timestamp fields, \texttt{start\_time} and \texttt{end\_time}, the scheduler can records the exact moment a task is submitted, and the worker thread records the moment the computation finishes. This allows for precise calculation of the latency and throughput.
+
+The typical lifecycle of a task within the application is simple:  
+\begin{enumerate} 
+    \item The tasks are allocated and filled with data in the main thread. 
+
+    \item They are passed to the scheduler via \texttt{do\_tasks} function exposed via the scheduler object. 
+
+    \item Once processing is complete, the memory is explicitly freed with the \texttt{ clean\_tasks} function.
+\end{enumerate}
+
+To automate the data generation process for testing every single workload supported by the scheduler, the \texttt{init\_tasks} function was used to create arrays of identical matrices, while \texttt{init\_hetero\_tasks} was employed to create arrays of heterogeneous matrices. These datasets constitute the input used for all the tests performed on the scheduler.
 
 
+\begin{lstlisting}[caption={Init Tasks Function}, language=C++] 
+inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
+    task* array_task = new task[n_task];
 
+    for (int i = 0; i < n_task; i++) {
+        array_task[i].M = m;
+        array_task[i].N = n;
+        array_task[i].K = k;
+        array_task[i].type = t;
 
+        if (t == Type::FLOAT) {
+            array_task[i].A = new float[m * k]; 
+            array_task[i].B = new float[k * n];
+            array_task[i].C = new float[m * n];
+
+            init_32bit(array_task[i].A,array_task[i].B,array_task[i].C, m, n, k);
+
+        } else if (t == Type::HALF) {
+            
+            /* .. same as 32 bit .. */
+        } 
+    }
+
+    return array_task;
+}
+\end{lstlisting}
+
+The implementation is straightforward, the function \texttt{init\_task} simply take the number of tasks to create, the matrix dimensions and the desired type of the matrices, it  allocate the array of tasks, then the system populate the matrices with random numbers thanks to the \texttt{init\_32bit} function:   
+
+\begin{lstlisting}[caption={Init 32 bit Function}, language=C++] 
+inline void init_32bit(void* A, void* B, void* C, int M, int N, int K) {
+    float* pA = (float*)A;
+    float* pB = (float*)B;
+    float* pC = (float*)C;
+
+    random_device rd;
+    mt19937 gen(rd());
+    
+    uniform_real_distribution<float> dis(-1.0f, 1.0f);
+
+    for (int i = 0; i < M * K; ++i) 
+        pA[i] = dis(gen);
+
+    for (int i = 0; i < K * N; ++i) 
+        pB[i] = dis(gen);
+
+    for (int i = 0; i < M * N; ++i) 
+        pC[i] = 0.0f;
+}
+\end{lstlisting}
+
+The \texttt{init\_32bit} function casts the generic void pointers back to float* and uses the C++ standard random number generator to fill the input matrices A and B. The output matrix C is initialized to zero for the results.
+
+The 16 bit initialization function is omitted because it follows the same pattern but includes an additional step to convert the generated random floats into half precision bit, same for the function \texttt{init\_hetero\_tasks}, it simply iterate on random number to create the a stream of random dimension matrices. 
+
+\clearpage 
+
+\subsection{SharedBuffer}
+
+The SharedBuffer is the tool used for communication between the threads, since the Coordinator and the Workers run independently, they need a safe place to exchange data.
+
+\begin{lstlisting}[caption={Shared Buffer Implementation}, language=C++] 
+class SharedBuffer {
+    private: 
+        unique_ptr<task*[]> data;
+        size_t size = 0;
+        
+        alignas(64) std::atomic<size_t> write_i{0};
+        alignas(64) std::atomic<size_t> read_i{0};
+
+    public:
+        /* constructor */
+        SharedBuffer(size_t s) : size(s), data(new task*[s]) {}
+
+        ~SharedBuffer() {}
+
+        /* put one task pointer inside, sleep if full*/
+        void put(task* ele) {
+
+#ifdef SLEEP
+            while (((write_i + 1) % size) == read_i) {
+                usleep(PUT_SLEEP);
+            }
+#else
+            while (((write_i + 1) % size) == read_i) {}
+#endif
+            data[write_i] = ele; 
+            write_i = (write_i + 1) % size;
+        }
+
+        /* get one task pointer sleep if empty, return to the caller after
+         * 5 attempt*/
+        task* get() {
+            int c = 0;
+
+#ifdef SLEEP
+            while (write_i == read_i){
+                c++;
+                usleep(GET_SLEEP);
+                if (c >= 5) {return nullptr;}
+            }
+#else
+            while (write_i == read_i){
+                c++;
+                if (c >= 50) {return nullptr;}
+            }
+#endif
+            task* ele = data[read_i];
+            read_i = (read_i + 1) % size;
+
+            return ele; 
+        }
+};
+\end{lstlisting}
+
+This class was implemented specifically for this scheduler to be as simple and fast as possible, avoiding the complex locking mechanisms usually found in standard libraries.
+
+The logic is based on a circular buffer managed by two counters: \texttt{write\_i} (where to put new data) and \texttt{read\_i} (where to take data) and by using atomic variables, the threads can update these counters without interfering with each other.
+
+The put function is used by the Coordinator, it checks if there is space, if the buffer is full, it waits. The get function is used by the Worker to pick up a task, if the buffer is empty, it waits for new data. A key detail is in the get function, that it doesn't wait forever, as shown in the code, if the buffer remains empty for a certain number of attempts (5 with sleep, 50 without), the function returns nullptr. This is done for a specific reason, the worker threads run inside a while loop controlled by the scheduler. If the get function blocked indefinitely waiting for a task, the thread would get stuck there and could never check if the program is trying to shut down. By returning control to the caller periodically, the worker can check if it should stop running or keep waiting for new work.
+
+By default, this waiting is a busy wait: the thread keeps checking the variable continuously, this is very fast but consumes all of the CPU core. To fix this, the \texttt{SLEEP} macro can be enabled. The thread takes a small sleep if it has to wait, freeing up the CPU.
+
+\clearpage
+
+\subsection{PerformanceMap}
 
 
 

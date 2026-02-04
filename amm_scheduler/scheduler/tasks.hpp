@@ -50,10 +50,6 @@ inline void clean_tasks(task* array_task, size_t n_task);
 
 inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
         task* array_task = new task[n_task];
-        random_device rd;
-        mt19937 gen(rd());
-
-        uniform_real_distribution<float> dis(-1.0f, 1.0f);
 
         for (int i = 0; i < n_task; i++) {
             array_task[i].M = m;

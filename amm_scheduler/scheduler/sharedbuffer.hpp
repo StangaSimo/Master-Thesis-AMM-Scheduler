@@ -12,7 +12,7 @@ using namespace std;
 /* basic implementation of a simple ring buffer with blocking function */
 class SharedBuffer {
     private: 
-        unique_ptr<task*[]> data; /* unique pointer so delete is not needed */
+        unique_ptr<task*[]> data;
         size_t size = 0;
         
         alignas(64) std::atomic<size_t> write_i{0};
@@ -42,7 +42,7 @@ class SharedBuffer {
         }
 
         /* get one task pointer sleep if empty, return to the caller after
-         * 50 attempt*/
+         * 5 attempt*/
         task* get() {
             int c = 0;
 
