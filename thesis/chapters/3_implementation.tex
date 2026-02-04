@@ -73,7 +73,7 @@ As shown in Figure \ref{code_tree}, the project includes a dedicated folder for 
 \subsection{Compilation Process}
 The tool CMake was used in this project to manage this complex build process, the build is not performed all at once. 
 
-Below is the CMakeLists.txt file in the root directory:
+Below is the entire CMakeLists.txt file in the root directory:
 
 \begin{lstlisting}[caption={CMakeLists.txt root directory}]
 cmake_minimum_required(VERSION 3.15)
@@ -200,7 +200,7 @@ Consequently, the scheduler logic knows exactly which accelerators are available
 Below the following snippet from the scheduler's build configuration shows how the flags trigger the injection of preprocessor definitions and the linking of specific libraries:
 
 
-\begin{lstlisting}[caption={Part of CMakeLists.txt scheduler directory}]
+\begin{lstlisting}[caption={Part of CMakeLists.txt inside the scheduler directory}]
 # CUDA
 if(NOT DEFINED ENABLE_CUDA)
     message("[SCHEDULER] CUDA off on scheduler")
@@ -230,7 +230,7 @@ The command \texttt{target\_compile\_definitions} passes a macro (e.g., \texttt{
 
 The compilation process for the accelerator backends follows a standard pattern. As an example, the configuration file for the OpenVINO library is presented below:
 
-\begin{lstlisting}[caption={CMakeLists.txt OpenVINO directory}]
+\begin{lstlisting}[caption={CMakeLists.txt inside OpenVINO directory}]
 cmake_minimum_required(VERSION 3.20)
 project(OpenVinoPart LANGUAGES CXX)
 
@@ -298,7 +298,8 @@ The implementation of these functions is in the \texttt{runner.cu} file, but bef
 #define CHECK_CUDA(func) {				    \
     cudaError_t e = (func);			        \
     if(e != cudaSuccess)			        \
-        printf ("%s %d CUDA ERROR: %s\n", __FILE__,  __LINE__, cudaGetErrorString(e)); \
+        printf ("%s %d CUDA ERROR: %s\n", __FILE__,  __LINE__, 
+                cudaGetErrorString(e)); \
 }
 
 #define CHECK_CUBLAS(func) {                      \
@@ -443,9 +444,9 @@ void cuda_gemm_16bit_p(__half* A, __half* B, __half* C, int M, int N, int K) {
 }
 \end{lstlisting}
 
-The logic remains identical to the 32-bit version, but it introduces changes to handle half-precision data. First the pointer types are replaced with the specific \texttt{\_\_half} type. Consequently, the \texttt{cublasGemmEx} function is configured with the \texttt{CUDA\_R\_16F} flag for the input and output data. However, it is worth noting that the computation type is kept as \texttt{CUBLAS\_COMPUTE\_32F}, this is a standard practice to ensures that while the data storage is compressed to 16-bit, the internal mathematical computation happens in 32-bit to prevent overflows.
+The logic remains identical to the 32 bit version, but it introduces changes to handle half-precision data, first the pointer types are replaced with the specific \texttt{\_\_half} type, consequently, the \texttt{cublasGemmEx} function is configured with the \texttt{CUDA\_R\_16F} flag for the input and output data. However, it is worth noting that the computation type is kept as \texttt{CUBLAS\_COMPUTE\_32F}, this is a standard practice to ensures that while the data storage is compressed to 16 bit, the internal mathematical computation happens in 32 bit to prevent overflows.
 
-The implementation for 8-bit integer matrices follows the exact same architectural pattern, differing only in data types, \texttt{int8\_t} and flags \texttt{CUDA\_R\_8I}. The code can be found in full in Appendix \ref{TODO}.
+The implementation for 8 bit integer matrices follows the exact same architectural pattern, differing only in data types, \texttt{int8\_t} and flags \texttt{CUDA\_R\_8I}. The code can be found in full in Appendix \ref{TODO}.
 
 \subsection{OpenVINO}
 The OpenVINO abstraction layer is designed to target the Intel NPU, just like the CUDA backend, the interaction between the C++ scheduler and the OpenVINO runtime is mediated by a standard C interface to ensure the ABI compatibility.
@@ -550,9 +551,12 @@ void ov_gemm_32bit_p(void *A, void *B, void *C, int M, int N, int K){
 
     ov::InferRequest& infer_request = request_cache_32bit[key];
 
-    ov::Tensor tensor_A(ov::element::f32, ov::Shape{(size_t)M, (size_t)K}, A);
-    ov::Tensor tensor_B(ov::element::f32, ov::Shape{(size_t)K, (size_t)N}, B);
-    ov::Tensor tensor_C(ov::element::f32, ov::Shape{(size_t)M, (size_t)N}, C);
+    ov::Tensor tensor_A(ov::element::f32, ov::Shape{(size_t)M, 
+                                                    (size_t)K}, A);
+    ov::Tensor tensor_B(ov::element::f32, ov::Shape{(size_t)K, 
+                                                    (size_t)N}, B);
+    ov::Tensor tensor_C(ov::element::f32, ov::Shape{(size_t)M, 
+                                                    (size_t)N}, C);
 
     infer_request.set_input_tensor(0, tensor_A);
     infer_request.set_input_tensor(1, tensor_B);
@@ -650,7 +654,9 @@ struct SYCLStream {
     float *d_A_f, *d_B_f, *d_C_f;     
     sycl::half *d_A_h, *d_B_h, *d_C_h;
     
-    SYCLStream(size_t max_elements) : q(sycl::gpu_selector_v, sycl::property::queue::in_order()) {
+    SYCLStream(size_t max_elements) : 
+                q(sycl::gpu_selector_v, 
+                sycl::property::queue::in_order()) {
         d_A_f = sycl::malloc_device<float>(max_elements, q);
         d_B_f = sycl::malloc_device<float>(max_elements, q);
         d_C_f = sycl::malloc_device<float>(max_elements, q);
@@ -659,7 +665,8 @@ struct SYCLStream {
         d_B_h = sycl::malloc_device<sycl::half>(max_elements, q);
         d_C_h = sycl::malloc_device<sycl::half>(max_elements, q);
 
-        if (q.get_device().get_info<sycl::info::device::name>()  != "Intel(R) Arc(TM) Graphics") {
+        if (q.get_device().get_info<sycl::info::device::name>()  
+                != "Intel(R) Arc(TM) Graphics") {
             std::cout << "Intel GPU NOT PRESENT\n";
             exit(EXIT_FAILURE);
         }
@@ -695,8 +702,13 @@ void sycl_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K) {
     s.q.memcpy(s.d_B_f, B, K * N * sizeof(float));
 
     float alpha = 1.0f, beta = 0.0f;
-    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, 
-            M, N, K, alpha, s.d_A_f, K, s.d_B_f, N, beta, s.d_C_f, N);
+
+    oneapi::mkl::blas::row_major::gemm(s.q, 
+                                        oneapi::mkl::transpose::nontrans, 
+                                        oneapi::mkl::transpose::nontrans, 
+                                        M, N, K, alpha, 
+                                        s.d_A_f, K, s.d_B_f, N, 
+                                        beta, s.d_C_f, N);
 
     s.q.memcpy(C, s.d_C_f, M * N * sizeof(float));
     s.q.wait(); 
@@ -711,8 +723,12 @@ void sycl_gemm_16bit_p(sycl::half *A, sycl::half *B, sycl::half *C, int M, int N
     s.q.memcpy(s.d_B_h, B, K * N * sizeof(sycl::half));
 
     sycl::half alpha = 1.0f, beta = 0.0f;
-    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, 
-            M, N, K, alpha, s.d_A_h, K, s.d_B_h, N, beta, s.d_C_h, N);
+    oneapi::mkl::blas::row_major::gemm(s.q, 
+                                        oneapi::mkl::transpose::nontrans, 
+                                        oneapi::mkl::transpose::nontrans, 
+                                        M, N, K, alpha, 
+                                        s.d_A_h, K, s.d_B_h, N, 
+                                        beta, s.d_C_h, N);
 
     s.q.memcpy(C, s.d_C_h, M * N * sizeof(sycl::half));
     s.q.wait();
@@ -740,7 +756,8 @@ extern "C" {
     }
 
     void sycl_gemm_16bit(void *A, void *B, void *C, int M, int N, int K) {
-        sycl_gemm_16bit_p((sycl::half*)A, (sycl::half*)B, (sycl::half*)C, M, N, K);
+        sycl_gemm_16bit_p((sycl::half*)A, (sycl::half*)B, (sycl::half*)C, 
+                            M, N, K);
     }
 
     void sycl_free() {
@@ -766,7 +783,9 @@ inline void cpu_init() {
     omp_set_num_threads(N_CORES);
 }
 
-inline void cpu_gemm_32bit(void* A, void* B, void* C, int M, int N, int K) {
+inline void cpu_gemm_32bit(void* A, void* B, void* C, 
+                            int M, int N, int K) {
+
     float* A_ = (float*) A;
     float* B_ = (float*) B;
     float* C_ = (float*) C;
@@ -780,7 +799,9 @@ inline void cpu_gemm_32bit(void* A, void* B, void* C, int M, int N, int K) {
                 C_, N);
 }
 
-inline void cpu_gemm_16bit(void* A, void* B, void* C, int M, int N, int K) {
+inline void cpu_gemm_16bit(void* A, void* B, void* C, 
+                            int M, int N, int K) {
+
     uint16_t* pA = (uint16_t*)A;
     uint16_t* pB = (uint16_t*)B;
     uint16_t* pC = (uint16_t*)C;
@@ -863,6 +884,7 @@ inline float half_to_float(uint16_t h) {
 
 The \texttt{float\_to\_half} function (available in the Appendix \ref{TODO}) performs the inverse operation.
 
+\clearpage
 
 \section{AMM Scheduler}
 The core of this project is the \texttt{AMScheduler} class. While the underlying system involves thread management, synchronization, and hardware interactions, the design goal was to encapsulate all this complexity behind a simple interface. 
@@ -919,7 +941,7 @@ void test_scheduler() {
     AMScheduler scheduler(Logic::DYNAMIC);
     
     /* 2. Submit work */
-    scheduler.do_tasks(task_array, n_tasks);
+    scheduler.do_tasks(Array_Of_Input_Tasks, Number_of_input_tasks);
     
     /* ...... */
     
@@ -927,11 +949,11 @@ void test_scheduler() {
     scheduler.wait();
     
     /* 4. Analyze profiler results */
-    scheduler.print_stats(task_array, n_matrix);
+    scheduler.print_stats(Array_Of_Input_Tasks, Number_of_input_tasks);
 }
 \end{lstlisting}
 
-The usage of the scheduler is extremely simple, the developer only needs to instantiate the class passing the logic and submit the array of tasks. The scheduler handles all the complexity of thread management and hardware dispatching internally.
+The usage of the scheduler is extremely simple, the developer only needs to instantiate the class passing the logic and submit the array of tasks. The scheduler handles all the complexity of thread management and hardware dispatching internally. The explaination of the tasks creation is in section \ref{TODO}.
 
 
 \subsection{Thread Initialization}
@@ -982,7 +1004,8 @@ void init_threads() {
     /* coordinator thread */
     shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
     threads[BT::CORDINATOR] = make_unique<thread>(&AMScheduler::coordinator_thread,this, 
-                                ref(shared_buffers)); /* ref because the thread function try to copy all the parameters */
+                                ref(shared_buffers)); 
+                                /* ref because the thread function try to copy all the parameters */
 }
 \end{lstlisting}
 
@@ -1055,38 +1078,26 @@ inline void handle_task(BT backend_type, task *task) {
     case BT::CUDA:
 #ifdef ENABLE_CUDA
         if (task->type == Type::FLOAT)
-            cuda_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+            cuda_gemm_32bit(task->A,task->B,task->C, 
+                                task->M, task->N, task->K);
         if (task->type == Type::HALF)
-            cuda_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+            cuda_gemm_16bit(task->A,task->B,task->C, 
+                                task->M, task->N, task->K);
 #endif 
         break;    
 
     case BT::SYCL:
 #ifdef ENABLE_SYCL
         if (task->type == Type::FLOAT)
-            sycl_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
+            sycl_gemm_32bit(task->A,task->B,task->C, 
+                                task->M, task->N, task->K);
         if (task->type == Type::HALF)
-            sycl_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
+            sycl_gemm_16bit(task->A,task->B,task->C, 
+                                task->M, task->N, task->K);
 #endif 
         break;    
 
-    case BT::OPENVINO:
-#ifdef ENABLE_OPENVINO
-        if (task->type == Type::FLOAT)
-            ov_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
-        if (task->type == Type::HALF)
-            ov_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
-#endif 
-        break;    
-
-    case BT::OPENBLAS:
-#ifdef ENABLE_OPENBLAS
-        if (task->type == Type::FLOAT)
-            cpu_gemm_32bit(task->A,task->B,task->C, task->M, task->N, task->K);
-        if (task->type == Type::HALF)
-            cpu_gemm_16bit(task->A,task->B,task->C, task->M, task->N, task->K);
-#endif 
-        break;    
+    /* .. same for OpenVINO and OpenBLASS .. */
 
     default: 
         cerr << "[SCHEDULER] ERROR handle task\n";
@@ -1104,7 +1115,7 @@ This function performs three simple steps, it checks the \texttt{backend\_type} 
 \subsection{Benchmarks Routines}
 Once the threads are running, the coordinator thread needs specific data to make decisions inside the static logics (see section \ref{TODO}). This data comes from the data profiling saved in CSV files create by \texttt{init\_benchmarks} function and later uploaded inside the \texttt{PerformanceMap} structure (see section \ref{TODO}) by the \texttt{init\_maps} function.
 
-\begin{lstlisting}[caption={Init Thread}, language=C++] 
+\begin{lstlisting}[caption={Init Benchmarks and Maps}, language=C++] 
 /* upload the banchmark files and generate them if not presents */
 void init_benchmarks() {
     for (BT i : bts) {
@@ -1116,17 +1127,21 @@ void init_benchmarks() {
         filename_h = get_benchmark_filename(i, Type::HALF); 
 
         if (filesystem::exists(filename_f)) {
-             PRINT("[SCHEDULER] File: " << filename_f <<  " opened.\n"); 
+             PRINT("[SCHEDULER] File: " << 
+                    filename_f <<  " opened.\n"); 
         } else {
-             PRINT("[SCHEDULER] File: " << filename_f <<  " not present\n"); 
+             PRINT("[SCHEDULER] File: " << 
+                    filename_f <<  " not present\n"); 
              benchmark(i, Type::FLOAT ,filename_f);
              PRINT("[SCHEDULER] Benchmark file created\n"); 
         }
 
         if (filesystem::exists(filename_h)){
-             PRINT("[SCHEDULER] File: " << filename_h <<  " opened.\n"); 
+             PRINT("[SCHEDULER] File: " << 
+                    filename_h <<  " opened.\n"); 
         } else {
-             PRINT("[SCHEDULER] File: " << filename_h <<  " not present\n"); 
+             PRINT("[SCHEDULER] File: " << 
+                    filename_h <<  " not present\n"); 
              benchmark(i, Type::HALF ,filename_h);
              PRINT("[SCHEDULER] Benchmark file created\n"); 
         }
@@ -1141,10 +1156,17 @@ void init_maps() {
         filename_f = get_benchmark_filename(i, Type::FLOAT); 
         filename_h = get_benchmark_filename(i, Type::HALF); 
 
-        if (filesystem::exists(filename_f) && filesystem::exists(filename_h)) {
-            bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE, i, filename_f, filename_h);
+        if (filesystem::exists(filename_f) 
+            && filesystem::exists(filename_h)) {
+
+            /* performance map creation */
+            bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE, 
+                                                i, filename_f, filename_h);
+
         } else {
-             cerr << "[SCHEDULER] File: " << filename_f <<  " or " << filename_h << " not found for map init\n"; 
+             cerr << "[SCHEDULER] File: " << 
+                    filename_f <<  " or " << 
+                    filename_h << " not found for map init\n"; 
              exit(EXIT_FAILURE);
         }
    }
