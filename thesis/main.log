@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  4 FEB 2026 18:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  5 FEB 2026 19:28
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -807,7 +807,7 @@ Package epstopdf Info: Source file: <images/Frontespizio/cherubinFrontespizio.ep
 (epstopdf)             Command: <repstopdf --outfile=images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf images/Frontespizio/cherubinFrontespizio.eps>
 (epstopdf)             \includegraphics on input line 4.
 Package epstopdf Info: Output file is already uptodate.
-<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=187, 288.07625pt x 294.09875pt>
+<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=191, 288.07625pt x 294.09875pt>
 File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file (type pdf)
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
@@ -955,7 +955,7 @@ Chapter 2.
 
 
 ]
-<images/core_ultra.png, id=271, 481.8pt x 481.8pt>
+<images/core_ultra.png, id=276, 481.8pt x 481.8pt>
 File: images/core_ultra.png Graphic file (type png)
 <use images/core_ultra.png>
 Package pdftex.def Info: images/core_ultra.png  used on input line 21.
@@ -971,12 +971,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [8
 
  <./images/core_ultra.png>]
-<images/rtx.png, id=287, 1505.625pt x 645.41125pt>
+<images/rtx.png, id=292, 1505.625pt x 645.41125pt>
 File: images/rtx.png Graphic file (type png)
 <use images/rtx.png>
 Package pdftex.def Info: images/rtx.png  used on input line 41.
 (pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
-<images/cuda.jpg, id=290, 407.5225pt x 246.9225pt>
+<images/cuda.jpg, id=295, 407.5225pt x 246.9225pt>
 File: images/cuda.jpg Graphic file (type jpg)
 <use images/cuda.jpg>
 Package pdftex.def Info: images/cuda.jpg  used on input line 59.
@@ -1002,12 +1002,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
 ]
-<images/sycl.jpg, id=312, 1104.125pt x 501.875pt>
+<images/sycl.jpg, id=317, 1104.125pt x 501.875pt>
 File: images/sycl.jpg Graphic file (type jpg)
 <use images/sycl.jpg>
 Package pdftex.def Info: images/sycl.jpg  used on input line 94.
 (pdftex.def)             Requested size: 88.3318pt x 40.15082pt.
-<images/oneapi.png, id=314, 244.66406pt x 249.18094pt>
+<images/oneapi.png, id=319, 244.66406pt x 249.18094pt>
 File: images/oneapi.png Graphic file (type png)
 <use images/oneapi.png>
 Package pdftex.def Info: images/oneapi.png  used on input line 105.
@@ -1027,7 +1027,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [11
 
  <./images/sycl.jpg> <./images/oneapi.png>]
-<images/openvino.jpg, id=326, 992.70876pt x 266.9975pt>
+<images/openvino.jpg, id=331, 992.70876pt x 266.9975pt>
 File: images/openvino.jpg Graphic file (type jpg)
 <use images/openvino.jpg>
 Package pdftex.def Info: images/openvino.jpg  used on input line 120.
@@ -1043,7 +1043,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [12
 
  <./images/openvino.jpg>]
-<images/openblass.jpg, id=336, 803.0pt x 548.0475pt>
+<images/openblass.jpg, id=341, 803.0pt x 548.0475pt>
 File: images/openblass.jpg Graphic file (type jpg)
 <use images/openblass.jpg>
 Package pdftex.def Info: images/openblass.jpg  used on input line 143.
@@ -1059,7 +1059,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [13
 
  <./images/openblass.jpg>]
-<images/C.jpeg, id=349, 803.0pt x 421.575pt>
+<images/C.jpeg, id=354, 803.0pt x 421.575pt>
 File: images/C.jpeg Graphic file (type jpg)
 <use images/C.jpeg>
 Package pdftex.def Info: images/C.jpeg  used on input line 162.
@@ -1075,7 +1075,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [14
 
  <./images/C.jpeg>]
-<images/cmake_logo.svg.png, id=360, 963.6pt x 964.60374pt>
+<images/cmake_logo.svg.png, id=365, 963.6pt x 964.60374pt>
 File: images/cmake_logo.svg.png Graphic file (type png)
 <use images/cmake_logo.svg.png>
 Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 193.
@@ -1129,7 +1129,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [19
 
 ]
-<images/grafico.png, id=391, 1468.73718pt x 1006.51031pt>
+<images/grafico.png, id=396, 1468.73718pt x 1006.51031pt>
 File: images/grafico.png Graphic file (type png)
 <use images/grafico.png>
 Package pdftex.def Info: images/grafico.png  used on input line 56.
@@ -1145,7 +1145,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [20
 
  <./images/grafico.png>]
-<images/ringbuffer.png, id=399, 527.72156pt x 173.89969pt>
+<images/ringbuffer.png, id=404, 527.72156pt x 173.89969pt>
 File: images/ringbuffer.png Graphic file (type png)
 <use images/ringbuffer.png>
 Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
@@ -1154,7 +1154,7 @@ Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
 
 LaTeX Warning: Reference `TODO' on page 21 undefined on input line 81.
 
-<images/coordinator.png, id=401, 688.82344pt x 1069.74657pt>
+<images/coordinator.png, id=406, 688.82344pt x 1069.74657pt>
 File: images/coordinator.png Graphic file (type png)
 <use images/coordinator.png>
 Package pdftex.def Info: images/coordinator.png  used on input line 85.
@@ -1181,7 +1181,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 LaTeX Warning: Reference `TODO' on page 22 undefined on input line 100.
 
-<images/workers.png, id=410, 580.41844pt x 822.82407pt>
+<images/workers.png, id=415, 580.41844pt x 822.82407pt>
 File: images/workers.png Graphic file (type png)
 <use images/workers.png>
 Package pdftex.def Info: images/workers.png  used on input line 104.
@@ -1189,7 +1189,7 @@ Package pdftex.def Info: images/workers.png  used on input line 104.
 
 LaTeX Warning: Reference `TODO' on page 22 undefined on input line 109.
 
-<images/performancemap.png, id=412, 697.8572pt x 538.26094pt>
+<images/performancemap.png, id=417, 697.8572pt x 538.26094pt>
 File: images/performancemap.png Graphic file (type png)
 <use images/performancemap.png>
 Package pdftex.def Info: images/performancemap.png  used on input line 113.
@@ -1205,7 +1205,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [22 <./images/workers.png> <./images/performancemap.png>]
-<images/profiler.png, id=421, 356.0803pt x 590.95781pt>
+<images/profiler.png, id=426, 356.0803pt x 590.95781pt>
 File: images/profiler.png Graphic file (type png)
 <use images/profiler.png>
 Package pdftex.def Info: images/profiler.png  used on input line 122.
@@ -1583,7 +1583,10 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[60])
+[60]
+
+LaTeX Warning: Reference `TODO' on page 61 undefined on input line 1438.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1594,9 +1597,48 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [61
 
 ]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[62]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[63
+
+]
+
+LaTeX Warning: Reference `TODO' on page 64 undefined on input line 1580.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[64])
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[65
+
+]
 \openout2 = `chapters/4_results.aux'.
 
- (./chapters/4_results.tex [62
+ (./chapters/4_results.tex [66
 
 
 
@@ -1604,10 +1646,10 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 ]
 Chapter 5.
-) [63]
+) [67]
 \openout2 = `chapters/AppendiceA.aux'.
 
- (./chapters/AppendiceA.tex [64
+ (./chapters/AppendiceA.tex [68
 
 
 
@@ -1615,7 +1657,7 @@ Chapter 5.
 
 ]
 Appendix A.
-) [65] (./main.bbl [66
+) [69] (./main.bbl [70
 
 
 
@@ -1700,7 +1742,7 @@ Overfull \hbox (84.58885pt too wide) in paragraph at lines 63--66
 \T1/cmr/m/n/12 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
-[67]
+[71]
 Underfull \hbox (badness 10000) in paragraph at lines 73--76
 []\T1/cmr/m/n/12 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
  []
@@ -1713,7 +1755,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[68] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+[72] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-14>
@@ -1730,21 +1772,21 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: ACFED20DC751AD39AFF571C955B1BD8E;4667.
+(rerunfilecheck)             Checksum: 93CC5C6318CD1281076290A59F5351F2;4820.
  ) 
 Here is how much of TeX's memory you used:
- 33450 strings out of 467538
- 657378 string characters out of 5419551
- 1710066 words of memory out of 5000000
- 60629 multiletter control sequences out of 15000+600000
+ 33617 strings out of 467538
+ 659820 string characters out of 5419551
+ 1824066 words of memory out of 5000000
+ 60686 multiletter control sequences out of 15000+600000
  644925 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,12n,108p,1148b,2044s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (68 pages, 1322730 bytes).
+Output written on main.pdf (72 pages, 1337100 bytes).
 PDF statistics:
- 1931 PDF objects out of 2073 (max. 8388607)
- 1765 compressed objects within 18 object streams
- 1140 named destinations out of 1200 (max. 500000)
- 525 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2081 PDF objects out of 2487 (max. 8388607)
+ 1909 compressed objects within 20 object streams
+ 1250 named destinations out of 1440 (max. 500000)
+ 533 words of extra memory for PDF output out of 10000 (max. 10000000)
 

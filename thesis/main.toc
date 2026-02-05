@@ -32,6 +32,7 @@
 \contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{52}{subsection.4.3.3}%
 \contentsline {subsection}{\numberline {4.3.4}Tasks}{56}{subsection.4.3.4}%
 \contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{59}{subsection.4.3.5}%
-\contentsline {subsection}{\numberline {4.3.6}PerformanceMap}{61}{subsection.4.3.6}%
-\contentsline {chapter}{\numberline {5}Results}{63}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{65}{appendix.A}%
+\contentsline {subsection}{\numberline {4.3.6}Performance Map}{61}{subsection.4.3.6}%
+\contentsline {subsection}{\numberline {4.3.7}Scheduler Logics}{65}{subsection.4.3.7}%
+\contentsline {chapter}{\numberline {5}Results}{67}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{69}{appendix.A}%

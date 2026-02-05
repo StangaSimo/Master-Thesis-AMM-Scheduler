@@ -1422,15 +1422,165 @@ This class was implemented specifically for this scheduler to be as simple and f
 
 The logic is based on a circular buffer managed by two counters: \texttt{write\_i} (where to put new data) and \texttt{read\_i} (where to take data) and by using atomic variables, the threads can update these counters without interfering with each other.
 
-The put function is used by the Coordinator, it checks if there is space, if the buffer is full, it waits. The get function is used by the Worker to pick up a task, if the buffer is empty, it waits for new data. A key detail is in the get function, that it doesn't wait forever, as shown in the code, if the buffer remains empty for a certain number of attempts (5 with sleep, 50 without), the function returns nullptr. This is done for a specific reason, the worker threads run inside a while loop controlled by the scheduler. If the get function blocked indefinitely waiting for a task, the thread would get stuck there and could never check if the program is trying to shut down. By returning control to the caller periodically, the worker can check if it should stop running or keep waiting for new work.
+The put function is used by the Coordinator, it checks if there is space, if the buffer is full, it waits. The get function is used by the Worker to pick up a task, if the buffer is empty, it waits for new data. 
+
+The task array is encapsulated within a \texttt{std::unique\_ptr}, this ensures that the memory is automatically released when the associated SharedBuffer object is destroyed. However, the underlying structure remains a simple raw array.
+
+A key detail is in the get function, that it doesn't wait forever, as shown in the code, if the buffer remains empty for a certain number of attempts (5 with sleep, 50 without), the function returns nullptr. This is done for a specific reason, the worker threads run inside a while loop controlled by the scheduler. If the get function blocked indefinitely waiting for a task, the thread would get stuck there and could never check if the program is trying to shut down. By returning control to the caller periodically, the worker can check if it should stop running or keep waiting for new work.
 
 By default, this waiting is a busy wait: the thread keeps checking the variable continuously, this is very fast but consumes all of the CPU core. To fix this, the \texttt{SLEEP} macro can be enabled. The thread takes a small sleep if it has to wait, freeing up the CPU.
 
 \clearpage
 
-\subsection{PerformanceMap}
+\subsection{Performance Map}
+The Performance Map is a specialized data structure utilized by the Coordinator thread. Its primary purpose is to act as a predictive model, providing the expected execution time for a specific task on a specific accelerator.
 
+As explained in the previous section the raw data is acquired through automated benchmark routines (see section \ref{TODO}). However, reading from CSV files isn't an option latency wise, therefore, the PerformanceMap class loads this data into an optimized in-memory structure at startup.
 
+The class definition and its global variables are presented below:
+\begin{lstlisting}[caption={}, language=C++] 
+class PerformanceMap {
+
+    struct map_struct {
+        unordered_map<unsigned long long, tuple<double, double>> grid_map;
+        
+        long long last_M = -1;    
+        long long last_N = -1;    
+        long long last_K = -1;    
+        double last_result = -1.0; 
+        double max_result = -1.0;
+    };
+
+    map_struct map_f;
+    map_struct map_h;
+
+    unordered_set<unsigned long long> jit_cache_f;
+    unordered_set<unsigned long long> jit_cache_h;
+
+    /* which accellerator am i */
+    BT bt;
+
+    long long STEP_SIZE;
+
+public: 
+
+    PerformanceMap(int step_size, BT bt, 
+                    string filename_f, 
+                    string filename_h) 
+                    : STEP_SIZE(step_size), bt(bt) {
+        init_maps(filename_f, filename_h);        
+    }
+
+    double query(long long M, long long N, long long K, Type type, bool add_jit);
+\end{lstlisting}
+
+The core of the structure is the \texttt{map\_struct}, which contains an \texttt{unordered\_map}. This map uses an unsigned long long as a key (explained shortly) and stores a tuple containing the execution time and the JIT compilation time. To avoid redundant lookups for homogeneous workloads (where tasks are identical), the structure also includes a caching mechanism, \texttt{last\_M}, \texttt{last\_N}, and \texttt{last\_result} that returns the previous result immediately if the dimensions match.
+
+Two separate instances of this struct are maintained: \texttt{map\_f} for 32 bit floating point tasks and \texttt{map\_h} for 16 bit half precision tasks, additionally, the \texttt{jit\_cache} sets are used to track which matrix dimensions have already triggered a JIT compilation, allowing the system to predict when the "cold start" penalty must be paid. The bt variable identifies which accelerator this map belongs to, enabling specific heuristics for each hardware type.
+
+The public interface is minimal: besides the constructor that loads the data from files, only the query function is exposed to the Coordinator.
+
+To index the 3D matrix dimensions efficiently within a hash map, a bit-packing strategy was chosen over using complex objects or tuples as keys. This approach minimizes hashing overhead and ensures fast lookups.
+
+\begin{lstlisting}[caption={Get key Implementation}, language=C++] 
+/* return the successor of val in our step_size */
+long long round_up(long long val) {
+    if (val == 0) return STEP_SIZE;
+    return ((val + STEP_SIZE - 1) / STEP_SIZE) * STEP_SIZE;
+}
+
+/* return the key of val in our step_size */
+unsigned long long get_key(long long M, long long N, long long K) {
+    long long rM = round_up(M);
+    long long rN = round_up(N);
+    long long rK = round_up(K);
+
+    /* 64 bit  |4bit nil|20bit M|20bit N|20bit K| */
+    return ((unsigned long long)rM << 40) | ((unsigned long long)rN << 20) | (unsigned long long)rK;
+}
+\end{lstlisting}
+
+The \texttt{get\_key} function first rounds up the dimensions to the nearest \texttt{STEP\_SIZE} (the interval used during benchmarking) to ensure that arbitrary task sizes map to the nearest available data point. Then, it packs the three task dimensions into a single 64 bit integer by shifting bits: M the high 20 bits, N the middle, and K the low bits. This creates a unique integer identifier for any matrix configuration.
+
+\clearpage 
+
+The query function is the brain of this component, it takes the matrix dimensions, the data type, and a boolean flag \texttt{add\_jit}, part of the code is shown below:
+
+\begin{lstlisting}[caption={Query Implementation}, language=C++] 
+/* return the time, add_jit true = populate the jit cache */
+double query(long long M, long long N, 
+             long long K, Type type, bool add_jit) {
+
+    /* ... setup pointers to the correct map and cache ... */
+
+    unsigned long long key = get_key(M, N, K);
+
+    /* we cache the last results */
+    if (M == data->last_M && N == data->last_N && K == data->last_K) 
+        {return data->last_K;}
+
+    data->last_M = M; data->last_N = N; data->last_K = K;
+
+    /* return if we find the key */
+    if (data->grid_map.find(key) != data->grid_map.end()) {
+        time_ms = get<0>(data->grid_map[key]);
+        jit_ms = get<1>(data->grid_map[key]);
+        /* add jit_ms only if openvino never see M N K*/
+        if (bt == BT::OPENVINO) {
+            /* mitigate overhead when other accellerator are running */
+            time_ms += time_ms * 0.1;
+            if (jit_cache->find(key) == jit_cache->end()){
+                if (add_jit)
+                    jit_cache->insert(key);
+                time_ms += jit_ms * 1.3;
+            }
+        }
+
+        /* add jit_ms only if sycl never see N */
+        if (bt == BT::SYCL) {
+            /* mitigate overhead when other accellerator are running */
+            time_ms += time_ms * 0.1;
+            unsigned long long sycl_key = (unsigned long long) N;
+            if (jit_cache->find(sycl_key) == jit_cache->end()){
+                if (add_jit) jit_cache->insert(sycl_key);
+                time_ms += JIT_MS_SYCL;
+            }
+        }
+        
+        /* mitigate openblas error in bencharks  */
+        if (bt == BT::OPENBLAS) time_ms = time_ms * 0.5;
+        data->last_K = time_ms;
+        return time_ms;
+    }
+
+    /* if we don't have data on this matrix, just return max time * 2 */
+    time_ms = data->max_result * 2;
+    /* add jit expences */
+    if (bt == BT::SYCL || bt == BT::OPENVINO) time_ms += JIT_MS_SYCL;
+    /* cache the result */
+    data->last_K = time_ms;
+    return time_ms; 
+}
+\end{lstlisting}
+
+The \texttt{add\_jit} boolean serve a specific task, the Coordinator often needs to query the cost of a task purely for planning purposes, without actually scheduling it. In these cases, \texttt{add\_jit} is set to false, preventing the map from marking the matrix as "seen" in the JIT cache, ensuring that the compilation cost is correctly applied only when the task is actually dispatched.
+
+The function \texttt{query} implements specific heuristics derived and observed from extensive black box analysis of the drivers, as their internal implementations are not public:
+
+\begin{itemize}
+    \item \textbf{CUDA}: For the nvidia backend, no JIT logic is applied, the driver handles kernel caching transparently and efficiently, so the raw execution time from the benchmark is returned directly.
+
+    \item \textbf{OpenBLAS}: Similarly, the CPU backend has no compilation overhead, however, we observed that during the benchmark routines, the processor often failed to maintain the maximum Boost frequency consistently or suffered from thermal throttling, resulting in benchmark times that were slightly slower than real world execution. To correct this, a scaling factor is applied to the estimated time to align it with the actual performance observed during runtime.
+
+    \item \textbf{OpenVINO}: The NPU driver behavior was straightforward, the JIT compilation times measured during benchmarking matched the runtime behavior perfectly. Therefore if a matrix key is not in the \texttt{jit\_cache}, the stored JIT time is added to the result. Additionally, we observed that when the NPU runs in parallel with other accelerators, it suffers from a slight performance degradation due to system bus contention or power sharing. To mitigate this, a small percentage of overhead is added to the base execution time.
+
+    \item \textbf{SYCL}: This was the most complex driver to analyze. Our tests revealed that the driver compiles an optimized kernel for a wide range of matrix sizes, but it triggers a recompilation whenever the N dimension changes. Furthermore, the compilation cost was found to be constant, around 100-120 ms, regardless of the matrix size. Consequently, the benchmarked JIT times were discarded in favor of adding a fixed constant \texttt{JIT\_MS\_SYCL}) whenever a new N is encountered. Similar to the NPU, the Intel GPU also exhibits slight overhead during parallel execution, which is compensated for by adding a small factor to the predicted time.
+\end{itemize}
+
+All of this tweaks exhibits ,as it will be shown in the next section, a good behavior in predicting the time of completition of a task, furthermore the code used for the black box analysis is intirely in the tests.hpp, in Appendix \ref{TODO}.
+
+\clearpage
+\subsection{Scheduler Logics}
 
 
 
