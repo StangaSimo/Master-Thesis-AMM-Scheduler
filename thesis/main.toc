@@ -21,18 +21,23 @@
 \contentsline {chapter}{\numberline {4}Implementation}{25}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Project Structure and Compilation}{26}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Compilation Process}{27}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Accellerators Abstraction Layers}{32}{section.4.2}%
+\contentsline {section}{\numberline {4.2}Accelerators Abstraction Layers}{32}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Cuda}{32}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}OpenVINO}{37}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}SYCL}{41}{subsection.4.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}OpenBLASS}{44}{subsection.4.2.4}%
 \contentsline {section}{\numberline {4.3}AMM Scheduler}{47}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{48}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Workers}{50}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{52}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Tasks}{56}{subsection.4.3.4}%
-\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{59}{subsection.4.3.5}%
-\contentsline {subsection}{\numberline {4.3.6}Performance Map}{61}{subsection.4.3.6}%
-\contentsline {subsection}{\numberline {4.3.7}Scheduler Logics}{65}{subsection.4.3.7}%
-\contentsline {chapter}{\numberline {5}Results}{67}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{69}{appendix.A}%
+\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{49}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Workers}{51}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{53}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Tasks}{57}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{60}{subsection.4.3.5}%
+\contentsline {subsection}{\numberline {4.3.6}Performance Map}{62}{subsection.4.3.6}%
+\contentsline {subsection}{\numberline {4.3.7}Coordinator}{66}{subsection.4.3.7}%
+\contentsline {subsubsection}{Baseline: CUDA only and Round Robin}{66}{section*.2}%
+\contentsline {subsection}{\numberline {4.3.8}Static Partitioning}{68}{subsection.4.3.8}%
+\contentsline {subsection}{\numberline {4.3.9}Large Matrix Split}{71}{subsection.4.3.9}%
+\contentsline {subsection}{\numberline {4.3.10}Static Hetero Partitioning}{75}{subsection.4.3.10}%
+\contentsline {subsection}{\numberline {4.3.11}Dynamic}{77}{subsection.4.3.11}%
+\contentsline {chapter}{\numberline {5}Results}{79}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{81}{appendix.A}%

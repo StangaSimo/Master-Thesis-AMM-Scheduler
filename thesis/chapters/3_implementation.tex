@@ -186,7 +186,7 @@ add_custom_target(UpdateLSP
 As the code in the figure \ref{code cmake} show, the \texttt{ExternalProject\_Add } feature of cmake is utilized to keep the compilation steps isolated. The main \texttt{CMakeLists.txt} file in the root directory acts as a manager. It does not compile the code directly, instead, it checks the configuration flags (such as \texttt{USE\_CUDA}, \texttt{USE\_SYCL} and \texttt{USE\_OPENVINO}) and triggers a separate build process for each active module. The process is the following:
 
 \begin{enumerate}
-    \item  First, CMake enters the accellerators sub-directories, \texttt{cuda/}, \texttt{sycl/}, \texttt{openvino/}, and builds them as standalone projects.
+    \item  First, CMake enters the accelerators sub-directories, \texttt{cuda/}, \texttt{sycl/}, \texttt{openvino/}, and builds them as standalone projects.
     \item  Each sub-project uses its specific compiler to generate a dynamic library, e.g., \texttt{libcuda\_lib.so}, \texttt{libsycl\_lib.so}).
     \item  Finally, the \texttt{scheduler/} directory is compiled. Because of the standard C ABI, the scheduler does not need to know how the hardware works or which compiler was used for the accelerators, it simply links against these shared libraries at runtime.
 \end{enumerate}
@@ -267,7 +267,7 @@ To speed up the development process, a script named \texttt{make\_run.sh} was cr
 Additionally, the project includes a Python script named \texttt{merge\_clangd.py}. Since multiple independent builds are used, the LSP of the code editing tools often don't work with these many libraries, this script collects the compilation commands from all the different modules and merges them into a single file, ensuring that code completion and error highlighting work correctly across the entire project. This file will be executed after all the compilation steps are done. 
 
 \clearpage
-\section{Accellerators Abstraction Layers}
+\section{Accelerators Abstraction Layers}
 Before diving into the architectural details in the following sections, it is important to clarify the supported data types. The scheduler is fully capable of managing both 32-bit and 16-bit matrix operations, furthermore thanks to the modular and flexible design of the codebase, the architecture is already provisioned to support 8-bit matrices as well. However, as 8-bit operations are not supported by all target accelerators and were not required to achieve the objectives of this thesis, their implementation has not been finalized across all backends.
 
 
@@ -348,7 +348,7 @@ void cuda_init() {
 At startup, the function first initializes the cuBLAS library handle, which is required to invoke the linear algebra routines.
 Then, it iterates through \texttt{N\_STREAM} number of streams (simply 2 stream is enough). For each stream, it creates a CUDA stream object to manage execution queues and allocates three distinct memory buffers on the device (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}). The size of these buffers is calculated to hold the largest matrix dimension supported by the system (MAX size), ensuring that any incoming task fits within the pre-allocated space without requiring reallocation.
 
-It is important to note that, although the accelerator hardware supports dimensions exceeding this limit, a maximum square matrix size of 4096×4096 was established (for each accellerator). This design choice was made to avoid introducing unnecessary architectural complexity, since it wasn't in this thesis objectives to maximize the memory saturation, and this limit provides a sufficient workload to stress-test the scheduler without complicating the memory management layer.
+It is important to note that, although the accelerator hardware supports dimensions exceeding this limit, a maximum square matrix size of 4096×4096 was established (for each accelerator). This design choice was made to avoid introducing unnecessary architectural complexity, since it wasn't in this thesis objectives to maximize the memory saturation, and this limit provides a sufficient workload to stress-test the scheduler without complicating the memory management layer.
 
 
 Complementary to the initialization, the \texttt{cuda\_free} function ensures the proper release of all GPU resources when the scheduler shuts down:
@@ -937,9 +937,10 @@ void test_scheduler() {
 
 The usage of the scheduler is extremely simple, the developer only needs to instantiate the class passing the logic and submit the array of tasks. The scheduler handles all the complexity of thread management and hardware dispatching internally. The explaination of the tasks creation is in section \ref{TODO}.
 
+\clearpage 
 
 \subsection{Thread Initialization}
-he \texttt{init\_threads} function is responsible for setting up the environment based on the available hardware:
+The \texttt{init\_threads} function is responsible for setting up the environment based on the available hardware:
 
 \begin{lstlisting}[caption={Init Thread}, language=C++] 
 void init_threads() {
@@ -967,7 +968,7 @@ void init_threads() {
     if(strategy == Logic::DYNAMIC) {
         #ifdef SLEEP 
         cout("[SCHEDULER] ERROR remove "#define SLEEP" with Dynamic logic")
-        exit(FAILUREEXIT_FAILURE);
+        exit(EXIT_FAILURE);
         #endif
         for (int i=0; i<bts.size(); i++) {
             busy[bts[i]] = new atomic<bool>;
@@ -982,12 +983,13 @@ void init_threads() {
     }
 
     if (bts.size() == 0) {
-        PRINT("[SCHEDULER] ATTENTION, no accellerator\n"); 
+        PRINT("[SCHEDULER] ATTENTION, no accelerator\n"); 
         exit(EXIT_FAILURE);
     }
 
     /* coordinator thread */
-    shared_buffers[BT::CORDINATOR] = make_unique<SharedBuffer>(BUFFER_LENGHT);
+    shared_buffers[BT::CORDINATOR] = 
+                        make_unique<SharedBuffer>(BUFFER_LENGHT);
 
     /* ref because the thread function try to copy all the parameters */
     threads[BT::CORDINATOR] = make_unique<thread>(
@@ -999,6 +1001,8 @@ void init_threads() {
 This function first checks which accelerators were enabled during compilation using preprocessor macros passed with CMake. For each enabled backend, it calls the specific initialization function for each backend, inside the dynamic libraries, and adds the backend type to the active list \texttt{bts}. After it iterates through the active backends to create the worker threads. For each accelerator, a dedicated \texttt{SharedBuffer} is instantiated to hold its incoming tasks, and a standard C++ \texttt{std::thread} is spawned to run the \texttt{worker\_thread} function.
 
 Finally, the function initializes the \textbf{Coordinator Thread}. This thread is equipped with its own input buffer and is responsible for fetching tasks from the user and dispatching them to the workers (for implementation see section \ref{TODO}). The reference to the shared buffers map is passed to the coordinator to allow it to push tasks to any worker inside the logics.
+
+\clearpage 
 
 \subsection{Workers}
 While the Coordinator thread manages the complexity of deciding where to send the data, the worker threads are designed to be extremely lightweight and simple. Their only purpose is to retrieve a task from their buffer, execute it, and signal the completion.
@@ -1113,29 +1117,22 @@ void init_benchmarks() {
         filename_f = get_benchmark_filename(i, Type::FLOAT); 
         filename_h = get_benchmark_filename(i, Type::HALF); 
 
-        if (filesystem::exists(filename_f)) {
-             PRINT("[SCHEDULER] File: " << 
+        if (filesystem::exists(filename_f))
+            PRINT("[SCHEDULER] File: " << 
                     filename_f <<  " opened.\n"); 
-        } else {
-             PRINT("[SCHEDULER] File: " << 
-                    filename_f <<  " not present\n"); 
-             benchmark(i, Type::FLOAT ,filename_f);
-             PRINT("[SCHEDULER] Benchmark file created\n"); 
-        }
+        else
+            benchmark(i, Type::FLOAT ,filename_f);
 
-        if (filesystem::exists(filename_h)){
-             PRINT("[SCHEDULER] File: " << 
+        if (filesystem::exists(filename_h))
+            PRINT("[SCHEDULER] File: " << 
                     filename_h <<  " opened.\n"); 
-        } else {
-             PRINT("[SCHEDULER] File: " << 
-                    filename_h <<  " not present\n"); 
-             benchmark(i, Type::HALF ,filename_h);
-             PRINT("[SCHEDULER] Benchmark file created\n"); 
-        }
+        else 
+            benchmark(i, Type::HALF ,filename_h);
+        
     }
 }
 
-/* create the map for each accellerator */
+/* create the map for each accelerator */
 void init_maps() {
     for (BT i : bts) {
         string filename_f; 
@@ -1150,12 +1147,8 @@ void init_maps() {
             bts_map[i] = make_unique<PerformanceMap>(STEP_SIZE, 
                                                 i, filename_f, filename_h);
 
-        } else {
-             cerr << "[SCHEDULER] File: " << 
-                    filename_f <<  " or " << 
-                    filename_h << " not found for map init\n"; 
-             exit(EXIT_FAILURE);
-        }
+        } else 
+            /* ... error prints and exit ... */
    }
 }
 \end{lstlisting}
@@ -1188,8 +1181,8 @@ The \texttt{benchmark} function acts as the driver. It defines the search space 
 
 The measurement logic is implemented in \texttt{benchmark\_acc}:
 
-\begin{lstlisting}[caption={Benchmark Accellerator Function}, language=C++] 
-/* benchmark the accellerator and write in the csv*/
+\begin{lstlisting}[caption={Benchmark Accelerator Function}, language=C++] 
+/* benchmark the accelerator and write in the csv*/
 inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K) {
     chrono::high_resolution_clock::time_point start_time;
     chrono::high_resolution_clock::time_point end_time;
@@ -1287,7 +1280,7 @@ typedef struct {
 } task; 
 \end{lstlisting}
 
-The structure utilizes generic pointers (void *) for the matrices A, B, and C so it allows the same code to handle data type supported uniformly. The specific interpretation of the data is determined by the Type enum field.
+The structure utilizes generic pointers (void *) for the matrices A, B, and C so it allows the same code to handle all the data type supported uniformly. The specific type of the data is determined by the Type enum field.
 
 Furthermore, the task structure plays a crucial role in profiling, containing two high-resolution timestamp fields, \texttt{start\_time} and \texttt{end\_time}, the scheduler can records the exact moment a task is submitted, and the worker thread records the moment the computation finishes. This allows for precise calculation of the latency and throughput.
 
@@ -1426,16 +1419,18 @@ The put function is used by the Coordinator, it checks if there is space, if the
 
 The task array is encapsulated within a \texttt{std::unique\_ptr}, this ensures that the memory is automatically released when the associated SharedBuffer object is destroyed. However, the underlying structure remains a simple raw array.
 
+Is important to note that the \texttt{alignas(64)} directive is applied to the index variables to prevent false sharing. This is a standard optimization technique, by forcing the read and write counters to reside on separate CPU cache lines (thanks to the padding that the compiler insert), it ensures that the Coordinator and Worker threads can update their respective counters independently without triggering unnecessary synchronization traffic between the processor cores, speeding up the process.
+
 A key detail is in the get function, that it doesn't wait forever, as shown in the code, if the buffer remains empty for a certain number of attempts (5 with sleep, 50 without), the function returns nullptr. This is done for a specific reason, the worker threads run inside a while loop controlled by the scheduler. If the get function blocked indefinitely waiting for a task, the thread would get stuck there and could never check if the program is trying to shut down. By returning control to the caller periodically, the worker can check if it should stop running or keep waiting for new work.
 
-By default, this waiting is a busy wait: the thread keeps checking the variable continuously, this is very fast but consumes all of the CPU core. To fix this, the \texttt{SLEEP} macro can be enabled. The thread takes a small sleep if it has to wait, freeing up the CPU.
+By default, this waiting is a busy wait: the thread keeps checking the variable continuously, this is very fast but consumes all of the CPU core. To fix this, the \texttt{SLEEP} macro can be enabled. The thread takes a small sleep if it has to wait, freeing up the CPU. This small feature was implemented primarily for future optimizations for maximizing resource efficiency. However, since it inevitably introduces a slight overhead (increased latency), it remains disabled and was not utilized during the experimental benchmarks presented in this thesis.
 
 \clearpage
 
 \subsection{Performance Map}
 The Performance Map is a specialized data structure utilized by the Coordinator thread. Its primary purpose is to act as a predictive model, providing the expected execution time for a specific task on a specific accelerator.
 
-As explained in the previous section the raw data is acquired through automated benchmark routines (see section \ref{TODO}). However, reading from CSV files isn't an option latency wise, therefore, the PerformanceMap class loads this data into an optimized in-memory structure at startup.
+As explained in the previous section the raw data is acquired through automated benchmark routines (see section \ref{TODO}). However, reading from CSV files isn't an option latency wise, therefore, the PerformanceMap class loads this data into an optimized in-memory structure at startup. 
 
 The class definition and its global variables are presented below:
 \begin{lstlisting}[caption={}, language=C++] 
@@ -1457,7 +1452,7 @@ class PerformanceMap {
     unordered_set<unsigned long long> jit_cache_f;
     unordered_set<unsigned long long> jit_cache_h;
 
-    /* which accellerator am i */
+    /* which accelerator am i */
     BT bt;
 
     long long STEP_SIZE;
@@ -1527,7 +1522,7 @@ double query(long long M, long long N,
         jit_ms = get<1>(data->grid_map[key]);
         /* add jit_ms only if openvino never see M N K*/
         if (bt == BT::OPENVINO) {
-            /* mitigate overhead when other accellerator are running */
+            /* mitigate overhead when other accelerator are running */
             time_ms += time_ms * 0.1;
             if (jit_cache->find(key) == jit_cache->end()){
                 if (add_jit)
@@ -1538,7 +1533,7 @@ double query(long long M, long long N,
 
         /* add jit_ms only if sycl never see N */
         if (bt == BT::SYCL) {
-            /* mitigate overhead when other accellerator are running */
+            /* mitigate overhead when other accelerator are running */
             time_ms += time_ms * 0.1;
             unsigned long long sycl_key = (unsigned long long) N;
             if (jit_cache->find(sycl_key) == jit_cache->end()){
@@ -1577,10 +1572,455 @@ The function \texttt{query} implements specific heuristics derived and observed 
     \item \textbf{SYCL}: This was the most complex driver to analyze. Our tests revealed that the driver compiles an optimized kernel for a wide range of matrix sizes, but it triggers a recompilation whenever the N dimension changes. Furthermore, the compilation cost was found to be constant, around 100-120 ms, regardless of the matrix size. Consequently, the benchmarked JIT times were discarded in favor of adding a fixed constant \texttt{JIT\_MS\_SYCL}) whenever a new N is encountered. Similar to the NPU, the Intel GPU also exhibits slight overhead during parallel execution, which is compensated for by adding a small factor to the predicted time.
 \end{itemize}
 
-All of this tweaks exhibits ,as it will be shown in the next section, a good behavior in predicting the time of completition of a task, furthermore the code used for the black box analysis is intirely in the tests.hpp, in Appendix \ref{TODO}.
+All of this tweaks exhibits, as it will be shown in the next section, a good behavior in predicting the time of completition of a task, furthermore the code used for the black box analysis is intirely in the tests.hpp file, found in Appendix \ref{TODO}.
 
 \clearpage
-\subsection{Scheduler Logics}
+
+\subsection{Coordinator}
+The heart of the Scheduler is the Coordinator thread, it is the decision making engine that determines how tasks are distributed among the available workers. As previously mentioned, the coordinator supports multiple task dispatch logics, ranging from simple baselines to more complex algorithms.
+
+Just like the worker threads, the Coordinator operates within a continuous while loop controlled by the \texttt{threads\_keep\_running} atomic flag. Before the loop, a switch statement selects the active logic based on the configuration provided during the scheduler's object instantiation.
+
+\subsubsection{Baseline: CUDA only and Round Robin}
+To validate the internal architecture and establish a performance baseline, two simple strategies were implemented first.
+
+\texttt{CODA\_ONLY} is the most basic logic simply bypasses the heterogeneity of the system and dispatch all the tasks to the fastest accelerator. This serves as the primary baseline: any strategy must outperform this single device execution at least to be considered effective. 
+
+\begin{lstlisting}[caption={CUDA Only Logic}, language=C++] 
+case Logic::CUDA_ONLY:
+
+PROF(profiler.start_power_monitor());
+
+if (buffers[BT::CUDA] == nullptr) {
+    cerr << "[SCHEDULER] Error, cuda logic but no cuda card";
+    exit(EXIT_FAILURE);
+}
+
+while (threads_keep_running) { 
+    single_task = buffer->get();
+    if (!single_task) {continue;} 
+    buffers[BT::CUDA]->put(single_task);
+} 
+
+PROF(profiler.stop_power_monitor());
+
+break;
+\end{lstlisting}
+
+The code is straightforward, it fetches a task from the input buffer and immediately pushes it into the CUDA worker's buffer. The PROF macros are used to trigger the start and stop of the monitoring tools within the Profiler, and thanks to this macro, can be turned off for minimizing the overhead simply by not defining \texttt{ENABLE\_PROFILING}.
+
+To verify the system's ability to manage multiple accelerators concurrently, a Round Robin logic was implemented.
+
+\begin{lstlisting}[caption={Round Robin Logic}, language=C++] 
+case Logic::ROUND_ROBIN: 
+
+while (threads_keep_running) { 
+    single_task = buffer->get();
+    if (!single_task) {continue;} 
+
+    buffers[bts[i]]->put(single_task);
+
+    i = (i+1) % bts_len;
+} 
+break;
+\end{lstlisting}
+
+This logic distributes tasks equally among all available workers in a cyclic manner, while effective for validating, this strategy is definitely not performance oriented.
+
+\clearpage
+
+\subsection{Static Partitioning}
+This strategy represents the core logic for handling homogeneous workloads (streams of identical matrices) in a batch style manner. Ideally, to minimize the makespan, the workload should be distributed proportionally to the computing power of each accelerator.
+
+The algorithm operates in batches defined by \texttt{BATCH\_SIZE}. The execution flow is divided into three distinct phases: Fetch, Logic, and Dispatch.
+
+First, the coordinator retrieves a batch of tasks from the input buffer. Then, it queries the PerformanceMap to estimate the execution time for a single task on each accelerator.
+
+\begin{lstlisting}[caption={Static Partitioning: Fetch and speed}, language=C++]  
+case Logic::STATIC_PARTITIONING: 
+
+PROF(profiler.start_power_monitor());
+
+while (threads_keep_running) { 
+    /* fetch */
+    PROF(profiler.start_fetch());
+    while (c < BATCH_SIZE) {
+        tasks[c] = buffer->get();
+        if (!tasks[c]) {break;} 
+        c++;
+    }
+    PROF(profiler.stop_fetch());
+
+    if (c == 0) {continue;}
+
+    /* calculate speeds */
+    PROF(profiler.start_logic());
+    total_speed = 0.0;
+    for (int j=0; j<bts_len; j++){
+        double ms = bts_map[bts[j]]->query(tasks[0]->M, tasks[0]->N, 
+                                           tasks[0]->K, tasks[0]->type, true);
+        
+        /* speed = 1 / time */
+        acc_speed[j] = 1.0 / (ms + 1e-9);        
+        total_speed += acc_speed[j];
+    }
+
+    /* .... */
+
+\end{lstlisting}
+
+The speed of each accelerator j is calculated as the inverse of its execution time: 
+$$v_j = 1/t_j$$ and it will be used for the task ratios for each accelerator.  
+
+As a standard practice, a small epsilon is added to avoid division by zero, in our logic its just 1 nanosecond, so it doesn't interfere with the times, but is useful in case of data errors from the query.
+
+Once the total system speed ($V$) is known (simply the sums of each accelerator speed), the ideal share of tasks for each accelerator ($S_j$) is calculated as: 
+
+$$
+    S_j = \frac{v_j}{V} \cdot N_{task}
+$$
+
+Since tasks cannot be split, this floating-point share must be converted into an integer.
+
+\begin{lstlisting}[caption={Static Partitioning: Distribution Logic}, language=C++] 
+/* .... */
+
+/* exact task per acc (double) */
+double shares[bts_len];
+int total_assigned = 0;
+
+for (int j=0; j<bts_len; j++) {
+    double ratio = acc_speed[j] / total_speed;
+    shares[j] = ratio * (double)c;
+    n_acc_task[j] = (int)shares[j]; /* integer part */
+    total_assigned += n_acc_task[j];
+}
+
+int missing_c = c - total_assigned;
+
+/* assign the missing task to the accelerator 
+ * mitigate slowness between accelerators */
+while (missing_c > 0) {
+    int best_j = -1;
+    double max_decimal = -1.0;
+
+    /* find the accelerator with the highest decimal part */
+    for (int j=0; j<bts_len; j++) {
+        double decimal_part = shares[j] - (double)n_acc_task[j];
+        if (decimal_part > max_decimal) {
+            max_decimal = decimal_part;
+            best_j = j;
+        }
+    }
+
+    /* assign one more task to the winner */
+    if (best_j != -1) {
+        n_acc_task[best_j]++;
+        /* set to -1 so it won't be picked again */
+        shares[best_j] = -1.0; 
+        missing_c--;
+    } else {
+        /* fallback */
+        n_acc_task[0]++;
+        missing_c--;
+    }
+}
+
+prof(profiler.stop_logic());
+
+/* .... */
+\end{lstlisting}
+
+The integer conversion inevitably leads to a truncation error (e.g., 3.7 tasks becomes 3), leaving some tasks unassigned, inside \texttt{missing\_c}. To solve this problem and ensure complete fairness between tasks, the scheduler implements the \textbf{Largest Remainder Method} for the decimal part of the array \texttt{shares}. 
+
+A simple example, a batch of 10 tasks distributed between two accelerators A and B, where the logic assigns: 4.7 tasks to A and 5.3 tasks to B. If we simply truncate integers A gets 4 tasks and B gets 5 tasks, so the total assigned will be 9 and we are missing 1 task.
+
+To decide who receives this unassigned task, the scheduler looks at the decimal remainders. A lost 0.7 and B lost 0.3. Since $0.7>0.3$, the accelerator A has the "highest claim" to the extra task. Therefore, the final distribution becomes 5 for A and 5 for B, correctly summing to 10. This method ensures that the final integer distribution remains as close as possible to the ideal proportion calculated before.
+
+Finally, the calculated number of tasks in \texttt{n\_acc\_task[j]} is dispatched to the corresponding worker buffers.
+
+\begin{lstlisting}[caption={Static Partitioning: Dispatch}, language=C++] 
+
+    /* .... */
+
+    PROF(profiler.start_dispatch());
+
+    /* send task to the accelerators */
+    t = 0;
+    for (int j=0; j<bts_len; j++) {
+        for (int w=0; w<n_acc_task[j]; w++){
+            if (t >= c) break;
+            
+            buffers[bts[j]]->put(tasks[t]);
+            t++;
+        }
+    }
+    
+    c = 0; 
+    PROF(profiler.stop_dispatch());
+    PROF(profiler.record_sample());
+} 
+
+PROF(profiler.stop_power_monitor());
+break;
+\end{lstlisting}
+
+\clearpage
+
+\subsection{Large Matrix Split}
+This static strategy addresses a specific case, handling a single matrix multiplication that is too large to fit into the memory of any individual accelerator. Instead of treating the matrix as an indivisible unit, this logic implements a Split-Compile-Merge approach, splitting the large matrix horizontally in smaller chunks and sending smaller tasks to each accellerator, enabling the sistem to process this workload in parallel, then the result are written directly into the corresponding section.  
+
+To determine the optimal number of rows for each device, the scheduler employs an \textbf{Iterative Refinement algorithm}. This logic is also splitted in 3 phase, the initial estimation, the iterative refinement and then the dispatchign. 
+
+\begin{lstlisting}[caption={Split Logic: Initialization}, language=C++] 
+case Logic::LARGE_MATRIX_SPLIT:
+PROF(profiler.start_power_monitor());
+
+while (threads_keep_running) { 
+    PROF(profiler.start_fetch());
+
+    single_task = buffer->get();
+    if (!single_task) {continue;} 
+
+    PROF(profiler.stop_fetch());
+    PROF(profiler.start_logic());
+
+    double curr_speeds[bts_len];
+    int rows[bts_len];
+
+    int rest = single_task->M % bts_len;
+    int base = single_task->M / bts_len;
+
+    /* equal row initially */
+    for (int j=0; j<bts_len; j++) 
+        rows[j] = base + (j < rest ? 1 : 0);
+
+    /* .... */
+\end{lstlisting}
+
+The process begins by retrieving the large task and distributing the rows as evenly as possible among all available accelerators. This serves as a starting point for the refinement loop.
+
+The core of the logic is a feedback loop that runs for a fixed number of iterations (decided with \texttt{SPLIT\_MATRIX\_ITERATION}). In each iteration, the scheduler queries the PerformanceMap to estimate how fast each accelerator can process its currently assigned chunk.
+
+\clearpage 
+
+\begin{lstlisting}[caption={Split Logic: Refinement Loop}, language=C++] 
+/* .... */
+/* loop for adjusting the ratios */
+for (int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
+    double total_speed = 0.0;
+
+    /* current speed for 1 row */
+    for (int j=0; j<bts_len; j++) {
+        int r = (rows[j] > 0) ? rows[j] : 1;
+
+        double ms = 0.0;
+
+        ms = bts_map[bts[j]]->query(r, 
+                    single_task->N, single_task->K, single_task->type, false);
+
+        /* update time if r exceed max size */
+        if (r > MAX_SIZE){
+            double max_ms = bts_map[bts[j]]->query(MAX_SIZE, 
+                single_task->N, single_task->K, single_task->type, false);
+            ms = max_ms * ((double)r / (double)MAX_SIZE);
+        }
+
+        /* single row speed, number of rows / ms */
+        double speed = (double)r / (ms + 1e-9);
+
+        curr_speeds[j] = speed;
+        total_speed += speed;
+    }
+
+    /* adjust the row with the ratios */
+    int rows_distributed = 0;
+    for (int j=0; j<bts_len; j++) {
+        double ratio = curr_speeds[j] / total_speed;
+
+        /* new rows from the ratio */
+        int target_rows = (int)(ratio * single_task->M);
+
+        rows[j] = target_rows;
+        rows_distributed += rows[j];
+    }
+}
+
+PROF(profiler.stop_logic());
+/* .... */
+\end{lstlisting}
+
+The metric used is rows $/$ ms: 
+
+\begin{itemize}
+    \item The scheduler queries the map for the time required to compute the currently assigned number of rows.
+    \item If the number of rows exceeds the maximum size present in the performanceMap, the time is estimated via $ T_{new} = T_{max} \cdot \frac{row}{max row}$
+    \item The throughput for each device is calculated, and the total rows M are redistributed proportionally to these new speeds.
+\end{itemize}
+
+This loop converge towards a balanced distribution where all accelerators finish at approximately the same time, and once the optimal row counts inside \texttt{rows[j]} are calculated, the actual tasks must be created and dispatched. This step does not copy any data, instead, it uses pointer arithmetic to create the smaller tasks.
+
+\begin{lstlisting}[caption={Split Logic: Sub Task dispatch}, language=C++] 
+/* .... */
+    size_t elem_size = (single_task->type == Type::FLOAT) ? 4 : 2;
+    size_t offset_rows_acc = 0;
+
+    /* dispatch tasks */
+    for (int j=0; j<bts_len; j++) {
+        int h = rows[j];
+        if (h <= 0) continue; 
+
+        /* divide rows into tasks if exceed MAX_SIZE */
+        while (h > 0) {
+            int h_limit = h;
+            
+            if (h_limit > MAX_SIZE) h_limit = MAX_SIZE;
+
+            task* sub_task = new ::task;
+            *sub_task = *single_task;
+
+            /* save the pointer for later freeup */
+            sub_task_array.push_back(sub_task);
+
+            /* A row */
+            sub_task->M = h_limit; 
+
+            /* A offset */
+            size_t offset_A = offset_rows_acc * single_task->K * elem_size;
+            sub_task->A = (char*)single_task->A + offset_A;
+
+            /* B offset still all in memory */
+            sub_task->B = single_task->B;
+
+            /* C offset */
+            size_t offset_C = offset_rows_acc * single_task->N * elem_size;
+            sub_task->C = (char*)single_task->C + offset_C;
+
+            /* add task to the pending */
+            pending_tasks++;
+
+            /* submit to the acc */
+            buffers[bts[j]]->put(sub_task);
+
+            /* for each accellerator we add more offset */
+            offset_rows_acc += h_limit; 
+            
+            h -= h_limit;
+        }
+    }
+
+    pending_tasks--;
+} 
+\end{lstlisting}
+
+For each accelerator, the logic creates a new task structure:
+
+\begin{enumerate}
+    \item \textbf{A}: The pointer is shifted forward to skip the rows processed by previous accelerators.
+    \item \textbf{B}: The pointer remains unchanged, as B is needed in its entirety for every row of A.
+    \item \textbf{C}: The pointer is shifted similarly to A, ensuring that the accelerator writes its result into the correct slice of the output buffer.
+\end{enumerate}
+
+Furthermore, if the assigned chunk of rows is still too large for the device memory, larger than \texttt{MAX\_SIZE}, the chunk is further subdivided into smaller, sequential tasks for that specific worker.
+
+\clearpage
+
+\subsection{Static Hetero Partitioning} 
+This strategy is an evolution of the Static Partitioning logic, designed for heterogeneous workloads where tasks differ in size and computational cost (stream of matrices with random dimensions).
+
+In this scenario, calculating a simple ratio based on the first task (as done in the previous strategy) would be incorrect, because the speed of an accelerator is not constant but depends on the problem size. Therefore, instead of assigning tasks based on a global ratio, this algorithm adopts a \textbf{greedy approach}: it simulates the execution timeline and assigns each task to the accelerator that can complete it soonest, considering its current accumulated load.
+
+\begin{lstlisting}[caption={Static Hetero Logic}, language=C++] 
+/* ... fetch logic same as before ... */
+
+/* iterator for each bt */ 
+int i_bt[bts_len];
+
+for (int i=0; i<bts_len; i++)
+    i_bt[i] = 0;
+
+task* dispatch_tasks[bts_len][BATCH_SIZE_HETERO];
+
+/* for every task */
+for (int i = 0; i < c; i++) {
+    int best_bt = -1;
+    double min_ms = 1e15;
+
+    /* for every bt */
+    for (int j = 0; j < bts_len; j++) {
+        double query_ms = bts_map[bts[j]]->query(tasks_hetero[i]->M, 
+                tasks_hetero[i]->N, tasks_hetero[i]->K, 
+                tasks_hetero[i]->type, false);
+
+        double finish_ms = bt_ms[j] + query_ms;
+
+        /* we assign the task to the least "filled" */
+        if (finish_ms < min_ms) {
+            min_ms = finish_ms;
+            best_bt = j;
+        }
+    }
+
+    /* openvino and sycl jit updates */
+    if (bts[best_bt] == BT::OPENVINO || bts[best_bt] == BT::SYCL)
+        bts_map[bts[best_bt]]->query(tasks_hetero[i]->M, 
+            tasks_hetero[i]->N, tasks_hetero[i]->K, 
+            tasks_hetero[i]->type, true);
+
+    dispatch_tasks[best_bt][i_bt[best_bt]] = tasks_hetero[i];
+    i_bt[best_bt]++;
+    bt_ms[best_bt] = min_ms;
+}
+
+/* .... */
+\end{lstlisting}
+
+The core relies on the \texttt{bt\_ms} array, wich tracks the load assigned to each accellerator so far (in the current batch). The load stand for the accumulated ms expected for that particular accellerator. 
+
+The logic iterates through the batch of tasks one by one. For each task, it queries the PerformanceMap to predict how long it will take on every available accelerator, then it compute the finish time expected with the load plus the task expences, than it update the best \texttt{bt}. Finally the task then is assigned to the best accellerator that has the smallest finish time, and the current load of that accellerator is updated.  
+
+Additionally, once a decision is made, the query function is called again with \texttt{add\_jit = true} for the chosen accelerator, ensures that the JIT cache is updated.
+
+After the simulation loop processes the entire batch, the tasks are pushed to the worker buffers same as before.
+
+\clearpage
+
+\subsection{Dynamic}
+The Dynamic strategy was the final logic implemented in the scheduler. Unlike the static approaches which rely on performance map and pre calculated distributions, this strategy implements a simple first come first served method. Since the scheduler's architecture was originally designed around batch processing and static partitioning, this logic was adapted to fit the existing structure by introducing a polling mechanism to monitor worker status (already seen in the worker section, see \ref{TODO}).
+
+The Coordinator effectively polls the state of the worker threads to find one that is currently idle.
+
+\begin{lstlisting}[caption={Static Hetero Logic}, language=C++] 
+case Logic::DYNAMIC:  
+i = 0;
+while (threads_keep_running) { 
+
+    if (dispached) {
+        single_task = buffer->get();
+        if (!single_task) {continue;} 
+        dispached = false;
+    }
+
+    if (*busy[bts[i]] == false) {
+        *busy[bts[i]] = true; 
+        dispached = true;
+        buffers[bts[i]]->put(single_task);
+    }
+
+    i++;
+    i = i % bts_len;
+}
+\end{lstlisting}
+
+The Coordinator fetches a new task from the input buffer only if the dispatched flag is true, ensures that the previous task was dispatched to some idle accelerator.
+The loop iterates through the list of accelerators \texttt{bts} and checks the busy atomic flag of the current worker. If \texttt{*busy[bts[i]]} is false (worker is idle), the task is immediately pushed to that worker's buffer. The busy flag is then set to true, and dispatched is set to true to trigger the fetch of the next task.
+If the current accelerator is busy, the loop increments i to check the next one in the list, ensuring that all workers are polled fairly in a round robin manner.
+
+This approach minimizes the scheduler's complexity but introduces a busy wait cycle on the Coordinator as it constantly checks for free workers. 
+
+As demonstrated in the results chapter, this method performs efficiently in homogeneous workloads, However, due to its greedy nature and lack of knowledge about task complexity or hardware capabilities, it tends to underperform in highly heterogeneous environments, where it fails to optimize load balancing effectively.
+
+
 
 
 

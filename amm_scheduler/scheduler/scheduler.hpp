@@ -289,7 +289,7 @@ class AMScheduler {
                         }
                     }
 
-                    PROF(profiler.stop_logic());
+                    prof(profiler.stop_logic());
 
                     PROF(profiler.start_dispatch());
 
@@ -579,8 +579,8 @@ class AMScheduler {
             /* initialize atomics for dynamic strategy */
             if(strategy == Logic::DYNAMIC) {
                 #ifdef SLEEP 
-                cout("[SCHEDULER] ERROR remove "#define SLEEP" with Dynamic logic")
-                exit(FAILUREEXIT_FAILURE);
+                cout << "[SCHEDULER] ERROR remove "#define SLEEP" with Dynamic logic\n";
+                exit(EXIT_FAILURE);
                 #endif
                 for (int i=0; i<bts.size(); i++) {
                     busy[bts[i]] = new atomic<bool>;

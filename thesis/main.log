@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  5 FEB 2026 19:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  6 FEB 2026 12:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -807,7 +807,7 @@ Package epstopdf Info: Source file: <images/Frontespizio/cherubinFrontespizio.ep
 (epstopdf)             Command: <repstopdf --outfile=images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf images/Frontespizio/cherubinFrontespizio.eps>
 (epstopdf)             \includegraphics on input line 4.
 Package epstopdf Info: Output file is already uptodate.
-<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=191, 288.07625pt x 294.09875pt>
+<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=207, 288.07625pt x 294.09875pt>
 File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file (type pdf)
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
@@ -955,7 +955,7 @@ Chapter 2.
 
 
 ]
-<images/core_ultra.png, id=276, 481.8pt x 481.8pt>
+<images/core_ultra.png, id=296, 481.8pt x 481.8pt>
 File: images/core_ultra.png Graphic file (type png)
 <use images/core_ultra.png>
 Package pdftex.def Info: images/core_ultra.png  used on input line 21.
@@ -971,12 +971,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [8
 
  <./images/core_ultra.png>]
-<images/rtx.png, id=292, 1505.625pt x 645.41125pt>
+<images/rtx.png, id=312, 1505.625pt x 645.41125pt>
 File: images/rtx.png Graphic file (type png)
 <use images/rtx.png>
 Package pdftex.def Info: images/rtx.png  used on input line 41.
 (pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
-<images/cuda.jpg, id=295, 407.5225pt x 246.9225pt>
+<images/cuda.jpg, id=315, 407.5225pt x 246.9225pt>
 File: images/cuda.jpg Graphic file (type jpg)
 <use images/cuda.jpg>
 Package pdftex.def Info: images/cuda.jpg  used on input line 59.
@@ -1002,12 +1002,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
 ]
-<images/sycl.jpg, id=317, 1104.125pt x 501.875pt>
+<images/sycl.jpg, id=337, 1104.125pt x 501.875pt>
 File: images/sycl.jpg Graphic file (type jpg)
 <use images/sycl.jpg>
 Package pdftex.def Info: images/sycl.jpg  used on input line 94.
 (pdftex.def)             Requested size: 88.3318pt x 40.15082pt.
-<images/oneapi.png, id=319, 244.66406pt x 249.18094pt>
+<images/oneapi.png, id=339, 244.66406pt x 249.18094pt>
 File: images/oneapi.png Graphic file (type png)
 <use images/oneapi.png>
 Package pdftex.def Info: images/oneapi.png  used on input line 105.
@@ -1027,7 +1027,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [11
 
  <./images/sycl.jpg> <./images/oneapi.png>]
-<images/openvino.jpg, id=331, 992.70876pt x 266.9975pt>
+<images/openvino.jpg, id=352, 992.70876pt x 266.9975pt>
 File: images/openvino.jpg Graphic file (type jpg)
 <use images/openvino.jpg>
 Package pdftex.def Info: images/openvino.jpg  used on input line 120.
@@ -1043,7 +1043,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [12
 
  <./images/openvino.jpg>]
-<images/openblass.jpg, id=341, 803.0pt x 548.0475pt>
+<images/openblass.jpg, id=362, 803.0pt x 548.0475pt>
 File: images/openblass.jpg Graphic file (type jpg)
 <use images/openblass.jpg>
 Package pdftex.def Info: images/openblass.jpg  used on input line 143.
@@ -1059,7 +1059,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [13
 
  <./images/openblass.jpg>]
-<images/C.jpeg, id=354, 803.0pt x 421.575pt>
+<images/C.jpeg, id=374, 803.0pt x 421.575pt>
 File: images/C.jpeg Graphic file (type jpg)
 <use images/C.jpeg>
 Package pdftex.def Info: images/C.jpeg  used on input line 162.
@@ -1075,7 +1075,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [14
 
  <./images/C.jpeg>]
-<images/cmake_logo.svg.png, id=365, 963.6pt x 964.60374pt>
+<images/cmake_logo.svg.png, id=385, 963.6pt x 964.60374pt>
 File: images/cmake_logo.svg.png Graphic file (type png)
 <use images/cmake_logo.svg.png>
 Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 193.
@@ -1129,7 +1129,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [19
 
 ]
-<images/grafico.png, id=396, 1468.73718pt x 1006.51031pt>
+<images/grafico.png, id=416, 1468.73718pt x 1006.51031pt>
 File: images/grafico.png Graphic file (type png)
 <use images/grafico.png>
 Package pdftex.def Info: images/grafico.png  used on input line 56.
@@ -1145,7 +1145,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [20
 
  <./images/grafico.png>]
-<images/ringbuffer.png, id=404, 527.72156pt x 173.89969pt>
+<images/ringbuffer.png, id=424, 527.72156pt x 173.89969pt>
 File: images/ringbuffer.png Graphic file (type png)
 <use images/ringbuffer.png>
 Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
@@ -1154,7 +1154,7 @@ Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
 
 LaTeX Warning: Reference `TODO' on page 21 undefined on input line 81.
 
-<images/coordinator.png, id=406, 688.82344pt x 1069.74657pt>
+<images/coordinator.png, id=426, 688.82344pt x 1069.74657pt>
 File: images/coordinator.png Graphic file (type png)
 <use images/coordinator.png>
 Package pdftex.def Info: images/coordinator.png  used on input line 85.
@@ -1181,7 +1181,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 LaTeX Warning: Reference `TODO' on page 22 undefined on input line 100.
 
-<images/workers.png, id=415, 580.41844pt x 822.82407pt>
+<images/workers.png, id=435, 580.41844pt x 822.82407pt>
 File: images/workers.png Graphic file (type png)
 <use images/workers.png>
 Package pdftex.def Info: images/workers.png  used on input line 104.
@@ -1189,7 +1189,7 @@ Package pdftex.def Info: images/workers.png  used on input line 104.
 
 LaTeX Warning: Reference `TODO' on page 22 undefined on input line 109.
 
-<images/performancemap.png, id=417, 697.8572pt x 538.26094pt>
+<images/performancemap.png, id=437, 697.8572pt x 538.26094pt>
 File: images/performancemap.png Graphic file (type png)
 <use images/performancemap.png>
 Package pdftex.def Info: images/performancemap.png  used on input line 113.
@@ -1205,7 +1205,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [22 <./images/workers.png> <./images/performancemap.png>]
-<images/profiler.png, id=426, 356.0803pt x 590.95781pt>
+<images/profiler.png, id=446, 356.0803pt x 590.95781pt>
 File: images/profiler.png Graphic file (type png)
 <use images/profiler.png>
 Package pdftex.def Info: images/profiler.png  used on input line 122.
@@ -1469,16 +1469,18 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [48]
 
-LaTeX Warning: Reference `TODO' on page 49 undefined on input line 1001.
-
-
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
 (fancyhdr)                \setlength{\headheight}{15.59995pt}.
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[49]
+[49
+
+]
+
+LaTeX Warning: Reference `TODO' on page 50 undefined on input line 1003.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1488,7 +1490,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [50]
 
-LaTeX Warning: Reference `TODO' on page 51 undefined on input line 1049.
+LaTeX Warning: Reference `TODO' on page 51 undefined on input line 1053.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1497,13 +1499,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[51]
+[51
 
-LaTeX Warning: Reference `TODO' on page 52 undefined on input line 1103.
-
-
-LaTeX Warning: Reference `TODO' on page 52 undefined on input line 1103.
-
+]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1512,6 +1510,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [52]
+
+LaTeX Warning: Reference `TODO' on page 53 undefined on input line 1107.
+
+
+LaTeX Warning: Reference `TODO' on page 53 undefined on input line 1107.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1536,7 +1540,15 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [55]
-Overfull \hbox (13.80577pt too wide) in paragraph at lines 1300--1301
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[56]
+Overfull \hbox (13.80577pt too wide) in paragraph at lines 1293--1294
 []\T1/cmr/m/n/12 Once pro-cess-ing is com-plete, the mem-ory is ex-plic-itly freed with the  \T1/cmtt/m/n/12 clean_tasks
  []
 
@@ -1547,17 +1559,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[56
+[57
 
 ]
-
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
-
-[57]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1573,7 +1577,15 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[59
+[59]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[60
 
 ]
 
@@ -1583,9 +1595,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[60]
+[61]
 
-LaTeX Warning: Reference `TODO' on page 61 undefined on input line 1438.
+LaTeX Warning: Reference `TODO' on page 62 undefined on input line 1433.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1594,7 +1606,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[61
+[62
 
 ]
 
@@ -1604,7 +1616,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[62]
+[63]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1612,11 +1624,11 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[63
+[64
 
 ]
 
-LaTeX Warning: Reference `TODO' on page 64 undefined on input line 1580.
+LaTeX Warning: Reference `TODO' on page 65 undefined on input line 1575.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1625,7 +1637,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[64])
+[65]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1633,12 +1645,118 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[65
+[66
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[67]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[68
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[69]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[70]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[71
+
+]
+Overfull \hbox (1.7797pt too wide) in paragraph at lines 1857--1858
+[]\T1/cmr/m/n/12 If the num-ber of rows ex-ceeds the max-i-mum size present in the per-for-manceMap,
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[72
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[73]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[74]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[75
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[76]
+
+LaTeX Warning: Reference `TODO' on page 77 undefined on input line 1989.
+
+)
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[77
 
 ]
 \openout2 = `chapters/4_results.aux'.
 
- (./chapters/4_results.tex [66
+ (./chapters/4_results.tex [78
 
 
 
@@ -1646,10 +1764,10 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 ]
 Chapter 5.
-) [67]
+) [79]
 \openout2 = `chapters/AppendiceA.aux'.
 
- (./chapters/AppendiceA.tex [68
+ (./chapters/AppendiceA.tex [80
 
 
 
@@ -1657,7 +1775,7 @@ Chapter 5.
 
 ]
 Appendix A.
-) [69] (./main.bbl [70
+) [81] (./main.bbl [82
 
 
 
@@ -1742,7 +1860,7 @@ Overfull \hbox (84.58885pt too wide) in paragraph at lines 63--66
 \T1/cmr/m/n/12 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
-[71]
+[83]
 Underfull \hbox (badness 10000) in paragraph at lines 73--76
 []\T1/cmr/m/n/12 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
  []
@@ -1755,7 +1873,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[72] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+[84] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-11-14>
@@ -1772,21 +1890,21 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 93CC5C6318CD1281076290A59F5351F2;4820.
+(rerunfilecheck)             Checksum: C5B4DAA28DE01C0D22B61D51FB8B4C0E;5402.
  ) 
 Here is how much of TeX's memory you used:
- 33617 strings out of 467538
- 659820 string characters out of 5419551
- 1824066 words of memory out of 5000000
- 60686 multiletter control sequences out of 15000+600000
+ 34062 strings out of 467538
+ 666816 string characters out of 5419551
+ 1824060 words of memory out of 5000000
+ 60807 multiletter control sequences out of 15000+600000
  644925 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,12n,108p,1148b,2044s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (72 pages, 1337100 bytes).
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on main.pdf (84 pages, 1410033 bytes).
 PDF statistics:
- 2081 PDF objects out of 2487 (max. 8388607)
- 1909 compressed objects within 20 object streams
- 1250 named destinations out of 1440 (max. 500000)
- 533 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2551 PDF objects out of 2984 (max. 8388607)
+ 2355 compressed objects within 24 object streams
+ 1574 named destinations out of 1728 (max. 500000)
+ 565 words of extra memory for PDF output out of 10000 (max. 10000000)
 
