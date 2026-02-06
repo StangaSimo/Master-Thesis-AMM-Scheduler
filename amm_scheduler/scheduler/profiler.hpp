@@ -23,7 +23,7 @@
 struct EnergyConsumption {
     double cpu_pkg_joules = 0.0;
     double cpu_core_joules = 0.0;
-    double intel_gpu_joules = 0.0;
+//    double intel_gpu_joules = 0.0;
     double nvidia_gpu_joules = 0.0;
 };
 

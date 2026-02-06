@@ -114,40 +114,7 @@ else()
     message(STATUS "CUDA Backend OFF")
 endif()
 
-# SYCL 
-if(USE_SYCL)
-    message(STATUS "SYCL Backend: ON")
-    ExternalProject_Add(build_sycl
-        SOURCE_DIR ${CMAKE_SOURCE_DIR}/sycl
-        CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
-            -DCMAKE_BUILD_TYPE=Release
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-            -DCMAKE_CXX_COMPILER=icpx 
-            -DCMAKE_CXX_FLAGS_RELEASE=${OPT_FLAGS}
-            #BUILD_ALWAYS 1
-    )
-    list(APPEND SCHEDULER_DEPS build_sycl)
-else()
-    message(STATUS "SYCL Backend: OFF")
-endif()
-
-# OPENVINO
-if(USE_OPENVINO)
-    message(STATUS "OPENVINO Backend: ON")
-    ExternalProject_Add(build_openvino
-        SOURCE_DIR ${CMAKE_SOURCE_DIR}/openvino
-        CMAKE_ARGS
-            -DCMAKE_INSTALL_PREFIX=${LIB_OUTPUT_DIR}
-            -DCMAKE_BUILD_TYPE=Release
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-            -DCMAKE_CXX_FLAGS_RELEASE=${OPT_FLAGS}
-            #BUILD_ALWAYS 1
-    )
-    list(APPEND SCHEDULER_DEPS build_openvino)
-else()
-    message(STATUS "OPENVINO Backend: OFF")
-endif()
+# SYCL and OPENVINO are the same as cuda
 
 # scheduler
 ExternalProject_Add(build_scheduler
@@ -175,9 +142,7 @@ ExternalProject_Add(build_scheduler
 
 add_custom_target(UpdateLSP
     ALL
-    COMMAND ${CMAKE_COMMAND} -E echo "update LSP..."
     COMMAND python3 ${CMAKE_SOURCE_DIR}/merge_clangd.py
-    COMMENT "merge compile_commands.json for clangd"
     DEPENDS build_scheduler 
 )
 \end{lstlisting}
@@ -198,7 +163,6 @@ Based on the flags passed to CMake during compilation, specific preprocessor def
 Consequently, the scheduler logic knows exactly which accelerators are available. This approach makes the system flexible, if a specific accelerator or library is missing on the current machine where the project have to be compiled, it can be disabled simply by using a flag.
 
 Below the following snippet from the scheduler's build configuration shows how the flags trigger the injection of preprocessor definitions and the linking of specific libraries:
-
 
 \begin{lstlisting}[caption={Part of CMakeLists.txt inside the scheduler directory}]
 # CUDA
@@ -385,11 +349,12 @@ The actual computational logic is implemented in the private functions, such as 
 
 \begin{lstlisting}[caption={cuda\_runner.cu 32-bit logic}, language=C++] 
 void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
-
         cublasSetStream(handle, streams[i]);
 
-        CHECK_CUDA(cudaMemcpyAsync(d_A[i], A, M * K * sizeof(float), cudaMemcpyHostToDevice, streams[i]));
-        CHECK_CUDA(cudaMemcpyAsync(d_B[i], B, K * N * sizeof(float), cudaMemcpyHostToDevice, streams[i]));
+        CHECK_CUDA(cudaMemcpyAsync(d_A[i], 
+            A, M * K * sizeof(float), cudaMemcpyHostToDevice, streams[i]));
+        CHECK_CUDA(cudaMemcpyAsync(d_B[i], 
+            B, K * N * sizeof(float), cudaMemcpyHostToDevice, streams[i]));
 
         float a = 1.0f, b = 0.0f;
 
@@ -403,10 +368,13 @@ void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
                  CUBLAS_COMPUTE_32F,
                  CUBLAS_GEMM_DEFAULT_TENSOR_OP);
 
-        CHECK_CUDA(cudaMemcpyAsync(C, d_C[i], M * N * sizeof(float), cudaMemcpyDeviceToHost, streams[i]));
-        CHECK_CUDA(cudaStreamSynchronize(streams[i])); /* blocking for latency metrics */ 
-
-        i = (i + 1) % N_STREAM; /* change stream for the next call */
+        CHECK_CUDA(cudaMemcpyAsync(C, 
+            d_C[i], M * N * sizeof(float), 
+            cudaMemcpyDeviceToHost, streams[i]));
+        /* blocking for latency metrics */ 
+        CHECK_CUDA(cudaStreamSynchronize(streams[i])); 
+        /* change stream for the next call */
+        i = (i + 1) % N_STREAM; 
 }
 \end{lstlisting}
 
@@ -423,11 +391,14 @@ Once computed, the result is copied back to the host. The process concludes with
 Below the implementation for the 16-bit cuda gemm:
 
 \begin{lstlisting}[caption={cuda\_runner.cu 16-bit logic}, language=C++] 
-void cuda_gemm_16bit_p(__half* A, __half* B, __half* C, int M, int N, int K) {
+void cuda_gemm_16bit_p(__half* A, __half* B, __half* C, 
+                        int M, int N, int K) {
     cublasSetStream(handle, streams[i]);
 
-    CHECK_CUDA(cudaMemcpyAsync(d_A[i], A, M * K * sizeof(__half), cudaMemcpyHostToDevice, streams[i]));
-    CHECK_CUDA(cudaMemcpyAsync(d_B[i], B, K * N * sizeof(__half), cudaMemcpyHostToDevice, streams[i]));
+    CHECK_CUDA(cudaMemcpyAsync(d_A[i], A, 
+        M * K * sizeof(__half), cudaMemcpyHostToDevice, streams[i]));
+    CHECK_CUDA(cudaMemcpyAsync(d_B[i], B, 
+        K * N * sizeof(__half), cudaMemcpyHostToDevice, streams[i]));
 
     float a = 1.0f, b = 0.0f;
 
@@ -441,7 +412,8 @@ void cuda_gemm_16bit_p(__half* A, __half* B, __half* C, int M, int N, int K) {
                  CUBLAS_COMPUTE_32F,
                  CUBLAS_GEMM_DEFAULT_TENSOR_OP);
 
-    CHECK_CUDA(cudaMemcpyAsync(C, d_C[i], M * N * sizeof(__half), cudaMemcpyDeviceToHost, streams[i]));
+    CHECK_CUDA(cudaMemcpyAsync(C, d_C[i], 
+        M * N * sizeof(__half), cudaMemcpyDeviceToHost, streams[i]));
     CHECK_CUDA(cudaStreamSynchronize(streams[i]));
 
     i = (i + 1) % N_STREAM;
@@ -461,11 +433,9 @@ extern "C" {
 #endif
 
     void ov_init();
-
     void ov_gemm_32bit(void* A, void* B, void* C, int M, int N, int K);
     void ov_gemm_16bit(void* A, void* B, void* C, int M, int N, int K);
     void ov_gemm_8bit(void* A, void* B, void* C, int M, int N, int K);
-
     void ov_free();
 
 #ifdef __cplusplus
@@ -485,9 +455,9 @@ ov::Core core;
 using namespace std;
 
 /* cache for compiled models */
-static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_32bit;
-static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_16bit;
-static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_8bit;
+static std::map<tuple<int, int, int>, ov::InferRequest> cache_32bit;
+static std::map<tuple<int, int, int>, ov::InferRequest> cache_16bit;
+static std::map<tuple<int, int, int>, ov::InferRequest> cache_8bit;
 
 const size_t MAX_MAP_SIZE = 20; 
 size_t map_size_32bit=0;
@@ -522,24 +492,30 @@ The core logic of the OpenVINO backend is found in the caching functions, such a
 
 \begin{lstlisting}[caption={ov runner.cpp caching function}, language=C++] 
 void cache_32bit(tuple<int, int, int> key) {
-    if (request_cache_32bit.find(key) == request_cache_32bit.end()) {
+    if (cache_32bit.find(key) == cache_32bit.end()) {
         map_size_32bit++;
         if (map_size_32bit >= MAX_MAP_SIZE) {
-            request_cache_32bit.clear();
+            cache_32bit.clear();
             map_size_32bit = 1;
         }
-        auto A_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)get<0>(key), (size_t)get<2>(key)});
-        auto B_ov = std::make_shared<ov::op::v0::Parameter>(ov::element::f32, ov::Shape{(size_t)get<2>(key), (size_t)get<1>(key)});
+        auto A_ov = std::make_shared<ov::op::v0::Parameter>
+            (ov::element::f32, ov::Shape{(size_t)get<0>(key), 
+            (size_t)get<2>(key)});
+        auto B_ov = std::make_shared<ov::op::v0::Parameter>
+            (ov::element::f32, ov::Shape{(size_t)get<2>(key), 
+            (size_t)get<1>(key)});
 
         auto matmul = std::make_shared<ov::op::v0::MatMul>(A_ov, B_ov);
         auto result = std::make_shared<ov::op::v0::Result>(matmul);
 
-        auto model = std::make_shared<ov::Model>(result, ov::ParameterVector{A_ov, B_ov});
+        auto model = std::make_shared<ov::Model>(result, 
+                                    ov::ParameterVector{A_ov, B_ov});
 
-        ov::CompiledModel compiled_model = core.compile_model(model, "NPU");
+        ov::CompiledModel compiled_model = core.
+                                        compile_model(model, "NPU");
         ov::InferRequest request = compiled_model.create_infer_request();
 
-        request_cache_32bit[key] = request;
+        cache_32bit[key] = request;
     }
 }
 \end{lstlisting}
@@ -553,7 +529,7 @@ void ov_gemm_32bit_p(void *A, void *B, void *C, int M, int N, int K){
     auto key = std::make_tuple(M, N, K);
     cache_32bit(key); 
 
-    ov::InferRequest& infer_request = request_cache_32bit[key];
+    ov::InferRequest& infer_request = cache_32bit[key];
 
     ov::Tensor tensor_A(ov::element::f32, ov::Shape{(size_t)M, 
                                                     (size_t)K}, A);
@@ -1573,6 +1549,73 @@ The function \texttt{query} implements specific heuristics derived and observed 
 \end{itemize}
 
 All of this tweaks exhibits, as it will be shown in the next section, a good behavior in predicting the time of completition of a task, furthermore the code used for the black box analysis is intirely in the tests.hpp file, found in Appendix \ref{TODO}.
+
+\clearpage
+
+\subsection{Profiler}
+To evaluate the performance and the efficiency of the scheduling logics, the \texttt{Profiler} tool was developed integrated directly into the scheduler's codebase. It acts as an observer, recording precise timestamps and sensor data during the execution of workloads without interfering with the logic. 
+
+The class provides a simple interface to start and stop counters for various metrics. Its primary responsibilities are: 
+
+\begin{itemize} 
+    \item Coordinator Latency, tracking the exact time spent in specific phases Fetching, Logic, Dispatching using high-resolution clocks. 
+
+    \item Worker Statistics, monitoring each worker thread to calculate occupancy.
+
+    \item Power Monitoring, measuring the total energy consumed by the hardware during the workspan. 
+\end{itemize}
+
+Below is a simplified view of the class structure and its key components:
+
+\begin{lstlisting}[caption={Profiler Class Structure}, language=C++] 
+
+/* Consumption stats */
+struct EnergyConsumption {}; 
+/* Coordinator stats */
+struct Metric {};
+/* Workers stats */
+struct WokerMetric {};
+
+class Profiler { 
+public: 
+
+/* power monitor helpers */
+void start_power_monitor() {
+    #ifdef ENABLE_INTEL_POWER_PROFILE
+    /* read RAPL files */
+    #endif
+
+    #ifdef ENABLE_CUDA
+    /* call NVML library */
+    #endif
+}
+void stop_power_monitor();
+
+/* scheduler logic monitor helpers */
+void start_fetch();
+void start_logic();
+void start_dispatch();
+void stop_fetch();
+void stop_logic();
+void stop_dispatch();
+void init_last_work();
+void start_worker();
+void end_worker();
+void record_sample();
+
+void print_stats();
+void save_to_csv();
+
+}; 
+\end{lstlisting}
+
+For the NVIDIA GPU, collecting data was straightforward thanks to the NVML library, the function \texttt{nvmlDeviceGetTotalEnergyConsumption} provides a monotonic counter of the total energy consumed by the board in millijoules since the driver started. By reading this counter before and after the workload, the exact consumption is derived.
+
+For the Intel hardware the system relies on RAPL. On Linux systems these hardware counters are exposed as standard text files in \texttt{/sys/class/powercap/}, the Profiler reads the energy values in microjoules directly from these files. While RAPL allows for fine grained domains (like DRAM or specific cores), monitoring the entire CPU Package was deemed sufficient for our goals, as we are interested in the total system efficiency gain, furthermore the GPU and NPU are also included in the CPU package.
+
+Using Joules as the primary metric provides a way to compare efficiency, as it inherently accounts for both the power draw and the duration of the task.
+
+Finally, all collected metrics are aggregated and appended to a results.csv file. This automated data collection was crucial for generating the results presented in the next chapter.
 
 \clearpage
 

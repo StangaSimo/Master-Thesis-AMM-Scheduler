@@ -3,19 +3,21 @@
 \section{Contest}
 Until a few years ago, performance improvements depended mainly on increasing CPU clock speeds, today the approach has changed completely, shifting towards hardware specialization.
 
-Modern computers, from servers to embedded SoCs, don't rely on a single processor anymore, instead they integrate different specific accelerators:
+Historically, this specialization was driven by distinct application domains, two of the most common examples are that GPUs were designed for rendering pixels, while DSPs handled only signal processing, however, in recent years, the landscape of high performance computing has witnessed a fundamental change. With the explosive growth of Artificial Intelligence, a vast array of modern applications from computer vision to LLM has been reduced to a common denominator: \textbf{matrix multiplication}.
+
+Consequently, hardware architectures have evolved to optimize this specific operation. Modern computers from servers to embedded SoCs, don't rely on a single processor anymore, instead, they integrate a heterogeneous suite of execution units, all capable of performing linear algebra but with different characteristics:
 
 \begin{itemize}
-    \item \textbf{CPU}: Optimized for sequential tasks and low latency.
+    \item \textbf{CPU}: Optimized for sequential tasks, complex logic and low latency.
     \item \textbf{GPU}: Available as integrated (iGPU) or discrete (dGPU), in a lot of cases both at the same time, designed for massive parallel computing.
-    \item \textbf{NPU} (Neural Processing Unit): A recently introduced unit, specialized in speeding up matrix operations for AI workloads.
+    \item \textbf{NPU} (Neural Processing Unit): A recently introduced unit, specialized in speeding up matrix operations for AI workloads, trading flexibility for extreme efficiency.
 \end{itemize}
 
-This variety of hardware has created a gap with the software, while hardware offers different resources for different workloads, traditional software tends to be static. It usually assigns tasks to a single device ,often just the CPU or GPU, and ignores the other available resources. 
+This variety of hardware has created a gap with the software, while hardware offers different resources for different workloads, traditional software tends to be static. It usually assigns tasks to a single device, often just the CPU or GPU, and ignores the other available resources. 
 
-The result is an inefficient use of the system. We could get more throughput with the same efficiency, or be more efficient at the same speed, so the current challenge is \textit{ orchestration}: we need a system that can dynamically map each task to the right accelerator, using the entire heterogeneous topology of the system.
+The result is an inefficient use of the system. We could get more throughput with the same efficiency, or be more efficient at the same speed. 
 
-\clearpage 
+This is precisely where our project fits in. Since the computational core of modern applications has converged on matrix operations, the current challenge is orchestration: we need a system capable of dynamically mapping these matrix multiplication tasks to the right accelerator, exploiting the entire heterogeneous topology of the system to maximize performance.
 
 \section{Objectives}
 The main goal of this thesis was to design and implement a scheduler capable of dynamically assigning computational tasks, specifically streams of matrix multiplications, to the different accelerators found in modern architectures.
@@ -25,6 +27,8 @@ The work started with an essential preliminary phase, I focused on integrating a
 After this initial phase, the work moved on to the actual development of the scheduler, the core of this project focused on the asymmetric orchestration logic, designed to decide in real-time which resource to use for each specific workload for maximize utilization and efficiency.
 
 Finally, the system was validated with experimental results on a complex hybrid architecture, this setup included an Intel multicore CPU (with integrated GPU and NPU) and a discrete NVIDIA GPU. The tests used to verify the operation were streams of identical matrices, streams of heterogeneous matrices, and splitting larger tasks across multiple accelerators.
+
+\clearpage
 
 \section{Thesis Structure}
 The work is organized into the following chapters:
