@@ -289,7 +289,7 @@ class AMScheduler {
                         }
                     }
 
-                    prof(profiler.stop_logic());
+                    PROF(profiler.stop_logic());
 
                     PROF(profiler.start_dispatch());
 

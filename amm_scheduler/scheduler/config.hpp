@@ -9,10 +9,10 @@
 #define ENABLE_INTEL_POWER_PROFILE /* profiling the power consumption with intel rapl */
 
 /********** tests ************/
-#define M_ 4092
-#define N_ 4092
-#define K_ 4092 
-#define N_MATRIX 100 
+#define M_ 4096
+#define N_ 4096
+#define K_ 4096 
+#define N_MATRIX 110 
 
 inline int BATCH_SIZE = 30;
 inline int BATCH_SIZE_HETERO = 40;
@@ -35,7 +35,7 @@ enum {SPLIT_MATRIX_ITERATION = 3};
 //#define SLEEP
 enum {GET_SLEEP = 500};       /* shared buffer sleep time */
 enum {PUT_SLEEP = 500};       /* 5 ms */
-enum {BUFFER_LENGHT = 1024};  /* shared buffer length */
+enum {BUFFER_LENGHT = 2048};  /* shared buffer length */
 
 /********** benchmark ************/
 enum {STEP_SIZE = 512};       /* benchmark for csv step size */

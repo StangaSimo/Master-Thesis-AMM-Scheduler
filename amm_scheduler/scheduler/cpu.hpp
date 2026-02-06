@@ -15,22 +15,22 @@ inline void pin_to_cores(const std::vector<int>& core_ids) {
 
 inline void cpu_init() {
 
-    //std::vector<int> e_cores = {10, 11, 12, 13};
+    std::vector<int> e_cores = {3,4};
 
-    //cpu_set_t cpu;
-    //CPU_ZERO(&cpu); 
+    cpu_set_t cpu;
+    CPU_ZERO(&cpu); 
 
-    //for (int id : e_cores) {
-    //    CPU_SET(id, &cpu);
-    //}
+    for (int id : e_cores) {
+        CPU_SET(id, &cpu);
+    }
 
-    //pthread_t current_thread = pthread_self();
-    //int rc = pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpu);
+    pthread_t current_thread = pthread_self();
+    int rc = pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpu);
 
-    //if (rc != 0) {
-    //    std::cerr << "Errore nel setting dell'affinità CPU: " << rc << "\n";
-    //    exit(EXIT_FAILURE);
-    //}
+    if (rc != 0) {
+        std::cerr << "Errore nel setting dell'affinità CPU: " << rc << "\n";
+        exit(EXIT_FAILURE);
+    }
 
     openblas_set_num_threads(N_CORES);
     omp_set_num_threads(N_CORES);

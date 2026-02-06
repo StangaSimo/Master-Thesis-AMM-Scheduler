@@ -161,13 +161,13 @@ public:
             if (bt == BT::OPENVINO) {
 
                 /* mitigate overhead when other accellerator are running */
-                time_ms += time_ms * 0.1;
+                //time_ms += time_ms * 0.1;
 
                 if (jit_cache->find(key) == jit_cache->end()){
                     if (add_jit)
                         jit_cache->insert(key);
 
-                    time_ms += jit_ms * 1.3;
+                    time_ms += jit_ms;
                     //time_ms += jit_ms;
                 }
             }
@@ -176,7 +176,7 @@ public:
             if (bt == BT::SYCL) {
 
                 /* mitigate overhead when other accellerator are running */
-                time_ms += time_ms * 0.1;
+                //time_ms += time_ms * 0.1;
 
                 unsigned long long sycl_key = (unsigned long long) N;
                 if (jit_cache->find(sycl_key) == jit_cache->end()){
@@ -190,7 +190,7 @@ public:
             
             /* mitigate openblas error in bencharks  */
             if (bt == BT::OPENBLAS)
-                time_ms = time_ms * 0.5;
+                time_ms = time_ms * 0.8;
             
             data->last_K = time_ms;
             return time_ms;

@@ -56,6 +56,7 @@ void test_scheduler_logics() {
 
     Type type = Type::FLOAT;
 
+    task* task_array = init_tasks(n_matrix, M, N, K, type);
     for (int w=0; w<1; w++) {
         if (w == 0) {cout << "\n--------------------  32BIT:  \n";}
         if (w == 1) {cout << "\n--------------------  16BIT:  \n"; type = Type::HALF;}
@@ -69,15 +70,14 @@ void test_scheduler_logics() {
             if (i == 1) {l = Logic::STATIC_PARTITIONING; cout << "\nStatic partitioning \n";}
             if (i == 2) {l = Logic::DYNAMIC; cout << "\nDynamic \n";}
 
-            task* task_array = init_tasks(n_matrix, M, N, K, type);
             AMScheduler scheduler = AMScheduler(l);
             scheduler.do_tasks(task_array, n_matrix);
             scheduler.wait();
             /* test_compare_task(task_array, num_matrix); */
             scheduler.print_stats(task_array,n_matrix);
-            clean_tasks(task_array, n_matrix);
         } 
     }
+    clean_tasks(task_array, n_matrix);
 }
 
 void test_large_matrix_split() {
@@ -94,8 +94,8 @@ void test_large_matrix_split() {
 
 /************************ real benchmarks *****************************/
 
-const size_t RAM_LIMIT = 20ULL * 1024 * 1024 * 1024;
-const size_t RAM_LIMIT_SAFE = 18ULL * 1024 * 1024 * 1024;
+/* 23 GB */
+const size_t RAM_LIMIT = 23ULL * 1024 * 1024 * 1024;
 
 size_t check_mem(int n_tasks, int M, int N, int K) {
     size_t elem = (size_t)M * K + (size_t)K * N + (size_t)M * N;
@@ -108,18 +108,32 @@ int get_max_tasks(int M, int N, int K) {
     return (int)(RAM_LIMIT / task_size);
 }
 
+size_t actual_tasks_size(task* tasks, int n) {
+    size_t total_bytes = 0;
+    for (int i = 0; i < n; ++i) {
+        size_t matrix_A = (size_t)tasks[i].M * tasks[i].K;
+        size_t matrix_B = (size_t)tasks[i].K * tasks[i].N;
+        size_t matrix_C = (size_t)tasks[i].M * tasks[i].N;
+        total_bytes += (matrix_A + matrix_B + matrix_C) * 4;
+    }
+    return total_bytes;
+}
+
 void bench_static_partitioning() {
-    int sizes[] = {1024, 2048, 4096};
+    int sizes[] = {2048, 4096};
     
     for (int s : sizes) {
         int step;
-        if (s == 1024) step = 250;      
-        else if (s == 2048) step = 50;  
-        else step = 10;                 
+        if (s == 1024) step = 25;       
+        else if (s == 2048) step = 10;   
+        else step = 4;                  
 
         int max_possible = get_max_tasks(s, s, s);
 
-        for (int b = 20; b <= 100; b += 10) {
+        cout << "Allocating " << max_possible << " tasks for size " << s << "...\n";
+        task* all_tasks = init_tasks(max_possible, s, s, s, Type::FLOAT);
+
+        for (int b = 20; b <= 70; b += 10) {
             BATCH_SIZE = b;
 
             int t = step; 
@@ -141,31 +155,34 @@ void bench_static_partitioning() {
                 if (last_run) cout << " (MAX RAM)";
                 cout << endl;
 
-                task* tasks = init_tasks(t, s, s, s, Type::FLOAT);
                 AMScheduler sched(Logic::STATIC_PARTITIONING);
-                sched.do_tasks(tasks, t);
+                sched.do_tasks(all_tasks, t);
                 sched.wait();
-                sched.print_stats(tasks, t);
-                clean_tasks(tasks, t);
+                sched.print_stats(all_tasks, t);
 
                 t += step;
             }
         }
+        clean_tasks(all_tasks, max_possible);
     }
 }
 
 void bench_dynamic_homo() {
     int sizes[] = {1024, 2048, 4096};
 
-    cout << "\n=== START DYNAMIC HOMOGENEOUS BENCHMARK ===\n";
+    cout << "\n=== START DYNAMIC & CUDA HOMOGENEOUS BENCHMARK ===\n";
 
     for (int s : sizes) {
         int step;
-        if (s == 1024) step = 250;
-        else if (s == 2048) step = 50;
-        else step = 10;
+        if (s == 1024) step = 25;
+        else if (s == 2048) step = 10;
+        else step = 4;
 
         int max_possible = get_max_tasks(s, s, s);
+        
+        cout << "Allocating " << max_possible << " tasks for size " << s << "...\n";
+        task* all_tasks = init_tasks(max_possible, s, s, s, Type::FLOAT);
+
         int t = step;
         bool last_run = false;
 
@@ -175,38 +192,52 @@ void bench_dynamic_homo() {
                 last_run = true;
             }
 
+            if (check_mem(t, s, s, s) > RAM_LIMIT) {
+                break;
+            }
+
             csvname = "bin/csv/dynamic_homo_S" + to_string(s) + ".csv";
-            
-            cout << "Dynamic Homo | Size: " << s << " | Tasks: " << t;
+            cout << "Dynamic Homo | Size: " << s << " | Tasks: " << t << endl;
+
+            {
+                AMScheduler sched_dyn(Logic::DYNAMIC);
+                sched_dyn.do_tasks(all_tasks, t);
+                sched_dyn.wait();
+                sched_dyn.print_stats(all_tasks, t);
+            }
+
+            csvname = "bin/csv/cuda_only_S" + to_string(s) + ".csv";
+            cout << "CUDA Only    | Size: " << s << " | Tasks: " << t;
             if (last_run) cout << " (MAX RAM)";
             cout << endl;
 
-            task* tasks = init_tasks(t, s, s, s, Type::FLOAT);
-            AMScheduler sched(Logic::DYNAMIC);
-            sched.do_tasks(tasks, t);
-            sched.wait();
-            sched.print_stats(tasks, t);
-            clean_tasks(tasks, t);
+            {
+                AMScheduler sched_cuda(Logic::CUDA_ONLY);
+                sched_cuda.do_tasks(all_tasks, t);
+                sched_cuda.wait();
+                sched_cuda.print_stats(all_tasks, t);
+            }
 
             t += step;
         }
+        clean_tasks(all_tasks, max_possible);
     }
 }
 
 void bench_hetero_comparison() {
     cout << "\n=== START HETERO COMPARISON BENCHMARK ===\n";
 
-    int max_total_tasks = get_max_tasks(MAX_SIZE, MAX_SIZE, MAX_SIZE);
+    int max_allocatable = get_max_tasks(MAX_SIZE, MAX_SIZE, MAX_SIZE);
     
-    max_total_tasks = (int)(max_total_tasks * 0.9); 
+    task* shared_tasks = init_hetero_tasks(max_allocatable, Type::FLOAT);
 
-    cout << "Allocating " << max_total_tasks << " mixed tasks ONCE..." << endl;
-    
-    task* shared_tasks = init_hetero_tasks(max_total_tasks, Type::FLOAT);
+    size_t current_mem = actual_tasks_size(shared_tasks, max_allocatable);
+    cout << "Allocated " << max_allocatable << " tasks using " << (double)current_mem / (1024*1024*1024) << " GB of RAM.\n";
 
-    int step = 20;
+    int max_total_tasks = max_allocatable;
+    int step = 5;
 
-    for (int b = 20; b <= 100; b += 10) {
+    for (int b = 20; b <= 70; b += 10) {
         BATCH_SIZE_HETERO = b;
         
         int t = step;
@@ -256,7 +287,30 @@ void bench_hetero_comparison() {
         t += step;
     }
 
-    cout << "Cleaning up shared tasks...\n";
+    cout << "\n--- CUDA Only Logic on Hetero ---\n";
+
+    t = step;
+    last_run = false;
+
+    while (!last_run) {
+        if (t >= max_total_tasks) {
+            t = max_total_tasks;
+            last_run = true;
+        }
+
+        csvname = "bin/csv/cuda_only_hetero.csv";
+        cout << "CUDA Only Hetero | Tasks: " << t;
+        if (last_run) cout << " (MAX ALLOC)";
+        cout << endl;
+
+        AMScheduler sched(Logic::CUDA_ONLY);
+        sched.do_tasks(shared_tasks, t);
+        sched.wait();
+        sched.print_stats(shared_tasks, t);
+
+        t += step;
+    }
+
     clean_tasks(shared_tasks, max_total_tasks);
 }
 
@@ -291,15 +345,16 @@ int main() {
     //test_hetero_logic();
     //test_dynamic();
     //test_jit_times();
+    
     /* remove openvino */
     //test_video_filter(Logic::CUDA_ONLY, false);
     //test_video_filter(Logic::STATIC_PARTITIONING, false);
     //test_video_filter(Logic::DYNAMIC, true);
     
-    //bench_static_partitioning();
-    //bench_dynamic_homo();
-    //bench_hetero_comparison();
-    bench_large_matrix();
-
+    bench_static_partitioning();
+    bench_dynamic_homo();
+    bench_hetero_comparison();
+    
+    //bench_large_matrix();
     return 0;
 }
