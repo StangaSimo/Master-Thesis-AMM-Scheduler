@@ -120,12 +120,12 @@ size_t actual_tasks_size(task* tasks, int n) {
 }
 
 void bench_static_partitioning() {
-    int sizes[] = {2048, 4096};
+    int sizes[] = {1024, 2048, 4096};
     
     for (int s : sizes) {
         int step;
-        if (s == 1024) step = 25;       
-        else if (s == 2048) step = 10;   
+        if (s == 1024) step = 50;       
+        else if (s == 2048) step = 20;   
         else step = 4;                  
 
         int max_possible = get_max_tasks(s, s, s);
@@ -174,8 +174,8 @@ void bench_dynamic_homo() {
 
     for (int s : sizes) {
         int step;
-        if (s == 1024) step = 25;
-        else if (s == 2048) step = 10;
+        if (s == 1024) step = 50;
+        else if (s == 2048) step = 20;
         else step = 4;
 
         int max_possible = get_max_tasks(s, s, s);
@@ -206,6 +206,22 @@ void bench_dynamic_homo() {
                 sched_dyn.print_stats(all_tasks, t);
             }
 
+            t += step;
+        }
+
+        t = step;
+        last_run = false;
+
+        while (!last_run) {
+            if (t >= max_possible) {
+                t = max_possible;
+                last_run = true;
+            }
+
+            if (check_mem(t, s, s, s) > RAM_LIMIT) {
+                break;
+            }
+
             csvname = "bin/csv/cuda_only_S" + to_string(s) + ".csv";
             cout << "CUDA Only    | Size: " << s << " | Tasks: " << t;
             if (last_run) cout << " (MAX RAM)";
@@ -220,6 +236,7 @@ void bench_dynamic_homo() {
 
             t += step;
         }
+
         clean_tasks(all_tasks, max_possible);
     }
 }
@@ -351,9 +368,9 @@ int main() {
     //test_video_filter(Logic::STATIC_PARTITIONING, false);
     //test_video_filter(Logic::DYNAMIC, true);
     
-    bench_static_partitioning();
+    //bench_static_partitioning();
     bench_dynamic_homo();
-    bench_hetero_comparison();
+    //bench_hetero_comparison();
     
     //bench_large_matrix();
     return 0;
