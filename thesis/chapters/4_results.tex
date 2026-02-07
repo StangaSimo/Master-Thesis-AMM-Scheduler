@@ -74,7 +74,7 @@ In this scenario, the workload increases significantly. The matrix size is large
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_energy_s2048.png} \caption{Energy Comparison Matrix 2048} \label{energy2048} \end{figure}
 
-As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this workloads. However, a clear different appears between the two logics. The Dynamic Strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the Static Strategy lags slightly behind with an average speedup of 1.90x. This indicates that the Dynamic logic is 14.2\% faster on average for this specific workload. 
+As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this workloads. However, a clear different appears between the two logics. The Dynamic Strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the Static Strategy lags slightly behind with an average speedup of 1.90x. This indicates that the Dynamic logic is 14\% faster on average for this specific workload. 
 
 Regarding energy efficiency (Figure \ref{energy2048}) the heterogeneous execution significantly reduces the total energy consumption compared to the CUDA only approach, thanks to the reduction in total execution time. The Dynamic Strategy proves to be the most efficient, consuming only 218.55 J on average per batch, compared to 430.42 J for CUDA Only.
 
@@ -93,8 +93,6 @@ Figure \ref{distrib2048} reveals the again the cause of the performance differen
 
 However, the Dynamic Strategy as already said, adapts in real time, so as seen in the Figure \ref{timedistr2048}, the Dynamic logic keeps the CPU and OpenVINO much busier.
 
-As shown in Figure \ref{time4096}, the behavior of the system changes drastically compared to the previous cases. The Static Strategy demonstrates its superiority here, consistently outperforming the Dynamic logic. While the Static logic maintains a stable execution time, the Dynamic logic exhibits a highly irregular, "sawtooth" pattern and is significantly slower. The Static Strategy achieves an average speedup of 1.30x, while the Dynamic Strategy struggles with an average speedup of only 0.88x, meaning it is often slower than the single CUDA card. This indicates that the Static logic saves on average 35.36/% of execution time compared to the Dynamic approach.
-
 \subsection{Matrix: 4096x4096}
 This scenario expose a heavy workload on the scheduler, the computational cost now should  dominate the ovehread of data transfer. The results of the logic execution are presented below:
 
@@ -102,7 +100,7 @@ This scenario expose a heavy workload on the scheduler, the computational cost n
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_energy_s4096.png} \caption{Energy Comparison 4096} \label{energy4096} \end{figure}
 
-As shown in Figure \ref{time4096} both strategies still significantly outperform the single CUDA baseline. However, the Static Strategy show its superiority in this specific scenario, achieving an average speedup of 2.00x (peaking max at 2.90x) and the Dynamic Strategy follows closely with a solid average speedup of 1.78x (peaking at 2.67x). Ultimately, the Static logic proves to be 12.5\% faster on average compared to the Dynamic one.
+As shown in Figure \ref{time4096} both strategies still significantly outperform the single CUDA baseline. However, the Static Strategy show its superiority in this specific scenario, achieving an average speedup of 2.00x (peaking max at 2.90x) and the Dynamic Strategy follows with an average speedup of 1.78x (peaking at 2.67x). Ultimately, the Static logic proves to be 12.5\% faster on average compared to the Dynamic one.
 
 Regarding efficiency (Figure \ref{energy4096}), the results still shows that despite activating all available accelerators, the parallel execution reduces the total energy consumed, the CUDA-only execution consumes on average 568.70 J, while the heterogeneous strategies drop this to roughly 330-340 J.
 
