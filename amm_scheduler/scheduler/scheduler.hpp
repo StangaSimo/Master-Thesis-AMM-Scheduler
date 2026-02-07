@@ -65,6 +65,7 @@ enum Logic : size_t {
     CUDA_ONLY,
     STATIC_PARTITIONING,
     LARGE_MATRIX_SPLIT,
+    LARGE_MATRIX_SPLIT_CUDA,
     STATIC_HETERO_PARTITIONING,
     DYNAMIC,
 };
@@ -547,6 +548,66 @@ class AMScheduler {
 
                 PROF(profiler.stop_power_monitor());
                 break;
+
+            case Logic::LARGE_MATRIX_SPLIT_CUDA:
+
+                PROF(profiler.start_power_monitor());
+
+                if (buffers[BT::CUDA] == nullptr) {
+                    cout << "[SCHEDULER] Error: no CUDA backend available.\n";
+                    exit(EXIT_FAILURE);
+                }
+
+                while (threads_keep_running) { 
+                    PROF(profiler.start_fetch());
+
+                    single_task = buffer->get();
+                    if (!single_task) {continue;} 
+
+                    PROF(profiler.stop_fetch());
+                    
+                    PROF(profiler.start_logic());
+                    int rows_left = single_task->M;
+                    int offset_rows = 0;
+                    size_t elem_size = (single_task->type == Type::FLOAT) ? 4 : 2;
+                    PROF(profiler.stop_logic());
+
+                    PROF(profiler.start_dispatch());
+
+                    while (rows_left > 0) {
+                        
+                        int chunk_h = rows_left;
+                        if (chunk_h > MAX_SIZE) chunk_h = MAX_SIZE;
+
+                        task* sub_task = new ::task;
+                        *sub_task = *single_task; 
+
+                        sub_task_array.push_back(sub_task);
+
+                        sub_task->M = chunk_h;
+
+                        size_t offset_A = (size_t)offset_rows * single_task->K * elem_size;
+                        size_t offset_C = (size_t)offset_rows * single_task->N * elem_size;
+
+                        sub_task->A = (char*)single_task->A + offset_A;
+                        sub_task->C = (char*)single_task->C + offset_C;
+
+                        pending_tasks++;
+
+                        buffers[BT::CUDA]->put(sub_task);
+
+                        rows_left -= chunk_h;
+                        offset_rows += chunk_h;
+                    }
+
+                    pending_tasks--;
+                    
+                    PROF(profiler.stop_dispatch());
+                    PROF(profiler.record_sample());
+                }
+
+                PROF(profiler.stop_power_monitor());
+                break;
             default:
                 printf("[SCHEDULER] Error in chosing the logic.\n");
                 exit(EXIT_FAILURE);
@@ -916,6 +977,8 @@ inline string get_logic_string(Logic l) {
             logic = "STATIC_PARTITIONING"; break;
         case Logic::LARGE_MATRIX_SPLIT:
             logic = "LARGE_MATRIX_SPLIT"; break;
+        case Logic::LARGE_MATRIX_SPLIT_CUDA:
+            logic = "LARGE_MATRIX_SPLIT_CUDA"; break;
         case Logic::STATIC_HETERO_PARTITIONING:
             logic = "STATIC_HETERO_PARTITIONING"; break;
         case Logic::DYNAMIC:

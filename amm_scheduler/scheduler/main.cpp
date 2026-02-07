@@ -336,7 +336,6 @@ void bench_large_matrix() {
     int K = 4000;
     int start_M = 5000;
     
-    csvname = "bin/csv/large_matrix.csv";
 
     for (int M = start_M; ; M += 1000) {
         if (check_mem(1, M, N, K) > RAM_LIMIT) {
@@ -344,13 +343,15 @@ void bench_large_matrix() {
             break;
         }
 
+        csvname = "bin/csv/large_matrix_cuda.csv";
+
         cout << "Large Matrix | M: " << M << " N: " << N << " K: " << K << endl;
 
         task* t = init_tasks(1, M, N, K, Type::FLOAT);
-        AMScheduler sched(Logic::LARGE_MATRIX_SPLIT);
+        AMScheduler sched(Logic::LARGE_MATRIX_SPLIT_CUDA);
         sched.do_tasks(t, 1);
         sched.wait();
-        sched.print_stats(nullptr, 1);
+        sched.print_stats(t, 1);
         clean_tasks(t, 1);
     }
 }
@@ -369,9 +370,9 @@ int main() {
     //test_video_filter(Logic::DYNAMIC, true);
     
     //bench_static_partitioning();
-    bench_dynamic_homo();
+    //bench_dynamic_homo();
     //bench_hetero_comparison();
     
-    //bench_large_matrix();
+    bench_large_matrix();
     return 0;
 }
