@@ -39,7 +39,7 @@ In this case, we are dealing with small matrices, where the biggest overhead is 
     \label{energy1024}
 \end{figure}
 
-As we can see from Figure \ref{time1024}, with these small tasks, the static logic and the dynamic logic perform almost in the same way. Both clearly outperform the single CUDA card by using multiple accelerators in parallel. An average speedup of 2\% was observed for the static logic, and 2.10\% for the dynamic logic, compared to the CUDA logic. The graph in Figure \ref{energy1024} is very interesting, where we can clearly see how the two logics manage to stay below the total consumption of the CUDA logic (remember how the total machine consumption is counted in this case, see section \ref{TODO}). This is a very significant result because it shows how these different accelerators, even if they are not as fast as the CUDA card, can still be efficient; and if used in parallel, they lead to an increase in the total system efficiency. In this case, the metric efficiency was calculated as Tasks per Joule, and we obtained:
+As we can see from Figure \ref{time1024}, with these small tasks, the static logic and the dynamic logic perform almost in the same way, both clearly outperform the single CUDA card by using multiple accelerators in parallel. An average speedup of 2\% was observed for the static logic, and 2.10\% for the dynamic logic, compared to the CUDA logic. The graph in Figure \ref{energy1024} is very interesting, where we can clearly see how the two strategy manage to stay below the total consumption of the CUDA logic (for energy metrics, see section \ref{TODO}). This is a very significant result because it shows how these different accelerators, even if they are not as fast as the CUDA card, can still be efficient; and if used in parallel, they lead to an increase in the total system efficiency. In this case, the metric efficiency was calculated as Tasks per Joule, and we obtained:
 
 \begin{itemize}
     \item Cuda only: 2.62 Tasks/J
@@ -63,7 +63,7 @@ Furthermore, to investigate the performance of the two logics, graphs were made 
     \label{timedistr1024}
 \end{figure}
 
-Here we can see how the two logics fundamentally differ in their operation. The greedy nature of the dynamic logic tends to make the accelerators work more continuously in this case of small tasks, managing to "spread" the work better among the accelerators. As we can note from Figure \ref{dist1024}, it is clear that the static logic underestimated the performance of the non-CUDA accelerators, and this led to a higher number of tasks on that accelerator, meanwhile, the dynamic logic managed, thanks to its greedy nature, to make the other accelerators work much more, and this indeed led to a bit more faster times. In fact, as we can see from the graph in Figure \ref{timedistr1024}, the dynamic logic definitly make more use of the other accelerators over the CUDA card. This is surely because they are slightly faster in this smaller tasks, having much less memory overhead.
+Here we can see how the two logics fundamentally differ in their operation. The greedy nature of the dynamic logic tends to make the accelerators work more continuously in this case of small tasks, managing to "spread" the work better among the accelerators. As we can note from Figure \ref{dist1024}, it is clear that the static logic underestimated the performance of the non CUDA accelerators, and this led to a higher number of tasks on NVIDIA card, meanwhile, the dynamic logic managed, thanks to its greedy nature, to make the other accelerators work much more evenly, and this indeed led to a bit more faster times. In fact, as we can see from the graph in Figure \ref{timedistr1024}, the dynamic logic definitly make more use of the other accelerators over the CUDA card. This is surely because they are slightly faster in this smaller tasks, having much less memory overhead.
 
 \clearpage 
 
@@ -74,9 +74,9 @@ In this scenario, the workload increases significantly. The matrix size is large
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_energy_s2048.png} \caption{Energy Comparison Matrix 2048} \label{energy2048} \end{figure}
 
-As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this workloads. However, a clear different appears between the two logics. The Dynamic Strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the Static Strategy lags slightly behind with an average speedup of 1.90x. This indicates that the Dynamic logic is 14\% faster on average for this specific workload. 
+As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this workloads. However, a clear different appears between the two logics. The dynamic strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the static strategy lags slightly behind with an average speedup of 1.90x. This indicates that the dynamic logic is 14\% faster on average for this specific workload. 
 
-Regarding energy efficiency (Figure \ref{energy2048}) the heterogeneous execution significantly reduces the total energy consumption compared to the CUDA only approach, thanks to the reduction in total execution time. The Dynamic Strategy proves to be the most efficient, consuming only 218.55 J on average per batch, compared to 430.42 J for CUDA Only.
+Regarding energy efficiency (Figure \ref{energy2048}) the heterogeneous execution significantly reduces the total energy consumption compared to the CUDA only approach, thanks to the reduction in total execution time. The dynamic strategy proves to be the most efficient, consuming only 218 J on average per batch, compared to 430 J for CUDA Only.
 
 The efficiency metric show this gain: 
 \begin{itemize} 
@@ -89,9 +89,9 @@ The efficiency metric show this gain:
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/distrib_s2048.png} \caption{Time Distribution: Matrix 2048x2048} \label{timedistr2048} \end{figure}
 
-Figure \ref{distrib2048} reveals the again the cause of the performance difference. The Static Strategy assigns a large portion of tasks to the CUDA GPU and a smaller share to the other accelerators. While safe, this distribution appears to underutilize the other accellerators.
+Figure \ref{distrib2048} reveals again the cause of the performance difference. The static strategy assigns a large portion of tasks to the CUDA GPU and a smaller share to the other accelerators. While safe, this distribution appears to underutilize the other accellerators.
 
-However, the Dynamic Strategy as already said, adapts in real time, so as seen in the Figure \ref{timedistr2048}, the Dynamic logic keeps the CPU and OpenVINO much busier.
+However, the dynamic strategy as already said, adapts in real time, so as seen in the Figure \ref{timedistr2048}, the dynamic logic keeps the CPU, the intel GPU and NPU work more evenly.
 
 \subsection{Matrix: 4096x4096}
 This scenario expose a heavy workload on the scheduler, the computational cost now should  dominate the ovehread of data transfer. The results of the logic execution are presented below:
@@ -100,21 +100,23 @@ This scenario expose a heavy workload on the scheduler, the computational cost n
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_energy_s4096.png} \caption{Energy Comparison 4096} \label{energy4096} \end{figure}
 
-As shown in Figure \ref{time4096} both strategies still significantly outperform the single CUDA baseline. However, the Static Strategy show its superiority in this specific scenario, achieving an average speedup of 2.00x (peaking max at 2.90x) and the Dynamic Strategy follows with an average speedup of 1.78x (peaking at 2.67x). Ultimately, the Static logic proves to be 12.5\% faster on average compared to the Dynamic one.
+As shown in Figure \ref{time4096} both strategies still significantly outperform the single CUDA baseline. However, the static strategy show its superiority in this specific scenario, achieving an average speedup of 2.00x (peaking max at 2.90x) and the dynamic strategy follows with an average speedup of 1.78x (peaking at 2.67x). Ultimately, the static logic proves to be 12.5\% faster on average compared to the Dynamic one.
 
 Regarding efficiency (Figure \ref{energy4096}), the results still shows that despite activating all available accelerators, the parallel execution reduces the total energy consumed, the CUDA-only execution consumes on average 568.70 J, while the heterogeneous strategies drop this to roughly 330-340 J.
 
 \begin{itemize} \item \textbf{CUDA Only}: 0.11 Tasks/J \item \textbf{Dynamic}: 0.18 Tasks/J \item \textbf{Static}: 0.18 Tasks/J \end{itemize}
 
-This represents a +61\% efficiency gain for the Static strategy over the baseline: using the CPU and NPU alongside the GPU for heavy tasks actually saves energy because the entire system finishes the job much faster.
+This represents a +61\% efficiency gain for the static strategy over the baseline: using the CPU and NPU alongside the GPU for heavy tasks actually saves energy because the entire system finishes the job much faster.
 
 To understand why the Static logic outperforms the Dynamic one here, we analyze the task distribution:
 
-\begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/distrib_tasks_s4096.png} \caption{Task Distribution 4096} \label{distrib4096} \end{figure}
+\begin{figure}[h!] \centering \includegraphics[scale=0.27]{images/results/distrib_tasks_s4096.png} \caption{Task Distribution 4096} \label{distrib4096} \end{figure}
 
-\begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/distrib_s4096.png} \caption{Time Distribution 4096} \label{timedistr4096} \end{figure}
+\begin{figure}[h!] \centering \includegraphics[scale=0.27]{images/results/distrib_s4096.png} \caption{Time Distribution 4096} \label{timedistr4096} \end{figure}
 
-Figure \ref{distrib4096} shows that the static strategy assigns the vast majority of tasks to the powerful CUDA GPU and SYCL, minimizing the load on slower devices. However, the dynamic logic, due to its greedy nature, assigns a slightly larger portion of tasks to the CPU and OpenVINO (as seen in Figure \ref{timedistr4096}). For very large matrices, the time difference between the GPU, NPU and mostly CPU is massive. If the Dynamic logic assigns the last few tasks to a slow device while the GPU finishes early, the entire makespan is delayed waiting for that slow device to complete. The static strategy with all the logics and heuristcs avoids this by predicting the velocity of the accellerators and restricting the slow devices to a more smaller amount of work, achieving the highest speedup. This clearly shows how the static approach have his benefit in a lot of workload in this heterogeneous scenerio.
+\clearpage 
+
+Figure \ref{distrib4096} shows that the static strategy assigns the vast majority of tasks to the powerful CUDA GPU and SYCL, minimizing the load on slower devices, however, the dynamic logic, due to its greedy nature, assigns a slightly larger portion of tasks to the CPU and OpenVINO (as seen in Figure \ref{timedistr4096}). For very large matrices, the time difference between the GPU, NPU and mostly CPU is massive, so if the dynamic logic assigns the last few tasks to a slow device while the GPU finishes early, the entire makespan is delayed waiting for that slow device to complete. The static strategy with all the logics and heuristcs avoids this by predicting the velocity of the accellerators and restricting the slow devices to a more smaller amount of work, achieving the highest speedup. This clearly shows how the static approach have his benefit in a lot of workload in this heterogeneous scenerio.
 
 \clearpage
 
@@ -123,23 +125,25 @@ We now present the following graphs to illustrate the impact of batch size on th
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.25]{images/results/analysis_batch_S1024.png} 
-    \includegraphics[scale=0.25]{images/results/analysis_batch_S2048.png} 
-    \includegraphics[scale=0.25]{images/results/analysis_batch_S4096.png} 
+    \includegraphics[scale=0.2]{images/results/analysis_batch_S1024.png} 
+    \includegraphics[scale=0.2]{images/results/analysis_batch_S2048.png} 
+    \includegraphics[scale=0.2]{images/results/analysis_batch_S4096.png} 
     \caption{Batch Size Analysis}
     \label{timedistr1024}
 \end{figure}
 
 As can be observed from the graphs, a relatively small batch size specifically ranging from 20 to 30 proved to be the most suitable for the selected algorithm and the dataset utilized across each workload. Conversely, it is evident that larger batch sizes frequently result in inaccurate predictions, while inevitably introducing additional overhead to the coordinator adding more time beetween the dispatch of the tasks to the workers.
 
+\clearpage 
+
 \section{heterogeneous Workloads}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.25]{images/results/compare_time_Hetero.png} 
-    \includegraphics[scale=0.25]{images/results/compare_energy_Hetero.png} 
-    \includegraphics[scale=0.25]{images/results/distrib_tasks_Hetero.png} 
-    \includegraphics[scale=0.25]{images/results/distrib_Hetero.png} 
+    \includegraphics[scale=0.3]{images/results/compare_time_Hetero.png} 
+    \includegraphics[scale=0.3]{images/results/compare_energy_Hetero.png} 
+    \includegraphics[scale=0.3]{images/results/distrib_tasks_Hetero.png} 
+    \includegraphics[scale=0.3]{images/results/distrib_Hetero.png} 
     \caption{Batch Size Analysis}
     \label{timedistr1024}
 \end{figure}
@@ -148,8 +152,8 @@ As can be observed from the graphs, a relatively small batch size specifically r
 \subsection{Large matric split}
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.25]{images/results/large_matrix_chunks.png} 
-    \includegraphics[scale=0.25]{images/results/large_matrix_analysis.png} 
+    \includegraphics[scale=0.3]{images/results/large_matrix_chunks.png} 
+    \includegraphics[scale=0.3]{images/results/large_matrix_analysis.png} 
     \caption{Batch Size Analysis}
     \label{timedistr1024}
 \end{figure}

@@ -45,7 +45,7 @@
 \contentsline {subsection}{\numberline {5.1.1}Matrix: 1024x1024}{84}{subsection.5.1.1}%
 \contentsline {subsection}{\numberline {5.1.2}Matrix: 2048x2048}{87}{subsection.5.1.2}%
 \contentsline {subsection}{\numberline {5.1.3}Matrix: 4096x4096}{89}{subsection.5.1.3}%
-\contentsline {subsection}{\numberline {5.1.4}Batch Comparison}{92}{subsection.5.1.4}%
-\contentsline {section}{\numberline {5.2}heterogeneous Workloads}{93}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Large matric split}{93}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.1.4}Batch Comparison}{93}{subsection.5.1.4}%
+\contentsline {section}{\numberline {5.2}heterogeneous Workloads}{94}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Large matric split}{94}{subsection.5.2.1}%
 \contentsline {chapter}{\numberline {A}Questa è un'appendice}{97}{appendix.A}%
