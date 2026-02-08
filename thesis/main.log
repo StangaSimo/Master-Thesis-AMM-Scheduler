@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  8 FEB 2026 08:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  8 FEB 2026 08:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -691,31 +691,7 @@ File: tikzlibraryfadings.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 File: pgflibraryfadings.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbposter.code.tex
 Library (tcolorbox): 'tcbposter.code.tex' version '6.8.0'
-)) (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux
-
-LaTeX Warning: Label `' multiply defined.
-
-
-LaTeX Warning: Label `ov logo' multiply defined.
-
-
-LaTeX Warning: Label `ov logo' multiply defined.
-
-) (./chapters/2_logical_design.aux
-
-LaTeX Warning: Label `ringfigure' multiply defined.
-
-) (./chapters/3_implementation.aux) (./chapters/4_results.aux
-
-LaTeX Warning: Label `timedistr1024' multiply defined.
-
-
-LaTeX Warning: Label `timedistr1024' multiply defined.
-
-
-LaTeX Warning: Label `timedistr1024' multiply defined.
-
-) (./chapters/AppendiceA.aux))
+)) (./main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 106.
@@ -802,9 +778,58 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 \c@lstlisting=\count370
 Package hyperref Info: Link coloring ON on input line 106.
  (./main.out) (./main.out)
+./main.tex:106: Missing \endcsname inserted.
+<to be read again> 
+                   \__kernel_tl_set:Nx 
+l.106 \begin{document}
+                      
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./main.tex:106: Missing number, treated as zero.
+<to be read again> 
+                   }
+l.106 \begin{document}
+                      
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+./main.tex:106: Missing { inserted.
+<to be read again> 
+                   }
+l.106 \begin{document}
+                      
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+./main.tex:106: Missing \endcsname inserted.
+<to be read again> 
+                   \__kernel_tl_set:Nx 
+l.106 \begin{document}
+                      
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <13> not available
+(Font)              size <12> substituted on input line 108.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
+
+]
 \openout2 = `chapters/Frontespizio.aux'.
 
  (./chapters/Frontespizio.tex
@@ -817,7 +842,7 @@ Package epstopdf Info: Source file: <images/Frontespizio/cherubinFrontespizio.ep
 (epstopdf)             Command: <repstopdf --outfile=images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf images/Frontespizio/cherubinFrontespizio.eps>
 (epstopdf)             \includegraphics on input line 4.
 Package epstopdf Info: Output file is already uptodate.
-<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=240, 288.07625pt x 294.09875pt>
+<images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf, id=178, 288.07625pt x 294.09875pt>
 File: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf Graphic file (type pdf)
 <use images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>
 Package pdftex.def Info: images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf  used on input line 4.
@@ -840,17 +865,17 @@ LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <18.72003> not available
 (Font)              size <17.28> substituted on input line 17.
 
 
-LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <13> not available
-(Font)              size <12> substituted on input line 24.
-
-
 LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <15.59996> not available
 (Font)              size <14.4> substituted on input line 24.
 
-[1
 
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.35 \end{titlepage}
+                     [1
 
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc} <./images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>])
+ <./images/Frontespizio/cherubinFrontespizio-eps-converted-to.pdf>])
 \openout2 = `chapters/Abstract.aux'.
 
 
@@ -872,52 +897,18 @@ LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <32.34409> not available
 LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <32.34409> not available
 (Font)              size <29.86> substituted on input line 111.
 
-(./main.toc
-LaTeX Font Info:    Calculating math sizes for size <13> on input line 3.
-
-
-LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 3.
-
-
-LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <13> not available
-(Font)              size <12> substituted on input line 3.
-
-
-LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <6.5> not available
-(Font)              size <6> substituted on input line 3.
-
-
-LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <13> not available
-(Font)              size <12> substituted on input line 3.
-
-
-LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 3.
-
-LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [3])
+(./main.toc)
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
-
-
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
-
-[4]
+ [3]
 \openout2 = `chapters/0_introduction.aux'.
 
- (./chapters/0_introduction.tex
+ (./chapters/0_introduction.tex [4
+
+
+
+]
 Chapter 1.
 
 LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <26.96207> not available
@@ -935,11 +926,7 @@ LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <18.72003> not available
 LaTeX Font Warning: Font shape `TS1/cmr/m/n' in size <13> not available
 (Font)              size <12> substituted on input line 11.
 
-[5
-
-
-
-{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+[5{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -969,11 +956,28 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 ]
 Chapter 2.
 [9]
-<images/core_ultra.png, id=343, 481.8pt x 481.8pt>
+
+LaTeX Warning: Citation `intel_meteor_lake' on page 10 undefined on input line 18.
+
+<images/core_ultra.png, id=228, 481.8pt x 481.8pt>
 File: images/core_ultra.png Graphic file (type png)
 <use images/core_ultra.png>
 Package pdftex.def Info: images/core_ultra.png  used on input line 22.
 (pdftex.def)             Requested size: 96.35829pt x 96.35829pt.
+
+LaTeX Warning: Reference `openblass' on page 10 undefined on input line 28.
+
+
+LaTeX Warning: Citation `intel_npu' on page 10 undefined on input line 30.
+
+
+LaTeX Warning: Reference `ov' on page 10 undefined on input line 30.
+
+
+LaTeX Warning: Citation `intel_arc' on page 10 undefined on input line 32.
+
+
+LaTeX Warning: Reference `sycl' on page 10 undefined on input line 32.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -985,16 +989,25 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [10
 
  <./images/core_ultra.png>]
-<images/rtx.png, id=360, 1505.625pt x 645.41125pt>
+<images/rtx.png, id=236, 1505.625pt x 645.41125pt>
 File: images/rtx.png Graphic file (type png)
 <use images/rtx.png>
 Package pdftex.def Info: images/rtx.png  used on input line 42.
 (pdftex.def)             Requested size: 150.57132pt x 64.5449pt.
-<images/cuda.jpg, id=363, 407.5225pt x 246.9225pt>
+
+
+LaTeX Warning: Citation `nvidia_ada' on page 11 undefined on input line 47.
+
+
+LaTeX Warning: Reference `cuda' on page 11 undefined on input line 53.
+
+<images/cuda.jpg, id=237, 407.5225pt x 246.9225pt>
 File: images/cuda.jpg Graphic file (type jpg)
 <use images/cuda.jpg>
 Package pdftex.def Info: images/cuda.jpg  used on input line 60.
 (pdftex.def)             Requested size: 81.50305pt x 49.38362pt.
+
+LaTeX Warning: Citation `cuda_guide' on page 11 undefined on input line 69.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1007,6 +1020,18 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
  <./images/rtx.png> <./images/cuda.jpg>]
 
+LaTeX Warning: Reference `4060' on page 12 undefined on input line 73.
+
+
+LaTeX Warning: Citation `cublas' on page 12 undefined on input line 76.
+
+
+LaTeX Warning: Citation `cuda_streams' on page 12 undefined on input line 78.
+
+
+LaTeX Warning: Citation `nvml' on page 12 undefined on input line 80.
+
+
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
 (fancyhdr)                \setlength{\headheight}{15.59995pt}.
@@ -1016,16 +1041,22 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [12
 
 ]
-<images/sycl.jpg, id=385, 1104.125pt x 501.875pt>
+<images/sycl.jpg, id=250, 1104.125pt x 501.875pt>
 File: images/sycl.jpg Graphic file (type jpg)
 <use images/sycl.jpg>
 Package pdftex.def Info: images/sycl.jpg  used on input line 95.
 (pdftex.def)             Requested size: 88.3318pt x 40.15082pt.
-<images/oneapi.png, id=387, 244.66406pt x 249.18094pt>
+
+
+LaTeX Warning: Citation `sycl' on page 13 undefined on input line 100.
+
+<images/oneapi.png, id=251, 244.66406pt x 249.18094pt>
 File: images/oneapi.png Graphic file (type png)
 <use images/oneapi.png>
 Package pdftex.def Info: images/oneapi.png  used on input line 106.
 (pdftex.def)             Requested size: 48.93193pt x 49.8353pt.
+
+LaTeX Warning: Citation `intel_oneapi' on page 13 undefined on input line 111.
 
 
 LaTeX Font Warning: Font shape `T1/cmtt/m/n' in size <13> not available
@@ -1041,11 +1072,20 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [13
 
  <./images/sycl.jpg> <./images/oneapi.png>]
-<images/openvino.jpg, id=400, 992.70876pt x 266.9975pt>
+<images/openvino.jpg, id=260, 992.70876pt x 266.9975pt>
 File: images/openvino.jpg Graphic file (type jpg)
 <use images/openvino.jpg>
 Package pdftex.def Info: images/openvino.jpg  used on input line 121.
 (pdftex.def)             Requested size: 99.27669pt x 26.70131pt.
+
+
+LaTeX Warning: Citation `openvino' on page 14 undefined on input line 126.
+
+
+LaTeX Warning: Citation `openvino' on page 14 undefined on input line 133.
+
+
+LaTeX Warning: Reference `185H' on page 14 undefined on input line 135.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1057,11 +1097,20 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [14
 
  <./images/openvino.jpg>]
-<images/openblass.jpg, id=410, 803.0pt x 548.0475pt>
+<images/openblass.jpg, id=266, 803.0pt x 548.0475pt>
 File: images/openblass.jpg Graphic file (type jpg)
 <use images/openblass.jpg>
 Package pdftex.def Info: images/openblass.jpg  used on input line 144.
 (pdftex.def)             Requested size: 80.3047pt x 54.80795pt.
+
+
+LaTeX Warning: Citation `openblas' on page 15 undefined on input line 151.
+
+
+LaTeX Warning: Citation `openblas_git' on page 15 undefined on input line 153.
+
+
+LaTeX Warning: Reference `implementation' on page 15 undefined on input line 155.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1073,11 +1122,20 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [15
 
  <./images/openblass.jpg>]
-<images/C.jpeg, id=421, 803.0pt x 421.575pt>
+<images/C.jpeg, id=272, 803.0pt x 421.575pt>
 File: images/C.jpeg Graphic file (type jpg)
 <use images/C.jpeg>
 Package pdftex.def Info: images/C.jpeg  used on input line 163.
 (pdftex.def)             Requested size: 112.41924pt x 59.0201pt.
+
+
+LaTeX Warning: Citation `libro_c' on page 16 undefined on input line 177.
+
+
+LaTeX Warning: Citation `libro_cpp' on page 16 undefined on input line 182.
+
+
+LaTeX Warning: Reference `implementation' on page 16 undefined on input line 186.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1089,11 +1147,15 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [16
 
  <./images/C.jpeg>]
-<images/cmake_logo.svg.png, id=432, 963.6pt x 964.60374pt>
+<images/cmake_logo.svg.png, id=278, 963.6pt x 964.60374pt>
 File: images/cmake_logo.svg.png Graphic file (type png)
 <use images/cmake_logo.svg.png>
 Package pdftex.def Info: images/cmake_logo.svg.png  used on input line 194.
 (pdftex.def)             Requested size: 77.08957pt x 77.16988pt.
+
+
+LaTeX Warning: Citation `cmake' on page 17 undefined on input line 199.
+
 )
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1115,7 +1177,19 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 ]
 Chapter 3.
+
+LaTeX Warning: Reference `preliminary' on page 19 undefined on input line 7.
+
+
+LaTeX Warning: Reference `ammscheduler' on page 19 undefined on input line 9.
+
 [19]
+
+LaTeX Warning: Reference `ammscheduler' on page 20 undefined on input line 18.
+
+
+LaTeX Warning: Reference `implementation' on page 20 undefined on input line 18.
+
 
 LaTeX Font Warning: Font shape `T1/cmr/m/it' in size <13> not available
 (Font)              size <12> substituted on input line 23.
@@ -1138,6 +1212,9 @@ Overfull \hbox (2.1807pt too wide) in paragraph at lines 31--32
  []
 
 
+LaTeX Warning: Reference `implementation' on page 21 undefined on input line 47.
+
+
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
 (fancyhdr)                \setlength{\headheight}{15.59995pt}.
@@ -1147,11 +1224,14 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [21
 
 ]
-<images/grafico.png, id=464, 1468.73718pt x 1006.51031pt>
+<images/grafico.png, id=303, 1468.73718pt x 1006.51031pt>
 File: images/grafico.png Graphic file (type png)
 <use images/grafico.png>
 Package pdftex.def Info: images/grafico.png  used on input line 56.
 (pdftex.def)             Requested size: 425.92288pt x 291.88051pt.
+
+
+LaTeX Warning: Reference `ammfigure' on page 22 undefined on input line 62.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1163,16 +1243,19 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [22
 
  <./images/grafico.png>]
-<images/ringbuffer.png, id=472, 527.72156pt x 173.89969pt>
+<images/ringbuffer.png, id=310, 527.72156pt x 173.89969pt>
 File: images/ringbuffer.png Graphic file (type png)
 <use images/ringbuffer.png>
 Package pdftex.def Info: images/ringbuffer.png  used on input line 76.
 (pdftex.def)             Requested size: 52.77524pt x 17.39098pt.
 
 
+LaTeX Warning: Reference `ringfigure' on page 23 undefined on input line 81.
+
+
 LaTeX Warning: Reference `TODO' on page 23 undefined on input line 81.
 
-<images/coordinator.png, id=474, 688.82344pt x 1069.74657pt>
+<images/coordinator.png, id=311, 688.82344pt x 1069.74657pt>
 File: images/coordinator.png Graphic file (type png)
 <use images/coordinator.png>
 Package pdftex.def Info: images/coordinator.png  used on input line 85.
@@ -1199,15 +1282,18 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 LaTeX Warning: Reference `TODO' on page 24 undefined on input line 100.
 
-<images/workers.png, id=483, 580.41844pt x 822.82407pt>
+<images/workers.png, id=320, 580.41844pt x 822.82407pt>
 File: images/workers.png Graphic file (type png)
 <use images/workers.png>
 Package pdftex.def Info: images/workers.png  used on input line 104.
 (pdftex.def)             Requested size: 81.25803pt x 115.19458pt.
 
+LaTeX Warning: Reference `preliminary' on page 24 undefined on input line 109.
+
+
 LaTeX Warning: Reference `TODO' on page 24 undefined on input line 109.
 
-<images/performancemap.png, id=485, 697.8572pt x 538.26094pt>
+<images/performancemap.png, id=321, 697.8572pt x 538.26094pt>
 File: images/performancemap.png Graphic file (type png)
 <use images/performancemap.png>
 Package pdftex.def Info: images/performancemap.png  used on input line 113.
@@ -1223,7 +1309,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [24 <./images/workers.png> <./images/performancemap.png>]
-<images/profiler.png, id=495, 356.0803pt x 590.95781pt>
+<images/profiler.png, id=331, 356.0803pt x 590.95781pt>
 File: images/profiler.png Graphic file (type png)
 <use images/profiler.png>
 Package pdftex.def Info: images/profiler.png  used on input line 122.
@@ -1252,6 +1338,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 ]
 Chapter 4.
 
+LaTeX Warning: Reference `logical design' on page 27 undefined on input line 10.
+
+
 LaTeX Warning: Reference `TODO' on page 27 undefined on input line 10.
 
 [27]
@@ -1265,6 +1354,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [28
 
 ]
+
+LaTeX Warning: Reference `code_tree' on page 29 undefined on input line 70.
+
 
 LaTeX Warning: Reference `TODO' on page 29 undefined on input line 70.
 
@@ -1283,6 +1375,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [29
 
 ]
+
+LaTeX Warning: Reference `code cmake' on page 30 undefined on input line 151.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1692,6 +1787,36 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [71]
+LaTeX Font Info:    Calculating math sizes for size <13> on input line 1716.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <6.5> not available
+(Font)              size <6> substituted on input line 1716.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <13> not available
+(Font)              size <12> substituted on input line 1716.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <6.5> not available
+(Font)              size <6> substituted on input line 1716.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 1716.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <6.5> not available
+(Font)              size <6> substituted on input line 1716.
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 1716.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 1716.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1784,4 +1909,343 @@ LaTeX Warning: Reference `TODO' on page 81 undefined on input line 2032.
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
 (fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)             
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[81
+
+]
+\openout2 = `chapters/4_results.aux'.
+
+ (./chapters/4_results.tex [82
+
+
+
+
+
+]
+Chapter 5.
+
+LaTeX Warning: Reference `tools' on page 83 undefined on input line 6.
+
+[83]
+<images/results/compare_time_s1024.png, id=2045, 1011.78pt x 650.43pt>
+File: images/results/compare_time_s1024.png Graphic file (type png)
+<use images/results/compare_time_s1024.png>
+Package pdftex.def Info: images/results/compare_time_s1024.png  used on input line 30.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_s1024.png, id=2046, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_s1024.png Graphic file (type png)
+<use images/results/compare_energy_s1024.png>
+Package pdftex.def Info: images/results/compare_energy_s1024.png  used on input line 37.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+
+
+LaTeX Warning: Reference `time1024' on page 84 undefined on input line 42.
+
+
+LaTeX Warning: Reference `energy1024' on page 84 undefined on input line 42.
+
+
+LaTeX Warning: Reference `TODO' on page 84 undefined on input line 42.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[84
+
+ <./images/results/compare_time_S1024.png> <./images/results/compare_energy_S1024.png>]
+<images/results/distrib_tasks_s1024.png, id=2057, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_tasks_s1024.png Graphic file (type png)
+<use images/results/distrib_tasks_s1024.png>
+Package pdftex.def Info: images/results/distrib_tasks_s1024.png  used on input line 54.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+<images/results/distrib_s1024.png, id=2058, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_s1024.png Graphic file (type png)
+<use images/results/distrib_s1024.png>
+Package pdftex.def Info: images/results/distrib_s1024.png  used on input line 61.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+
+
+LaTeX Warning: Reference `dist1024' on page 85 undefined on input line 66.
+
+
+LaTeX Warning: Reference `timedistr1024' on page 85 undefined on input line 66.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[85 <./images/results/distrib_tasks_S1024.png> <./images/results/distrib_S1024.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[86]
+<images/results/compare_time_s2048.png, id=2071, 1011.78pt x 650.43pt>
+File: images/results/compare_time_s2048.png Graphic file (type png)
+<use images/results/compare_time_s2048.png>
+Package pdftex.def Info: images/results/compare_time_s2048.png  used on input line 73.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_s2048.png, id=2072, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_s2048.png Graphic file (type png)
+<use images/results/compare_energy_s2048.png>
+Package pdftex.def Info: images/results/compare_energy_s2048.png  used on input line 75.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+
+
+LaTeX Warning: Reference `time2048' on page 87 undefined on input line 77.
+
+
+LaTeX Warning: Reference `energy2048' on page 87 undefined on input line 79.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[87
+
+ <./images/results/compare_time_S2048.png> <./images/results/compare_energy_S2048.png>]
+<images/results/distrib_tasks_s2048.png, id=2082, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_tasks_s2048.png Graphic file (type png)
+<use images/results/distrib_tasks_s2048.png>
+Package pdftex.def Info: images/results/distrib_tasks_s2048.png  used on input line 88.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+<images/results/distrib_s2048.png, id=2083, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_s2048.png Graphic file (type png)
+<use images/results/distrib_s2048.png>
+Package pdftex.def Info: images/results/distrib_s2048.png  used on input line 90.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+
+
+LaTeX Warning: Reference `distrib2048' on page 88 undefined on input line 92.
+
+
+LaTeX Warning: Reference `timedistr2048' on page 88 undefined on input line 94.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[88 <./images/results/distrib_tasks_S2048.png> <./images/results/distrib_S2048.png>]
+<images/results/compare_time_s4096.png, id=2092, 1011.78pt x 650.43pt>
+File: images/results/compare_time_s4096.png Graphic file (type png)
+<use images/results/compare_time_s4096.png>
+Package pdftex.def Info: images/results/compare_time_s4096.png  used on input line 99.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_s4096.png, id=2093, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_s4096.png Graphic file (type png)
+<use images/results/compare_energy_s4096.png>
+Package pdftex.def Info: images/results/compare_energy_s4096.png  used on input line 101.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+
+
+LaTeX Warning: Reference `time4096' on page 89 undefined on input line 103.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[89 <./images/results/compare_time_S4096.png> <./images/results/compare_energy_S4096.png>]
+
+LaTeX Warning: Reference `energy4096' on page 90 undefined on input line 105.
+
+<images/results/distrib_tasks_s4096.png, id=2103, 1146.2022pt x 533.1117pt>
+File: images/results/distrib_tasks_s4096.png Graphic file (type png)
+<use images/results/distrib_tasks_s4096.png>
+Package pdftex.def Info: images/results/distrib_tasks_s4096.png  used on input line 113.
+(pdftex.def)             Requested size: 298.00554pt x 138.60576pt.
+<images/results/distrib_s4096.png, id=2104, 1146.2022pt x 533.1117pt>
+File: images/results/distrib_s4096.png Graphic file (type png)
+<use images/results/distrib_s4096.png>
+Package pdftex.def Info: images/results/distrib_s4096.png  used on input line 114.
+(pdftex.def)             Requested size: 298.00554pt x 138.60576pt.
+
+LaTeX Warning: Reference `distrib4096' on page 90 undefined on input line 117.
+
+
+LaTeX Warning: Reference `timedistr4096' on page 90 undefined on input line 117.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[90 <./images/results/distrib_tasks_S4096.png> <./images/results/distrib_S4096.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[91]
+<images/results/analysis_batch_S1024.png, id=2118, 1011.78pt x 650.43pt>
+File: images/results/analysis_batch_S1024.png Graphic file (type png)
+<use images/results/analysis_batch_S1024.png>
+Package pdftex.def Info: images/results/analysis_batch_S1024.png  used on input line 126.
+(pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
+<images/results/analysis_batch_S2048.png, id=2119, 1011.78pt x 650.43pt>
+File: images/results/analysis_batch_S2048.png Graphic file (type png)
+<use images/results/analysis_batch_S2048.png>
+Package pdftex.def Info: images/results/analysis_batch_S2048.png  used on input line 127.
+(pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
+<images/results/analysis_batch_S4096.png, id=2120, 1011.78pt x 650.43pt>
+File: images/results/analysis_batch_S4096.png Graphic file (type png)
+<use images/results/analysis_batch_S4096.png>
+Package pdftex.def Info: images/results/analysis_batch_S4096.png  used on input line 128.
+(pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[92
+
+ <./images/results/analysis_batch_S1024.png> <./images/results/analysis_batch_S2048.png> <./images/results/analysis_batch_S4096.png>]
+<images/results/compare_time_Hetero.png, id=2130, 1011.78pt x 650.43pt>
+File: images/results/compare_time_Hetero.png Graphic file (type png)
+<use images/results/compare_time_Hetero.png>
+Package pdftex.def Info: images/results/compare_time_Hetero.png  used on input line 141.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_Hetero.png, id=2131, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_Hetero.png Graphic file (type png)
+<use images/results/compare_energy_Hetero.png>
+Package pdftex.def Info: images/results/compare_energy_Hetero.png  used on input line 142.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/distrib_tasks_Hetero.png, id=2132, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_tasks_Hetero.png Graphic file (type png)
+<use images/results/distrib_tasks_Hetero.png>
+Package pdftex.def Info: images/results/distrib_tasks_Hetero.png  used on input line 143.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+<images/results/distrib_Hetero.png, id=2133, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_Hetero.png Graphic file (type png)
+<use images/results/distrib_Hetero.png>
+Package pdftex.def Info: images/results/distrib_Hetero.png  used on input line 144.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+
+
+LaTeX Warning: Float too large for page by 66.73286pt on input line 147.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<images/results/large_matrix_chunks.png, id=2134, 1011.78pt x 578.16pt>
+File: images/results/large_matrix_chunks.png Graphic file (type png)
+<use images/results/large_matrix_chunks.png>
+Package pdftex.def Info: images/results/large_matrix_chunks.png  used on input line 153.
+(pdftex.def)             Requested size: 303.53633pt x 173.44933pt.
+<images/results/large_matrix_analysis.png, id=2135, 1141.3842pt x 489.5088pt>
+File: images/results/large_matrix_analysis.png Graphic file (type png)
+<use images/results/large_matrix_analysis.png>
+Package pdftex.def Info: images/results/large_matrix_analysis.png  used on input line 154.
+(pdftex.def)             Requested size: 342.4179pt x 146.85376pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+)
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[93
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[94 <./images/results/compare_time_Hetero.png> <./images/results/compare_energy_Hetero.png> <./images/results/distrib_tasks_Hetero.png> <./images/results/distrib_Hetero.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[95 <./images/results/large_matrix_chunks.png> <./images/results/large_matrix_analysis.png>]
+\openout2 = `chapters/AppendiceA.aux'.
+
+ (./chapters/AppendiceA.tex [96
+
+
+
+
+
+]
+Appendix A.
+) [97] (./main.bbl) (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-11-14>
+ ***********
+
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 2.48409pt have occurred.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `main.out':
+(rerunfilecheck)             Before: D8D4FFCD505F16DF24C038A24AC530DF;4096
+(rerunfilecheck)             After:  9EAB8D25D027E82059C2EB285B02C5E8;6594.
+ )
+(\end occurred when \ifx on line 106 was incomplete) 
+Here is how much of TeX's memory you used:
+ 34218 strings out of 467538
+ 673076 string characters out of 5419551
+ 1817414 words of memory out of 5000000
+ 60942 multiletter control sequences out of 15000+600000
+ 644925 words of font info for 77 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 108i,12n,108p,1148b,2044s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+pdfTeX warning (dest): name{\\@expl@@@filehook@file@pop@assign@@nnnn\040} has been referenced but does not exist, replaced by a fixed one
+
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on main.pdf (98 pages, 8351418 bytes).
+PDF statistics:
+ 2578 PDF objects out of 2984 (max. 8388607)
+ 2326 compressed objects within 24 object streams
+ 1611 named destinations out of 1728 (max. 500000)
+ 598 words of extra memory for PDF output out of 10000 (max. 10000000)
+
