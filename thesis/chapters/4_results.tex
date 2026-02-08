@@ -110,11 +110,9 @@ This represents a +61\% efficiency gain for the static strategy over the baselin
 
 To understand why the Static logic outperforms the Dynamic one here, we analyze the task distribution:
 
-\begin{figure}[h!] \centering \includegraphics[scale=0.27]{images/results/distrib_tasks_s4096.png} \caption{Task Distribution 4096} \label{distrib4096} \end{figure}
+\begin{figure}[h!] \centering \includegraphics[scale=0.26]{images/results/distrib_tasks_s4096.png} \caption{Task Distribution 4096} \label{distrib4096} \end{figure}
+\begin{figure}[h!] \centering \includegraphics[scale=0.26]{images/results/distrib_s4096.png} \caption{Time Distribution 4096} \label{timedistr4096} \end{figure}
 
-\begin{figure}[h!] \centering \includegraphics[scale=0.27]{images/results/distrib_s4096.png} \caption{Time Distribution 4096} \label{timedistr4096} \end{figure}
-
-\clearpage 
 
 Figure \ref{distrib4096} shows that the static strategy assigns the vast majority of tasks to the powerful CUDA GPU and SYCL, minimizing the load on slower devices, however, the dynamic logic, due to its greedy nature, assigns a slightly larger portion of tasks to the CPU and OpenVINO (as seen in Figure \ref{timedistr4096}). For very large matrices, the time difference between the GPU, NPU and mostly CPU is massive, so if the dynamic logic assigns the last few tasks to a slow device while the GPU finishes early, the entire makespan is delayed waiting for that slow device to complete. The static strategy with all the logics and heuristcs avoids this by predicting the velocity of the accellerators and restricting the slow devices to a more smaller amount of work, achieving the highest speedup. This clearly shows how the static approach have his benefit in a lot of workload in this heterogeneous scenerio.
 
