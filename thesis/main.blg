@@ -1,48 +1,54 @@
 This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
-I found no \citation commands---while reading file main.aux
-I found no \bibdata command---while reading file main.aux
-I found no \bibstyle command---while reading file main.aux
-You've used 0 entries,
-            0 wiz_defined-function locations,
-            83 strings with 482 characters,
-and the built_in function-call counts, 0 in all, are:
-= -- 0
-> -- 0
+A level-1 auxiliary file: chapters/Frontespizio.aux
+A level-1 auxiliary file: chapters/Abstract.aux
+A level-1 auxiliary file: chapters/0_introduction.aux
+A level-1 auxiliary file: chapters/1_tools.aux
+A level-1 auxiliary file: chapters/2_logical_design.aux
+A level-1 auxiliary file: chapters/3_implementation.aux
+A level-1 auxiliary file: chapters/4_results.aux
+A level-1 auxiliary file: chapters/AppendiceA.aux
+The style file: plain.bst
+Database file #1: chapters/Bibliografia.bib
+You've used 16 entries,
+            2118 wiz_defined-function locations,
+            569 strings with 5853 characters,
+and the built_in function-call counts, 3277 in all, are:
+= -- 305
+> -- 118
 < -- 0
-+ -- 0
-- -- 0
-* -- 0
-:= -- 0
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
++ -- 52
+- -- 34
+* -- 126
+:= -- 577
+add.period$ -- 47
+call.type$ -- 16
+change.case$ -- 53
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 0
-format.name$ -- 0
-if$ -- 0
+cite$ -- 16
+duplicate$ -- 142
+empty$ -- 313
+format.name$ -- 34
+if$ -- 678
 int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 0
-num.names$ -- 0
-pop$ -- 0
-preamble$ -- 0
-purify$ -- 0
+int.to.str$ -- 16
+missing$ -- 4
+newline$ -- 82
+num.names$ -- 32
+pop$ -- 94
+preamble$ -- 1
+purify$ -- 49
 quote$ -- 0
-skip$ -- 0
+skip$ -- 110
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
+substring$ -- 82
+swap$ -- 26
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
+type$ -- 60
 warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 0
-(There were 3 error messages)
+while$ -- 32
+width$ -- 18
+write$ -- 160

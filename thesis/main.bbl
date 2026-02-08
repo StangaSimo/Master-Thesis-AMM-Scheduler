@@ -1,0 +1,82 @@
+\begin{thebibliography}{10}
+
+\bibitem{intel_arc}
+{Intel Corporation}.
+\newblock {\em Intel Arc Graphics Xe-LPG Architecture}, 2023.
+\newblock https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-gpu/2023-2/intel-xe-gpu-architecture.html.
+
+\bibitem{intel_meteor_lake}
+{Intel Corporation}.
+\newblock {\em Intel Core Ultra Processors (Series 1)}, 2024.
+\newblock https://www.intel.com/content/www/us/en/products/sku/236849/intel-core-ultra-9-processor-185h-24m-cache-up-to-5-10-ghz/specifications.html.
+
+\bibitem{intel_oneapi}
+{Intel Corporation}.
+\newblock Intel oneapi: A unified programming model, 2024.
+\newblock https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html.
+
+\bibitem{intel_npu}
+{Intel Corporation}.
+\newblock {\em Intel’s Neural Processing Unit}, 2024.
+
+\bibitem{openvino}
+{Intel Corporation}.
+\newblock {\em Openvino Documentation}, 2025.
+\newblock https://docs.openvino.ai/2025/index.htm.
+
+\bibitem{libro_c}
+Brian Kernighan and Dennis Ritchie.
+\newblock {\em The C Programming Language}.
+\newblock Prentice Hall, 1988.
+
+\bibitem{cmake}
+{Kitware, Inc.}
+\newblock {\em CMake Documentation}, 2025.
+\newblock https://cmake.org/cmake/help/latest/.
+
+\bibitem{nvidia_ada}
+{Klaus Hinum}.
+\newblock {\em NVIDIA GeForce RTX 4060 Laptop GPU Spec}, 2022.
+\newblock https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-Laptop-GPU-Benchmarks-and-Specs.675692.0.html.
+
+\bibitem{cublas}
+{NVIDIA Corporation}.
+\newblock {\em Cublas}, 2025.
+\newblock https://docs.nvidia.com/cuda/cublas/index.html.
+
+\bibitem{cuda_guide}
+{NVIDIA Corporation}.
+\newblock {\em CUDA C++ Programming Guide}, 2025.
+\newblock https://docs.nvidia.com/cuda/cuda-c-programming-guide/.
+
+\bibitem{nvml}
+{NVIDIA Corporation}.
+\newblock {\em NVIDIA Management Library (NVML)}, 2026.
+\newblock https://developer.nvidia.com/management-library-nvml.
+
+\bibitem{openblas_git}
+{OpenBLAS Team}.
+\newblock Openblas github, 2024.
+\newblock https://github.com/OpenMathLib/OpenBLAS.
+
+\bibitem{cuda_streams}
+{Steve Rennich}.
+\newblock {\em CUDA C++ Streams and Concurrency}, 2024.
+\newblock https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf.
+
+\bibitem{libro_cpp}
+Bjarne Stroustrup.
+\newblock {\em The C++ Programming Language}.
+\newblock Addison-Wesley, 2013.
+
+\bibitem{sycl}
+{The Khronos Group}.
+\newblock Sycl overview and specification, 2024.
+\newblock https://www.khronos.org/sycl/.
+
+\bibitem{openblas}
+{Zhang Xianyi}.
+\newblock Openblas, 2025.
+\newblock http://www.openmathlib.org/OpenBLAS/.
+
+\end{thebibliography}
