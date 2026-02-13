@@ -7,7 +7,7 @@ In the first section, we will explain the structure of the project files and the
 
 Subsequently, we will explain each of the abstraction layers used to target the accelerators, and then to conclude, we will see in detail all the components that make the scheduler logic work.
 
-As mentioned in Chapter \ref{logical design}, the code developed during the preliminary phase is not analyzed in this section. This avoids repetition, as the evolved version of this code, which is integrated into the scheduler, will be explained in detail later. However, the original code is available in Appendix \ref{TODO}.
+As mentioned in Chap. \ref{logical design}, logical design, the code developed during the preliminary phase is not analyzed in this section. This avoids repetition, as the evolved version of this code, which is integrated into the scheduler, will be explained in detail later. However, all the original code is available in Appendix \ref{TODO}.
 
 \clearpage 
 
@@ -63,19 +63,18 @@ The figure below provides a view of the project's file and folder structure:
 
 \clearpage 
 
-The codebase of this project was designed with a specific goal: modularity. Since the project works with very different hardware architectures, writing all the code in a single environment is not feasible. Each accelerator requires its own specific compiler and libraries: NVIDIA GPUs need the nvcc compiler, Intel GPUs need the icpx compiler for SYCL, and the NPU relies on OpenVINO libraries.
+The codebase of this project was designed with a specific goal: modularity. Since the project works with very different hardware architectures, writing all the code in a single environment is not feasible. Each accelerator requires its own specific compiler and libraries: NVIDIA GPUs need the \texttt{nvcc} compiler, Intel GPUs need the \texttt{icpx} compiler for SYCL, and the NPU relies on OpenVINO libraries.
 
-To solve this compatibility issue, the architecture was decomposed into independent dynamic libraries. Each hardware backend (CUDA, SYCL, OpenVINO) is compiled into a separate shared object file (.so), and each of these libraries expose a standard C ABI (Application Binary Interface). This design is mandatory because the C ABI acts as a universal language that allows the main scheduler to communicate with the accelerators without needing to understand their specific C++ implementations or complex driver dependencies, moreover the real problem was with the version of the compilers utilized with each specific library, so the standard approach is to unify all the interfaces with the help of the C language.
+To solve this compatibility issue, the architecture was decomposed into independent dynamic libraries. Each hardware backend (CUDA, SYCL, OpenVINO) is compiled into a separate shared object file (\texttt{.so}), and each of these libraries expose a standard C ABI (Application Binary Interface). This design is mandatory because the C ABI acts as a universal language that allows the main scheduler to communicate with the accelerators without needing to understand their specific C++ implementations or complex driver dependencies, moreover the real problem was with the version of the compilers utilized with each specific library, so the standard approach is to unify all the interfaces with the help of the C language.
 
-As shown in Figure \ref{code_tree}, the project includes a dedicated folder for each library (\texttt{sycl/}, \texttt{openvino/}, and \texttt{cuda/}) containing their specific implementations, finally, the \texttt{scheduler/} directory containing all the internal dependencies used by the scheduler logic, which will be explained in section \ref{TODO}.
-
+As shown in Fig. \ref{code_tree}, the project includes a dedicated folder for each library (\texttt{sycl/}, \texttt{openvino/}, and \texttt{cuda/}) containing its specific implementations, finally, the \texttt{scheduler/} directory containing all the internal dependencies used by the scheduler logic, which will be explained in Sec. \ref{implammscheduler}.
 
 \subsection{Compilation Process}
 The tool CMake was used in this project to manage this complex build process, the build is not performed all at once. 
 
 Below is the entire CMakeLists.txt file in the root directory:
 
-\begin{lstlisting}[caption={CMakeLists.txt root directory}]
+\begin{lstlisting}[caption={CMakeLists.txt root directory}, label={lla}]
 cmake_minimum_required(VERSION 3.15)
 project(amm_scheduler)
 
@@ -146,9 +145,8 @@ add_custom_target(UpdateLSP
     DEPENDS build_scheduler 
 )
 \end{lstlisting}
-\label{code cmake}
 
-As the code in the figure \ref{code cmake} show, the \texttt{ExternalProject\_Add } feature of cmake is utilized to keep the compilation steps isolated. The main \texttt{CMakeLists.txt} file in the root directory acts as a manager. It does not compile the code directly, instead, it checks the configuration flags (such as \texttt{USE\_CUDA}, \texttt{USE\_SYCL} and \texttt{USE\_OPENVINO}) and triggers a separate build process for each active module. The process is the following:
+As the code in the Fig. \ref{lla} show, the \texttt{ExternalProject\_Add } feature of cmake is utilized to keep the compilation steps isolated. The main \texttt{CMakeLists.txt} file in the root directory acts as a manager. It does not compile the code directly, instead, it checks the configuration flags (such as \texttt{USE\_CUDA}, \texttt{USE\_SYCL} and \texttt{USE\_OPENVINO}) and triggers a separate build process for each active module. The process is the following:
 
 \begin{enumerate}
     \item  First, CMake enters the accelerators sub-directories, \texttt{cuda/}, \texttt{sycl/}, \texttt{openvino/}, and builds them as standalone projects.
@@ -156,11 +154,11 @@ As the code in the figure \ref{code cmake} show, the \texttt{ExternalProject\_Ad
     \item  Finally, the \texttt{scheduler/} directory is compiled. Because of the standard C ABI, the scheduler does not need to know how the hardware works or which compiler was used for the accelerators, it simply links against these shared libraries at runtime.
 \end{enumerate}
 
-This separation ensures that the specific code for one hardware component does not interfere with the others, for example, the scheduler compiler does not need to handle CUDA Kernels, it only sees standard C functions. 
+This separation ensures that the specific code for one hardware component does not interfere with the others. For example, the scheduler compiler does not need to handle CUDA Kernels, but rather it only sees standard C functions. 
 
 Based on the flags passed to CMake during compilation, specific preprocessor definitions are passed to the C++ code. This allows the program to enable or disable dependencies on specific libraries directly inside the source code.
 
-Consequently, the scheduler logic knows exactly which accelerators are available. This approach makes the system flexible, if a specific accelerator or library is missing on the current machine where the project have to be compiled, it can be disabled simply by using a flag.
+Consequently, the scheduler logic knows exactly which accelerators are available. This approach makes the system flexible, if a specific accelerator or library is missing on the machine where the project has to be compiled, it can be disabled simply by using a flag.
 
 Below the following snippet from the scheduler's build configuration shows how the flags trigger the injection of preprocessor definitions and the linking of specific libraries:
 
@@ -192,9 +190,9 @@ endif()
 
 The command \texttt{target\_compile\_definitions} passes a macro (e.g., \texttt{ENABLE\_CUDA}) to the compiler, which the C++ code effectively uses to enable or disable code blocks via \texttt{\#ifdef} directives. Simultaneously, \texttt{target\_link\_libraries} ensures that the scheduler only links against the dynamic libraries that are actually present. 
 
-The compilation process for the accelerator backends follows a standard pattern. As an example, the configuration file for the OpenVINO library is presented below:
+The compilation process for the accelerator backends follows a standard pattern. As an example, the configuration file for the OpenVINO library is presented in Listing \ref{cmake1}:
 
-\begin{lstlisting}[caption={CMakeLists.txt inside OpenVINO directory}]
+\begin{lstlisting}[caption={CMakeLists.txt inside OpenVINO directory}, label={cmake1}]
 cmake_minimum_required(VERSION 3.20)
 project(OpenVinoPart LANGUAGES CXX)
 
@@ -216,31 +214,30 @@ install(TARGETS ov_lib
     PUBLIC_HEADER DESTINATION include
 )
 \end{lstlisting}
-\label{code cmake openvino}
 
-First this script locates the necessary dependencies on the host system using \texttt{find\_package}, then, it defines a shared library named \texttt{ov\_lib} using the source file \texttt{runner.cpp}. The \texttt{SHARED} keyword is fundamental because it instructs the compiler to generate a dynamic library instead of a standard executable.
+First this script locates the necessary dependencies on the host system using \\ \texttt{find\_package}, then, it defines a shared library named \texttt{ov\_lib} using the source file \texttt{runner.cpp}. The \texttt{SHARED} keyword is fundamental because it instructs the compiler to generate a dynamic library instead of a standard executable.
 
 Finally, the script links the specific runtime (in this case, \texttt{openvino::runtime}) and specifies the installation rules. The \texttt{install} command ensures that the resulting binary and the public header (\texttt{ov\_wrapper.h}) are placed in the correct output directories, making them accessible to the main scheduler.
 
-The CUDA and SYCL modules utilize an identical structure, differing only in the specific compilers and libraries linked.
+The CUDA and SYCL modules use an identical structure, differing only in the specific compilers and libraries linked.
 
-Finally, when the compilation finishes, all the resulting files are placed in a \texttt{ bin/} directory. This folder contains the final executable named scheduler, the csv that the scheduler will create at runtime, and all the dynamic libraries it needs to run.
+Finally, when the compilation finishes, all the resulting files are placed in a \texttt{ bin/} directory. This folder contains the final executable named scheduler, the csv that the scheduler will create at runtime, and all the dynamic libraries it needs.
 
 To speed up the development process, a script named \texttt{make\_run.sh} was created. This script automates the entire workflow that consist of cleaning the bin and build dir, runs CMake with the correct options to enable all accelerators, compiles the project using all available CPU cores, and finally executes the program.
 
-Additionally, the project includes a Python script named \texttt{merge\_clangd.py}. Since multiple independent builds are used, the LSP of the code editing tools often don't work with these many libraries, this script collects the compilation commands from all the different modules and merges them into a single file, ensuring that code completion and error highlighting work correctly across the entire project. This file will be executed after all the compilation steps are done. 
+Additionally, the project includes a Python script named \texttt{merge\_clangd.py}. Since multiple independent builds are used, the LSP (Language Server Protocol) of the code editing tools often don't work with these many libraries. This script collects the compilation commands from all the different modules and merges them into a single file, ensuring that code completion and error highlighting work correctly across the entire project. This file will be executed after all the compilation steps are done. 
 
 \clearpage
 \section{Accelerators Abstraction Layers}
-Before diving into the architectural details in the following sections, it is important to clarify the supported data types. The scheduler is fully capable of managing both 32-bit and 16-bit matrix operations, furthermore thanks to the modular and flexible design of the codebase, the architecture is already provisioned to support 8-bit matrices as well. However, as 8-bit operations are not supported by all target accelerators and were not required to achieve the objectives of this thesis, their implementation has not been finalized across all backends.
+Before diving into the architectural details in the following sections, it is important to clarify the supported data types. The scheduler is fully capable of managing both 32-bit and 16-bit matrix operations. Furthermore, thanks to the modular and flexible design of the codebase, the architecture is already capable to support 8-bit matrices as well. However, as 8-bit operations are not supported by all target accelerators and were not required to achieve the objectives of this thesis, their implementation has not been finalized across all the different backends.
 
 
 \subsection{Cuda}
 The CUDA abstraction layer is designed to manage the NVIDIA discrete GPU available in the system. As previously discussed, the interaction between the C++ scheduler and the NVIDIA compiler (\texttt{nvcc}) is mediated by a C interface.
 
-The header file \texttt{cuda\_wrapper.h} defines the Application Binary Interface exposed to the scheduler. It declares the necessary functions for initialization, memory cleanup, and the execution of matrix multiplication across different data types, 32-bit floating point, 16-bit floating point, and 8-bit integer.
+The header file \texttt{cuda\_wrapper.h} defines the Application Binary Interface exposed to the scheduler (see Listing \ref{cuda1}). It declares the necessary functions for initialization, memory cleanup, and the execution of matrix multiplication across different data types, 32-bit floating point, 16-bit floating point, and 8-bit integer.
 
-\begin{lstlisting}[caption={cuda\_wrapper.h interface}, language=C++] 
+\begin{lstlisting}[caption={cuda\_wrapper.h interface}, language=C++, label={cuda1}] 
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -258,7 +255,7 @@ extern "C" {
 
 The implementation of these functions is in the \texttt{runner.cu} file, but before analyzing the initialization and execution logic, we will examine the global data structures and helper macros defined in the file, these elements manage the persistent state of the device and ensure error reporting. 
 
-\begin{lstlisting}[caption={cuda\_runner.cu data and helper}, language=C++] 
+\begin{lstlisting}[caption={cuda\_runner.cu data and helper}, language=C++, label={cuda2}] 
 #define CHECK_CUDA(func) {				    \
     cudaError_t e = (func);			        \
     if(e != cudaSuccess)			        \
@@ -281,17 +278,17 @@ void *d_C[N_STREAM];
 int i = 0; /* stream id*/
 \end{lstlisting}
 
-To ensure that the execution goes without errors, the code utilizes two macros: \texttt{CHECK\_CUDA} and \texttt{CHECK\_CUBLAS}. These are used to wrap every API call to the CUDA runtime and the cuBLAS library, respectively, if an operation fails the macro immediately prints the specific error code along with the file name and line number where the failure occurred.
+To ensure that the execution progresses without errors, the code utilizes two macros: \texttt{CHECK\_CUDA} and \texttt{CHECK\_CUBLAS} (see Listing \ref{cuda2}). These are used to wrap every API call to the CUDA runtime and the cuBLAS library, respectively. If an operation fails the macro immediately prints the specific error code along with the file name and line number where the failure occurred.
 
-Regarding the state management, the system relies on CUDA Streams, a macro \texttt{N\_STREAM} defines the number of parallel execution queues. Streams, enable the GPU to allows the overlap of memory transfers with computation, or the concurrent execution of multiple kernels. To support this concurrency, the device resources are replicated for each stream. The memory pointers (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}) are defined as arrays, meaning that each stream possesses its own independent pre-allocated memory buffers. Finally, a global integer \texttt{i} acts as counter, used to cycle through the available streams when dispatching new tasks.
+As for as state management is concerned, the system relies on CUDA Streams, a macro \texttt{N\_STREAM} defines the number of parallel execution queues. Streams, enable the GPU to allows the overlap of memory transfers with computation, or the concurrent execution of multiple kernels. To support this concurrency, the device resources are replicated for each stream. The memory pointers (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}) are defined as arrays, meaning that each stream possesses its own independent pre-allocated memory buffers. Finally, a global integer \texttt{i} acts as counter, used to cycle through the available streams when dispatching new tasks.
 
-The design focuses on minimizing the overhead during the runtime by performing expensive operations only once during the startup.  The \texttt{cuda\_init} function is responsible for preparing the GPU environment before any task is processed. Its primary goal is to eliminate the latency associated with running the dynamic memory allocation istrunctions. Allocating memory on the GPU using \texttt{cudaMalloc} is a slow operation compare to the others, infact if the system were to allocate and free memory for every single matrix multiplication task, the overhead would significantly impact the performance. To solve this, the initialization function adopts a simple pre-allocation strategy. 
+The design focuses on minimizing the runtime overhead by performing expensive operations only once during the startup.  The \texttt{cuda\_init} function is responsible for preparing the GPU environment before any task is processed. Its primary goal is to eliminate the latency associated with running the dynamic memory allocation istrunctions. Allocating memory on the GPU using \texttt{cudaMalloc} is a slow operation compare to the others, infact if the system were to allocate and free memory for every single matrix multiplication task, the overhead would significantly impact the performance. To solve this, the initialization function adopts a simple pre-allocation strategy. 
 
 \clearpage
 
-Below the implementation of the \texttt{cuda\_init} function:
+In Listing \ref{cudainit} the implementation of the \texttt{cuda\_init} function:
 
-\begin{lstlisting}[caption={cuda\_runner.cu init}, language=C++] 
+\begin{lstlisting}[caption={cuda\_runner.cu init}, language=C++, label={cudainit}] 
 void cuda_init() {
     CHECK_CUBLAS(cublasCreate(&handle));
 
@@ -312,12 +309,11 @@ void cuda_init() {
 At startup, the function first initializes the cuBLAS library handle, which is required to invoke the linear algebra routines.
 Then, it iterates through \texttt{N\_STREAM} number of streams (simply 2 stream is enough). For each stream, it creates a CUDA stream object to manage execution queues and allocates three distinct memory buffers on the device (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}). The size of these buffers is calculated to hold the largest matrix dimension supported by the system (MAX size), ensuring that any incoming task fits within the pre-allocated space without requiring reallocation.
 
-It is important to note that, although the accelerator hardware supports dimensions exceeding this limit, a maximum square matrix size of 4096×4096 was established (for each accelerator). This design choice was made to avoid introducing unnecessary architectural complexity, since it wasn't in this thesis objectives to maximize the memory saturation, and this limit provides a sufficient workload to stress-test the scheduler without complicating the memory management layer.
+It is important to observe that, although the hardware accelerator supports dimensions exceeding this limit, a maximum square matrix size of 4096×4096 was established (for each accelerator). This design choice was made to avoid introducing unnecessary architectural complexity, since it wasn't in this thesis objectives to maximize the memory saturation, and this limit provides a sufficient workload to stress the scheduler without incurring into the typical limitations due to the memory management layer.
 
+Complementary to the initialization, the \texttt{cuda\_free} (see Listing \ref{cudafree}) function ensures the proper release of all GPU resources when the scheduler shuts down.
 
-Complementary to the initialization, the \texttt{cuda\_free} function ensures the proper release of all GPU resources when the scheduler shuts down:
-
-\begin{lstlisting}[caption={cuda\_runner.cu free}, language=C++] 
+\begin{lstlisting}[caption={cuda\_runner.cu free}, language=C++, label={cudafree}] 
 void cuda_free() {
     for (int j = 0; j < N_STREAM; ++j) {
         CHECK_CUDA(cudaFree(d_A[j]));
@@ -333,9 +329,9 @@ The function iterates through the created streams, freeing the device memory buf
 
 To maintain compatibility between the C ABI and CUDA C++ features, the execution logic is split into two levels, since the public C interface cannot recognize CUDA specific types it relies on generic \texttt{void*} pointers.
 
-To handle this the system implements a layer of simple bridge functions, these functions accept the generic pointers and cast them to the correct concrete type (e.g., \texttt{float*} or \texttt{\_\_half*}), and immediately forward the call to the internal function.
+To handle this the system implements a layer of simple bridge functions, these functions accept the generic pointers and cast them to the correct concrete type (e.g., \texttt{float*} or \texttt{\_\_half*}), and immediately forward the call to the internal function (see Listing \ref{cuda3}).
 
-\begin{lstlisting}[caption={cuda\_runner.cu type bridging functions}, language=C++] 
+\begin{lstlisting}[caption={cuda\_runner.cu type bridging functions}, language=C++, label={cuda3}] 
 void cuda_gemm_32bit(void* A, void* B, void* C, int M, int N, int K) {
     cuda_gemm_32bit_p((float*)A, (float*)B, (float*)C, M, N, K); 
 }
@@ -345,9 +341,9 @@ void cuda_gemm_16bit(void* A, void* B, void* C, int M, int N, int K) {
 }
 \end{lstlisting}
 
-The actual computational logic is implemented in the private functions, such as \texttt{cuda\_gemm\_32bit\_p}. This functions orchestrates the entire lifecycle of a single GPU task.
+The actual computational logic is implemented in the private functions, such as \texttt{cuda\_gemm\_32bit\_p}. This functions orchestrates the entire lifecycle of a single GPU task. (see Listing \ref{cuda4})
 
-\begin{lstlisting}[caption={cuda\_runner.cu 32-bit logic}, language=C++] 
+\begin{lstlisting}[caption={cuda\_runner.cu 32-bit logic}, language=C++, label={cuda4}] 
 void cuda_gemm_32bit_p(float* A, float* B, float* C, int M, int N, int K) {
         cublasSetStream(handle, streams[i]);
 
@@ -382,15 +378,15 @@ The function begins by associating the global cuBLAS handle with the current str
 
 The execution begins by asynchronously copying the inputs A and B to the GPU buffers using the \texttt{cudaMemcpyAsync}, next, the matrix multiplication is triggered via \texttt{cublasGemmEx}, this function is chosen over standard BLAS calls because it offers more flexibility for high-performance computing. 
 
-It enables the \texttt{CUBLAS\_GEMM\_DEFAULT\_TENSOR\_OP} flag, explicitly instructing the GPU to utilize tensor tores whenever is possible (with 16 bit and 8 bit, in more modern GPUs from the Ampere architecture, even 32 bit). 
+It enables the \texttt{CUBLAS\_GEMM\_DEFAULT\_TENSOR\_OP} flag, explicitly instructing the GPU to utilize tensor cores whenever is possible (with 16 bit and 8 bit, in more modern GPUs from the Ampere architecture, even 32 bit). 
 
-Notably, the input operands are swapped in the function call, this operation ensure the matematical correctness compensating the layout difference between C++ and cuBLAS that are using two different storing method of the matrix, respectively row-major and column-major, with this simple method the function multiply two matrices without requiring an expensive physical transpose
+Notably, the input operands are swapped in the function call. This operation ensure the matematical correctness compensating the layout difference between C++ and cuBLAS that are using two different storing method of the matrix, respectively row-major and column-major. With this simple method the function multiply two matrices without requiring an expensive physical transpose
 
 Once computed, the result is copied back to the host. The process concludes with \texttt{cudaStreamSynchronize}, which blocks the thread to ensure data validity and accurate timing, followed by an update of the stream index for the next stream.
 
-Below the implementation for the 16-bit cuda gemm:
+In listing \ref{cuda5} we outline the implementation for the 16-bit cuda gemm:
 
-\begin{lstlisting}[caption={cuda\_runner.cu 16-bit logic}, language=C++] 
+\begin{lstlisting}[caption={cuda\_runner.cu 16-bit logic}, language=C++, label={cuda5}] 
 void cuda_gemm_16bit_p(__half* A, __half* B, __half* C, 
                         int M, int N, int K) {
     cublasSetStream(handle, streams[i]);
@@ -420,7 +416,7 @@ void cuda_gemm_16bit_p(__half* A, __half* B, __half* C,
 }
 \end{lstlisting}
 
-The logic remains identical to the 32 bit version, but it introduces changes to handle half-precision data, first the pointer types are replaced with the specific \texttt{\_\_half} type, consequently, the \texttt{cublasGemmEx} function is configured with the \texttt{CUDA\_R\_16F} flag for the input and output data. However, it is worth noting that the computation type is kept as \texttt{CUBLAS\_COMPUTE\_32F}, this is a standard practice to ensures that while the data storage is compressed to 16 bit, the internal mathematical computation happens in 32 bit to prevent overflows.
+The logic stay the same of the 32 bit version, but it introduces changes to handle half-precision data, first the pointer types are replaced with the specific \texttt{\_\_half} type, consequently, the \texttt{cublasGemmEx} function is configured with the \texttt{CUDA\_R\_16F} flag for the input and output data. However, it is worth pointing out that the computation type is kept as \texttt{CUBLAS\_COMPUTE\_32F}. This is a standard practice to ensures that while the data storage is compressed to 16 bit. The internal mathematical computation happens in 32 bit to prevent overflows.
 
 The implementation for 8 bit integer matrices follows the exact same architectural pattern, differing only in data types, \texttt{int8\_t} and flags \texttt{CUDA\_R\_8I}. The code can be found in full in Appendix \ref{TODO}.
 
@@ -428,7 +424,7 @@ The implementation for 8 bit integer matrices follows the exact same architectur
 \label{implopenvino}
 The OpenVINO abstraction layer is designed to target the Intel NPU, just like the CUDA backend, the interaction between the C++ scheduler and the OpenVINO runtime is mediated by a standard C interface to ensure the ABI compatibility.
 
-\begin{lstlisting}[caption={ov\_wrapper.h interface}, language=C++] 
+\begin{lstlisting}[caption={ov\_wrapper.h interface}, language=C++, label={ov1}] 
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -444,13 +440,13 @@ extern "C" {
 #endif
 \end{lstlisting}
 
-The header file \texttt{ov\_wrapper.h} defines the interface exposed to the scheduler. It's the identical structure used for the other accelerators, declaring functions for initialization, cleanup, and matrix multiplication for 32-bit, 16-bit, and 8-bit data types.
+The header file \texttt{ov\_wrapper.h} (see Listing \ref{ov1}) defines the interface exposed to the scheduler. It's the identical structure used for the other accelerators, declaring functions for initialization, cleanup, and matrix multiplication for 32-bit, 16-bit, and 8-bit data types.
 
 The implementation resides in the \texttt{runner.cpp} file. While the function signatures are similar to the CUDA implementation, the internal logic is fundamentally different due to how OpenVINO function, unlike CUDA, which have all pre-compiled kernels, OpenVINO works by building a so call computational graph and compiling it for the specific target device at runtime.
 
 Compiling a model is an expensive and time consuming operation, it cannot be performed for every single task. To solve this, the system implements a simple caching mechanism.
 
-\begin{lstlisting}[caption={ov runner.cpp chaching}, language=C++] 
+\begin{lstlisting}[caption={ov runner.cpp chaching}, language=C++, label={ov2}] 
 ov::Core core;
 
 using namespace std;
@@ -466,9 +462,9 @@ size_t map_size_16bit=0;
 size_t map_size_8bit=0;
 \end{lstlisting}
 
-The global variable \texttt{core} represents OpenVINO runtime, it will be utilized for discovering available devices and compiling the models.
+The global variable \texttt{core}(see Listing \ref{ov2}), represents OpenVINO runtime, it will be utilized for discovering available devices and compiling the models.
 
-To implement the caching mechanism, the system utilizes standard C++ maps for associating a specific set of matrix dimensions (represented by a tuple (M,N,K)) with a already compiled ov::InferRequest. This means that if the scheduler requests a matrix multiplication with dimensions that have been seen before, the system can retrieve the pre-compiled request immediately, skipping the expensive compilation step for already seen matrices.
+To implement the caching mechanism, the system utilizes standard C++ maps for associating a specific set of matrix dimensions (represented by a tuple (M,N,K)) with a already compiled ov::InferRequest. This means that if the scheduler requests a matrix multiplication with dimensions that have been seen before, the system can retrieve the pre-compiled request immediately, skipping the expensive compilation step for already seen matrices. %TODO capire bene cosa intendeva il prof
 
 Finally, to manage memory usage and prevent the cache from growing indefinitely in case there are many different matrices, a simple eviction policy is enforced using the \texttt{MAX\_MAP\_SIZE} constant and associated counters and if the number of cached models exceeds this limit, the cache is cleared to make room for new entries.
 
@@ -582,9 +578,9 @@ The SYCL abstraction layer is designed to manage Intel GPUs. In this project, SY
 
 Just like the previous modules, the interaction with the scheduler is mediated by a pure C interface to ensure ABI compatibility. The header file \texttt{sycl\_wrapper.h} defines the standard functions for initialization, execution (32-bit and 16-bit), and cleanup. 
 
-The implementation logic begins with the initialization phase:
+The implementation logic begins with the initialization phase (see Listing \ref{sycl1}):
 
-\begin{lstlisting}[caption={sycl runner.cpp init}, language=C++] 
+\begin{lstlisting}[caption={sycl runner.cpp init}, language=C++, label={sycl1}] 
 void init() {
     try {
 
@@ -654,7 +650,7 @@ Finally, the struct includes a destructor, so that when the stream object is des
 
 The execution logic is implemented in the following functions:
 
-\begin{lstlisting}[caption={sycl runner.cpp execution}, language=C++] 
+\begin{lstlisting}[caption={sycl runner.cpp execution}, language=C++, label={sycl3}] 
 void sycl_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K) {
     SYCLStream& s = *streams[current_stream];
 
@@ -697,7 +693,7 @@ void sycl_gemm_16bit_p(sycl::half *A, sycl::half *B, sycl::half *C, int M, int N
 }
 \end{lstlisting}
 
-The \texttt{sycl\_gemm\_32bit\_p} function orchestrates execution of the tasks, first, it selects the current stream and copies the input data from the host to the pre-allocated device buffers using \texttt{memcpy}.
+The \texttt{sycl\_gemm\_32bit\_p} function (see Listing \ref{sycl3}) orchestrates execution of the tasks, first, it selects the current stream and copies the input data from the host to the pre-allocated device buffers using \texttt{memcpy}.
 
 Next, it invokes the matrix multiplication using the oneMKL library, thanks to this library the matrices A and B in this case can be passed directly with the \texttt{nontrans} flag, without needing to swap operands.
 
@@ -730,10 +726,10 @@ The code concludes with the C-compatible wrappers. These functions simply cast t
 
 The \texttt{sycl\_free} function simply calls \texttt{streams.clear()}. Because the system uses smart pointers (std::unique\_ptr) and the SYCLStream struct has a defined destructor, clearing the vector automatically triggers the destruction of all stream objects.
 
-\subsection{OpenBLASS}
+\subsection{OpenBLAS}
 Finally, the project includes a backend to target the host CPU. Unlike the other accelerators which required complex compilation and separate dynamic libraries to ensure compatibility, the CPU implementation was introduced directly into the scheduler codebase.
 
-As already said in this thesis, this library was the last addition to the project, and since the scheduler and the OpenBLASS library share the same compiler, there were no compatibility issues to solve, infact, the implementation is located directly in the header file \texttt{cpu.hpp} inside the \texttt{scheduler/} directory.
+As already said in this thesis, this library was the last addition to the project, and since the scheduler and the OpenBLAS library share the same compiler, there were no compatibility issues to solve, infact, the implementation is located directly in the header file \texttt{cpu.hpp} inside the \texttt{scheduler/} directory.
 
 The complete implementation is presented below:
 
@@ -847,6 +843,7 @@ The \texttt{float\_to\_half} function (available in the Appendix \ref{TODO}) per
 \clearpage
 
 \section{AMM Scheduler}
+\label{implammscheduler}
 The core of this project is the \texttt{AMScheduler} class. While the underlying system involves thread management, synchronization, and hardware interactions, the design goal was to encapsulate all this complexity behind a simple interface. 
 
 The scheduler is implemented as a C++ class defined in \texttt{scheduler.hpp}, it adheres to the \textbf{RAII} pattern. This ensures that the lifecycle of the execution environment  including worker threads, shared buffers, and hardware contexts is tied to the lifecycle of the scheduler object itself. However, it is important to note that while standard C++ smart pointers are used for the threads and maps, explicit memory management is maintained for performance critical data structures, such as the task arrays and the internal shared buffers allowing the system to minimize overhead and ensuring that the developer has full visibility into the exact behavior of the memory.
@@ -1407,6 +1404,7 @@ By default, this waiting is a busy wait: the thread keeps checking the variable 
 \clearpage
 
 \subsection{Performance Map}
+\label{implperformancemap}
 The Performance Map is a specialized data structure utilized by the Coordinator thread. Its primary purpose is to act as a predictive model, providing the expected execution time for a specific task on a specific accelerator.
 
 As explained in the previous section the raw data is acquired through automated benchmark routines (see section \ref{TODO}). However, reading from CSV files isn't an option latency wise, therefore, the PerformanceMap class loads this data into an optimized in-memory structure at startup. 
@@ -1556,6 +1554,7 @@ All of this tweaks exhibits, as it will be shown in the next section, a good beh
 \clearpage
 
 \subsection{Profiler}
+\label{implprofiler}
 To evaluate the performance and the efficiency of the scheduling logics, the \texttt{Profiler} tool was developed integrated directly into the scheduler's codebase. It acts as an observer, recording precise timestamps and sensor data during the execution of workloads without interfering with the logic. 
 
 The class provides a simple interface to start and stop counters for various metrics. Its primary responsibilities are: 

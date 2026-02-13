@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  13 FEB 2026 14:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  13 FEB 2026 16:53
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1192,9 +1192,6 @@ Package pdftex.def Info: images/performancemap.png  used on input line 113.
 (pdftex.def)             Requested size: 97.69934pt x 75.35602pt.
 
 
-LaTeX Warning: Reference `TODO performance map' on page 24 undefined on input line 118.
-
-
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
 (fancyhdr)                \setlength{\headheight}{15.59995pt}.
@@ -1202,15 +1199,11 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [24 <./images/workers.png> <./images/performancemap.png>]
-<images/profiler.png, id=504, 356.0803pt x 590.95781pt>
+<images/profiler.png, id=506, 356.0803pt x 590.95781pt>
 File: images/profiler.png Graphic file (type png)
 <use images/profiler.png>
 Package pdftex.def Info: images/profiler.png  used on input line 122.
 (pdftex.def)             Requested size: 49.85089pt x 82.73352pt.
-
-
-LaTeX Warning: Reference `TODO' on page 25 undefined on input line 128.
-
 )
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1244,13 +1237,11 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [28
 
 ]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 77.
 
-LaTeX Warning: Reference `TODO' on page 29 undefined on input line 70.
-
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 78.
 
 LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 79.
+(Font)              size <6> substituted on input line 78.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1278,10 +1269,6 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [31]
-Overfull \hbox (33.05113pt too wide) in paragraph at lines 221--222
-[]\T1/cmr/m/n/12 First this script lo-cates the nec-es-sary de-pen-den-cies on the host sys-tem us-ing \T1/cmtt/m/n/12 find_package\T1/cmr/m/n/12 ,
- []
-
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1349,7 +1336,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [38]
 
-LaTeX Warning: Reference `TODO' on page 39 undefined on input line 425.
+LaTeX Warning: Reference `TODO' on page 39 undefined on input line 421.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1367,7 +1354,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [40]
-Overfull \hbox (10.52417pt too wide) in paragraph at lines 526--527
+Overfull \hbox (10.52417pt too wide) in paragraph at lines 522--523
 []\T1/cmr/m/n/12 Once the model is cached, the ex-e-cu-tion of the task is han-dled by the \T1/cmtt/m/n/12 ov_gemm_32bit_p
  []
 
@@ -1387,7 +1374,15 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [42]
-Overfull \hbox (6.24197pt too wide) in paragraph at lines 581--582
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[43]
+Overfull \hbox (6.24197pt too wide) in paragraph at lines 577--578
 \T1/cmr/m/n/12 SYCL is uti-lized in con-junc-tion with the In-tel oneAPI Math Ker-nel Li-brary (oneMKL)
  []
 
@@ -1398,17 +1393,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[43
+[44
 
 ]
-
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
-
-[44]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1434,9 +1421,6 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [47]
 
-LaTeX Warning: Reference `TODO' on page 48 undefined on input line 845.
-
-
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
 (fancyhdr)                \setlength{\headheight}{15.59995pt}.
@@ -1445,17 +1429,28 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [48]
 
+LaTeX Warning: Reference `TODO' on page 49 undefined on input line 841.
+
+
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
 (fancyhdr)                \setlength{\headheight}{15.59995pt}.
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[49
+[49]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[50
 
 ]
 
-LaTeX Warning: Reference `TODO' on page 50 undefined on input line 915.
+LaTeX Warning: Reference `TODO' on page 51 undefined on input line 912.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1464,7 +1459,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[50]
+[51]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1472,11 +1467,11 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[51
+[52
 
 ]
 
-LaTeX Warning: Reference `TODO' on page 52 undefined on input line 980.
+LaTeX Warning: Reference `TODO' on page 53 undefined on input line 977.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1485,9 +1480,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[52]
+[53]
 
-LaTeX Warning: Reference `TODO' on page 53 undefined on input line 1031.
+LaTeX Warning: Reference `TODO' on page 54 undefined on input line 1028.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1496,23 +1491,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[53
+[54
 
 ]
-
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
-
-[54]
-
-LaTeX Warning: Reference `TODO' on page 55 undefined on input line 1085.
-
-
-LaTeX Warning: Reference `TODO' on page 55 undefined on input line 1085.
-
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1521,6 +1502,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [55]
+
+LaTeX Warning: Reference `TODO' on page 56 undefined on input line 1082.
+
+
+LaTeX Warning: Reference `TODO' on page 56 undefined on input line 1082.
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1545,7 +1532,15 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [58]
-Overfull \hbox (13.80577pt too wide) in paragraph at lines 1271--1272
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[59]
+Overfull \hbox (13.80577pt too wide) in paragraph at lines 1268--1269
 []\T1/cmr/m/n/12 Once pro-cess-ing is com-plete, the mem-ory is ex-plic-itly freed with the  \T1/cmtt/m/n/12 clean_tasks
  []
 
@@ -1556,17 +1551,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[59
+[60
 
 ]
-
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
-
-[60]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1582,7 +1569,15 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[62
+[62]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[63
 
 ]
 
@@ -1592,9 +1587,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[63]
+[64]
 
-LaTeX Warning: Reference `TODO' on page 64 undefined on input line 1412.
+LaTeX Warning: Reference `TODO' on page 65 undefined on input line 1410.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1603,7 +1598,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[64
+[65
 
 ]
 
@@ -1613,7 +1608,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[65]
+[66]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1621,11 +1616,11 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[66
+[67
 
 ]
 
-LaTeX Warning: Reference `TODO' on page 67 undefined on input line 1554.
+LaTeX Warning: Reference `TODO' on page 68 undefined on input line 1552.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1634,7 +1629,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[67]
+[68]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1642,25 +1637,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[68
-
-]
-
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
-
-[69]
-
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
-
-[70
+[69
 
 ]
 
@@ -1670,7 +1647,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[71]
+[70]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1678,7 +1655,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[72
+[71
 
 ]
 
@@ -1688,7 +1665,17 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[73]
+[72]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[73
+
+]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1704,13 +1691,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[75
-
-]
-Overfull \hbox (1.7797pt too wide) in paragraph at lines 1906--1907
-[]\T1/cmr/m/n/12 If the num-ber of rows ex-ceeds the max-i-mum size present in the per-for-manceMap,
- []
-
+[75]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1721,6 +1702,10 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 [76
 
 ]
+Overfull \hbox (1.7797pt too wide) in paragraph at lines 1905--1906
+[]\T1/cmr/m/n/12 If the num-ber of rows ex-ceeds the max-i-mum size present in the per-for-manceMap,
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1728,7 +1713,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[77]
+[77
+
+]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1744,7 +1731,15 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[79
+[79]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[80
 
 ]
 
@@ -1754,9 +1749,9 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[80]
+[81]
 
-LaTeX Warning: Reference `TODO' on page 81 undefined on input line 2040.
+LaTeX Warning: Reference `TODO' on page 82 undefined on input line 2039.
 
 )
 
@@ -1766,22 +1761,390 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[81
+[82
 
 ]
 \openout2 = `chapters/4_results.aux'.
 
- (./chapters/4_results.tex [82
+ (./chapters/4_results.tex
+Chapter 5.
+[83
 
 
 
 
 
 ]
-Chapter 5.
-[83]
-<images/results/compare_time_s1024.png, id=2211, 1011.78pt x 650.43pt>
+<images/results/compare_time_s1024.png, id=2228, 1011.78pt x 650.43pt>
 File: images/results/compare_time_s1024.png Graphic file (type png)
 <use images/results/compare_time_s1024.png>
 Package pdftex.def Info: images/results/compare_time_s1024.png  used on input line 30.
-(pdftex.de
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_s1024.png, id=2229, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_s1024.png Graphic file (type png)
+<use images/results/compare_energy_s1024.png>
+Package pdftex.def Info: images/results/compare_energy_s1024.png  used on input line 37.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+
+
+LaTeX Warning: Reference `TODO' on page 84 undefined on input line 42.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[84
+
+ <./images/results/compare_time_S1024.png> <./images/results/compare_energy_S1024.png>]
+<images/results/distrib_tasks_s1024.png, id=2240, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_tasks_s1024.png Graphic file (type png)
+<use images/results/distrib_tasks_s1024.png>
+Package pdftex.def Info: images/results/distrib_tasks_s1024.png  used on input line 54.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+<images/results/distrib_s1024.png, id=2241, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_s1024.png Graphic file (type png)
+<use images/results/distrib_s1024.png>
+Package pdftex.def Info: images/results/distrib_s1024.png  used on input line 61.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[85 <./images/results/distrib_tasks_S1024.png> <./images/results/distrib_S1024.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[86]
+<images/results/compare_time_s2048.png, id=2258, 1011.78pt x 650.43pt>
+File: images/results/compare_time_s2048.png Graphic file (type png)
+<use images/results/compare_time_s2048.png>
+Package pdftex.def Info: images/results/compare_time_s2048.png  used on input line 73.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_s2048.png, id=2259, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_s2048.png Graphic file (type png)
+<use images/results/compare_energy_s2048.png>
+Package pdftex.def Info: images/results/compare_energy_s2048.png  used on input line 75.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[87
+
+ <./images/results/compare_time_S2048.png> <./images/results/compare_energy_S2048.png>]
+<images/results/distrib_tasks_s2048.png, id=2270, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_tasks_s2048.png Graphic file (type png)
+<use images/results/distrib_tasks_s2048.png>
+Package pdftex.def Info: images/results/distrib_tasks_s2048.png  used on input line 88.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+<images/results/distrib_s2048.png, id=2271, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_s2048.png Graphic file (type png)
+<use images/results/distrib_s2048.png>
+Package pdftex.def Info: images/results/distrib_s2048.png  used on input line 90.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[88 <./images/results/distrib_tasks_S2048.png> <./images/results/distrib_S2048.png>]
+<images/results/compare_time_s4096.png, id=2282, 1011.78pt x 650.43pt>
+File: images/results/compare_time_s4096.png Graphic file (type png)
+<use images/results/compare_time_s4096.png>
+Package pdftex.def Info: images/results/compare_time_s4096.png  used on input line 99.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_s4096.png, id=2283, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_s4096.png Graphic file (type png)
+<use images/results/compare_energy_s4096.png>
+Package pdftex.def Info: images/results/compare_energy_s4096.png  used on input line 101.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[89 <./images/results/compare_time_S4096.png> <./images/results/compare_energy_S4096.png>]
+<images/results/distrib_tasks_s4096.png, id=2295, 1146.2022pt x 533.1117pt>
+File: images/results/distrib_tasks_s4096.png Graphic file (type png)
+<use images/results/distrib_tasks_s4096.png>
+Package pdftex.def Info: images/results/distrib_tasks_s4096.png  used on input line 113.
+(pdftex.def)             Requested size: 298.00554pt x 138.60576pt.
+<images/results/distrib_s4096.png, id=2296, 1146.2022pt x 533.1117pt>
+File: images/results/distrib_s4096.png Graphic file (type png)
+<use images/results/distrib_s4096.png>
+Package pdftex.def Info: images/results/distrib_s4096.png  used on input line 114.
+(pdftex.def)             Requested size: 298.00554pt x 138.60576pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[90 <./images/results/distrib_tasks_S4096.png> <./images/results/distrib_S4096.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[91]
+<images/results/analysis_batch_S1024.png, id=2312, 1011.78pt x 650.43pt>
+File: images/results/analysis_batch_S1024.png Graphic file (type png)
+<use images/results/analysis_batch_S1024.png>
+Package pdftex.def Info: images/results/analysis_batch_S1024.png  used on input line 126.
+(pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
+<images/results/analysis_batch_S2048.png, id=2313, 1011.78pt x 650.43pt>
+File: images/results/analysis_batch_S2048.png Graphic file (type png)
+<use images/results/analysis_batch_S2048.png>
+Package pdftex.def Info: images/results/analysis_batch_S2048.png  used on input line 127.
+(pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
+<images/results/analysis_batch_S4096.png, id=2314, 1011.78pt x 650.43pt>
+File: images/results/analysis_batch_S4096.png Graphic file (type png)
+<use images/results/analysis_batch_S4096.png>
+Package pdftex.def Info: images/results/analysis_batch_S4096.png  used on input line 128.
+(pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
+
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[92
+
+ <./images/results/analysis_batch_S1024.png> <./images/results/analysis_batch_S2048.png> <./images/results/analysis_batch_S4096.png>]
+<images/results/compare_time_Hetero.png, id=2323, 1011.78pt x 650.43pt>
+File: images/results/compare_time_Hetero.png Graphic file (type png)
+<use images/results/compare_time_Hetero.png>
+Package pdftex.def Info: images/results/compare_time_Hetero.png  used on input line 141.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/compare_energy_Hetero.png, id=2324, 1011.78pt x 650.43pt>
+File: images/results/compare_energy_Hetero.png Graphic file (type png)
+<use images/results/compare_energy_Hetero.png>
+Package pdftex.def Info: images/results/compare_energy_Hetero.png  used on input line 142.
+(pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+<images/results/distrib_tasks_Hetero.png, id=2325, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_tasks_Hetero.png Graphic file (type png)
+<use images/results/distrib_tasks_Hetero.png>
+Package pdftex.def Info: images/results/distrib_tasks_Hetero.png  used on input line 143.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+<images/results/distrib_Hetero.png, id=2326, 1146.9249pt x 533.1117pt>
+File: images/results/distrib_Hetero.png Graphic file (type png)
+<use images/results/distrib_Hetero.png>
+Package pdftex.def Info: images/results/distrib_Hetero.png  used on input line 144.
+(pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
+
+
+LaTeX Warning: Float too large for page by 66.73286pt on input line 147.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<images/results/large_matrix_chunks.png, id=2327, 1011.78pt x 578.16pt>
+File: images/results/large_matrix_chunks.png Graphic file (type png)
+<use images/results/large_matrix_chunks.png>
+Package pdftex.def Info: images/results/large_matrix_chunks.png  used on input line 153.
+(pdftex.def)             Requested size: 303.53633pt x 173.44933pt.
+<images/results/large_matrix_analysis.png, id=2328, 1141.3842pt x 489.5088pt>
+File: images/results/large_matrix_analysis.png Graphic file (type png)
+<use images/results/large_matrix_analysis.png>
+Package pdftex.def Info: images/results/large_matrix_analysis.png  used on input line 154.
+(pdftex.def)             Requested size: 342.4179pt x 146.85376pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+)
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[93
+
+]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[94 <./images/results/compare_time_Hetero.png> <./images/results/compare_energy_Hetero.png> <./images/results/distrib_tasks_Hetero.png> <./images/results/distrib_Hetero.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[95 <./images/results/large_matrix_chunks.png> <./images/results/large_matrix_analysis.png>]
+\openout2 = `chapters/AppendiceA.aux'.
+
+ (./chapters/AppendiceA.tex [96
+
+
+
+
+
+]
+Appendix A.
+) [97] (./main.bbl [98
+
+
+
+
+]
+Underfull \hbox (badness 4765) in paragraph at lines 4--7
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 In-tel Arc Graph-ics Xe-LPG Ar-chi-tec-ture\T1/cmr/m/n/12 , 2023.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4--7
+\T1/cmr/m/n/12 https://www.intel.com/content/www/us/en/docs/oneapi/optimization-guide-
+ []
+
+
+Underfull \hbox (badness 6461) in paragraph at lines 9--12
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 In-tel Core Ul-tra Pro-ces-sors (Se-ries 1)\T1/cmr/m/n/12 , 2024.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--12
+\T1/cmr/m/n/12 https://www.intel.com/content/www/us/en/products/sku/236849/intel-
+ []
+
+
+Underfull \hbox (badness 1009) in paragraph at lines 14--17
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  In-tel oneapi: A uni-fied pro-gram-ming model, 2024.
+ []
+
+
+Overfull \hbox (27.73198pt too wide) in paragraph at lines 14--17
+\T1/cmr/m/n/12 https://www.intel.com/content/www/us/en/developer/tools/oneapi/overview.html. 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--26
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 Open-vino Doc-u-men-ta-tion\T1/cmr/m/n/12 , 2025.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--36
+[]\T1/cmr/m/n/12 Kitware, Inc.  \T1/cmr/m/it/12 CMake Doc-u-men-ta-tion\T1/cmr/m/n/12 , 2025.
+ []
+
+
+Underfull \hbox (badness 1400) in paragraph at lines 38--41
+[]\T1/cmr/m/n/12 Klaus Hinum.  \T1/cmr/m/it/12 NVIDIA GeForce RTX 4060 Lap-top GPU Spec\T1/cmr/m/n/12 , 2022.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--41
+\T1/cmr/m/n/12 https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-Laptop-GPU-
+ []
+
+
+Overfull \hbox (36.20584pt too wide) in paragraph at lines 43--46
+[]\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 Cublas\T1/cmr/m/n/12 , 2025.  https://docs.nvidia.com/cuda/cublas/index.html. 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--51
+[]\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 CUDA C++ Pro-gram-ming Guide\T1/cmr/m/n/12 , 2025.
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 53--56
+[]\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 NVIDIA Man-age-ment Li-brary (NVML)\T1/cmr/m/n/12 , 2026.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 58--61
+[]\T1/cmr/m/n/12 OpenBLAS Team.  Open-blas github, 2024.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--66
+[]\T1/cmr/m/n/12 Steve Ren-nich.  \T1/cmr/m/it/12 CUDA C++ Streams and Con-cur-rency\T1/cmr/m/n/12 , 2024.
+ []
+
+
+Overfull \hbox (84.58885pt too wide) in paragraph at lines 63--66
+\T1/cmr/m/n/12 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
+ []
+
+[99]
+Underfull \hbox (badness 10000) in paragraph at lines 73--76
+[]\T1/cmr/m/n/12 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
+ []
+
+)
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[100] (./main.aux (./chapters/Frontespizio.aux) (./chapters/Abstract.aux) (./chapters/0_introduction.aux) (./chapters/1_tools.aux) (./chapters/2_logical_design.aux) (./chapters/3_implementation.aux) (./chapters/4_results.aux) (./chapters/AppendiceA.aux))
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-11-14>
+ ***********
+
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 2.48409pt have occurred.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: 1017BB604D8A24B81746B79EECAF61B0;6584.
+ ) 
+Here is how much of TeX's memory you used:
+ 34318 strings out of 467538
+ 674650 string characters out of 5419551
+ 1826008 words of memory out of 5000000
+ 61007 multiletter control sequences out of 15000+600000
+ 644925 words of font info for 77 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 108i,12n,108p,1184b,2048s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on main.pdf (100 pages, 8377493 bytes).
+PDF statistics:
+ 2784 PDF objects out of 2984 (max. 8388607)
+ 2528 compressed objects within 26 object streams
+ 1630 named destinations out of 1728 (max. 500000)
+ 734 words of extra memory for PDF output out of 10000 (max. 10000000)
+
