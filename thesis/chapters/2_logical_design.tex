@@ -4,23 +4,23 @@
 This chapter describes the logical structure of the project, the design process was divided into two main phases:
 
 \begin{itemize}
-    \item The first part of the chapter (\ref{preliminary}) presents the Independent Benchmarks. Before developing the centralized scheduler, standalone applications were created for each accelerator. This phase was essential to verify the feasibility of the project and to understand how to effectively control the specific hardware using the selected libraries. 
+    \item The first part of the chapter (see Sec. \ref{preliminary}) presents the Independent Benchmarks. Before developing the centralized scheduler, standalone applications were created for each accelerator. This phase was essential to verify the feasibility of the project and to understand how to effectively control the specific hardware using the selected libraries. 
 
-    \item  The second part (\ref{ammscheduler}) provides a comprehensive overview of the AMM Scheduler. This section describes the high-level operation of all the components of the scheduler, it illustrates the architectural design of the main project and explains how the various logical blocks interact to enable the scheduler's functionality, detailing the specific operational logic that governs the system.
+    \item  The second part (see Sec. \ref{ammscheduler}) provides a comprehensive overview of the AMM Scheduler. This section describes the high-level operation of all the components of the scheduler, it illustrates the architectural design of the main project and explains how the various logical blocks interact to enable the scheduler's functionality, detailing the specific operational logic that governs the system.
 \end{itemize}
 
 \clearpage
 
 \section{Preliminary Phase}
 \label{preliminary}
-Before designing the centralized scheduler, the project required a preliminary phase focused on the independent analysis of each software stack. Three standalone applications were developed, targeting the NVIDIA GPU, the Intel iGPU, and the NPU respectively. The primary objective of this phase to gain a deep understanding of the specific libraries (CUDA, SYCL, and OpenVINO) and their interaction with the hardware.
+Before designing the centralized scheduler, the project required a preliminary phase focused on the independent analysis of each software stack. Three standalone applications were developed, targeting the NVIDIA GPU, the Intel iGPU, and the Intel NPU respectively. The primary objective of this phase to gain a deep understanding of the specific libraries (CUDA, SYCL, and OpenVINO) and their interaction with the hardware.
 
-It is important to note that the OpenBLAS backend for the CPU was not included in this preliminary phase. This component was introduced directly during the development of the scheduler (described in the next section \ref{ammscheduler}) with a specific goal: to maximize the degree of heterogeneity of the system, by treating the CPU as an additional accelerator rather than just a coordinator. Moreover unlike the GPU and NPU, which required a specific study of their asynchronous drivers and memory models, the CPU integration relies on standard synchronous function calls, consequently, a dedicated standalone analysis deemed unnecessary. The technical details of this integration will be discussed in the implementation chapter (\ref{implementation}).
+It is important to note that the OpenBLAS backend for the CPU was not included in this preliminary phase. This component was introduced directly during the development of the scheduler (described in the next section \ref{ammscheduler}) with a specific goal: to maximize the degree of heterogeneity of the system, by treating the CPU as an additional accelerator rather than just a coordinator. Moreover unlike the GPU and NPU, which required a specific study of their asynchronous drivers and memory models, the CPU integration relies on standard synchronous function calls. Consequently, a dedicated standalone analysis deemed unnecessary. The technical details of this integration will be discussed in the implementation Chapter \ref{implementation}.
 
 \subsection{Studying the Common Patterns}
 A crucial goal of this stage was to gain a deep, hands-on understanding of the specific libraries. Since technologies like CUDA, SYCL, and OpenVINO manage hardware in fundamentally different ways, so a first approach phase was necessary to see how their specific mechanisms works and the drivers interactions.
 
-This distinction is particularly evident in the case of OpenVINO, while CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra, consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a workaround was required, instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to accomplish as an inference task (more on this in section \ref{TODO}).
+This distinction is particularly evident in the case of OpenVINO. While CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra. Consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a workaround was required; instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to perform as an inference task (more on this in section \ref{implopenvino}).
 
 \clearpage
 
@@ -36,7 +36,7 @@ Despite these architectural differences, this preliminary study revealed a recur
 Recognizing this common structure for each library was fundamental for the design of the Abstraction Layer used in the scheduler.
 
 \subsection{Benchmarking}
-During this phase, benchmarking routines were implemented within each of the standalone applications. However, their purpose was distinct from the final experimental results presented in later chapters, in this context measuring execution time and power consumption served as a development tool to:
+During this phase, benchmarking routines were implemented within each of the standalone applications. However, their purpose was distinct from the final experimental results presented in later chapters. In this context, the measurements of the execution time and power consumption were intended to act as a development tool to:
 
 \begin{itemize}
     \item Verify the correctness of the implementation (e.g., ensuring the code was actually running on the accelerator and not falling back to the CPU).
@@ -44,7 +44,7 @@ During this phase, benchmarking routines were implemented within each of the sta
     \item Analyze the runtime behavior of the drivers, and identify architectural bottlenecks (such as PCIe transfer overheads or compilation latencies).
 \end{itemize}
 
-However, it must be noted that the performance profile observed in these isolated environments proved to be different from the behavior within the full scheduler. The concurrent execution of different workloads and the increased stress on system resources exposed new bottlenecks that were not visible during the standalone tests, consequently, the backend implementations were significantly evolved during the integration phase, and specific structures were introduced to mitigate these latencies. These optimizations and the specific issues encountered under high-load scenarios will be analyzed in detail in the Implementation Chapter (\ref{implementation}).
+However, we must point out that the performance profile observed in these isolated environments proved to be quite different from the behavior, observered when using the full scheduler. The concurrent execution of different workloads and the increased stress on system resources exposed new bottlenecks that were not visible during the standalone tests. Consequently, the backend implementations significantly evolved during the integration phase, and specific structures were introduced to mitigate these latencies. These optimizations and the specific issues encountered under high-load scenarios will be analyzed in detail in the Implementation Chapter (\ref{implementation}).
 
 \clearpage
 \section{AMM Scheduler}
@@ -59,15 +59,15 @@ The core of the project is the AMM Scheduler, that stands for Asymettric Matrix 
 \end{figure}
 
 
-As illustrated in figure \ref{ammfigure}, the architecture implements the producer and consumer paradigm.
+As illustrated in Fig. \ref{ammfigure}, the architecture implements a producer and consumer pattern.
 
-In this model, the host application acts as the producer, generating computational tasks for the scheduler, that functions as the consumer, processing these requests asynchronously. The execution logic follows the farm pattern: a central coordinator retrieves the tasks and distributes them among the available worker nodes. To enable parallel execution, the coordinator and each worker operate as independent threads. 
+In this model, the host application acts as the producer, it generates computational tasks for the scheduler, that behave as the consumer, processing these requests asynchronously. The execution logic follows the farm pattern: a central coordinator retrieves the tasks and distributes them to the available worker nodes. To enable parallel execution, the coordinator and each worker operate as independent threads. 
 
 As shown in the diagram, Workers communicate with the Coordinator using atomic variables. This mechanism signals when a Worker is idle or updates the count of completed tasks, this ensures that the scheduler's wait function can correctly determine when all tasks are finished.
 
 \clearpage
 
- Now we will examine each component in the diagram and explain a bit deeper its function:
+ Now we will examine each component in the diagram and explain a bit deeper its bahvior:
 
 \begin{itemize}
 
@@ -78,49 +78,49 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
     \label{ringfigure}
 \end{figure}
 
-    \item \textbf{Ring Buffers}: The key to this asynchronous pattern is the ring buffer (rappresented in the figure \ref{ringfigure} as the arrows marked with a circle), which decouples the Host from the Coordinator, designed ad-hoc for the scheduler, this structure enables extremely fast communication with minimal overhead, using atomic variables instead of locks. As the graph illustrates, this mechanism also serve the communication between the Coordinator and the Workers, minimizing overhead and maximizing speed during task distribution. More on the code implementation in chapter \ref{TODO}.
+\item \textbf{Ring Buffers}: The key to this asynchronous pattern is the ring buffer (rappresented in the Fig. \ref{ringfigure} as the arrows marked with a circle), which decouples the Host from the Coordinator, designed ad-hoc for the scheduler. This structure enables extremely fast communications with minimal overhead, using atomic variables instead of locks. As the graph in Fig \ref{ammfigure} illustrates, this mechanism also implements the communication between the Coordinator and the Workers, minimizing the overhead and maximizing speed during task distribution. More on the code implementation in Sec. \ref{implringbuffer}.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.1]{images/coordinator.png} 
     \caption{Coordinator}
-    \label{ringfigure}
+    \label{figcoordinator}
 \end{figure}
 
-    \item \textbf{Coordinator}: The Coordinator acts as the brain of the scheduler, it decides how to dispatch tasks and implements different strategies to demonstrate various resource management techniques. 
+\item \textbf{Coordinator}: The Coordinator (represented in Fig. \ref{figcoordinator} acts as the brain of the scheduler. It decides how to dispatch tasks and implements different strategies to demonstrate various resource management techniques. 
 
-    It features distinct scheduling logics, based on the type of workload that the host have to compute, the main logics that shape the design of the scheduler are the static one. 
+    It features distinct scheduling logics, based on the type of workload that the host have to compute. The main logics that shape the design of the scheduler are the static ones. 
 
-    The first logic, Static stream, handles static homogeneous workloads (tasks of identical matrices), by using a Performance Map (a custom data structure containing heuristics and execution time estimates) the coordinator predicts how long a task will take on a specific accelerator and based on this, it performs a static dispatch of the tasks in a batch style manner (see section static partitioning \ref{TODO}).  
+    The first logic, Static stream, handles static homogeneous workloads (tasks of identical matrices). By using a Performance Map (a custom data structure containing heuristics and execution time estimates) the coordinator predicts how long a task will take on a specific accelerator and based on this, it performs a static dispatch of the tasks in a batch style way (see Sec. \ref{implstaticlogic}, Static Partitioning)
 
-    The second logic, Static Hetero, work in a similar way but for static heterogeneous workloads (matrices of different sizes), the coordinator uses the same performance map to calculate the optimal distribution, ensuring the workload is balanced across all accelerators (see section static hetero partitioning \ref{TODO}).
+    The second logic, Static Hetero, work in a similar way but for static heterogeneous workloads (matrices of different sizes), the coordinator uses the same performance map to calculate the optimal distribution, ensuring the workload is balanced across all accelerators (see Sec. \ref{implheterologic}, Static Hetero Partitioning).
 
-    To evaluate these strategies, we also implemented a dynamic tasks dispatch logic. This approach assigns tasks to the first available Worker (in idle state) and serves as a baseline to verify the efficiency of our static methods (see section dynamic \ref{TODO}).
+    To evaluate these strategies, we also implemented a dynamic tasks dispatch logic. This approach assigns tasks to the first available Worker (i.e. idle) and serves as a baseline to verify the efficiency of our static methods (see Sec. \ref{impldynamiclogic}, Dynamic).
 
-    Finally, the Coordinator supports the logic of Task Splitting, if a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks to be distributed across multiple accellerators (see section large matrix split \ref{TODO}).
+    Finally, the Coordinator supports the Task Splitting logic. If a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks such that they may be distributed across multiple accellerators (see Sec. \ref{impllargelogic}, Large Matrix Split).
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.14]{images/workers.png} 
-    \caption{workers}
+    \caption{Workers}
     \label{workerfigure}
 \end{figure}
 
-    \item \textbf{Workers}: Workers are threads that utilize the abstraction layers defined in the preliminary phase \ref{preliminary}. Their internal logic is straightforward: they retrieve available tasks and execute them on their assigned accelerator. All low-level details regarding the accelerator libraries are completely hidden from the Worker prospective (see Section \ref{TODO}).
+\item \textbf{Workers}: Workers (represented in Fig. \ref{workerfigure}) are threads that utilize the abstraction layers defined in the preliminary phase (see Sec. \ref{preliminary}). Their internal logic is straightforward: they retrieve available tasks and execute them on their assigned accelerator. All low-level details regarding the accelerator libraries are completely hidden from the Worker prospective (see Sec. \ref{implworker}, Workers).
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.14]{images/performancemap.png} 
-    \caption{benchmark and performance maps rapresentation}
+    \caption{Benchmark and Performancemaps Rapresentation}
     \label{performancemapfigure}
 \end{figure}
 
-    \item \textbf{Benchmarks and Performance Maps}: Internally, the scheduler utilizes a data structure called the Performance Map to determine the execution time of every single task for each individual accelerator. To achieve this, the structure contains heuristics and data loaded from CSV files (specifically one file for each accelerator). These files are created by a benchmark routine developed directly within the scheduler; if the csv for one or more accellerators is missing so that there are no data for the performance maps, the routine activates automatically to generate the necessary information stored in the csv files, it utilizes the accelerator libraries, testing them by executing precise tasks in a specific manner to gather this data as accurately as possible. Furthermore, the Performance Map is an extremely fast structure: it is equipped with caching and highly optimized internal data structures to minimize overhead on the Coordinator's logic, which is the only component that accesses this structure (see Section \ref{TODO performance map}).
+    \item \textbf{Benchmarks and Performance Maps}: Internally, the scheduler utilizes a data structure called the Performance Map to determine the execution time of every single task for each individual accelerator. The structure contains heuristics and data loaded from CSV files (specifically one file for each accelerator). These files are created by a benchmark routine developed directly within the scheduler. If the csv for one or more accelerators is missing so that there are no data for the performance maps, the routine activates automatically to generate the necessary information stored in the csv files, it utilizes the accelerator libraries, testing them by executing precise tasks in a specific way to gather this data as accurately as possible. Furthermore, the Performance Map is an extremely fast structure: it is equipped with caching and highly optimized internal data structures to minimize overhead on the Coordinator's logic, which is the only component that accesses this structure (see Sec. \ref{TODO performance map}, ).
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.14]{images/profiler.png} 
-    \caption{profiler}
+    \caption{Profiler}
     \label{profilerfigure}
 \end{figure}
 

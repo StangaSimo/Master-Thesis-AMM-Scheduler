@@ -6,10 +6,10 @@
 
 \chapter{Tools and Technologies}
 \label{tools}
-This chapter presents the hardware and software resources used to develop and validate the system. The choice to work on a hybrid and highly heterogeneous architecture was made to test the scheduler in a real-world scenario, and in this scenario, devices with different performance characteristics and programming models have to work together.
+This chapter presents the hardware and software resources used to develop and validate our scheduler. The choice to work on a hybrid and highly heterogeneous architecture was made to test the scheduler in a real-world scenario, and in this scenario, devices with different performance characteristics and programming models have to work together.
 
 \section{Experimental Platform}
-All development and benchmarking activities were done on a mobile workstation Lenovo Yoga Pro 9i gen 9. This platform represents a modern high-performance "Edge" computing node well, it integrates all the types of accelerators studied into a single physical system: multicore CPU, NPU, integrated GPU, and discrete GPU, and having these components available at the same time allowed to emulate, within a single node, the orchestration issues of heterogeneous distributed systems.
+All development and benchmarking activities were done on a mobile workstation Lenovo Yoga Pro 9i gen 9. This platform represents a modern high-performance "Edge" computing node well. It integrates all the types of accelerators we considered into a single physical system: multicore CPU, NPU, integrated GPU, and discrete GPU. Having these components available at the same time allowed to emulate, within a single node, the orchestration issues of heterogeneous distributed systems.
 
 \clearpage 
 
@@ -25,11 +25,11 @@ The core of the system is the Intel Core Ultra 9 185H processor, based on the "M
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Host CPU}: This cpu is made of 16 hybrid cores, 6 Performance-cores, 8 Efficient-cores, and 2 Low-Power-cores for efficiency. In this project this unit acts both as host and accelerator, it runs the scheduler code and does some computation through the OpenBlass library (\ref{openblass}).
+    \item \textbf{Host CPU}: This cpu is made of 16 hybrid cores, 6 Performance-cores, 8 Efficient-cores, and 2 Low-Power-cores for efficiency. In this project this unit acts both as host and accelerator. It runs the scheduler code and does some computation through the OpenBlas library (see Sec. \ref{openblass}).
 
-    \item \textbf{NPU}: The Ultra 9 includes a native Neural Processing Unit. This is a low-power accelerator designed specifically for neural network inference. Its compute acceleration is facilitated by Neural Compute Engines, which consist of hardware acceleration blocks for AI operations like Matrix Multiplication and Convolution, alongside Streaming Hybrid Architecture Vector Engines for general computing tasks \cite{intel_npu}. In this project the NPU is used via the OpenVINO  {\ref{ov}} backend to run Matrix Multiplication. 
+    \item \textbf{NPU}: The Ultra 9 includes a native Neural Processing Unit. This is a low-power accelerator designed specifically for neural network inference. Its compute acceleration is facilitated by Neural Compute Engines, which consist of hardware acceleration blocks for AI operations like Matrix Multiplication and Convolution, alongside Streaming Hybrid Architecture Vector Engines for general computing tasks \cite{intel_npu}. In this project the NPU is exploited via the OpenVINO (see Sec. \ref{ov}) backend. 
 
-    \item \textbf{iGPU}: Intel Arc Graphics, integrated into the SoC, this graphics unit based on Xe-LPG architecture \cite{intel_arc}, offers parallel computing capabilities with direct access to system memory, in this project this accellerator has been used with the SYCL library (\ref{sycl}) as the backend to leverage the full performance of this accellerator. 
+    \item \textbf{iGPU}: Intel Arc Graphics, integrated into the SoC. This graphics unit based on Xe-LPG architecture \cite{intel_arc}, offers parallel computing capabilities with direct access to system memory, in this project this accellerator has been exploited via with the SYCL library (see Sec. \ref{sycl}) as the backend to leverage the full performance of this accellerator. 
 \end{itemize}
 
 \clearpage 
@@ -50,7 +50,7 @@ Unlike the integrated GPU this card features 3072 CUDA Cores for general paralle
 
 The device utilizes 8 GB of GDDR6 VRAM with a 128-bit memory interface, this dedicated memory provides high bandwidth but requires explicit data transfer over the PCIe bus.
 
-Within the scheduler this device is managed via the CUDA backend \ref{cuda}.
+Within the scheduler this device is managed via the CUDA backend (see Sec. \ref{cuda}).
 
 \section{CUDA Toolkit}
 \label{cuda}
@@ -62,20 +62,16 @@ Within the scheduler this device is managed via the CUDA backend \ref{cuda}.
     \label{cuda logo}
 \end{figure}
 
-To exploit the computational capabilities of the discrete NVIDIA GPU the system utilizes CUDA (Compute Unified Device Architecture). This parallel computing platform and programming model developed by NVIDIA that enables dramatic increases in computing performance by
-harnessing the power of the GPU. It allows developers to accelerate compute-
-intensive applications using C, C++, and Fortran, and is widely adopted
-in fields such as deep learning, scientific computing, and high-performance
-computing (HPC) \cite{cuda_guide}.
+To exploit the computational capabilities of the discrete NVIDIA GPU the system utilizes CUDA (Compute Unified Device Architecture). This parallel computing platform and programming model, developed by NVIDIA, enables dramatic increases in computing performance by harnessing the power of the GPU. It allows developers to accelerate compute- intensive applications using C, C++, and Fortran, and is widely adopted in fields such as deep learning, scientific computing, and more in general high-performance computing (HPC) \cite{cuda_guide}.
 
 \clearpage
 
-In this project CUDA is the tool chosen to extract maximum throughput from the hardware \ref{4060}. The implementation relies on specific libraries and mechanisms to optimize the execution of matrix multiplication streams.
+In this project CUDA is the tool chosen to extract maximum throughput from the hardware (see Sec. \ref{4060}). The implementation relies on specific libraries and mechanisms to optimize the execution of matrix multiplication streams.
 
 \begin{itemize}
     \item \textbf{cuBLAS and Tensor Cores}: to perform linear algebra operations we adopts cuBLAS (CUDA Basic Linear Algebra Subroutines). This library is the GPU-accelerated version of the standard BLAS specification and provides highly optimized implementations of matrix operations, specifically, cuBLAS allows the utilization of Tensor Cores, specialized hardware units designed to accelerate mixed-precision matrix multiplication (Float16 and Int8). This significantly increases the theoretical throughput compared to standard floating-point units \cite{cublas}.
 
-    \item \textbf{CUDA Streams}: To handle the latency introduced by data transfers between the CPU and the GPU the system utilizes CUDA Streams. A stream is a sequence of operations that execute in issue-order on the GPU, by employing multiple streams it is possible to achieve concurrency: while one stream is transferring data over the PCIe bus another stream can execute a computational kernel \cite{cuda_streams}. This mechanism, known as "latency hiding", is fundamental for real-time processing and ensures that the GPU compute units remain active as much as possible.
+    \item \textbf{CUDA Streams}: To handle the latency introduced by data transfers between the CPU and the GPU the system utilizes CUDA Streams. A stream is a sequence of operations that execute in issue-order on the GPU, by employing multiple streams it is possible to achieve computation/communication overlapping: while one stream is transferring data over the PCIe bus another stream can execute a computational kernel \cite{cuda_streams}. This mechanism, known as "latency hiding", is fundamental for real-time processing and ensures that the GPU compute units remain active as much as possible.
 
     \item \textbf{NVIDIA Management Library (NVML)}: For the analysis of energy efficiency the project integrates the NVIDIA Management Library (NVML). This serves as a monitoring tool that provides direct access to the GPU hardware sensors, it allows the retrieval of real-time metrics such as power usage (in milliJoule) and temperature without requiring external physical probes \cite{nvml}.
 \end{itemize}
@@ -85,7 +81,7 @@ In this project CUDA is the tool chosen to extract maximum throughput from the h
 \section{SYCL}
 \label{sycl}
 
-While CUDA provides maximum performance for NVIDIA hardware, it requires a proprietary programming model, and to address the need for portability and to fully exploit the Intel hardware present in the system, the project adopts the SYCL standard through the Intel oneAPI toolkit.
+While CUDA provides maximum performance for NVIDIA hardware, it requires a proprietary programming model, and to address the need for portability and to fully exploit the Intel hardware present in the system, this project adopts the SYCL standard through the Intel oneAPI toolkit.
 
 \begin{itemize}
 \item \textbf{The SYCL Standard}: 
@@ -108,7 +104,7 @@ SYCL is an open, royalty-free standard managed by the Khronos Group. It enables 
     \label{oneapi logo}
 \end{figure}
 
-SYCL requires a specific software development kit (SDK) to be compiled and executed. For this thesis, the Intel oneAPI Base Toolkit was selected \cite{intel_oneapi}. oneAPI is Intel's unified programming model designed to simplify development across diverse architectures, it implements the SYCL standard via the \texttt{icpx} compiler, and provides a comprehensive set of libraries optimized for a large set of devices. The choice of this toolkit allows the project to target the available Intel hardware efficiently. Moreover this choice guarantees that the codebase could seamlessly target accellerator from othe vendor like AMD without having to rewrite the code.
+SYCL requires a specific software development kit (SDK) to be compiled and executed. For this thesis, the Intel oneAPI Base Toolkit was selected \cite{intel_oneapi}. oneAPI is Intel's unified programming model designed to simplify development across diverse architectures. It implements the SYCL standard via the \texttt{icpx} compiler, and provides a comprehensive set of libraries optimized for a large set of devices. The choice of this toolkit allows the project to target the available Intel hardware efficiently. Moreover this choice guarantees that the codebase could seamlessly target accellerator from othe vendor like AMD without having to rewrite the code.
 \end{itemize}
 
 \clearpage
@@ -125,34 +121,34 @@ SYCL requires a specific software development kit (SDK) to be compiled and execu
 
 Developed by Intel, this open-source toolkit is designed to optimize and deploy deep learning models across various types of hardware, from edge devices to cloud servers \cite{openvino}.
 
-The main function of the library is that it acts as a translator, it takes an AI model and converts it into a specific format that the target hardware understands.
-This is very useful because it allow the program to run on different components like the CPU, NPU or the integrated graphics without needing to rewrite the code for each specific accellerator. 
+The main function provided by the library is that it acts as a translator, it takes an AI model and converts it into a specific format that the target hardware understands.
+This is very useful because it allows the program to run on different components like the CPU, NPU or the integrated graphics without needing to rewrite the code for each specific accellerator. 
 
 The toolkit automatically handles the low-level details to ensure the task runs as fast as possible in the chosen device. This efficiency is achieved through the model optimizer, as described in the documentation, this tool analyzes the computational operations and simplifies them (for example, by merging multiple mathematical steps into one) before execution. 
 
 The result is a hardware-agnostic format called intermediate representation, IR, which allows the runtme to map the operations efficiently to the available resources \cite{openvino}.
 
-In this project OpenVINO was essential for targeting the specific NPU found in the system \ref{185H}. Since the NPU cannot run standard C++ code directly, OpenVINO acts as the bridge between the scheduler and the hardware, specifically, it was implemented to execute Matrix Multiplication tasks on the NPU. This allowed the system to offload these calculations to the neural accelerator, taking advantage of its high energy efficiency.
+In this project OpenVINO was essential for targeting the specific NPU found in the system (see Sec.\ref{185H}). Since the NPU cannot run standard C++ code directly, OpenVINO acts as the bridge between the scheduler and the hardware, specifically, it was implemented to execute Matrix Multiplication tasks on the NPU. This allowed the system to offload these calculations to the neural accelerator, taking advantage of its high energy efficiency.
 
 \clearpage
 
-\section{OpenBlass}
-\label{openblass}
+\section{OpenBlas}
+\label{openblas}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.1]{images/openblass.jpg} 
-    \caption{OpenBlass Logo}
+    \caption{OpenBlas Logo}
     \label{openblass logo}
 \end{figure}
 
 To enable efficient processing on the Host CPU, the project integrates OpenBLAS. OpenBLAS is an optimized, open-source implementation of the BLAS (Basic Linear Algebra Subprograms) API. 
 
-Historically, the project emerged as a successor to GotoBLAS2, a highly regarded library developed by Kazushige Goto, then after the original development ceased, the OpenBLAS community took over to maintain the code and expand support for modern architectures \cite{openblas}.
+Historically, the project emerged as a successor to GotoBLAS2, a highly regarded library developed by Kazushige Goto. After the original development ceased, the OpenBLAS community took over to maintain the code and expand support for modern architectures \cite{openblas}.
 
-The library achieves high performance through a mechanism called runtime processor detection. OpenBLAS first identifies the CPU architecture and automatically selects the most optimized functions for that specific hardware, these functions are often implemented in assembly language to leverage SIMD instructions, such as AVX2 or AVX-512, which allow the processor to handle multiple data points simultaneously. Additionally, the library automatically handles multi-threading to distribute the computational load across all available processor cores\cite{openblas_git}.
+The library achieves high performance through a mechanism called runtime processor detection. OpenBLAS first identifies the CPU architecture and automatically selects the most optimized functions for that specific hardware. These functions are often implemented in assembly language to leverage SIMD instructions, such as AVX2 or AVX-512, which allow the processor to handle multiple data points simultaneously (vector computing). Additionally, the library automatically handles multi-threading to distribute the computational load across all available processor cores\cite{openblas_git}.
 
-In this project this library allow the Host CPU to be treated as an additional accelerator, so rather than limiting the CPU solely to orchestration tasks, OpenBLAS enables the scheduler to use some of the processor cores as a worker node. More details on this will be provided in the Implementation Chapter \ref{implementation}.
+In this project this library allows the Host CPU to be treated as an additional accelerator. Rather than limiting the CPU solely to orchestration tasks, OpenBLAS enables the scheduler to use some of the processor cores as a worker node. More details on this will be provided in the Implementation Chapter \ref{implementation}.
 \clearpage
 
 \section{C/C++}
@@ -172,18 +168,12 @@ Below is a brief overview of both languages:
 \,
 
 \textbf{The C Language}: 
-\begin{itemize}
-    \item Developed in the 1970s by Dennis Ritchie, it was one of the first high-level languages in history. 
-    \item it is renowned for its simplicity, efficiency, and direct access to memory, making it ideal for writing highly optimized code \cite{libro_c}.
-\end{itemize}
+Developed in the 1970s by Dennis Ritchie, it was one of the first high-level languages in history. It is renowned for its simplicity, efficiency, and direct access to memory, making it ideal for writing highly optimized code \cite{libro_c}.
 
 \textbf{The C++ Language}: 
-\begin{itemize}
-    \item C++ is an extension of C developed in the 1980s by Bjarne Stroustrup. Among its key features is the support for Object-Oriented Programming (OOP), which allows for the creation of more structured and modular software compared to procedural C \cite{libro_cpp}.
-    \item It provides a rich Standard Library (STL) and is the industry standard for performance-critical applications.
-\end{itemize}
+C++ is an extension of C developed in the 1980s by Bjarne Stroustrup. Among its key features is the support for Object-Oriented Programming (OOP), which allows for the creation of more structured and modular software compared to procedural C \cite{libro_cpp}. It provides a rich Standard Library (STL) and is the industry standard for performance-critical applications.
 
-In the context of this project, C plays a critical architectural role. It was utilized to define the Application Binary Interface (ABI) between the scheduler and the various hardware wrappers. Instead C++ serves as the primary development language. Its adoption was mandatory as it is the native language required by the SDKs of all the utilized frameworks, It is used to implement the complex logic of the scheduler and the data structures necessary for task management. Further details on this will be provided in the Implementation Chapter \ref{implementation}.
+In the context of this project, C plays a critical architectural role. It was utilized to define the Application Binary Interface (ABI) between the scheduler and the various hardware wrappers. This choice was driven by the need for a stable and simplified interface. Since the project components are built with different compilers, C++ was unsuitable due to its lack of a standardized ABI, which causes binary incompatibility. C, instead, ensures consistent linkage across these environments. Instead C++ serves as the primary development language. Its adoption was mandatory as it is the native language required by the SDKs of all the utilized frameworks. It is used to implement the complex logic of the scheduler and the data structures necessary for task management. Further details on this will be provided in the Implementation Chapter \ref{implementation}.
 
 \clearpage
 

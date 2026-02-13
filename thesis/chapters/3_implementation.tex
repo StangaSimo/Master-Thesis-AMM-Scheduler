@@ -425,6 +425,7 @@ The logic remains identical to the 32 bit version, but it introduces changes to 
 The implementation for 8 bit integer matrices follows the exact same architectural pattern, differing only in data types, \texttt{int8\_t} and flags \texttt{CUDA\_R\_8I}. The code can be found in full in Appendix \ref{TODO}.
 
 \subsection{OpenVINO}
+\label{implopenvino}
 The OpenVINO abstraction layer is designed to target the Intel NPU, just like the CUDA backend, the interaction between the C++ scheduler and the OpenVINO runtime is mediated by a standard C interface to ensure the ABI compatibility.
 
 \begin{lstlisting}[caption={ov\_wrapper.h interface}, language=C++] 
@@ -981,6 +982,7 @@ Finally, the function initializes the \textbf{Coordinator Thread}. This thread i
 \clearpage 
 
 \subsection{Workers}
+\label{implworker}
 While the Coordinator thread manages the complexity of deciding where to send the data, the worker threads are designed to be extremely lightweight and simple. Their only purpose is to retrieve a task from their buffer, execute it, and signal the completion.
 
 Below the implementation of the worker function: 
@@ -1330,6 +1332,7 @@ The 16 bit initialization function is omitted because it follows the same patter
 \clearpage 
 
 \subsection{SharedBuffer}
+\label{implringbuffer}
 
 The SharedBuffer is the tool used for communication between the threads, since the Coordinator and the Workers run independently, they need a safe place to exchange data.
 
@@ -1673,6 +1676,8 @@ This logic distributes tasks equally among all available workers in a cyclic man
 \clearpage
 
 \subsection{Static Partitioning}
+\label{implstaticlogic}
+
 This strategy represents the core logic for handling homogeneous workloads (streams of identical matrices) in a batch style manner. Ideally, to minimize the makespan, the workload should be distributed proportionally to the computing power of each accelerator.
 
 The algorithm operates in batches defined by \texttt{BATCH\_SIZE}. The execution flow is divided into three distinct phases: Fetch, Logic, and Dispatch.
@@ -1811,6 +1816,7 @@ break;
 \clearpage
 
 \subsection{Large Matrix Split}
+\label{impllargelogic}
 This static strategy addresses a specific case, handling a single matrix multiplication that is too large to fit into the memory of any individual accelerator. Instead of treating the matrix as an indivisible unit, this logic implements a Split-Compile-Merge approach, splitting the large matrix horizontally in smaller chunks and sending smaller tasks to each accellerator, enabling the sistem to process this workload in parallel, then the result are written directly into the corresponding section.  
 
 To determine the optimal number of rows for each device, the scheduler employs an \textbf{Iterative Refinement algorithm}. This logic is also splitted in 3 phase, the initial estimation, the iterative refinement and then the dispatchign. 
@@ -1969,6 +1975,7 @@ Furthermore, if the assigned chunk of rows is still too large for the device mem
 \clearpage
 
 \subsection{Static Hetero Partitioning} 
+\label{implheterologic}
 This strategy is an evolution of the Static Partitioning logic, designed for heterogeneous workloads where tasks differ in size and computational cost (stream of matrices with random dimensions).
 
 In this scenario, calculating a simple ratio based on the first task (as done in the previous strategy) would be incorrect, because the speed of an accelerator is not constant but depends on the problem size. Therefore, instead of assigning tasks based on a global ratio, this algorithm adopts a \textbf{greedy approach}: it simulates the execution timeline and assigns each task to the accelerator that can complete it soonest, considering its current accumulated load.
@@ -2029,6 +2036,7 @@ After the simulation loop processes the entire batch, the tasks are pushed to th
 \clearpage
 
 \subsection{Dynamic}
+\label{impldynamiclogic}
 The Dynamic strategy was the final logic implemented in the scheduler. Unlike the static approaches which rely on performance map and pre calculated distributions, this strategy implements a simple first come first served method. Since the scheduler's architecture was originally designed around batch processing and static partitioning, this logic was adapted to fit the existing structure by introducing a polling mechanism to monitor worker status (already seen in the worker section, see \ref{TODO}).
 
 The Coordinator effectively polls the state of the worker threads to find one that is currently idle.
