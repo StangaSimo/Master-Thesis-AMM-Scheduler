@@ -1,9 +1,9 @@
 \chapter{Results}
-\label{resultso}
+\label{results}
 
-In this chapter, we present the performance analysis of the AMM Scheduler. The objective of these tests is to validate the effectiveness of the proposed scheduling logics (Static, Static Hetero, and Dynamic) and to analyze how the workload is distributed among the available accelerators in a real-world heterogeneous environment.
+This chapter, discusses the performance of the AMM Scheduler. The objective of the discussed tests is the validation of the effectiveness of the proposed scheduling logics (Static, Static Hetero, and Dynamic) and to analyze how the workload is distributed among the available accelerators in a real-world heterogeneous environment.
 
-All the experiments were conducted as already described in the Tool chapter (see \ref{tools}), on a modern high performance laptop, specifically the Lenovo Yoga Pro 9. 
+All the experiments were conducted as already described in the Tool chapter (see Chap. \ref{tools}), on a modern high performance laptop, specifically the Lenovo Yoga Pro 9. 
 
 The specific hardware and software used are listed below:
 \begin{itemize} 
@@ -39,7 +39,7 @@ In this case, we are dealing with small matrices, where the biggest overhead is 
     \label{energy1024}
 \end{figure}
 
-As we can see from Figure \ref{time1024}, with these small tasks, the static logic and the dynamic logic perform almost in the same way, both clearly outperform the single CUDA card by using multiple accelerators in parallel. An average speedup of 2\% was observed for the static logic, and 2.10\% for the dynamic logic, compared to the CUDA logic. The graph in Figure \ref{energy1024} is very interesting, where we can clearly see how the two strategy manage to stay below the total consumption of the CUDA logic (for energy metrics, see section \ref{TODO}). This is a very significant result because it shows how these different accelerators, even if they are not as fast as the CUDA card, can still be efficient; and if used in parallel, they lead to an increase in the total system efficiency. In this case, the metric efficiency was calculated as Tasks per Joule, and we obtained:
+As we can see from Figure \ref{time1024}, with these small tasks, the static logic and the dynamic logic perform almost in the same way, both clearly outperform the single CUDA card by using multiple accelerators in parallel. An average speedup of 2\% was observed for the static logic, and 2.10\% for the dynamic logic, compared to the CUDA logic. The graph in Figure \ref{energy1024} is very interesting, where we can clearly see how the two strategy manage to stay below the total consumption of the CUDA logic (for energy metrics, see Sec. \ref{implprofiler}). This is a very significant result because it shows how these different accelerators, even if they are not as fast as the CUDA card, can still be efficient; and if used in parallel, they lead to an increase in the total system efficiency. In this case, the metric efficiency was calculated as Tasks per Joule, and we obtained:
 
 \begin{itemize}
     \item Cuda only: 2.62 Tasks/J
@@ -63,7 +63,7 @@ Furthermore, to investigate the performance of the two logics, graphs were made 
     \label{timedistr1024}
 \end{figure}
 
-Here we can see how the two logics fundamentally differ in their operation. The greedy nature of the dynamic logic tends to make the accelerators work more continuously in this case of small tasks, managing to "spread" the work better among the accelerators. As we can note from Figure \ref{dist1024}, it is clear that the static logic underestimated the performance of the non CUDA accelerators, and this led to a higher number of tasks on NVIDIA card, meanwhile, the dynamic logic managed, thanks to its greedy nature, to make the other accelerators work much more evenly, and this indeed led to a bit more faster times. In fact, as we can see from the graph in Figure \ref{timedistr1024}, the dynamic logic definitly make more use of the other accelerators over the CUDA card. This is surely because they are slightly faster in this smaller tasks, having much less memory overhead.
+Here we can see how the two logics fundamentally differ in their operation. The greedy nature of the dynamic logic tends to make the accelerators work more continuously in this case of small tasks, managing to "spread" the work better among the accelerators. As we can note from Figure \ref{dist1024}, it is clear that the static logic underestimated the performance of the non CUDA accelerators, and this led to a higher number of tasks on NVIDIA card, meanwhile, the dynamic logic managed, thanks to its greedy nature, to make the other accelerators work much more evenly, and this indeed led to a bit more faster times. In fact, as we can see from the graph in Figure \ref{timedistr1024}, the dynamic logic definitly make more use of the other accelerators over the CUDA card. This is due to the fact that they are slightly faster in this smaller tasks, having much less memory overhead.
 
 \clearpage 
 
@@ -74,7 +74,7 @@ In this scenario, the workload increases significantly. The matrix size is large
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_energy_s2048.png} \caption{Energy Comparison Matrix 2048} \label{energy2048} \end{figure}
 
-As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this workloads. However, a clear different appears between the two logics. The dynamic strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the static strategy lags slightly behind with an average speedup of 1.90x. This indicates that the dynamic logic is 14\% faster on average for this specific workload. 
+As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this kind of workload. However, a clear different appears between the two logics. The dynamic strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the static strategy lags slightly behind with an average speedup of 1.90x. This indicates that the dynamic logic is 14\% faster on average for this specific workload. 
 
 Regarding energy efficiency (Figure \ref{energy2048}) the heterogeneous execution significantly reduces the total energy consumption compared to the CUDA only approach, thanks to the reduction in total execution time. The dynamic strategy proves to be the most efficient, consuming only 218 J on average per batch, compared to 430 J for CUDA Only.
 
@@ -94,7 +94,7 @@ Figure \ref{distrib2048} reveals again the cause of the performance difference. 
 However, the dynamic strategy as already said, adapts in real time, so as seen in the Figure \ref{timedistr2048}, the dynamic logic keeps the CPU, the intel GPU and NPU work more evenly.
 
 \subsection{Matrix: 4096x4096}
-This scenario expose a heavy workload on the scheduler, the computational cost now should  dominate the ovehread of data transfer. The results of the logic execution are presented below:
+This scenario expose a heavy workload on the scheduler, the computational cost now should  dominate the ovehread of data transfer. The results of the logic execution are presented in Fig. \ref{time4096} and Fig. \ref{energy4096}:
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_time_s4096.png} \caption{Time Comparison 4096} \label{time4096} \end{figure}
 
@@ -130,7 +130,7 @@ We now present the following graphs to illustrate the impact of batch size on th
     \label{timedistr1024}
 \end{figure}
 
-As can be observed from the graphs, a relatively small batch size specifically ranging from 20 to 30 proved to be the most suitable for the selected algorithm and the dataset utilized across each workload. Conversely, it is evident that larger batch sizes frequently result in inaccurate predictions, while inevitably introducing additional overhead to the coordinator adding more time beetween the dispatch of the tasks to the workers.
+As is evident from the graphs, a relatively small batch size specifically ranging from 20 to 30 proved to be the most suitable for the selected algorithm and the dataset utilized across each workload. Conversely, it is evident that larger batch sizes frequently result in inaccurate predictions, while inevitably introducing additional overhead to the coordinator adding more time beetween the dispatch of the tasks to the workers.
 
 \clearpage 
 

@@ -28,18 +28,18 @@
 \contentsline {subsection}{\numberline {4.2.4}OpenBLAS}{47}{subsection.4.2.4}%
 \contentsline {section}{\numberline {4.3}AMM Scheduler}{50}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{52}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Workers}{54}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{56}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Tasks}{60}{subsection.4.3.4}%
-\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{63}{subsection.4.3.5}%
-\contentsline {subsection}{\numberline {4.3.6}Performance Map}{65}{subsection.4.3.6}%
-\contentsline {subsection}{\numberline {4.3.7}Profiler}{69}{subsection.4.3.7}%
-\contentsline {subsection}{\numberline {4.3.8}Coordinator}{71}{subsection.4.3.8}%
-\contentsline {subsubsection}{Baseline: CUDA only and Round Robin}{71}{section*.2}%
-\contentsline {subsection}{\numberline {4.3.9}Static Partitioning}{73}{subsection.4.3.9}%
-\contentsline {subsection}{\numberline {4.3.10}Large Matrix Split}{76}{subsection.4.3.10}%
-\contentsline {subsection}{\numberline {4.3.11}Static Hetero Partitioning}{80}{subsection.4.3.11}%
-\contentsline {subsection}{\numberline {4.3.12}Dynamic}{82}{subsection.4.3.12}%
+\contentsline {subsection}{\numberline {4.3.2}Workers}{53}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{55}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Tasks}{59}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{62}{subsection.4.3.5}%
+\contentsline {subsection}{\numberline {4.3.6}Performance Map}{64}{subsection.4.3.6}%
+\contentsline {subsection}{\numberline {4.3.7}Profiler}{68}{subsection.4.3.7}%
+\contentsline {subsection}{\numberline {4.3.8}Coordinator}{70}{subsection.4.3.8}%
+\contentsline {subsubsection}{Baseline: CUDA only and Round Robin}{70}{section*.2}%
+\contentsline {subsection}{\numberline {4.3.9}Static Partitioning}{71}{subsection.4.3.9}%
+\contentsline {subsection}{\numberline {4.3.10}Large Matrix Split}{75}{subsection.4.3.10}%
+\contentsline {subsection}{\numberline {4.3.11}Static Hetero Partitioning}{79}{subsection.4.3.11}%
+\contentsline {subsection}{\numberline {4.3.12}Dynamic}{81}{subsection.4.3.12}%
 \contentsline {chapter}{\numberline {5}Results}{83}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Homogeneous Workloads}{83}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}Matrix: 1024x1024}{84}{subsection.5.1.1}%
