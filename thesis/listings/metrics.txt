@@ -1,0 +1,69 @@
+############################################################
+ MATRIX 1024x1024 (Homogeneous)
+############################################################
+
+[1] SPEEDUP ANALYSIS (Baseline: CUDA_Only)
+   > Dynamic vs CUDA: Avg 2.02x | Max 2.29x
+   > Static vs CUDA:  Avg 2.10x | Max 2.24x
+   > Dynamic vs Static: Avg 0.96x (-4.3%)
+
+[2] ENERGY EFFICIENCY (Avg per Batch)
+   > CUDA_Only   : 405.50 J
+   > Dynamic     : 231.85 J (-42.8% vs CUDA)
+   > Static      : 241.43 J (-40.5% vs CUDA)
+
+############################################################
+ MATRIX 2048x2048 (Homogeneous)
+############################################################
+
+[1] SPEEDUP ANALYSIS (Baseline: CUDA_Only)
+   > Dynamic vs CUDA: Avg 2.21x | Max 2.71x
+   > Static vs CUDA:  Avg 1.90x | Max 2.04x
+   > Dynamic vs Static: Avg 1.15x (+15.2%)
+
+[2] ENERGY EFFICIENCY (Avg per Batch)
+   > CUDA_Only   : 407.58 J
+   > Dynamic     : 218.55 J (-46.4% vs CUDA)
+   > Static      : 258.70 J (-36.5% vs CUDA)
+
+############################################################
+ MATRIX 4096x4096 (Homogeneous)
+############################################################
+
+[1] SPEEDUP ANALYSIS (Baseline: CUDA_Only)
+   > Dynamic vs CUDA: Avg 1.78x | Max 2.67x
+   > Static vs CUDA:  Avg 2.00x | Max 2.90x
+   > Dynamic vs Static: Avg 0.88x (-11.7%)
+
+[2] ENERGY EFFICIENCY (Avg per Batch)
+   > CUDA_Only   : 568.70 J
+   > Dynamic     : 331.56 J (-41.7% vs CUDA)
+   > Static      : 343.20 J (-39.7% vs CUDA)
+
+############################################################
+ HETEROGENEOUS WORKLOAD
+############################################################
+
+[1] SPEEDUP ANALYSIS (Baseline: CUDA_Only)
+   > Dynamic vs CUDA: Avg 0.42x | Max 1.24x
+   > Static vs CUDA:  Avg 1.65x | Max 1.85x
+   > Dynamic vs Static: Avg 0.24x (-75.8%)
+
+[2] ENERGY EFFICIENCY (Avg per Batch)
+   > CUDA_Only   : 136.44 J
+   > Dynamic     : 805.13 J (+490.1% vs CUDA)
+   > Static      : 112.20 J (-17.8% vs CUDA)
+
+############################################################
+ LARGE MATRIX SPLIT (Hybrid vs CUDA)
+############################################################
+
+[1] SPEEDUP ANALYSIS
+   > Hybrid vs CUDA Only:
+     Average Speedup: 1.49x
+     Max Speedup:     2.46x (at M=36000)
+
+[2] ENERGY CONSUMPTION
+   > Hybrid Energy Saving vs CUDA: +21.80% (Average)
+   > Total Energy used in Benchmark: CUDA=52114J vs Hybrid=38897J
+

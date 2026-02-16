@@ -127,33 +127,109 @@ We now present the following graphs to illustrate the impact of batch size on th
     \includegraphics[scale=0.2]{images/results/analysis_batch_S2048.png} 
     \includegraphics[scale=0.2]{images/results/analysis_batch_S4096.png} 
     \caption{Batch Size Analysis}
-    \label{timedistr1024}
+    \label{result1}
 \end{figure}
 
-As is evident from the graphs, a relatively small batch size specifically ranging from 20 to 30 proved to be the most suitable for the selected algorithm and the dataset utilized across each workload. Conversely, it is evident that larger batch sizes frequently result in inaccurate predictions, while inevitably introducing additional overhead to the coordinator adding more time beetween the dispatch of the tasks to the workers.
+As is evident from the graphs in Fig \ref{result1}, a relatively small batch size specifically ranging from 20 to 30 proved to be the most suitable for the selected algorithm and the dataset utilized across each workload. Conversely, it is evident that larger batch sizes frequently result in inaccurate predictions, while inevitably introducing additional overhead to the coordinator adding more time beetween the dispatch of the tasks to the workers.
 
 \clearpage 
 
-\section{heterogeneous Workloads}
+\section{Heterogeneous Workloads}
+\subsection{Static Heterogeneous}
+This test involves streams of matrices with random dimensions ( from 512 to 4096). This represents the most realistic scenario for a general-purpose system, where tasks of varying complexity arrive at the scheduler.
+
+The results of the execution are presented in Fig. \ref{timehetero} and Fig. \ref{energyhetero}:
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{images/results/compare_time_Hetero.png}
+\caption{Time Comparison: Heterogeneous Stream}
+\label{timehetero}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{images/results/compare_energy_Hetero.png}
+\caption{Energy Comparison: Heterogeneous Stream}
+\label{energyhetero}
+\end{figure}
+
+As shown in Fig. \ref{timehetero}, the difference between the strategies is this case is drastic. The static hetero strategy as the red line proves to be extremely robust, consistently outperforming the single CUDA baseline as the green line. It achieves an average speedup of 1.65x (peaking at 1.85x), demonstrating how this logic achieves a consistent speedup increase while orchestrating the diverse accelerators to handle the heterogeneous workload.
+
+In contrast, the dynamic strategy as the blue line fails to maintain consistent execution times this type of workload. With an average speedup of only 0.42x, it is significantly slower than using the discrete GPU alone. This failure is due to its greedy nature: without looking ahead, it treats a 512×512 matrix and a 4096×4096 matrix as identical tasks, and consistently fails to distribute them efficiently to achieve maximum performance.
+
+The energy analysis in Fig. \ref{energyhetero} mirrors the performance gap already observed:
+\begin{itemize}
+\item \textbf{Static Strategy}: Consumes on average 112 J, achieving a -17\% energy saving compared to the average CUDA baseline (136 J).
+\item \textbf{Dynamic Strategy}: Due to the extremely long execution times, the energy consumption skyrockets to an average of 805 J, with a +490\% increase over the baseline.
+\end{itemize}
+
+To better understand these results, we analyze the distribution graphs in Fig. \ref{distribhetero} and Fig. \ref{timedistrhetero}:
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{images/results/distrib_tasks_Hetero.png}
+\caption{Task Distribution: Heterogeneous Stream}
+\label{distribhetero}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{images/results/distrib_Hetero.png}
+\caption{Time Distribution: Heterogeneous Stream}
+\label{timedistrhetero}
+\end{figure}
+
+Regarding the task distribution (see Fig. \ref{distribhetero}), the graph doesn't describe the full scenario since every task has a different weight. However, for the static strategy, we can observe that the number of tasks assigned to each accelerator remains proportional as the total number of tasks increases. This confirms that the strategy is consistent in its decision making logic.
+
+In contrast, the dynamic strategy shows a completely chaotic behavior. Since tasks are assigned to whichever device is free, the distribution varies unpredictably. Unlike the homogeneous tests where the dynamic distribution was relatively stable with smaller tasks, here the randomness of task sizes combined with greedy scheduling leads to a random assignment that changes with every run.
+
+As seen in the Time Distribution (Figure \ref{timedistrhetero}), the CPU and OpenVINO bars are massive. This indicates that the scheduler blindly assigned computationally heavy tasks (e.g., a 4096×4096 matrix) to slow devices simply because they were "free"" at that moment. This creates a massive bottleneck where the powerful GPU finishes its work quickly and sits idle for seconds, waiting for the CPU to finish a single large matrix.
+
+This result conclusively proves that for heterogeneous streams of tasks, smart scheduling with performance prediction is mandatory in this kind of workloads. A simple greedy approach is insufficient and leads to severe performance degradation.
+
+\clearpage 
+
+\subsection{Batch Comparison}
+We now present the following graph in Fig. \ref{result_hetero} to illustrate the impact of batch size on the execution times of the static logic under heterogeneous workload conditions:
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.3]{images/results/compare_time_Hetero.png} 
-    \includegraphics[scale=0.3]{images/results/compare_energy_Hetero.png} 
-    \includegraphics[scale=0.3]{images/results/distrib_tasks_Hetero.png} 
-    \includegraphics[scale=0.3]{images/results/distrib_Hetero.png} 
-    \caption{Batch Size Analysis}
-    \label{timedistr1024}
+    \includegraphics[scale=0.4]{images/results/analysis_batch_hetero.png} 
+    \caption{Heterogeneous Batch Size}
+    \label{result_hetero}
 \end{figure}
 
+As is evident from the graph in Fig \ref{result_hetero}, a relatively large batch size, specifically ranging from 60 to 70, proved to be the most suitable for the static hetero algorithm. Conversely, it is evident that smaller batch sizes (e.g. 20) frequently result in highly unstable execution times, introducing load imbalance due to the high variance of task duration. Larger batches effectively smooth out these variations, allowing the static ratios calculated within the algorithm to converge towards a more efficient distribution of the task, effectively respecting the planned times.
 
-\subsection{Large matric split}
+\subsection{Large matrix split}
+
+This scenario involves decomposing a single very large matrix multiplication (where M grows up to 230,000 rows) into smaller sub-tasks (chunks) to fit within device memory limits and distribute the computation.
+
+To provide a fair and meaningful baseline, a simplified version of the splitting logic was implemented. This strategy performs the same chunking operation required to handle the large matrix dimensions but dispatches all chunks exclusively to the NVIDIA GPU (the code can be seen in Appendix \ref{TODO}).
+
+Furthermore, for this specific test case, the OpenVINO backend was excluded. Preliminary tests showed that OpenVINO's performance degrades when handling extremely "rectangular" matrices (very high M, fixed N,K), making it an unsuitable for this specific splitting workload. Our strategy therefore in this test leverages CUDA, SYCL, and OpenBLAS.
+
+The following graphs (Fig. \ref{timelarge}) illustrate the comparison between the Hybrid Split strategy and the CUDA Only baseline:
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.3]{images/results/large_matrix_chunks.png} 
-    \includegraphics[scale=0.3]{images/results/large_matrix_analysis.png} 
-    \caption{Batch Size Analysis}
-    \label{timedistr1024}
+    \includegraphics[scale=0.35]{images/results/large_matrix_time_energy.png} 
+    \caption{Time and Task Analysis}
+    \label{timelarge}
 \end{figure}
 
+The execution time comparison on Fig. \ref{timelarge} on the left clearly demonstrates the advantage of the Hybrid split approach. The split logic consistently remains below the green line (CUDA Only), indicating a lower total time to completion across the entire range of matrix sizes. The hybrid strategy achieves an 1.49x average speedup compared to using the GPU alone. In specific configurations the speedup reaches a peak of 2.46x, demonstrating that the combined throughput of the CPU and iGPU can more than double the system's performance for certain problem sizes.
 
+Consumptions wise, the Hybrid strategy also demonstrated superior energy efficiency in some cases (see Fig. \ref{timelarge} on the right): on average, the large static split approach reduced energy consumption by 21\% compared to the CUDA baseline. Furthermore over the entire benchmark, the hybrid strategy consumed 38 J less on average than the 52 J required by the CUDA only execution. This result highlights that finishing the task faster, even by powering up the CPU and iGPU, is often more energy efficient than keeping the discrete GPU active for a longer duration.
+
+\clearpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.4]{images/results/large_matrix_chunks.png} 
+    \caption{Chunk Distribution Analysis}
+    \label{chunklarge}
+\end{figure}
+
+The load balancing graph on Fig. \ref{chunklarge} provides insight into how the work was distributed. As expected, the powerful CUDA GPU handles the majority of the chunks (approximately 50\% or 60\% of the workload). The remaining of the work is successfully offloaded to the iGPU and CPU backends. This is the direct cause of the observed speedup: by keeping all accelerators active, the system completes the massive calculation faster than the single GPU could.
