@@ -233,3 +233,96 @@ Consumptions wise, the Hybrid strategy also demonstrated superior energy efficie
 \end{figure}
 
 The load balancing graph on Fig. \ref{chunklarge} provides insight into how the work was distributed. As expected, the powerful CUDA GPU handles the majority of the chunks (approximately 50\% or 60\% of the workload). The remaining of the work is successfully offloaded to the iGPU and CPU backends. This is the direct cause of the observed speedup: by keeping all accelerators active, the system completes the massive calculation faster than the single GPU could.
+
+\section{Real-World Application: Video Filtering}
+To demonstrate the flexibility of the AMM Scheduler beyond synthetic benchmarks, a real-world video processing application was implemented. This test case involves applying an edge detection filter (convolution) to a video stream in real-time.
+
+The application, whose source code can be found in Appendix \ref{appendix:opencv}, uses OpenCV to decode a video file frame by frame. Each frame is converted into a matrix format suitable for the scheduler: the image is flattened, and the convolution kernel is treated as the second matrix in a multiplication operation (using the \textit{im2col} technique). This effectively transforms a standard image processing task into a stream of matrix multiplication tasks.
+
+For this specific test, the OpenVINO backend was disabled. Since the \textit{im2col} transformation results in matrices that are essentially long vectors (very high N, small K), the specialized architecture of the NPU does not provide a benefit compared to the CPU or GPU. Therefore, the task distribution focuses on CUDA, SYCL, and OpenBLAS.
+
+\subsection{Performance Comparison}
+To evaluate the scheduler under a workload that is as realistic as possible, a video processing application was implemented. The specific task consisted of applying an edge-detection filter to a standard .mp4 video file.
+
+To manage the video format and frame extraction, the OpenCV library was utilized (the complete source code is available in Appendix \ref{appendix:opencv}). Typically, applying a filter to an image is performed using convolution operations. However, since the AMM Scheduler is specialized exclusively for Matrix Multiplication, the standard im2col (image-to-column) technique was employed. This technique reshapes the image data and the filter kernel, transforming the convolution problem into a matrix multiplication task that our system can execute.
+
+Once the frames were extracted and converted, they were simply dispatched to the scheduler following the standard procedure already described in the Implementation Chapter (see Sec. \ref{implammscheduler}). The scheduler then handled the distribution of these tasks across the available hardware automatically.
+
+To demonstrate the results, we present the raw execution logs generated directly by the scheduler. We compared a baseline execution using only the Discrete GPU (Cuda only logic) against the Dynamic Logic of the scheduler.
+
+In Fig. \ref{videocuda} is the output log for the CUDA Only execution:
+
+\begin{lstlisting}[caption={Video Filter Output: CUDA Only}, language=bash, label={videocuda}]
+Matrix: 1x917604x9 | Tasks: 241
+Total Time: 2896.41 ms
+Latency (ms): Avg 1452.57 | Min 29.15 | Max 2896.41
+
+Power consumption:
+Duration: 2.89 s
+cpu package:     89.46 J  (30.89 W avg)
+cpu core:        59.04 J  (20.38 W avg)
+cuda gpu:       231.69 J  (79.99 W avg)
+total:          321.16 J
+\end{lstlisting}
+
+And in Fig. \ref{videodynamic} is the output using the dynamic Logic:
+
+\begin{lstlisting}[caption={Video Filter Output: Dynamic}, language=bash, label={videodynamic}]
+Matrix: 1x917604x9 | Tasks: 241
+Total Time: 592.46 ms
+Latency (ms): Avg 306.42 | Min 12.55 | Max 592.46
+
+Power consumption:
+Duration: 0.59 s
+cpu package:     23.17 J  (39.11 W avg)
+cpu core:        17.12 J  (28.90 W avg)
+cuda gpu:       101.43 J (171.20 W avg)
+total:          124.60 J
+
+Scheduler: 241 batches
+Fetch      | avg: 0.20   us
+Logic      | avg: 6.89   us
+Dispatch   | avg: 0.19   us
+Total overhead: 1755.25 us
+
+Workers:
+[CUDA]
+tasks: 43
+occupancy:         87.45 %
+total work time: 522.00 ms,  Avg work time:   12139.50 us
+[SYCL]
+tasks: 40
+occupancy:         96.48 %
+total work time: 561.80 ms,  Avg work time:   14045.01 us
+[OPENBLAS]
+tasks: 158
+occupancy:         87.59 %
+total work time: 511.55 ms,  Avg work time:   3237.66 us
+\end{lstlisting}
+
+The results show a massive performance improvement with the scheduler. The total execution time dropped from 2896 ms to 592 ms, representing a speedup of roughly 4.8x. Consequently, the total energy consumed for the task was reduced from 321 J to 124 J.
+
+This speedup is due to the specific size of the matrices produced by the im2col transformation. As shown in the logs (1×917604×9), these matrices are essentially long vectors. The CPU and the Integrated Graphics are extremely efficient, as they perform the calculation directly in system memory without the high latency overhead required to move data to the discrete GPU and launch kernels.
+
+The dynamic logic naturally exploited this characteristic: by assigning tasks to whichever device was free, it allowed the CPU to process the majority of the frames (158 tasks) simply because it was completing them faster (3.2 ms per task) than the discrete GPU (12 ms per task).
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{images/frame_originale.jpg}
+\caption{Original Input Frame}
+\label{fig:input_frame}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{images/frame_edge.jpg}
+\caption{Edge Detection Output}
+\label{fig:output_frame}
+\end{minipage}
+\caption{Visual comparison of the video filter application.}
+\label{video_comparison}
+\end{figure}
+
+Finally, to qualitatively validate the correctness of the computation, we present a visual comparison between the input video stream and the output generated by the scheduler. Figure \ref{video_comparison} displays a single frame extracted from the test video. On the left, the original frame is shown. On the right, the result of the Edge Detection filter is visible showing how the scheduler successfully applied the kernel using the \textit{im2col} matrix multiplication technique.

@@ -8,12 +8,13 @@ A level-1 auxiliary file: chapters/1_tools.aux
 A level-1 auxiliary file: chapters/2_logical_design.aux
 A level-1 auxiliary file: chapters/3_implementation.aux
 A level-1 auxiliary file: chapters/4_results.aux
+A level-1 auxiliary file: chapters/5_conclusions.aux
 A level-1 auxiliary file: chapters/AppendiceA.aux
 The style file: plain.bst
 Database file #1: chapters/Bibliografia.bib
 You've used 16 entries,
             2118 wiz_defined-function locations,
-            569 strings with 5853 characters,
+            570 strings with 5879 characters,
 and the built_in function-call counts, 3277 in all, are:
 = -- 305
 > -- 118

@@ -88,6 +88,9 @@ inline void test_video_filter(Logic l, bool display) {
         exit(EXIT_FAILURE);
     }
 
+    double fps = cap.get(cv::CAP_PROP_FPS);
+    if (fps <= 0) fps = 30.0;
+
     /* edge detection */
     cv::Mat kernel = (cv::Mat_<float>(3, 3) << -1, -1, -1, -1, 8, -1, -1, -1, -1);
 
@@ -114,30 +117,42 @@ inline void test_video_filter(Logic l, bool display) {
         tasks.push_back(t);
     }
 
-    cout << "[OPENCV TEST] frame Processati\n";
+    cout << "[OPENCV TEST] frames done\n";
 
     AMScheduler scheduler = AMScheduler(l);
     scheduler.do_tasks(tasks.data(), tasks.size());
     scheduler.wait();
     scheduler.print_stats(tasks.data(), tasks.size());
 
-    cout << "[OPENCV TEST] Scheduler finito\n";
+    cout << "[OPENCV TEST] scheduler done \n";
 
-    if (display) {
-        for (auto& t : tasks) {
-            cv::Mat display;
+    if (!tasks.empty()) {
+        int out_w = float_img.cols - kernel.rows + 1;
+        int out_h = float_img.rows - kernel.rows + 1;
+        cv::Size frame_size(out_w, out_h);
 
-            cv::Mat out = result_from_task(t, float_img.cols, kernel.rows);
+        cv::VideoWriter writer("test_edge.mp4", 
+                               cv::VideoWriter::fourcc('M','P','4','V'), 
+                               fps, frame_size, false);
 
-            cv::normalize(out, out, 0, 255, cv::NORM_MINMAX); 
-            out.convertTo(display, CV_8U);
+        if (!writer.isOpened()) {
+            std::cout << "Could not open the output video for writing\n";
+        } else {
+            for (auto& t : tasks) {
+                cv::Mat out = result_from_task(t, float_img.cols, kernel.rows);
+                
+                cv::Mat display_frame;
+                cv::normalize(out, out, 0, 255, cv::NORM_MINMAX);
+                out.convertTo(display_frame, CV_8U);
 
-            cv::imshow("Scheduler Output", display);
+                writer.write(display_frame);
 
-            if (cv::waitKey(30) == 27) {
-                video_ended = true;
-                break;
+                if (display) {
+                    cv::imshow("Scheduler Output", display_frame);
+                    if (cv::waitKey(1) == 27) break; 
+                }
             }
+            std::cout << "[OPENCV TEST] Video saved as test_edge.mp4\n";
         }
     }
 

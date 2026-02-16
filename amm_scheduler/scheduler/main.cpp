@@ -365,14 +365,14 @@ int main() {
     //test_jit_times();
     
     /* remove openvino */
-    //test_video_filter(Logic::CUDA_ONLY, false);
+    test_video_filter(Logic::CUDA_ONLY, false);
+    test_video_filter(Logic::DYNAMIC, true);
     //test_video_filter(Logic::STATIC_PARTITIONING, false);
-    //test_video_filter(Logic::DYNAMIC, true);
     
     //bench_static_partitioning();
     //bench_dynamic_homo();
     //bench_hetero_comparison();
     
-    bench_large_matrix();
+    //bench_large_matrix();
     return 0;
 }
