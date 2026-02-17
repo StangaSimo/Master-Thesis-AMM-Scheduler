@@ -12,7 +12,7 @@
 #define M_ 4096
 #define N_ 4096
 #define K_ 4096 
-#define N_MATRIX 110 
+#define N_MATRIX 100 
 
 inline int BATCH_SIZE = 30;
 inline int BATCH_SIZE_HETERO = 40;

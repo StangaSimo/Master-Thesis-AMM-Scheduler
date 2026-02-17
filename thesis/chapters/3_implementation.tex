@@ -1811,8 +1811,6 @@ PROF(profiler.stop_power_monitor());
 break;
 \end{lstlisting}
 
-\clearpage
-
 \subsection{Large Matrix Split}
 \label{impllargelogic}
 This static strategy addresses a specific case, handling a single matrix multiplication that is too large to fit into the memory of any individual accelerator. Instead of treating the matrix as an indivisible unit, this logic implements a Split-Compile-Merge approach, splitting the large matrix horizontally in smaller chunks and sending smaller tasks to each accellerator, enabling the sistem to process this workload in parallel, then the result are written directly into the corresponding section.  
@@ -1848,8 +1846,6 @@ while (threads_keep_running) {
 The process begins by retrieving the large task and distributing the rows as evenly as possible among all available accelerators. This serves as a starting point for the refinement loop.
 
 The core of the logic is a feedback loop that runs for a fixed number of iterations (decided with \texttt{SPLIT\_MATRIX\_ITERATION}). In each iteration, the scheduler queries the PerformanceMap to estimate how fast each accelerator can process its currently assigned chunk.
-
-\clearpage 
 
 \begin{lstlisting}[caption={Split Logic: Refinement Loop}, language=C++] 
 /* .... */
@@ -1907,7 +1903,7 @@ The metric used is rows per millisecond (rows $/$ ms):
 
 This loop converge towards a balanced distribution where all accelerators finish at approximately the same time, and once the optimal row counts inside \texttt{rows[j]} are calculated, the actual tasks must be created and dispatched. This step does not copy any data, instead, it uses pointer arithmetic to create the smaller tasks.
 
-\begin{lstlisting}[caption={Split Logic: Sub Task dispatch}, language=C++] 
+\begin{lstlisting}[caption={Split Logic: Sub Task dispatch}, language=C++, label={logic2}] 
 /* .... */
     size_t elem_size = (single_task->type == Type::FLOAT) ? 4 : 2;
     size_t offset_rows_acc = 0;
@@ -1960,7 +1956,7 @@ This loop converge towards a balanced distribution where all accelerators finish
 } 
 \end{lstlisting}
 
-For each accelerator, the logic creates a new task structure:
+For each accelerator, the logic (in Listing \ref{logic2}) creates a new task structure:
 
 \begin{enumerate}
     \item \textbf{A}: The pointer is shifted forward to skip the rows processed by previous accelerators.
@@ -1978,7 +1974,7 @@ This strategy is an evolution of the Static Partitioning logic, designed for het
 
 In this scenario, calculating a simple ratio based on the first task (as done in the previous strategy) would be incorrect, because the speed of an accelerator is not constant but depends on the problem size. Therefore, instead of assigning tasks based on a global ratio, this algorithm adopts a \textbf{greedy approach}: it simulates the execution timeline and assigns each task to the accelerator that can complete it soonest, considering its current accumulated load.
 
-\begin{lstlisting}[caption={Static Hetero Logic}, language=C++] 
+\begin{lstlisting}[caption={Static Hetero Logic}, language=C++, label={heterologic}] 
 /* ... fetch logic same as before ... */
 
 /* iterator for each bt */ 
@@ -2023,15 +2019,13 @@ for (int i = 0; i < c; i++) {
 /* .... */
 \end{lstlisting}
 
-The core relies on the \texttt{bt\_ms} array, wich tracks the load assigned to each accellerator so far (in the current batch). The load stand for the accumulated ms expected for that particular accellerator. 
+The core of the logic on the Listing. \ref{heterologic} relies on the \texttt{bt\_ms} array, wich tracks the load assigned to each accellerator so far (in the current batch). The load stand for the accumulated ms expected for that particular accellerator. 
 
 The logic iterates through the batch of tasks one by one. For each task, it queries the PerformanceMap to predict how long it will take on every available accelerator, then it compute the finish time expected with the load plus the task expences, than it update the best \texttt{bt}. Finally the task then is assigned to the best accellerator that has the smallest finish time, and the current load of that accellerator is updated.  
 
 Additionally, once a decision is made, the query function is called again with \texttt{add\_jit = true} for the chosen accelerator, ensures that the JIT cache is updated.
 
 After the simulation loop processes the entire batch, the tasks are pushed to the worker buffers same as before.
-
-\clearpage
 
 \subsection{Dynamic}
 \label{impldynamiclogic}

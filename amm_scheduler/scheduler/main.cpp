@@ -358,21 +358,22 @@ void bench_large_matrix() {
 
 int main() {
     test_accellerators();
-    //test_scheduler_logics();
+    test_scheduler_logics();
     //test_large_matrix_split();
     //test_hetero_logic();
     //test_dynamic();
     //test_jit_times();
     
     /* remove openvino */
-    test_video_filter(Logic::CUDA_ONLY, false);
-    test_video_filter(Logic::DYNAMIC, true);
+    //test_video_filter(Logic::CUDA_ONLY, false);
+    //test_video_filter(Logic::DYNAMIC, true);
     //test_video_filter(Logic::STATIC_PARTITIONING, false);
     
     //bench_static_partitioning();
     //bench_dynamic_homo();
     //bench_hetero_comparison();
     
+    /* remove openvino */
     //bench_large_matrix();
     return 0;
 }
