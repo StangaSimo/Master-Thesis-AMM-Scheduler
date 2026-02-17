@@ -1,0 +1,57 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{7}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contest}{7}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Objectives}{8}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Thesis Structure}{9}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Tools and Technologies}{11}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Experimental Platform}{11}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}The SoC: Intel Core Ultra 9 185H}{12}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}NVIDIA GeForce RTX 4060}{13}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}CUDA Toolkit}{13}{section.2.2}%
+\contentsline {section}{\numberline {2.3}SYCL}{15}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Openvino}{16}{section.2.4}%
+\contentsline {section}{\numberline {2.5}OpenBlas}{17}{section.2.5}%
+\contentsline {section}{\numberline {2.6}C/C++}{18}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Cmake}{19}{section.2.7}%
+\contentsline {chapter}{\numberline {3}Logical Design}{21}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Preliminary Phase}{22}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Studying the Common Patterns}{22}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Benchmarking}{23}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}AMM Scheduler}{24}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Implementation}{29}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Project Structure and Compilation}{30}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Compilation Process}{31}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Accelerators Abstraction Layers}{36}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Cuda}{36}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}OpenVINO}{41}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}SYCL}{46}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}OpenBLAS}{49}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}AMM Scheduler}{52}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{54}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Workers}{55}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{57}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Tasks}{61}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{64}{subsection.4.3.5}%
+\contentsline {subsection}{\numberline {4.3.6}Performance Map}{66}{subsection.4.3.6}%
+\contentsline {subsection}{\numberline {4.3.7}Profiler}{70}{subsection.4.3.7}%
+\contentsline {subsection}{\numberline {4.3.8}Coordinator}{72}{subsection.4.3.8}%
+\contentsline {subsubsection}{Baseline: CUDA only and Round Robin}{72}{section*.2}%
+\contentsline {subsection}{\numberline {4.3.9}Static Partitioning}{73}{subsection.4.3.9}%
+\contentsline {subsection}{\numberline {4.3.10}Large Matrix Split}{77}{subsection.4.3.10}%
+\contentsline {subsection}{\numberline {4.3.11}Static Hetero Partitioning}{81}{subsection.4.3.11}%
+\contentsline {subsection}{\numberline {4.3.12}Dynamic}{83}{subsection.4.3.12}%
+\contentsline {chapter}{\numberline {5}Results}{85}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Homogeneous Workloads}{85}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Matrix: 1024x1024}{86}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Matrix: 2048x2048}{89}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Matrix: 4096x4096}{91}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Batch Comparison}{94}{subsection.5.1.4}%
+\contentsline {section}{\numberline {5.2}Heterogeneous Workloads}{95}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Static Heterogeneous}{95}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Batch Comparison}{98}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Large matrix split}{98}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Real-World Application: Video Filtering}{100}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Performance Comparison}{101}{subsection.5.3.1}%
+\contentsline {chapter}{\numberline {6}Conclusions}{105}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Personal Balance}{106}{section.6.1}%
+\contentsline {chapter}{\numberline {A}Questa è un'appendice}{107}{appendix.A}%

@@ -10,25 +10,25 @@ The experimental results, conducted on a complex hybrid architecture, validated 
 Specifically, the comparison between the scheduling logics highlighted distinct behaviors depending on the workload:
 
 \begin{itemize}
-\item \textbf{Homogeneous Workloads}: For streams of identical (1024 and 2048), the dynamic strategy proved to be effective. Its greedy nature allowed it to minimize idle time by keeping all accelerators busy, achieving speedups of up to 2.20 compared to the single CUDA card. However, as the matrix size increased to heavy workloads, the static strategy demonstrated superior performance (2x speedup vs 1.78x for dynamic). The predictive nature of the Static logic prevented, in most cases, a slow device that delays the entire batch by taking on a final massive task.
+\item \textbf{Homogeneous Workloads}: For streams of identical (1024 and 2048), the dynamic strategy proved to be effective. Its greedy nature allowed it to minimize idle time by keeping all accelerators busy, achieving speedups of up to 2.20 compared to the single CUDA card. However, as the matrix size increased to heavy workloads, the static strategy demonstrated superior performance (2x speedup vs 1.78x for dynamic). The predictive nature of the static logic prevented, in most cases, a slow device that delays the entire batch by taking on a final massive task.
 
-\item \textbf{Heterogeneous Workloads}: In scenarios with mixed matrix sizes (streams from $512$ to $4096$), the necessity of a smart, predictive scheduler became evident. The static hetero strategy successfully mapped task complexity to hardware capability, achieving 1.65x speedup. In contrast, the Dynamic logic failed to handle the variance, resulting in severe performance degradation (0.42x speedup) due to inefficient task assignment, proving that a simple greedy approach is insufficient for diverse workloads.
+\item \textbf{Heterogeneous Workloads}: In scenarios with mixed matrix sizes (streams from $512$ to $4096$), the necessity of a smart, predictive scheduler became evident. The static hetero strategy successfully mapped task complexity to hardware capability, achieving 1.65x speedup. In contrast, the dynamic logic failed to handle the variance, resulting in severe performance degradation (0.42x speedup) due to inefficient task assignment, proving that a simple greedy approach is insufficient for diverse workloads.
 
-\item \textbf{Large Matrix Splitting}: The Split strategy demonstrated that even for a single massive operation, decomposing the problem and offloading chunks to the CPU and iGPU can yield a 1.49x speedup and reduce total energy consumption by 21\%.
+\item \textbf{Large Matrix Splitting}: The split strategy demonstrated that even for a single massive operation, decomposing the problem and offloading chunks to the CPU and iGPU can yield a 1.49x speedup and reduce total energy consumption by 21\%.
 \end{itemize}
 
-In conclusion, all the project objectives were met. The AMM Scheduler proved that an approach to hardware utilization that embraces the diversity of available accelerators rather than ignoring it, is a viable path to maximizing both throughput and energy efficiency in modern computing systems.
+In conclusion, all the project objectives were met. The AMM Scheduler proved that an approach to hardware that embraces the diversity of available accelerators rather than ignoring it, is a viable path to maximizing both throughput and energy efficiency in modern computing systems.
 
-\section{Future Work}
-While the current implementation offers a simple foundation for heterogeneous scheduling, several avenues for future research and optimization remain open to further enhance the system's capabilities:
-
-\begin{itemize}
-\item Multi-Node Scaling: The natural evolution of this project is to extend the scheduler's scope beyond a single machine. Future work could focus on adapting the coordinator to distribute workloads across a server cluster, treating remote nodes as additional accelerators. This would involve implementing network-aware dispatching logic to balance computation speed with network latency, effectively creating a distributed heterogeneous computing grid.
-
-\item **Pre-emptive Dynamic Scheduling**: The current Dynamic logic suffers from "straggler" issues with large tasks because it cannot interrupt a running kernel. Implementing a mechanism to split large tasks at runtime or cancel and re-assign slow tasks could significantly improve the robustness of the dynamic approach against unpredictable delays.
-
-\item **Support for Non-Matrix Workloads**: While the current architecture is highly optimized for Matrix Multiplication, the underlying abstraction layer could be generalized. Extending the scheduler to handle arbitrary compute graphs or pipeline-parallelism would make it applicable to a wider range of high-performance computing applications beyond linear algebra.
-
-\end{itemize}
+%\section{Future Work}
+%While the current implementation offers a simple foundation for heterogeneous scheduling, several avenues for future research and optimization remain open to further enhance the system's capabilities:
+%
+%\begin{itemize}
+%\item Multi-Node Scaling: The natural evolution of this project is to extend the scheduler's scope beyond a single machine. Future work could focus on adapting the coordinator to distribute workloads across a server cluster, treating remote nodes as additional accelerators. This would involve implementing network-aware dispatching logic to balance computation speed with network latency, effectively creating a distributed heterogeneous computing grid.
+%
+%\item **Pre-emptive Dynamic Scheduling**: The current Dynamic logic suffers from "straggler" issues with large tasks because it cannot interrupt a running kernel. Implementing a mechanism to split large tasks at runtime or cancel and re-assign slow tasks could significantly improve the robustness of the dynamic approach against unpredictable delays.
+%
+%\item **Support for Non-Matrix Workloads**: While the current architecture is highly optimized for Matrix Multiplication, the underlying abstraction layer could be generalized. Extending the scheduler to handle arbitrary compute graphs or pipeline-parallelism would make it applicable to a wider range of high-performance computing applications beyond linear algebra.
+%
+%\end{itemize}
 
 \section{Personal Balance}
