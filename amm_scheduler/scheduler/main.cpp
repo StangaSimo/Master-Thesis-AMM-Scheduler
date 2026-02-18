@@ -9,6 +9,8 @@
 
 using namespace std;
 
+/************************ Test functions *****************************/
+
 void test_hetero_logic() {
     size_t n_matrix = 80;
 
@@ -18,7 +20,7 @@ void test_hetero_logic() {
     for (int i=0; i<3; i++) {
 
         if (i == 1) {l = Logic::STATIC_HETERO_PARTITIONING; cout << "\nStatic partitioning \n";}
-        if (i == 2) {l = Logic::DYNAMIC; cout << "\nStatic partitioning \n";}
+        if (i == 2) {l = Logic::DYNAMIC; cout << "\nDynamic \n";}
 
         AMScheduler scheduler = AMScheduler(l);
 

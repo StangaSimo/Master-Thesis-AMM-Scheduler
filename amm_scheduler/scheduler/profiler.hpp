@@ -23,7 +23,6 @@
 struct EnergyConsumption {
     double cpu_pkg_joules = 0.0;
     double cpu_core_joules = 0.0;
-//    double intel_gpu_joules = 0.0;
     double nvidia_gpu_joules = 0.0;
 };
 
@@ -111,7 +110,6 @@ class Profiler {
 #ifdef ENABLE_INTEL_POWER_PROFILE
         start_pkg_uj = read_rapl_energy_uj("intel-rapl:0");
         start_core_uj = read_rapl_energy_uj("intel-rapl:0/intel-rapl:0:0");
-        //std::cout << "\n[PROFILER] RAPL Start PKG: " << start_pkg_uj << " uJ\n";
 #endif
 
        /* starting nvml read */
@@ -139,8 +137,6 @@ class Profiler {
 #ifdef ENABLE_INTEL_POWER_PROFILE
         double end_pkg_uj = read_rapl_energy_uj("intel-rapl:0");
         double end_core_uj = read_rapl_energy_uj("intel-rapl:0/intel-rapl:0:0");
-
-        //std::cout << "[PROFILER] RAPL End PKG: " << end_pkg_uj << " uJ\n";
 
         if (end_pkg_uj >= start_pkg_uj)
             final_energy.cpu_pkg_joules = (end_pkg_uj - start_pkg_uj) / 1e6; // uJ to J
@@ -182,7 +178,7 @@ class Profiler {
         batch_count++;
     }
 
-    void print_stats(const std::vector<BT>& bts, task* tasks, size_t num_tasks, std::string strategy_name = "UNKNOWN") {
+    void print_stats(const std::vector<BT>& bts, task* tasks, size_t num_tasks, std::string strategy_name = "ERROR") {
         if (tasks == nullptr || num_tasks == 0) return;
 
         stop_power_monitor();
@@ -202,7 +198,7 @@ class Profiler {
                 total_span_ms, avg_lat_ms, min_lat_ms, max_lat_ms, bts, final_energy);
     }
 
-    void print_stats(const std::vector<BT>& bts, const std::vector<task*>& sub_tasks, std::string strategy_name = "UNKNOWN") {
+    void print_stats(const std::vector<BT>& bts, const std::vector<task*>& sub_tasks, std::string strategy_name = "ERROR") {
         if (sub_tasks.empty()) return;
         std::vector<task> temp_tasks;
         temp_tasks.reserve(sub_tasks.size());
@@ -320,7 +316,7 @@ class Profiler {
         }
 
         bool file_exists = std::filesystem::exists(filename);
-        std::ofstream file(filename, std::ios::app);/* append mode */
+        std::ofstream file(filename, std::ios::app); /* append mode */
 
         if (!file.is_open()) {
             std::cerr << "[PROFILER] Error opening CSV file: " << filename << std::endl;

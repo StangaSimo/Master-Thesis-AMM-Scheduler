@@ -28,7 +28,7 @@ inline void cpu_init() {
     int rc = pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpu);
 
     if (rc != 0) {
-        std::cerr << "Errore nel setting dell'affinità CPU: " << rc << "\n";
+        std::cerr << "[ERROR] Openblas Affinity CPU: " << rc << "\n";
         exit(EXIT_FAILURE);
     }
 

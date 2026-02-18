@@ -3,31 +3,6 @@
 
 int main() {
 
-  /* TODO: Sparse gem  */
-  /* TODO: provare il codice sul server  */
-  /* TODO: scheduler asimmetrico, con stream di matrici non uguali, e vedere sei
-   */
-  /* divisione a blocchi di una matrice , strassen, diviisione in 4 blocchi */
-  /* trovare una bella applicazione per uno stream di matrice o una matrice
-   * molto grande */
-
-  /*
-
-     TUTTO 16 bit va bene??? 8 bit per le coral ancora peggio, si converte? si
-     mette come decisione?
-
-      json per i dati,
-
-      regressione o altro) per fallback.
-      hashmap per capire a chi fare la query, predictive model (modello di
-
-      scheduler greedy o window,
-
-      dag con ready queue per le matrici? (quindi matrici connesse?)
-
-      pipeline di elaborazione immagini e video.
-  */
-
   printGPUInfo(getGPUInfo(0));
 
 #ifdef GEM

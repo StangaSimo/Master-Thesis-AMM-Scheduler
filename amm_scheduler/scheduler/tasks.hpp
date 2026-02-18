@@ -184,10 +184,10 @@ inline float half_to_float(uint16_t h) {
             e += 1; m &= ~0x00000400;
         }
     } else if (e == 31) {
-        if (m == 0) { // Inf
+        if (m == 0) { 
              uint32_t res = (s << 31) | 0x7f800000;
              float f; memcpy(&f, &res, 4); return f;
-        } else { // NaN
+        } else { 
              uint32_t res = (s << 31) | 0x7f800000 | (m << 13);
              float f; memcpy(&f, &res, 4); return f;
         }

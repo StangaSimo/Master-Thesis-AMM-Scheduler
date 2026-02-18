@@ -5,13 +5,11 @@
 #include <cstdlib>
 #include <iostream>
 
-/* This library is intended for the Intel NPU present in the metheor Lake CPUs */
-
+/* this library is intended for the Intel NPU */
 ov::Core core;
 
 using namespace std;
 
-//TODO convert hashmap from tuple to bellissimo int 
 /* cache for compiled models */
 static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_32bit;
 static std::map<tuple<int, int, int>, ov::InferRequest> request_cache_16bit;
@@ -174,6 +172,7 @@ extern "C" {
     void ov_gemm_8bit(void *A, void *B, void *C, int M, int N, int K){
         ov_gemm_8bit_p(A, B, C, M, N, K);
     }
+
     void ov_free() {
     }
 }

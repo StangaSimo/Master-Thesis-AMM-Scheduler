@@ -237,35 +237,37 @@ inline void test_accellerators() {
     cout << "--- PASSED 16-bit Tests ---\n";
 
     /* ------------------- 8 BIT TEST ------------------- */
-    //cout << "\n--- Running 8-bit INT8 Tests ---\n";
-    // Input 1 byte, Output 4 byte (int32)
-    //int8_t *A8 = new int8_t[M*K];
-    //int8_t *B8 = new int8_t[K*N];
-    //int32_t *C8 = new int32_t[M*N]; 
+    /*
+    cout << "\n--- Running 8-bit INT8 Tests ---\n";
+     Input 1 byte, Output 4 byte (int32)
+    int8_t *A8 = new int8_t[M*K];
+    int8_t *B8 = new int8_t[K*N];
+    int32_t *C8 = new int32_t[M*N]; 
 
-    //init_8bit(A8, B8, C8, M, N, K);
+    init_8bit(A8, B8, C8, M, N, K);
 
-    //#ifdef ENABLE_OPENVINO
-    //    ov_gemm_8bit(A8, B8, C8, M, N, K);
-    //    if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "OpenVINO 8bit Fail\n"; exit(1); }
-    //    ov_free();
-    //#endif
+    #ifdef ENABLE_OPENVINO
+        ov_gemm_8bit(A8, B8, C8, M, N, K);
+        if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "OpenVINO 8bit Fail\n"; exit(1); }
+        ov_free();
+    #endif
 
-    //#ifdef ENABLE_CUDA
-    //    cuda_gemm_8bit(A8, B8, C8, M, N, K);
-    //    if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "CUDA 8bit Fail\n"; exit(1); }
-    //    cuda_free();
-    //#endif
+    #ifdef ENABLE_CUDA
+        cuda_gemm_8bit(A8, B8, C8, M, N, K);
+        if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "CUDA 8bit Fail\n"; exit(1); }
+        cuda_free();
+    #endif
 
-    //#ifdef ENABLE_SYCL
-    //    sycl_gemm_8bit(A8, B8, C8, M, N, K);
-    //    if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "SYCL 8bit Fail\n"; exit(1); }
-    //    sycl_free();
-    //#endif
+    #ifdef ENABLE_SYCL
+        sycl_gemm_8bit(A8, B8, C8, M, N, K);
+        if(!compare_cpu_8bit(A8, B8, C8, M, N, K)) { cout << "SYCL 8bit Fail\n"; exit(1); }
+        sycl_free();
+    #endif
 
-    //delete[] A8; delete[] B8; delete[] C8;
-    //
-    //cout << "\n[ALL TESTS PASSED]\n" << endl;
+    delete[] A8; delete[] B8; delete[] C8;
+    */
+    
+    cout << "\n[ALL TESTS PASSED]\n" << endl;
 }
 /***************************** helper test for main ***************************/
 
@@ -351,40 +353,40 @@ inline void test_jit_times() {
         dims.push_back(d);
     
 
-    //for (int m : dims) 
-    //    for (int n : dims) 
-    //        for (int k : dims) {
-    //            task* task = init_tasks(1, m, n, k, Type::FLOAT);
+    for (int m : dims) 
+        for (int n : dims) 
+            for (int k : dims) {
+                task* task = init_tasks(1, m, n, k, Type::FLOAT);
 
-    //            /* openvino */
-    //            start_time = chrono::high_resolution_clock::now();
-    //            handle_task(BT::OPENVINO, task);
-    //            end_time = chrono::high_resolution_clock::now();
-    //            jit_duration = end_time - start_time;
+                /* openvino */
+                start_time = chrono::high_resolution_clock::now();
+                handle_task(BT::OPENVINO, task);
+                end_time = chrono::high_resolution_clock::now();
+                jit_duration = end_time - start_time;
 
-    //            start_time = chrono::high_resolution_clock::now();
-    //            handle_task(BT::OPENVINO, task);
-    //            end_time = chrono::high_resolution_clock::now();
-    //            duration = end_time - start_time;
-    //            
-    //            difference = jit_duration.count() - duration.count();
-    //            cout << "ov_jit : " << jit_duration.count()  << " ms | ov : " << duration.count() << " ms m " << m << " n " << n << " k "<<  k  <<"\n ";
-    //            diffs.push_back(difference);
-    //             
-    //            /* sycl */
-    //            //start_time = chrono::high_resolution_clock::now();
-    //            //handle_task(BT::SYCL, task);
-    //            //end_time = chrono::high_resolution_clock::now();
-    //            //jit_duration = end_time - start_time;
+                start_time = chrono::high_resolution_clock::now();
+                handle_task(BT::OPENVINO, task);
+                end_time = chrono::high_resolution_clock::now();
+                duration = end_time - start_time;
+                
+                difference = jit_duration.count() - duration.count();
+                cout << "ov_jit : " << jit_duration.count()  << " ms | ov : " << duration.count() << " ms m " << m << " n " << n << " k "<<  k  <<"\n ";
+                diffs.push_back(difference);
+                 
+                /* sycl */
+                start_time = chrono::high_resolution_clock::now();
+                handle_task(BT::SYCL, task);
+                end_time = chrono::high_resolution_clock::now();
+                jit_duration = end_time - start_time;
 
-    //            //start_time = chrono::high_resolution_clock::now();
-    //            //handle_task(BT::SYCL, task);
-    //            //end_time = chrono::high_resolution_clock::now();
-    //            //duration = end_time - start_time;
-    //            //
-    //            //difference = jit_duration.count() - duration.count();
-    //            //cout << "sycl_jit : " << jit_duration.count()  << " ms | sycl : " << duration.count() << " ms m " << m << " n " << n << " k "<<  k  <<"\n ";
-    //        }
+                start_time = chrono::high_resolution_clock::now();
+                handle_task(BT::SYCL, task);
+                end_time = chrono::high_resolution_clock::now();
+                duration = end_time - start_time;
+                
+                difference = jit_duration.count() - duration.count();
+                cout << "sycl_jit : " << jit_duration.count()  << " ms | sycl : " << duration.count() << " ms m " << m << " n " << n << " k "<<  k  <<"\n ";
+            }
 
     task* task_array = init_hetero_tasks(50, Type::FLOAT);
 
@@ -410,20 +412,22 @@ inline void test_jit_times() {
     cout << "jit ms: " << avg/diffs.size() << "ms\n";
 
     
-    //task* task = init_tasks(1, 1046, 4000, 4000, Type::FLOAT);
+    /* 
+    task* task = init_tasks(1, 1046, 4000, 4000, Type::FLOAT);
 
-    //start_time = chrono::high_resolution_clock::now();
-    //handle_task(BT::SYCL, task);
-    //end_time = chrono::high_resolution_clock::now();
-    //jit_duration = end_time - start_time;
+    start_time = chrono::high_resolution_clock::now();
+    handle_task(BT::SYCL, task);
+    end_time = chrono::high_resolution_clock::now();
+    jit_duration = end_time - start_time;
 
-    //start_time = chrono::high_resolution_clock::now();
-    //handle_task(BT::SYCL, task);
-    //end_time = chrono::high_resolution_clock::now();
-    //duration = end_time - start_time;
+    start_time = chrono::high_resolution_clock::now();
+    handle_task(BT::SYCL, task);
+    end_time = chrono::high_resolution_clock::now();
+    duration = end_time - start_time;
 
-    //difference = jit_duration.count() - duration.count();
-    //cout << "sycl_jit : " << jit_duration.count()  << " ms | sycl : " << duration.count() << " ms\n ";
+    difference = jit_duration.count() - duration.count();
+    cout << "sycl_jit : " << jit_duration.count()  << " ms | sycl : " << duration.count() << " ms\n ";
+    */
 
     ov_free();
     sycl_free();

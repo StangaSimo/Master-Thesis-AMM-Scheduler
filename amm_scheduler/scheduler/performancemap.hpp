@@ -168,7 +168,6 @@ public:
                         jit_cache->insert(key);
 
                     time_ms += jit_ms;
-                    //time_ms += jit_ms;
                 }
             }
 

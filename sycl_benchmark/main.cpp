@@ -26,7 +26,8 @@ struct PowerStats {
 PowerStats compute_stats(const std::vector<double>& v) {
     if (v.empty()) return {0.0, 0.0, 0.0};
     double sum = std::accumulate(v.begin(), v.end(), 0.0);
-    return { sum / v.size(), *std::min_element(v.begin(), v.end()), *std::max_element(v.begin(), v.end()) };
+    return { sum / v.size(), *std::min_element(v.begin(), v.end()), 
+                        *std::max_element(v.begin(), v.end()) };
 }
 
 void save_results_to_csv(const std::string& filename, 
@@ -37,7 +38,7 @@ void save_results_to_csv(const std::string& filename,
     
     std::ofstream file(filename, std::ios::app);
     if (!file.is_open()) {
-        std::cerr << "[ERRORE] Impossibile aprire il file CSV.\n";
+        std::cerr << "[ERRORE] CSV\n";
         return;
     }
 
@@ -71,7 +72,7 @@ void save_results_to_csv(const std::string& filename,
          << gpu_stats.avg << "," 
          << gpu_stats.max << "\n";
 
-    std::cout << ">> Risultati salvati in: " << filename << "\n";
+    std::cout << ">> Results in: " << filename << "\n";
 }
 
 class GpuPowerMonitor {
@@ -152,7 +153,7 @@ void benchmark(sycl::queue& q, int M, int N, int K, int runs) {
         #endif
 
         if (!d_A || !d_B || !d_C) {
-            std::cerr << "Errore allocazione memoria GPU!\n";
+            std::cerr << "[ERROR] Memory GPU\n";
             return;
         }
 
@@ -230,16 +231,15 @@ int main() {
         auto dev = q.get_device();
         std::cout << "Device: " << dev.get_info<sycl::info::device::name>() << "\n";
         
-        // 5. CHECK SUPPORTO FP16
         if (!dev.has(sycl::aspect::fp16)) {
-            std::cerr << "[ERRORE] no FP16!\n";
+            std::cerr << "[ERROR] no FP16!\n";
             return 1;
         }
         
         benchmark(q, 4096, 4096, 4096, 10);
         
     } catch (sycl::exception const& e) {
-        std::cerr << "Errore inizializzazione SYCL.\n";
+        std::cerr << "[ERROR] SYCL\n";
         return 1;
     }
     return 0;

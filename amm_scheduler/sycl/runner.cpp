@@ -34,7 +34,6 @@ struct SYCLStream {
     }
 };
 
-//static unique_ptr<sycl::queue> global_q;
 static std::vector<std::unique_ptr<SYCLStream>> streams;
 static int current_stream = 0;
 static size_t MAX = (size_t)4096 * 4096;
@@ -60,7 +59,8 @@ void sycl_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K) {
     s.q.memcpy(s.d_B_f, B, K * N * sizeof(float));
 
     float alpha = 1.0f, beta = 0.0f;
-    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, 
+    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, 
+            oneapi::mkl::transpose::nontrans, 
             M, N, K, alpha, s.d_A_f, K, s.d_B_f, N, beta, s.d_C_f, N);
 
     s.q.memcpy(C, s.d_C_f, M * N * sizeof(float));
@@ -69,14 +69,16 @@ void sycl_gemm_32bit_p(float *A, float *B, float *C, int M, int N, int K) {
     current_stream = (current_stream + 1) % N_STREAMS;
 }
 
-void sycl_gemm_16bit_p(sycl::half *A, sycl::half *B, sycl::half *C, int M, int N, int K) {
+void sycl_gemm_16bit_p(sycl::half *A, sycl::half *B, 
+                                sycl::half *C, int M, int N, int K) {
     SYCLStream& s = *streams[current_stream];
 
     s.q.memcpy(s.d_A_h, A, M * K * sizeof(sycl::half));
     s.q.memcpy(s.d_B_h, B, K * N * sizeof(sycl::half));
 
     sycl::half alpha = 1.0f, beta = 0.0f;
-    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, oneapi::mkl::transpose::nontrans, 
+    oneapi::mkl::blas::row_major::gemm(s.q, oneapi::mkl::transpose::nontrans, 
+            oneapi::mkl::transpose::nontrans, 
             M, N, K, alpha, s.d_A_h, K, s.d_B_h, N, beta, s.d_C_h, N);
 
     s.q.memcpy(C, s.d_C_h, M * N * sizeof(sycl::half));

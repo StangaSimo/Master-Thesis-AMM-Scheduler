@@ -9,7 +9,7 @@ add_library(ov_lib SHARED runner.cpp)
 
 set_target_properties(ov_lib PROPERTIES PUBLIC_HEADER ov_wrapper.h)
 
-# C++17 needed OpenVINO
+# C++17 needed
 target_compile_features(ov_lib PRIVATE cxx_std_17)
 
 target_link_libraries(ov_lib PRIVATE openvino::runtime)

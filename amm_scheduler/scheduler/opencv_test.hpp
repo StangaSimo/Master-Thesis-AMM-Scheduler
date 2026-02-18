@@ -11,6 +11,8 @@
 #include "tasks.hpp"
 #include "scheduler.hpp"
 
+
+
 inline void prepare_task_from_frame(const cv::Mat& frame, const cv::Mat& kernel, task& t) {
     int k_sz = kernel.rows;
 
@@ -32,32 +34,25 @@ inline void prepare_task_from_frame(const cv::Mat& frame, const cv::Mat& kernel,
 
     float* A_ptr = (float*)t.A;
     int a_idx = 0;
-    for(int i=0; i<k_sz; ++i) {
-        for(int j=0; j<k_sz; ++j) {
+    for(int i=0; i<k_sz; ++i) 
+        for(int j=0; j<k_sz; ++j)
             A_ptr[a_idx++] = kernel.at<float>(i, j);
-        }
-    }
 
     float* B_ptr = (float*)t.B;
     int patch_idx = 0;
 
-    for (int y = 0; y < out_h; y++) {
+    for (int y = 0; y < out_h; y++) 
         for (int x = 0; x < out_w; x++) {
-
             int k_pixel_idx = 0;
-
             for (int ky = 0; ky < k_sz; ky++) {
                 for (int kx = 0; kx < k_sz; kx++) {
                     float pixel_val = frame.at<float>(y + ky, x + kx);
-
                     B_ptr[k_pixel_idx * t.N + patch_idx] = pixel_val;
-
                     k_pixel_idx++;
                 }
             }
             patch_idx++;
         }
-    }
 }
 
 inline cv::Mat result_from_task(const task& t, int original_w, int kernel_sz) {
@@ -136,7 +131,7 @@ inline void test_video_filter(Logic l, bool display) {
                                fps, frame_size, false);
 
         if (!writer.isOpened()) {
-            std::cout << "Could not open the output video for writing\n";
+            std::cout << "[ERROR] video won't open\n";
         } else {
             for (auto& t : tasks) {
                 cv::Mat out = result_from_task(t, float_img.cols, kernel.rows);
@@ -152,7 +147,7 @@ inline void test_video_filter(Logic l, bool display) {
                     if (cv::waitKey(1) == 27) break; 
                 }
             }
-            std::cout << "[OPENCV TEST] Video saved as test_edge.mp4\n";
+            std::cout << "[OPENCV TEST] Video saved test_edge.mp4\n";
         }
     }
 

@@ -5,6 +5,8 @@
 
 #define OFFSET(row, col, ld) ((row) * (ld) + (col))
 
+
+
 // transfer float4
 template <
     const int BLOCK_SIZE_M,  // width of block of C that each thread block calculate

@@ -162,9 +162,9 @@ TestResult run_gem(KernelType kernel, const int M, const int N, const int K, dim
     CHECK_CUDA(cudaMemcpy(h_C_gpu.data(), d_C, M * N * sizeof(float), cudaMemcpyDeviceToHost));
 
     if (compare_matrix(h_C_gpu.data(), h_C_cpu.data(), M * N)) {
-        std::cout << "------ [DEBUG RESULT] ✓ Results are CORRECT for " << getKernelName(kernel) << std::endl;
+        std::cout << "------ [DEBUG RESULT] CORRECT for " << getKernelName(kernel) << std::endl;
     } else {
-        std::cerr << "------ [DEBUG RESULT] ✗ Results are INCORRECT for " << getKernelName(kernel) << std::endl;
+        std::cerr << "------ [DEBUG RESULT] INCORRECT for " << getKernelName(kernel) << std::endl;
     }
 #endif
 

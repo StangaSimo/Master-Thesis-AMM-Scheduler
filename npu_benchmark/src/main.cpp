@@ -45,7 +45,7 @@ void power_monitor_thread() {
 
     FILE *fp = popen("sudo intel_gpu_top -c -s 100", "r");
     if (!fp) {
-        std::cerr << "[ERROR] Impossibile avviare intel_gpu_top, userò la stima RAPL per la GPU.\n";
+        std::cerr << "[ERROR] intel_gpu_top\n";
     }
 
     char buffer[2048];
