@@ -19,16 +19,22 @@ Specifically, the comparison between the scheduling logics highlighted distinct 
 
 In conclusion, all the initial project objectives were met. The AMM Scheduler proved that an approach to hardware that embraces the diversity of available accelerators rather than ignoring it, is a viable path to maximizing both throughput and energy efficiency in modern computing systems.
 
-%\section{Future Work}
-%While the current implementation offers a simple foundation for heterogeneous scheduling, several avenues for future research and optimization remain open to further enhance the system's capabilities:
-%
-%\begin{itemize}
-%\item Multi-Node Scaling: The natural evolution of this project is to extend the scheduler's scope beyond a single machine. Future work could focus on adapting the coordinator to distribute workloads across a server cluster, treating remote nodes as additional accelerators. This would involve implementing network-aware dispatching logic to balance computation speed with network latency, effectively creating a distributed heterogeneous computing grid.
-%
-%\item **Pre-emptive Dynamic Scheduling**: The current Dynamic logic suffers from "straggler" issues with large tasks because it cannot interrupt a running kernel. Implementing a mechanism to split large tasks at runtime or cancel and re-assign slow tasks could significantly improve the robustness of the dynamic approach against unpredictable delays.
-%
-%\item **Support for Non-Matrix Workloads**: While the current architecture is highly optimized for Matrix Multiplication, the underlying abstraction layer could be generalized. Extending the scheduler to handle arbitrary compute graphs or pipeline-parallelism would make it applicable to a wider range of high-performance computing applications beyond linear algebra.
-%
-%\end{itemize}
+\section{Future Work}
+While the current implementation offers the initial foundation for heterogeneous scheduling, several avenues for future research and optimization remain open to enhance this project capabilities:
+
+\begin{itemize}
+\item Multi Node: The evolution of this project could be to extend the scheduler's scope beyond a single machine. Future work could focus on adapting the coordinator to distribute workloads across a server cluster, treating remote nodes as additional accelerators. This would involve implementing network aware logic to balance computation with network latency, and hardware aware if the nodes have all different accellerators. 
+
+\item Expansion of Supported Primitives and Logics: Currently the scheduler is specialized in Matrix Multiplication. Future developments could aim to extend the library of supported operations, adding other primitives such as Convolutions, FFTs, and so on. Moreover the current logic handles streams of independent tasks. A significant step would be the implementation of a dependency aware scheduler capable of managing Directed Acyclic Graphs (DAGs). This would allow the system to orchestrate entire computational pipelines like a full Neural Network inference.
+\end{itemize}
 
 \section{Personal Balance}
+This thesis represented my first encounter with a software project of this magnitude and complexity. It has been a long journey, characterized by numerous challenges. One of the most significant aspects was the responsibility of making critical architectural decisions early on, choices that would dictate the entire development of the project. The uncertainty of whether these foundational decisions would prove effective could only be verified upon completion. 
+However, this pressure ultimately served as a driving force. It compelled me to approach all the challenges with a pragmatic mindset, and in the end the results validated the effort.
+
+Above all, as a hardware enthusiast, working on this project was very exciting. I had the chance to interact directly with many different accelerators and orchestrate them, exploring and exploiting all of their libraries. This experience taught me a lot about their architectures and gave me a strong foundation in High Performance Computing.
+
+I would like to express my sincere gratitude to my supervisor for the trust placed in me for this thesis. I deeply appreciate the freedom granted to explore these project, accompanied by his constant guidance and ability to point me in the right direction whenever necessary. Confirming what I already knew, and as this experience has fully confirmed, it has been a true pleasure and privilege to work on this Master's thesis with him.
+
+In conclusion, I remain profoundly satisfied with this work. It has fostered my growth both personally and as a software engineer, fueling my ambition to contribute to a better (and faster!) world.
+
