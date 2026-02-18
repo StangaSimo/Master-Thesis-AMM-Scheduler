@@ -1,4 +1,65 @@
-\chapter{Questa è un'appendice}
+\chapter{Appendix: Source Code}
+\label{appendix:source_code}
 
-\lipsum[5]
+This appendix contains the source code developed for the AMM Scheduler and the preliminary benchmarks used to analyze the hardware accelerators. The code is organized by project structure.
 
+\section{AMM Scheduler}
+The core project of this thesis. It includes the scheduler logic, the task definitions, and the specific backend implementations for CUDA, SYCL, and OpenVINO.
+
+\subsection{Build and Scripts}
+\lstinputlisting[language=make, caption={Root (CMakeLists.txt)}]{listings/appendice/amm_scheduler/CMakeLists.txt}
+\lstinputlisting[caption={Setup Instructions (setup.txt)}]{listings/appendice/setup.txt}
+\lstinputlisting[language=Bash, caption={Build Script (make\_run.sh)}]{listings/appendice/amm_scheduler/make_run.sh}
+\lstinputlisting[language=Python, caption={Clangd Utility (merge\_clangd.py)}]{listings/appendice/amm_scheduler/merge_clangd.py}
+
+\subsection{Scheduler}
+This section contains the main orchestration logic, including the \texttt{AMScheduler} class, the profiler, and the task definitions.
+
+\lstinputlisting[language=C++, caption={Main (main.cpp)}]{listings/appendice/amm_scheduler/scheduler/main.cpp}
+\lstinputlisting[language=C++, caption={Scheduler class (scheduler.hpp)}]{listings/appendice/amm_scheduler/scheduler/scheduler.hpp}
+\lstinputlisting[language=C++, caption={Task definitions (tasks.hpp)}]{listings/appendice/amm_scheduler/scheduler/tasks.hpp}
+\lstinputlisting[language=C++, caption={profiler.hpp}]{listings/appendice/amm_scheduler/scheduler/profiler.hpp}
+\lstinputlisting[language=C++, caption={performancemap.hpp}]{listings/appendice/amm_scheduler/scheduler/performancemap.hpp}
+\lstinputlisting[language=C++, caption={OpenBlass Implementation (cpu.hpp)}]{listings/appendice/amm_scheduler/scheduler/cpu.hpp}
+\lstinputlisting[language=C++, caption={sharedbuffer.hpp}]{listings/appendice/amm_scheduler/scheduler/sharedbuffer.hpp}
+\lstinputlisting[language=C++, caption={config.hpp}]{listings/appendice/amm_scheduler/scheduler/config.hpp}
+\lstinputlisting[language=C++, caption={tests.hpp}]{listings/appendice/amm_scheduler/scheduler/tests.hpp}
+
+\subsection{Backend: CUDA}
+Implementation of the NVIDIA GPU backend.
+\lstinputlisting[language=C++, caption={CUDA Runner (runner.cu)}]{listings/appendice/amm_scheduler/cuda/runner.cu}
+\lstinputlisting[language=C++, caption={CUDA Wrapper (cuda\_wrapper.h)}]{listings/appendice/amm_scheduler/cuda/cuda_wrapper.h}
+
+\subsection{Backend: SYCL}
+Implementation of the Intel Integrated Graphics backend via SYCL (OneAPI).
+\lstinputlisting[language=C++, caption={SYCL Runner (runner.cpp)}]{listings/appendice/amm_scheduler/sycl/runner.cpp}
+\lstinputlisting[language=C++, caption={SYCL Wrapper (sycl\_wrapper.h)}]{listings/appendice/amm_scheduler/sycl/sycl_wrapper.h}
+
+\subsection{Backend: OpenVINO}
+Implementation of the Intel NPU backend via OpenVINO.
+\lstinputlisting[language=C++, caption={OpenVINO Runner (runner.cpp)}]{listings/appendice/amm_scheduler/openvino/runner.cpp}
+\lstinputlisting[language=C++, caption={OpenVINO Wrapper (ov\_wrapper.h)}]{listings/appendice/amm_scheduler/openvino/ov_wrapper.h}
+
+\subsubsection{OpenCV test}
+\lstinputlisting[language=C++, caption={OpenCV Video Test (opencv\_test.hpp)}]{listings/appendice/amm_scheduler/scheduler/opencv_test.hpp}
+
+\clearpage
+\section{Benchmarks}
+This section includes the standalone benchmarks developed to study the behavior of the accelerators before the integration into the main scheduler.
+
+\subsection{CUDA Benchmark}
+\lstinputlisting[language=C++, caption={CUDA Main (main.cu)}]{listings/appendice/gpu_benchmark/src/main.cu}
+
+\lstinputlisting[language=C++, caption={GEMM Runner (gem\_runner.cu)}]{listings/appendice/gpu_benchmark/src/benchmarks/gem_runner.cu}
+\lstinputlisting[language=C++, caption={Memory Runner (mem\_runner.cu)}]{listings/appendice/gpu_benchmark/src/benchmarks/mem_runner.cu}
+
+%\lstinputlisting[language=C++, caption={Power Header (power.hpp)}]{listings/appendice/gpu_benchmark/src/include/benchmark/power.hpp}
+%\lstinputlisting[language=C++, caption={Helper Functions (help\_func.hpp)}]{listings/appendice/gpu_benchmark/src/include/benchmark/help_func.hpp}
+
+\subsection{OpenVINO Benchmark}
+\lstinputlisting[language=C++, caption={Openvino Main (main.cpp)}]{listings/appendice/npu_benchmark/main.cpp}
+\lstinputlisting[language=make, caption={Openvino Makefile}]{listings/appendice/npu_benchmark/Makefile}
+
+\subsection{SYCL Benchmark}
+\lstinputlisting[language=C++, caption={SYCL Main (main.cpp)}]{listings/appendice/sycl_benchmark/main.cpp}
+\lstinputlisting[language=C++, caption={SYCL Makefile)}]{listings/appendice/sycl_benchmark/Makefile}

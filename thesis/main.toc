@@ -55,4 +55,17 @@
 \contentsline {chapter}{\numberline {6}Conclusions}{103}{chapter.6}%
 \contentsline {section}{\numberline {6.1}Future Work}{104}{section.6.1}%
 \contentsline {section}{\numberline {6.2}Personal Balance}{105}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Questa è un'appendice}{107}{appendix.A}%
+\contentsline {chapter}{\numberline {A}Appendix: Source Code}{107}{appendix.A}%
+\contentsline {section}{\numberline {A.1}AMM Scheduler}{107}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}Build and Scripts}{107}{subsection.A.1.1}%
+\contentsline {subsection}{\numberline {A.1.2}Scheduler}{110}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}Backend: CUDA}{163}{subsection.A.1.3}%
+\contentsline {subsection}{\numberline {A.1.4}Backend: SYCL}{166}{subsection.A.1.4}%
+\contentsline {subsection}{\numberline {A.1.5}Backend: OpenVINO}{169}{subsection.A.1.5}%
+\contentsline {subsubsection}{OpenCV test}{173}{section*.3}%
+\contentsline {section}{\numberline {A.2}Benchmarks}{176}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}GPU Benchmark (CUDA)}{176}{subsection.A.2.1}%
+\contentsline {subsubsection}{Runners}{177}{section*.4}%
+\contentsline {subsubsection}{Utilities}{186}{section*.5}%
+\contentsline {subsection}{\numberline {A.2.2}NPU Benchmark (OpenVINO)}{186}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}SYCL Benchmark}{192}{subsection.A.2.3}%

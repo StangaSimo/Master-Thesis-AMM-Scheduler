@@ -1,0 +1,6 @@
+CompileFlags:
+  Remove: 
+    - -forward-unknown-to-host-compiler
+    - -Xcompiler*
+    - -gencode*
+    - --generate-code*
