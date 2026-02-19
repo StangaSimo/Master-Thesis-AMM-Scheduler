@@ -282,7 +282,7 @@ To ensure that the execution progresses without errors, the code utilizes two ma
 
 As for as state management is concerned, the system relies on CUDA Streams, a macro \texttt{N\_STREAM} defines the number of parallel execution queues. Streams, enable the GPU to allows the overlap of memory transfers with computation, or the concurrent execution of multiple kernels. To support this concurrency, the device resources are replicated for each stream. The memory pointers (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}) are defined as arrays, meaning that each stream possesses its own independent pre-allocated memory buffers. Finally, a global integer \texttt{i} acts as counter, used to cycle through the available streams when dispatching new tasks.
 
-The design focuses on minimizing the runtime overhead by performing expensive operations only once during the startup.  The \texttt{cuda\_init} function is responsible for preparing the GPU environment before any task is processed. Its primary goal is to eliminate the latency associated with running the dynamic memory allocation istrunctions. Allocating memory on the GPU using \texttt{cudaMalloc} is a slow operation compare to the others, infact if the system were to allocate and free memory for every single matrix multiplication task, the overhead would significantly impact the performance. To solve this, the initialization function adopts a simple pre-allocation strategy. 
+The design focuses on minimizing the runtime overhead by performing expensive operations only once during the startup.  The \texttt{cuda\_init} function is responsible for preparing the GPU environment before any task is processed. Its primary goal is to eliminate the latency associated with running the dynamic memory allocation instrunctions. Allocating memory on the GPU using \texttt{cudaMalloc} is a slow operation compare to the others, infact if the system were to allocate and free memory for every single matrix multiplication task, the overhead would significantly impact the performance. To solve this, the initialization function adopts a simple pre-allocation strategy. 
 
 \clearpage
 
@@ -938,7 +938,7 @@ void init_threads() {
     /* initialize atomics for dynamic strategy */
     if(strategy == Logic::DYNAMIC) {
         #ifdef SLEEP 
-        cout("[SCHEDULER] ERROR remove "#define SLEEP" with Dynamic logic")
+        cout << "[SCHEDULER] ERROR remove "#define SLEEP" with Dynamic logic"
         exit(EXIT_FAILURE);
         #endif
         for (int i=0; i<bts.size(); i++) {
@@ -1798,7 +1798,7 @@ break;
 
 \subsection{Large Matrix Split}
 \label{impllargelogic}
-This static strategy addresses a specific case, handling a single matrix multiplication that is too large to fit into the memory of any individual accelerator. Instead of treating the matrix as an indivisible unit, this logic implements a Split-Compile-Merge approach, splitting the large matrix horizontally in smaller chunks and sending smaller tasks to each accellerator, enabling the sistem to process this workload in parallel, then the result are written directly into the corresponding section.  
+This static strategy addresses a specific case, handling a single matrix multiplication that is too large to fit into the memory of any individual accelerator. Instead of treating the matrix as an indivisible unit, this logic implements a Split-Compile-Merge approach, splitting the large matrix horizontally in smaller chunks and sending smaller tasks to each accelerator, enabling the sistem to process this workload in parallel, then the result are written directly into the corresponding section.  
 
 To determine the optimal number of rows for each device, the scheduler employs an \textbf{Iterative Refinement algorithm}. This logic is also splitted in 3 phase, the initial estimation, the iterative refinement and then the dispatchign. 
 
@@ -1925,7 +1925,7 @@ This loop converge towards a balanced distribution where all accelerators finish
             /* submit to the acc */
             buffers[bts[j]]->put(sub_task);
 
-            /* for each accellerator we add more offset */
+            /* for each accelerator we add more offset */
             offset_rows_acc += h_limit; 
             
             h -= h_limit;
@@ -1999,9 +1999,9 @@ for (int i = 0; i < c; i++) {
 /* .... */
 \end{lstlisting}
 
-The core of the logic on the Listing. \ref{heterologic} relies on the \texttt{bt\_ms} array, wich tracks the load assigned to each accellerator so far (in the current batch). The load stand for the accumulated ms expected for that particular accellerator. 
+The core of the logic on the Listing. \ref{heterologic} relies on the \texttt{bt\_ms} array, wich tracks the load assigned to each accelerator so far (in the current batch). The load stand for the accumulated ms expected for that particular accellerator. 
 
-The logic iterates through the batch of tasks one by one. For each task, it queries the PerformanceMap to predict how long it will take on every available accelerator, then it compute the finish time expected with the load plus the task expences, than it update the best \texttt{bt}. Finally the task then is assigned to the best accellerator that has the smallest finish time, and the current load of that accellerator is updated.  
+The logic iterates through the batch of tasks one by one. For each task, it queries the PerformanceMap to predict how long it will take on every available accelerator, then it compute the finish time expected with the load plus the task expences, than it update the best \texttt{bt}. Finally the task then is assigned to the best accelerator that has the smallest finish time, and the current load of that accellerator is updated.  
 
 Additionally, once a decision is made, the query function is called again with \texttt{add\_jit = true} for the chosen accelerator, ensures that the JIT cache is updated.
 

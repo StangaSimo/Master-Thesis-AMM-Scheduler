@@ -140,7 +140,7 @@ The efficiency metric show this gain:
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/distrib_time_s2048.png} \caption{Time Distribution: Matrix 2048x2048} \label{timedistr2048} \end{figure}
 
-Figure \ref{distrib2048} reveals again the cause of the performance difference. The static strategy assigns a large portion of tasks to the CUDA GPU and a smaller share to the other accelerators. While safe, this distribution appears to underutilize the other accellerators.
+Figure \ref{distrib2048} reveals again the cause of the performance difference. The static strategy assigns a large portion of tasks to the CUDA GPU and a smaller share to the other accelerators. While safe, this distribution appears to underutilize the other accelerators.
 
 However, the dynamic strategy as already said, adapts in real time, so as seen in the Figure \ref{timedistr2048}, the dynamic logic keeps the CPU, the intel GPU and NPU work more evenly.
 
@@ -165,7 +165,7 @@ To understand why the Static logic outperforms the Dynamic one here, we analyze 
 \begin{figure}[h!] \centering \includegraphics[scale=0.26]{images/results/distrib_time_s4096.png} \caption{Time Distribution 4096} \label{timedistr4096} \end{figure}
 
 
-Figure \ref{distrib4096} shows that the static strategy assigns the vast majority of tasks to the powerful CUDA GPU and SYCL, minimizing the load on slower devices, however, the dynamic logic, due to its greedy nature, assigns a slightly larger portion of tasks to the CPU and OpenVINO (as seen in Figure \ref{timedistr4096}). For very large matrices, the time difference between the GPU, NPU and mostly CPU is massive, so if the dynamic logic assigns the last few tasks to a slow device while the GPU finishes early, the entire makespan is delayed waiting for that slow device to complete. The static strategy with all the logics and heuristcs avoids this by predicting the velocity of the accellerators and restricting the slow devices to a more smaller amount of work, achieving the highest speedup. This clearly shows how the static approach have his benefit in a lot of workload in this heterogeneous scenerio.
+Figure \ref{distrib4096} shows that the static strategy assigns the vast majority of tasks to the powerful CUDA GPU and SYCL, minimizing the load on slower devices, however, the dynamic logic, due to its greedy nature, assigns a slightly larger portion of tasks to the CPU and OpenVINO (as seen in Figure \ref{timedistr4096}). For very large matrices, the time difference between the GPU, NPU and mostly CPU is massive, so if the dynamic logic assigns the last few tasks to a slow device while the GPU finishes early, the entire makespan is delayed waiting for that slow device to complete. The static strategy with all the logics and heuristcs avoids this by predicting the velocity of the accelerators and restricting the slow devices to a more smaller amount of work, achieving the highest speedup. This clearly shows how the static approach have his benefit in a lot of workload in this heterogeneous scenario.
 
 \clearpage
 
@@ -257,7 +257,7 @@ As is evident from the graph in Fig \ref{result_hetero}, a relatively large batc
 
 This scenario involves decomposing a single very large matrix multiplication (where M grows up to 230,000 rows) into smaller sub-tasks (chunks) to fit within device memory limits and distribute the computation.
 
-To provide a fair and meaningful baseline, a simplified version of the splitting logic was implemented. This strategy performs the same chunking operation required to handle the large matrix dimensions but dispatches all chunks exclusively to the NVIDIA GPU (the code can be seen in Appendix \ref{TODO}).
+To provide a fair and meaningful baseline, a simplified version of the splitting logic was implemented. This strategy performs the same chunking operation required to handle the large matrix dimensions but dispatches all chunks exclusively to the NVIDIA GPU (the code can be seen in Appendix \ref{appscheduler}, \texttt{scheduler.hpp}).
 
 Furthermore, for this specific test case, the OpenVINO backend was excluded. Preliminary tests showed that OpenVINO's performance degrades when handling extremely "rectangular" matrices (very high M, fixed N,K), making it an unsuitable for this specific splitting workload. Our strategy therefore in this test leverages CUDA, SYCL, and OpenBLAS.
 
@@ -288,7 +288,7 @@ The load balancing graph on Fig. \ref{chunklarge} provides insight into how the 
 \section{Real-World Application: Video Filtering}
 To demonstrate the flexibility of the AMM Scheduler beyond synthetic benchmarks, a real-world video processing application was implemented. This test case involves applying an edge detection filter (convolution) to a video stream in real-time.
 
-The application, whose source code can be found in Appendix \ref{appopencv} , uses OpenCV to decode a video file frame by frame. Each frame is converted into a matrix format suitable for the scheduler: the image is flattened, and the convolution kernel is treated as the second matrix in a multiplication operation (using the \textit{im2col} technique). This effectively transforms a standard image processing task into a stream of matrix multiplication tasks.
+The application, whose source code can be found in Appendix \ref{appopencv}, uses OpenCV to decode a video file frame by frame. Each frame is converted into a matrix format suitable for the scheduler: the image is flattened, and the convolution kernel is treated as the second matrix in a multiplication operation (using the \textit{im2col} technique). This effectively transforms a standard image processing task into a stream of matrix multiplication tasks.
 
 For this specific test, the OpenVINO backend was disabled. Since the \textit{im2col} transformation results in matrices that are essentially long vectors (very high N, small K), the specialized architecture of the NPU does not provide a benefit compared to the CPU or GPU. Therefore, the task distribution focuses on CUDA, SYCL, and OpenBLAS.
 

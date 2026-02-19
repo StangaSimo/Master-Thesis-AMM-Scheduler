@@ -29,7 +29,7 @@ The core of the system is the Intel Core Ultra 9 185H processor, based on the "M
 
     \item \textbf{NPU}: The Ultra 9 includes a native Neural Processing Unit. This is a low power accelerator designed specifically for neural network inference. Its compute acceleration is facilitated by Neural Compute Engines, which consist of hardware acceleration blocks for AI operations like matrix multiplication and convolution, alongside streaming hybrid architecture vector engines for general computing tasks \cite{intel_npu}. In this project the NPU is exploited via the OpenVINO (see Sec. \ref{ov}) backend. 
 
-    \item \textbf{iGPU}: Intel Arc Graphics, integrated into the SoC. This graphics unit based on Xe-LPG architecture \cite{intel_arc}, offers parallel computing capabilities with direct access to system memory. In this project this GPU has been exploited via with the SYCL library (see Sec. \ref{sycl}) as the backend to leverage the full performance of this accellerator. 
+    \item \textbf{iGPU}: Intel Arc Graphics, integrated into the SoC. This graphics unit based on Xe-LPG architecture \cite{intel_arc}, offers parallel computing capabilities with direct access to system memory. In this project this GPU has been exploited via with the SYCL library (see Sec. \ref{sycl}) as the backend to leverage the full performance of this accelerator. 
 \end{itemize}
 
 \clearpage 
@@ -104,7 +104,7 @@ SYCL is an open, royalty-free standard managed by the Khronos Group. It enables 
     \label{oneapi logo}
 \end{figure}
 
-SYCL requires a specific software development kit (SDK) to be compiled and executed. For this thesis, the Intel oneAPI Base Toolkit was selected \cite{intel_oneapi}. oneAPI is Intel's unified programming model designed to simplify development across diverse architectures. It implements the SYCL standard via the \texttt{icpx} compiler, and provides a comprehensive set of libraries optimized for a large set of devices. The choice of this toolkit allows the project to target the available Intel hardware efficiently. Moreover this choice guarantees that the codebase could seamlessly target accellerator from othe vendor like AMD without having to rewrite the code.
+SYCL requires a specific software development kit (SDK) to be compiled and executed. For this thesis, the Intel oneAPI Base Toolkit was selected \cite{intel_oneapi}. oneAPI is Intel's unified programming model designed to simplify development across diverse architectures. It implements the SYCL standard via the \texttt{icpx} compiler, and provides a comprehensive set of libraries optimized for a large set of devices. The choice of this toolkit allows the project to target the available Intel hardware efficiently. Moreover this choice guarantees that the codebase could seamlessly target accelerator from othe vendor like AMD without having to rewrite the code.
 \end{itemize}
 
 \clearpage
@@ -122,7 +122,7 @@ SYCL requires a specific software development kit (SDK) to be compiled and execu
 Developed by Intel, this open-source toolkit is designed to optimize and deploy deep learning models across various types of hardware, from edge devices to cloud servers \cite{openvino}.
 
 The main function provided by the library is that it acts as a translator, it takes an AI model and converts it into a specific format that the target hardware understands.
-This is very useful because it allows the program to run on different components like the CPU, NPU or the integrated graphics without needing to rewrite the code for each specific accellerator. 
+This is very useful because it allows the program to run on different components like the CPU, NPU or the integrated graphics without needing to rewrite the code for each specific accelerator. 
 
 The toolkit automatically handles the low level details to ensure the task runs as fast as possible in the chosen device. This efficiency is achieved through the model optimizer, as described in the documentation, this tool analyzes the computational operations and simplifies them (for example, by merging multiple mathematical steps into one) before execution. 
 
@@ -190,7 +190,7 @@ To manage the compilation process of such a complex architecture, the project ut
 
 CMake does not build the software directly, instead it acts as a generator: it reads configuration files named CMakeLists.txt, and generates standard build files for the native toolchain of the operating system, such as Makefiles for Linux or Visual Studio projects for Windows. This abstraction allows developers to describe how the project should be built in a way that is independent of the specific compiler being used.
 
-In this thesis its primary function is to manage the complexity of dynamic linking: since the project depends on large external frameworks (CUDA, OpenVINO, OneAPI, OpenBlass), CMake is configured to locate and link these as shared libraries. This ensures that the executable remains lightweight and that dependencies are resolved correctly at runtime. 
+In this thesis its primary function is to manage the complexity of dynamic linking: since the project depends on large external frameworks (CUDA, OpenVINO, OneAPI, OpenBlas), CMake is configured to locate and link these as shared libraries. This ensures that the executable remains lightweight and that dependencies are resolved correctly at runtime. 
 
 Additionally, it enables a modular structure where specific hardware backends can be included or excluded via simple configuration flags.
 

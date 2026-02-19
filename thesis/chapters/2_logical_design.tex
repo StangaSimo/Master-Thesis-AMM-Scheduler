@@ -65,7 +65,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
 
 \clearpage
 
- Now we will examine each component in the diagram and explain a bit deeper its bahvior:
+ Now we will examine each component in the diagram and explain a bit deeper its behavior:
 
 \begin{itemize}
 
@@ -95,7 +95,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
 
     To evaluate these strategies, we also implemented a dynamic tasks dispatch logic. This approach assigns tasks to the first available Worker (i.e. idle) and serves as a baseline to verify the efficiency of our static methods (see Sec. \ref{impldynamiclogic}, Dynamic).
 
-    Finally, the Coordinator supports the Task Splitting logic. If a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks such that they may be distributed across multiple accellerators (see Sec. \ref{impllargelogic}, Large Matrix Split).
+    Finally, the Coordinator supports the Task Splitting logic. If a matrix exceeds the memory capacity of a single accelerator, the logic breaks it down into smaller sub-tasks such that they may be distributed across multiple accelerators (see Sec. \ref{impllargelogic}, Large Matrix Split).
 
 \begin{figure}[h!]
     \centering
