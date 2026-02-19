@@ -13,7 +13,7 @@ This chapter describes the logical structure of the project, the design process 
 
 \section{Preliminary Phase}
 \label{preliminary}
-Before designing the centralized scheduler, the project required a preliminary phase focused on the independent analysis of each software stack. Three standalone applications were developed, targeting the NVIDIA GPU, the Intel iGPU, and the Intel NPU respectively. The primary objective of this phase to gain a deep understanding of the specific libraries (CUDA, SYCL, and OpenVINO) and their interaction with the hardware.
+Before designing the centralized scheduler, the project required a preliminary phase focused on the independent analysis of each software stack. Three standalone applications were developed, targeting the NVIDIA GPU, the Intel iGPU, and the Intel NPU respectively. The primary objective of this phase was to gain a deep understanding of the specific libraries (CUDA, SYCL, and OpenVINO) and their interaction with the hardware.
 
 It is important to note that the OpenBLAS backend for the CPU was not included in this preliminary phase. This component was introduced directly during the development of the scheduler (described in the next section \ref{ammscheduler}) with a specific goal: to maximize the degree of heterogeneity of the system, by treating the CPU as an additional accelerator rather than just a coordinator. Moreover unlike the GPU and NPU, which required a specific study of their asynchronous drivers and memory models, the CPU integration relies on standard synchronous function calls. Consequently, a dedicated standalone analysis deemed unnecessary. The technical details of this integration will be discussed in the implementation Chapter \ref{implementation}.
 

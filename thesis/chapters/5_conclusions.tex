@@ -23,7 +23,7 @@ In conclusion, all the initial project objectives were met. The AMM Scheduler pr
 While the current implementation offers the initial foundation for heterogeneous scheduling, several avenues for future research and optimization remain open to enhance this project capabilities:
 
 \begin{itemize}
-\item Multi Node: The evolution of this project could be to extend the scheduler's scope beyond a single machine. Future work could focus on adapting the coordinator to distribute workloads across a server cluster, treating remote nodes as additional accelerators. This would involve implementing network aware logic to balance computation with network latency, and hardware aware if the nodes have all different accellerators. 
+\item Multi Node: The evolution of this project could be to extend the scheduler's scope beyond a single machine. Future work could focus on adapting the coordinator to distribute workloads across a server cluster, treating remote nodes as additional accelerators. This would involve implementing network aware logic to balance computation with network latency, and implement hardware aware logic if the nodes have all different accelerators. 
 
 \item Expansion of Supported Primitives and Logics: Currently the scheduler is specialized in Matrix Multiplication. Future developments could aim to extend the library of supported operations, adding other primitives such as Convolutions, FFTs, and so on. Moreover the current logic handles streams of independent tasks. A significant step would be the implementation of a dependency aware scheduler capable of managing Directed Acyclic Graphs (DAGs). This would allow the system to orchestrate entire computational pipelines like a full Neural Network inference.
 \end{itemize}
