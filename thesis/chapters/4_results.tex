@@ -15,7 +15,7 @@ The specific hardware and software used are listed below:
     \item OS Kubuntu 25.10 with the linux kernel 6.17. 
 \end{itemize}
 
-The results presented in the following sections were obtained directly from the execution of the code (see Appendix \ref{TODO}), utilizing the instrumentation described in the Profiler implementation (see Sec. \ref{implprofiler}).
+The results presented in the following sections were obtained directly from the execution of the code (see Appendix \ref{appscheduler}, \texttt{main.cpp}), utilizing the instrumentation described in the Profiler implementation (see Sec. \ref{implprofiler}).
 
 Upon completion of a batch of tasks, the scheduler automatically exports all relevant metrics (including execution time, latency, energy consumption, and worker statistics) into structured .csv files. These files constitute the source dataset used to generate the graphs and observe the results discussed in this chapter.
 
@@ -187,7 +187,7 @@ As is evident from the graphs in Fig \ref{result1}, a relatively small batch siz
 
 \section{Heterogeneous Workloads}
 \subsection{Static Heterogeneous}
-This test involves streams of matrices with random dimensions ( from 512 to 4096). This represents the most realistic scenario for a general-purpose system, where tasks of varying complexity arrive at the scheduler.
+This test involves streams of matrices with random dimensions (from 512 to 4096). This represents the most realistic scenario for a general-purpose system, where tasks of varying complexity arrive at the scheduler.
 
 The results of the execution are presented in Fig. \ref{timehetero} and Fig. \ref{energyhetero}:
 
@@ -288,14 +288,14 @@ The load balancing graph on Fig. \ref{chunklarge} provides insight into how the 
 \section{Real-World Application: Video Filtering}
 To demonstrate the flexibility of the AMM Scheduler beyond synthetic benchmarks, a real-world video processing application was implemented. This test case involves applying an edge detection filter (convolution) to a video stream in real-time.
 
-The application, whose source code can be found in Appendix \ref{appendix:opencv}, uses OpenCV to decode a video file frame by frame. Each frame is converted into a matrix format suitable for the scheduler: the image is flattened, and the convolution kernel is treated as the second matrix in a multiplication operation (using the \textit{im2col} technique). This effectively transforms a standard image processing task into a stream of matrix multiplication tasks.
+The application, whose source code can be found in Appendix \ref{appopencv} , uses OpenCV to decode a video file frame by frame. Each frame is converted into a matrix format suitable for the scheduler: the image is flattened, and the convolution kernel is treated as the second matrix in a multiplication operation (using the \textit{im2col} technique). This effectively transforms a standard image processing task into a stream of matrix multiplication tasks.
 
 For this specific test, the OpenVINO backend was disabled. Since the \textit{im2col} transformation results in matrices that are essentially long vectors (very high N, small K), the specialized architecture of the NPU does not provide a benefit compared to the CPU or GPU. Therefore, the task distribution focuses on CUDA, SYCL, and OpenBLAS.
 
 \subsection{Performance Comparison}
 To evaluate the scheduler under a workload that is as realistic as possible, a video processing application was implemented. The specific task consisted of applying an edge-detection filter to a standard .mp4 video file.
 
-To manage the video format and frame extraction, the OpenCV library was utilized (the complete source code is available in Appendix \ref{appendix:opencv}). Typically, applying a filter to an image is performed using convolution operations. However, since the AMM Scheduler is specialized exclusively for Matrix Multiplication, the standard im2col (image-to-column) technique was employed. This technique reshapes the image data and the filter kernel, transforming the convolution problem into a matrix multiplication task that our system can execute.
+To manage the video format and frame extraction, the OpenCV library was utilized. Typically, applying a filter to an image is performed using convolution operations. However, since the AMM Scheduler is specialized exclusively for Matrix Multiplication, the standard im2col (image-to-column) technique was employed. This technique reshapes the image data and the filter kernel, transforming the convolution problem into a matrix multiplication task that our system can execute.
 
 Once the frames were extracted and converted, they were simply dispatched to the scheduler following the standard procedure already described in the Implementation Chapter (see Sec. \ref{implammscheduler}). The scheduler then handled the distribution of these tasks across the available hardware automatically.
 

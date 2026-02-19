@@ -25,11 +25,11 @@ The core of the system is the Intel Core Ultra 9 185H processor, based on the "M
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Host CPU}: This cpu is made of 16 hybrid cores, 6 Performance-cores, 8 Efficient-cores, and 2 Low-Power-cores for efficiency. In this project this unit acts both as host and accelerator. It runs the scheduler code and does some computation through the OpenBlas library (see Sec. \ref{openblass}).
+    \item \textbf{Host CPU}: This cpu is made of 16 hybrid cores, 6 Performance cores, 8 Efficient cores, and 2 Low Power cores for efficiency. In this project this unit acts both as host and accelerator. It runs the scheduler code and does some computation through the OpenBlas library (see Sec. \ref{openblas}).
 
-    \item \textbf{NPU}: The Ultra 9 includes a native Neural Processing Unit. This is a low-power accelerator designed specifically for neural network inference. Its compute acceleration is facilitated by Neural Compute Engines, which consist of hardware acceleration blocks for AI operations like Matrix Multiplication and Convolution, alongside Streaming Hybrid Architecture Vector Engines for general computing tasks \cite{intel_npu}. In this project the NPU is exploited via the OpenVINO (see Sec. \ref{ov}) backend. 
+    \item \textbf{NPU}: The Ultra 9 includes a native Neural Processing Unit. This is a low power accelerator designed specifically for neural network inference. Its compute acceleration is facilitated by Neural Compute Engines, which consist of hardware acceleration blocks for AI operations like matrix multiplication and convolution, alongside streaming hybrid architecture vector engines for general computing tasks \cite{intel_npu}. In this project the NPU is exploited via the OpenVINO (see Sec. \ref{ov}) backend. 
 
-    \item \textbf{iGPU}: Intel Arc Graphics, integrated into the SoC. This graphics unit based on Xe-LPG architecture \cite{intel_arc}, offers parallel computing capabilities with direct access to system memory, in this project this accellerator has been exploited via with the SYCL library (see Sec. \ref{sycl}) as the backend to leverage the full performance of this accellerator. 
+    \item \textbf{iGPU}: Intel Arc Graphics, integrated into the SoC. This graphics unit based on Xe-LPG architecture \cite{intel_arc}, offers parallel computing capabilities with direct access to system memory. In this project this GPU has been exploited via with the SYCL library (see Sec. \ref{sycl}) as the backend to leverage the full performance of this accellerator. 
 \end{itemize}
 
 \clearpage 
@@ -62,7 +62,7 @@ Within the scheduler this device is managed via the CUDA backend (see Sec. \ref{
     \label{cuda logo}
 \end{figure}
 
-To exploit the computational capabilities of the discrete NVIDIA GPU the system utilizes CUDA (Compute Unified Device Architecture). This parallel computing platform and programming model, developed by NVIDIA, enables dramatic increases in computing performance by harnessing the power of the GPU. It allows developers to accelerate compute- intensive applications using C, C++, and Fortran, and is widely adopted in fields such as deep learning, scientific computing, and more in general high-performance computing (HPC) \cite{cuda_guide}.
+To exploit the computational capabilities of the discrete NVIDIA GPU the system utilizes CUDA (Compute Unified Device Architecture). This parallel computing platform and programming model, developed by NVIDIA, enables dramatic increases in computing performance by harnessing the power of the GPU. It allows developers to accelerate compute intensive applications using C, C++, and Fortran, and is widely adopted in fields such as deep learning, scientific computing, and more in general high performance computing (HPC) \cite{cuda_guide}.
 
 \clearpage
 
@@ -124,7 +124,7 @@ Developed by Intel, this open-source toolkit is designed to optimize and deploy 
 The main function provided by the library is that it acts as a translator, it takes an AI model and converts it into a specific format that the target hardware understands.
 This is very useful because it allows the program to run on different components like the CPU, NPU or the integrated graphics without needing to rewrite the code for each specific accellerator. 
 
-The toolkit automatically handles the low-level details to ensure the task runs as fast as possible in the chosen device. This efficiency is achieved through the model optimizer, as described in the documentation, this tool analyzes the computational operations and simplifies them (for example, by merging multiple mathematical steps into one) before execution. 
+The toolkit automatically handles the low level details to ensure the task runs as fast as possible in the chosen device. This efficiency is achieved through the model optimizer, as described in the documentation, this tool analyzes the computational operations and simplifies them (for example, by merging multiple mathematical steps into one) before execution. 
 
 The result is a hardware-agnostic format called intermediate representation, IR, which allows the runtme to map the operations efficiently to the available resources \cite{openvino}.
 
@@ -173,7 +173,7 @@ Developed in the 1970s by Dennis Ritchie, it was one of the first high-level lan
 \textbf{The C++ Language}: 
 C++ is an extension of C developed in the 1980s by Bjarne Stroustrup. Among its key features is the support for Object-Oriented Programming (OOP), which allows for the creation of more structured and modular software compared to procedural C \cite{libro_cpp}. It provides a rich Standard Library (STL) and is the industry standard for performance-critical applications.
 
-In the context of this project, C plays a critical architectural role. It was utilized to define the Application Binary Interface (ABI) between the scheduler and the various hardware wrappers. This choice was driven by the need for a stable and simplified interface. Since the project components are built with different compilers, C++ was unsuitable due to its lack of a standardized ABI, which causes binary incompatibility. C, instead, ensures consistent linkage across these environments. Instead C++ serves as the primary development language. Its adoption was mandatory as it is the native language required by the SDKs of all the utilized frameworks. It is used to implement the complex logic of the scheduler and the data structures necessary for task management. Further details on this will be provided in the Implementation Chapter \ref{implementation}.
+In the context of this project, C plays a critical architectural role. It was utilized to define the Application Binary Interface (ABI) between the scheduler and the various hardware wrappers. This choice was driven by the need for a stable and simplified interface. Since the project components are built with different compilers, C++ was unsuitable due to its lack of a standardized ABI, which causes binary incompatibility. C, instead, ensures consistent linkage across these environments. Instead C++ serves as the primary development language. Its adoption was mandatory as it is the native language required by the SDKs of all the utilized frameworks. It is used to implement the complex logic of the scheduler and the data structures necessary for task management. Further details on this will be provided in the implementation Chapter \ref{implementation}.
 
 \clearpage
 

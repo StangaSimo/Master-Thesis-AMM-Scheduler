@@ -748,6 +748,12 @@ INPUT listings/appendice/gpu_benchmark/src/benchmarks/gem_runner.cu
 INPUT ./listings/appendice/gpu_benchmark/src/benchmarks/mem_runner.cu
 INPUT ./listings/appendice/gpu_benchmark/src/benchmarks/mem_runner.cu
 INPUT listings/appendice/gpu_benchmark/src/benchmarks/mem_runner.cu
+INPUT ./listings/appendice/gpu_benchmark/src/include/power.hpp
+INPUT ./listings/appendice/gpu_benchmark/src/include/power.hpp
+INPUT listings/appendice/gpu_benchmark/src/include/power.hpp
+INPUT ./listings/appendice/gpu_benchmark/src/include/help_func.hpp
+INPUT ./listings/appendice/gpu_benchmark/src/include/help_func.hpp
+INPUT listings/appendice/gpu_benchmark/src/include/help_func.hpp
 INPUT ./listings/appendice/npu_benchmark/main.cpp
 INPUT ./listings/appendice/npu_benchmark/main.cpp
 INPUT listings/appendice/npu_benchmark/main.cpp

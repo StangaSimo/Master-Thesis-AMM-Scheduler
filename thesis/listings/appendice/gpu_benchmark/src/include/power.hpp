@@ -1,4 +1,3 @@
-#pragma once
 #include <nvml.h>
 #include <thread>
 #include <atomic>

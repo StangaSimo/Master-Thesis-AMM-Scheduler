@@ -4,9 +4,9 @@
 This chapter describes the logical structure of the project, the design process was divided into two main phases:
 
 \begin{itemize}
-    \item The first part of the chapter (see Sec. \ref{preliminary}) presents the Independent Benchmarks. Before developing the centralized scheduler, standalone applications were created for each accelerator. This phase was essential to verify the feasibility of the project and to understand how to effectively control the specific hardware using the selected libraries. 
+    \item The first part of the chapter (see Sec. \ref{preliminary}) presents the independent benchmarks. Before developing the centralized scheduler, standalone applications were created for each accelerator. This phase was essential to verify the feasibility of the project and to understand how to effectively control the specific hardware using the selected libraries. 
 
-    \item  The second part (see Sec. \ref{ammscheduler}) provides a comprehensive overview of the AMM Scheduler. This section describes the high-level operation of all the components of the scheduler, it illustrates the architectural design of the main project and explains how the various logical blocks interact to enable the scheduler's functionality, detailing the specific operational logic that governs the system.
+    \item  The second part (see Sec. \ref{ammscheduler}) provides a comprehensive overview of the AMM Scheduler. This section describes the high level operation of all the components of the scheduler, it illustrates the architectural design of the main project and explains how the various logical blocks interact to enable the scheduler's functionality, detailing the specific operational logic that governs the system.
 \end{itemize}
 
 \clearpage
@@ -21,8 +21,6 @@ It is important to note that the OpenBLAS backend for the CPU was not included i
 A crucial goal of this stage was to gain a deep, hands-on understanding of the specific libraries. Since technologies like CUDA, SYCL, and OpenVINO manage hardware in fundamentally different ways, so a first approach phase was necessary to see how their specific mechanisms works and the drivers interactions.
 
 This distinction is particularly evident in the case of OpenVINO. While CUDA and SYCL follow a traditional \textit{kernel launch} paradigm, the NPU is designed exclusively for deep learning graphs, not for general-purpose linear algebra. Consequently, to perform a standard matrix multiplication (GEMM) on this accelerator, a workaround was required; instead of invoking a mathematical function, the operation had to be encapsulated within a synthetic neural network layer, effectively "tricking" the driver into treating a raw calculation that we wanted to perform as an inference task (more on this in section \ref{implopenvino}).
-
-\clearpage
 
 Despite these architectural differences, this preliminary study revealed a recurring pattern, the execution flow for every accelerator whether running a kernel or a simulated inference relies on four identical logical steps:
 
@@ -44,7 +42,7 @@ During this phase, benchmarking routines were implemented within each of the sta
     \item Analyze the runtime behavior of the drivers, and identify architectural bottlenecks (such as PCIe transfer overheads or compilation latencies).
 \end{itemize}
 
-However, we must point out that the performance profile observed in these isolated environments proved to be quite different from the behavior, observered when using the full scheduler. The concurrent execution of different workloads and the increased stress on system resources exposed new bottlenecks that were not visible during the standalone tests. Consequently, the backend implementations significantly evolved during the integration phase, and specific structures were introduced to mitigate these latencies. These optimizations and the specific issues encountered under high-load scenarios will be analyzed in detail in the Implementation Chapter (\ref{implementation}).
+However, we must point out that the performance profile observed in these isolated environments proved to be quite different from the behavior, observered when using the full scheduler. The concurrent execution of different workloads and the increased stress on system resources exposed new bottlenecks that were not visible during the standalone tests. Consequently, the backend implementations significantly evolved during the integration phase, and specific structures were introduced to mitigate these latencies. These optimizations and the specific issues encountered under high-load scenarios will be analyzed in detail in the implementation Chapter (\ref{implementation}).
 
 \clearpage
 \section{AMM Scheduler}
@@ -78,7 +76,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
     \label{ringfigure}
 \end{figure}
 
-\item \textbf{Ring Buffers}: The key to this asynchronous pattern is the ring buffer (rappresented in the Fig. \ref{ringfigure} as the arrows marked with a circle), which decouples the Host from the Coordinator, designed ad-hoc for the scheduler. This structure enables extremely fast communications with minimal overhead, using atomic variables instead of locks. As the graph in Fig \ref{ammfigure} illustrates, this mechanism also implements the communication between the Coordinator and the Workers, minimizing the overhead and maximizing speed during task distribution. More on the code implementation in Sec. \ref{implringbuffer}.
+\item \textbf{Ring Buffers}: The key to this asynchronous pattern is the ring buffer (rappresented in Fig. \ref{ringfigure} as the arrows marked with a circle), which decouples the Host from the Coordinator, designed ad-hoc for the scheduler. This structure enables extremely fast communications with minimal overhead, using atomic variables instead of locks. As the graph in Fig \ref{ammfigure} illustrates, this mechanism also implements the communication between the Coordinator and the Workers, minimizing the overhead and maximizing speed during task distribution. More on the code implementation in Sec. \ref{implsharedbuffer}.
 
 \begin{figure}[h!]
     \centering
@@ -87,7 +85,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
     \label{figcoordinator}
 \end{figure}
 
-\item \textbf{Coordinator}: The Coordinator (represented in Fig. \ref{figcoordinator} acts as the brain of the scheduler. It decides how to dispatch tasks and implements different strategies to demonstrate various resource management techniques. 
+\item \textbf{Coordinator}: The Coordinator (represented in Fig. \ref{figcoordinator}) acts as the brain of the scheduler. It decides how to dispatch tasks and implements different strategies to demonstrate various resource management techniques. 
 
     It features distinct scheduling logics, based on the type of workload that the host have to compute. The main logics that shape the design of the scheduler are the static ones. 
 
@@ -106,7 +104,7 @@ As shown in the diagram, Workers communicate with the Coordinator using atomic v
     \label{workerfigure}
 \end{figure}
 
-\item \textbf{Workers}: Workers (represented in Fig. \ref{workerfigure}) are threads that utilize the abstraction layers defined in the preliminary phase (see Sec. \ref{preliminary}). Their internal logic is straightforward: they retrieve available tasks and execute them on their assigned accelerator. All low-level details regarding the accelerator libraries are completely hidden from the Worker prospective (see Sec. \ref{implworker}, Workers).
+\item \textbf{Workers}: Workers (represented in Fig. \ref{workerfigure}) are threads that utilize the abstraction layers defined in the preliminary phase (see Sec. \ref{preliminary}). Their internal logic is straightforward: they retrieve available tasks and execute them on their assigned accelerator. All low-level details regarding the accelerator libraries are completely hidden from the Worker prospective (for implementation see Sec. \ref{implworker}, Worker).
 
 \begin{figure}[h!]
     \centering

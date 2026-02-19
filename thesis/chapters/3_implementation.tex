@@ -7,7 +7,7 @@ In the first section, we will explain the structure of the project files and the
 
 Subsequently, we will explain each of the abstraction layers used to target the accelerators, and then to conclude, we will see in detail all the components that make the scheduler logic work.
 
-As mentioned in Chap. \ref{logical design}, logical design, the code developed during the preliminary phase is not analyzed in this section. This avoids repetition, as the evolved version of this code, which is integrated into the scheduler, will be explained in detail later. However, all the original code is available in Appendix \ref{TODO}.
+As mentioned in Chap. \ref{logical design}, logical design, the code developed during the preliminary phase is not analyzed in this section. This avoids repetition, as the evolved version of this code, which is integrated into the scheduler, will be explained in detail later. However, all the original code is available in Appendix \ref{appbenchmark}.
 
 \clearpage 
 
@@ -160,9 +160,9 @@ Based on the flags passed to CMake during compilation, specific preprocessor def
 
 Consequently, the scheduler logic knows exactly which accelerators are available. This approach makes the system flexible, if a specific accelerator or library is missing on the machine where the project has to be compiled, it can be disabled simply by using a flag.
 
-Below the following snippet from the scheduler's build configuration shows how the flags trigger the injection of preprocessor definitions and the linking of specific libraries:
+The following snippet in Listing \ref{abcd} from the scheduler's build configuration shows how the flags trigger the injection of preprocessor definitions and the linking of specific libraries:
 
-\begin{lstlisting}[caption={Part of CMakeLists.txt inside the scheduler directory}]
+\begin{lstlisting}[caption={Part of CMakeLists.txt inside the scheduler directory}, label={abcd}]
 # CUDA
 if(NOT DEFINED ENABLE_CUDA)
     message("[SCHEDULER] CUDA off on scheduler")
@@ -306,7 +306,7 @@ void cuda_init() {
 }
 \end{lstlisting}
 
-At startup, the function first initializes the cuBLAS library handle, which is required to invoke the linear algebra routines.
+At startup, the \texttt{cuda\_init} function first initializes the cuBLAS library handle, which is required to invoke the linear algebra routines.
 Then, it iterates through \texttt{N\_STREAM} number of streams (simply 2 stream is enough). For each stream, it creates a CUDA stream object to manage execution queues and allocates three distinct memory buffers on the device (\texttt{d\_A}, \texttt{d\_B}, \texttt{d\_C}). The size of these buffers is calculated to hold the largest matrix dimension supported by the system (MAX size), ensuring that any incoming task fits within the pre-allocated space without requiring reallocation.
 
 It is important to observe that, although the hardware accelerator supports dimensions exceeding this limit, a maximum square matrix size of 4096×4096 was established (for each accelerator). This design choice was made to avoid introducing unnecessary architectural complexity, since it wasn't in this thesis objectives to maximize the memory saturation, and this limit provides a sufficient workload to stress the scheduler without incurring into the typical limitations due to the memory management layer.
@@ -418,7 +418,7 @@ void cuda_gemm_16bit_p(__half* A, __half* B, __half* C,
 
 The logic stay the same of the 32 bit version, but it introduces changes to handle half-precision data, first the pointer types are replaced with the specific \texttt{\_\_half} type, consequently, the \texttt{cublasGemmEx} function is configured with the \texttt{CUDA\_R\_16F} flag for the input and output data. However, it is worth pointing out that the computation type is kept as \texttt{CUBLAS\_COMPUTE\_32F}. This is a standard practice to ensures that while the data storage is compressed to 16 bit. The internal mathematical computation happens in 32 bit to prevent overflows.
 
-The implementation for 8 bit integer matrices follows the exact same architectural pattern, differing only in data types, \texttt{int8\_t} and flags \texttt{CUDA\_R\_8I}. The code can be found in full in Appendix \ref{TODO}.
+The implementation for 8 bit integer matrices follows the exact same architectural pattern, differing only in data types, \texttt{int8\_t} and flags \texttt{CUDA\_R\_8I}. The code can be found in full in Appendix \ref{appcuda}.
 
 \subsection{OpenVINO}
 \label{implopenvino}
@@ -464,11 +464,11 @@ size_t map_size_8bit=0;
 
 The global variable \texttt{core}(see Listing \ref{ov2}), represents OpenVINO runtime, it will be utilized for discovering available devices and compiling the models.
 
-To implement the caching mechanism, the system utilizes standard C++ maps for associating a specific set of matrix dimensions (represented by a tuple (M,N,K)) with a already compiled ov::InferRequest. This means that if the scheduler requests a matrix multiplication with dimensions that have been seen before, the system can retrieve the pre-compiled request immediately, skipping the expensive compilation step for already seen matrices. %TODO capire bene cosa intendeva il prof
+To implement the caching mechanism, the system utilizes standard C++ maps for associating a specific set of matrix dimensions (represented by a tuple (M,N,K)) with a already compiled ov::InferRequest. This means that if the scheduler requests a matrix multiplication with dimensions that have been seen before, the system can retrieve the pre-compiled request immediately, skipping the expensive compilation step for already seen matrices. 
 
 Finally, to manage memory usage and prevent the cache from growing indefinitely in case there are many different matrices, a simple eviction policy is enforced using the \texttt{MAX\_MAP\_SIZE} constant and associated counters and if the number of cached models exceeds this limit, the cache is cleared to make room for new entries.
 
-\begin{lstlisting}[caption={ov runner.cpp init}, language=C++] 
+\begin{lstlisting}[caption={ov runner.cpp init}, language=C++, label={ovinit}] 
 void ov_init_p() {
     bool available = false;
 
@@ -483,11 +483,11 @@ void ov_init_p() {
 }
 \end{lstlisting}
 
-The init function simply queries the OpenVINO Core to verify the presence of the NPU device. If the hardware is not found, the system aborts to prevent runtime failures during execution.
+The init (Listing \ref{ovinit} function simply queries the OpenVINO Core to verify the presence of the NPU device. If the hardware is not found, the system aborts to prevent runtime failures during execution.
 
 The core logic of the OpenVINO backend is found in the caching functions, such as \texttt{cache\_32bit}. This function is responsible for constructing the neural network graph that represents a matrix multiplication.
 
-\begin{lstlisting}[caption={ov runner.cpp caching function}, language=C++] 
+\begin{lstlisting}[caption={ov runner.cpp caching function}, language=C++, label={ovcache32}] 
 void cache_32bit(tuple<int, int, int> key) {
     if (cache_32bit.find(key) == cache_32bit.end()) {
         map_size_32bit++;
@@ -517,11 +517,11 @@ void cache_32bit(tuple<int, int, int> key) {
 }
 \end{lstlisting}
 
-The graph construction consist in three steps, first two input nodes are created with the specific shape and precision in this case 32-bit float. Second, a \texttt{MatMul} node is instantiated taking these parameters as inputs, defining the GEMM Operation. Finally, the graph is wrapped into an \texttt{ov::Model} object and compiled for the NPU device. This step optimizes the graph for the specific hardware architecture, and the resulting request object is stored in the cache map.
+The graph construction in Listing \ref{ovcache32} consist in three steps, first two input nodes are created with the specific shape and precision in this case 32-bit float. Second, a \texttt{MatMul} node is instantiated taking these parameters as inputs, defining the GEMM Operation. Finally, the graph is wrapped into an \texttt{ov::Model} object and compiled for the NPU device. This step optimizes the graph for the specific hardware architecture, and the resulting request object is stored in the cache map.
 
 Once the model is cached, the execution of the task is handled by the \texttt{ov\_gemm\_32bit\_p} function.
 
-\begin{lstlisting}[caption={ov runner.cpp gemm 32 bit}, language=C++] 
+\begin{lstlisting}[caption={ov runner.cpp gemm 32 bit}, language=C++, label={ovgem}] 
 void ov_gemm_32bit_p(void *A, void *B, void *C, int M, int N, int K){
     auto key = std::make_tuple(M, N, K);
     cache_32bit(key); 
@@ -543,15 +543,13 @@ void ov_gemm_32bit_p(void *A, void *B, void *C, int M, int N, int K){
 }
 \end{lstlisting}
 
-This function first calls the cache function to ensure the request object is available. Then, it wraps the raw pointers provided by the scheduler (A, B, C) into \texttt{ov::Tensor} objects. Notably this constructor uses the existing memory pointers without allocating new buffers or copying data (zero-copy). Finally, the tensors are bound to the input/output ports of the model, and the \texttt{infer()} method is called to trigger the execution on the NPU.
+This function (Listing \ref{ovgem}) first calls the cache function to ensure the request object is available. Then, it wraps the raw pointers provided by the scheduler (A, B, C) into \texttt{ov::Tensor} objects. Notably this constructor uses the existing memory pointers without allocating new buffers or copying data (zero-copy). Finally, the tensors are bound to the input/output ports of the model, and the \texttt{infer()} method is called to trigger the execution on the NPU.
 
-Finally, the code exposes the public C ABI by wrapping the internal C++ functions. This structure mirrors the approach used in the CUDA backend, ensuring that the scheduler sees a uniform interface across all accelerators.
+Finally, the code exposes the public C ABI by wrapping the internal C++ functions (Listing \ref{ovwrapper}). This structure mirrors the approach used in the CUDA backend, ensuring that the scheduler sees a uniform interface across all accelerators.
 
-\begin{lstlisting}[caption={ov runner.cpp wrappers}, language=C++] 
+\begin{lstlisting}[caption={ov runner.cpp wrappers}, language=C++, label={ovwrapper}] 
 extern "C" {
-    void ov_init() {
-        ov_init_p();
-    }
+    void ov_init() {ov_init_p();}
 
     void ov_gemm_32bit(void *A, void *B, void *C, int M, int N, int K){
         ov_gemm_32bit_p(A, B, C, M, N, K);
@@ -564,14 +562,12 @@ extern "C" {
     void ov_gemm_8bit(void *A, void *B, void *C, int M, int N, int K){
         ov_gemm_8bit_p(A, B, C, M, N, K);
     }
-    void ov_free() {
-    }
+
+    void ov_free();
 }
 \end{lstlisting}
 
 A notable difference compared to the CUDA implementation is the \texttt{ov\_free} function, which is empty. This is because the OpenVINO runtime relies on modern C++ features, specifically RAII and smart pointers, so when the program terminates or the objects go out of scope, the destructors for the \texttt{ov::Core} and the cached requests are invoked automatically, releasing the NPU resources explicit cleanup.
-
-\clearpage
 
 \subsection{SYCL}
 The SYCL abstraction layer is designed to manage Intel GPUs. In this project, SYCL is utilized in conjunction with the Intel oneAPI Math Kernel Library (oneMKL) to perform high-performance matrix operations. 
@@ -701,7 +697,7 @@ Finally, the result is copied back to the host, and \texttt{s.q.wait()} is calle
 
 The 16-bit implementation is structurally identical but operates on the \texttt{sycl::half} data type. This allows the hardware to utilize half-precision units on the GPU, improving throughput.
 
-\begin{lstlisting}[caption={sycl runner.cpp wrapper}, language=C++] 
+\begin{lstlisting}[caption={sycl runner.cpp wrapper}, language=C++, label={syclwrapper}] 
 extern "C" {
     void sycl_init() {
         init();
@@ -722,18 +718,19 @@ extern "C" {
 }
 \end{lstlisting}
 
-The code concludes with the C-compatible wrappers. These functions simply cast the generic \texttt{void*} pointers to the appropriate C++ types (float* or sycl::half*) and forward the call.
+The code concludes with the C-compatible wrappers (see Listing \ref{syclwrapper}. These functions simply cast the generic \texttt{void*} pointers to the appropriate C++ types (float* or sycl::half*) and forward the call.
 
 The \texttt{sycl\_free} function simply calls \texttt{streams.clear()}. Because the system uses smart pointers (std::unique\_ptr) and the SYCLStream struct has a defined destructor, clearing the vector automatically triggers the destruction of all stream objects.
 
 \subsection{OpenBLAS}
+\label{implopenblas}
 Finally, the project includes a backend to target the host CPU. Unlike the other accelerators which required complex compilation and separate dynamic libraries to ensure compatibility, the CPU implementation was introduced directly into the scheduler codebase.
 
 As already said in this thesis, this library was the last addition to the project, and since the scheduler and the OpenBLAS library share the same compiler, there were no compatibility issues to solve, infact, the implementation is located directly in the header file \texttt{cpu.hpp} inside the \texttt{scheduler/} directory.
 
-The complete implementation is presented below:
+The complete implementation is presented in Listing \ref{openblasfun}:
 
-\begin{lstlisting}[caption={OpenBLAS CPU Implementation}, language=C++] 
+\begin{lstlisting}[caption={OpenBLAS CPU Implementation}, language=C++, label={openblasfun}] 
 inline void cpu_init() {
     openblas_set_num_threads(N_CORES);
     omp_set_num_threads(N_CORES);
@@ -838,7 +835,7 @@ inline float half_to_float(uint16_t h) {
 }
 \end{lstlisting}
 
-The \texttt{float\_to\_half} function (available in the Appendix \ref{TODO}) performs the inverse operation.
+The \texttt{float\_to\_half} function (available in the Appendix \ref{appscheduler}, in \texttt{task.hpp}) performs the inverse operation.
 
 \clearpage
 
@@ -1023,7 +1020,7 @@ void worker_thread(BT bt, SharedBuffer *buffer) {
 } 
 \end{lstlisting}
 
-The implementation is a continuous loop that retrieves a task from the shared buffer and processes it. The function \texttt{buffer->get()} is the entry point. As detailed in the Shared Buffer section (see Section \ref{implsharedbuffer}), if the macro \texttt{SLEEP} is defined, this function blocks the thread and puts it to sleep until a new task arrives. This prevents the worker from consuming CPU cycles while waiting. If \texttt{SLEEP} is not defined, the thread spins (busy waiting) to react faster.
+The implementation is a continuous loop that retrieves a task from the shared buffer and processes it. The function \texttt{buffer->get()} is the entry point. As detailed in the Shared Buffer section (see Sec. \ref{implsharedbuffer}), if the macro \texttt{SLEEP} is defined, this function blocks the thread and puts it to sleep until a new task arrives. This prevents the worker from consuming CPU cycles while waiting. If \texttt{SLEEP} is not defined, the thread spins (busy waiting) to react faster.
 
 The behavior is slightly different based on the scheduler strategy: 
 
@@ -1061,7 +1058,7 @@ inline void handle_task(BT backend_type, task *task) {
 #endif 
         break;    
 
-    /* .. same for OpenVINO and OpenBLASS .. */
+    /* .. same for OpenVINO and OpenBLAS .. */
 
     default: 
         cerr << "[SCHEDULER] ERROR handle task\n";
@@ -1078,7 +1075,7 @@ This function (see Sec. \ref{sched7}) performs three simple steps, it checks the
 \label{implbenchmark}
 Once the threads are running, the coordinator thread needs specific data to make decisions inside the static logics (see Sec. \ref{implstaticlogic}). This data comes from the data profiling saved in CSV files create by \texttt{init\_benchmarks} function and later uploaded inside the \texttt{PerformanceMap} structure (see Sec. \ref{implperformancemap}) by the \texttt{init\_maps} function.
 
-\begin{lstlisting}[caption={Init Benchmarks and Maps}, language=C++] 
+\begin{lstlisting}[caption={Init Benchmarks and Maps}, language=C++, label={benchadc}] 
 /* upload the banchmark files and generate them if not presents */
 void init_benchmarks() {
     for (BT i : bts) {
@@ -1125,7 +1122,7 @@ void init_maps() {
 }
 \end{lstlisting}
 
-The \texttt{init\_benchmarks} function ensures that the data exists. It iterates through the list of active accelerators and checks for the existence of specific CSV files for both 32 and 16 bit data types. If a file is found, the system proceeds, if a file is missing, the system automatically triggers the benchmarking routine to generate the data from scratch.
+The \texttt{init\_benchmarks} (Listing \ref{benchadc}) function ensures that the data exists. It iterates through the list of active accelerators and checks for the existence of specific CSV files for both 32 and 16 bit data types. If a file is found, the system proceeds, if a file is missing, the system automatically triggers the benchmarking routine to generate the data from scratch.
 
 Subsequently, again within the constructor, the \texttt{init\_maps} function is called. Its role is to load the data from the disk into the memory. It reads the CSV files generated in the previous step and populates the \texttt{PerformanceMap} objects for each accelerator. This ensures that when the scheduler is running, it can query the expected execution time of a matrix multiplication in constant time O(1) without needing to read from the disk again. If a file is missing at this stage, the system considers it a critical error and shuts down, as the scheduler cannot function without its performance models. If a file is missing at this stage, the system shuts down, as the scheduler cannot function without its performance models.
 
@@ -1155,7 +1152,8 @@ The measurement logic is implemented in \texttt{benchmark\_acc} (see Listing \re
 
 \begin{lstlisting}[caption={Benchmark Accelerator Function}, language=C++, label={sched9}] 
 /* benchmark the accelerator and write in the csv*/
-inline void benchmark_acc(BT bt, Type type, string filename, int M, int N, int K) {
+inline void benchmark_acc(BT bt, Type type, string filename, 
+                            int M, int N, int K) {
     chrono::high_resolution_clock::time_point start_time;
     chrono::high_resolution_clock::time_point end_time;
     chrono::duration<double, std::milli> duration;
@@ -1233,7 +1231,7 @@ To allow the scheduler to manage workloads efficiently without being tied to a s
 The definition of the task structure is below: 
 
 \begin{lstlisting}[caption={Task Structure}, language=C++] 
-enum Type : int { FLOAT, HALF, UINT8, };
+enum Type : int { FLOAT, HALF, UINT8 };
 
 typedef struct { 
 
@@ -1269,7 +1267,7 @@ The typical lifecycle of a task within the application is simple:
 To automate the data generation process for testing every single workload supported by the scheduler, the \texttt{init\_tasks} function was used to create arrays of identical matrices, while \texttt{init\_hetero\_tasks} was employed to create arrays of heterogeneous matrices. These datasets constitute the input used for all the tests performed on the scheduler.
 
 
-\begin{lstlisting}[caption={Init Tasks Function}, language=C++] 
+\begin{lstlisting}[caption={Init Tasks Function}, language=C++, label={inittask}] 
 inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
     task* array_task = new task[n_task];
 
@@ -1287,18 +1285,16 @@ inline task* init_tasks(size_t n_task, int m, int n, int k, Type t) {
             init_32bit(array_task[i].A,array_task[i].B,array_task[i].C, m, n, k);
 
         } else if (t == Type::HALF) {
-            
             /* .. same as 32 bit .. */
         } 
     }
-
     return array_task;
 }
 \end{lstlisting}
 
-The implementation is straightforward, the function \texttt{init\_task} simply take the number of tasks to create, the matrix dimensions and the desired type of the matrices, it  allocate the array of tasks, then the system populate the matrices with random numbers thanks to the \texttt{init\_32bit} function:   
+The implementation is straightforward, the function \texttt{init\_task} (see Listing \ref{inittask}) simply take the number of tasks to create, the matrix dimensions and the desired type of the matrices, it  allocate the array of tasks, then the system populate the matrices with random numbers thanks to the \texttt{init\_32bit} function:   
 
-\begin{lstlisting}[caption={Init 32 bit Function}, language=C++] 
+\begin{lstlisting}[caption={Init 32 bit Function}, language=C++, label={init32}] 
 inline void init_32bit(void* A, void* B, void* C, int M, int N, int K) {
     float* pA = (float*)A;
     float* pB = (float*)B;
@@ -1306,7 +1302,6 @@ inline void init_32bit(void* A, void* B, void* C, int M, int N, int K) {
 
     random_device rd;
     mt19937 gen(rd());
-    
     uniform_real_distribution<float> dis(-1.0f, 1.0f);
 
     for (int i = 0; i < M * K; ++i) 
@@ -1320,7 +1315,7 @@ inline void init_32bit(void* A, void* B, void* C, int M, int N, int K) {
 }
 \end{lstlisting}
 
-The \texttt{init\_32bit} function casts the generic void pointers back to float* and uses the C++ standard random number generator to fill the input matrices A and B. The output matrix C is initialized to zero for the results.
+The \texttt{init\_32bit} (see Listing \ref{init32}) function casts the generic void pointers back to float* and uses the C++ standard random number generator to fill the input matrices A and B. The output matrix C is initialized to zero for the results.
 
 The 16 bit initialization function is omitted because it follows the same pattern but includes an additional step to convert the generated random floats into half precision bit, same for the function \texttt{init\_hetero\_tasks}, it simply iterate on random number to create the a stream of random dimension matrices. 
 
@@ -1331,7 +1326,7 @@ The 16 bit initialization function is omitted because it follows the same patter
 
 The SharedBuffer is the tool used for communication between the threads, since the Coordinator and the Workers run independently, they need a safe place to exchange data.
 
-\begin{lstlisting}[caption={Shared Buffer Implementation}, language=C++] 
+\begin{lstlisting}[caption={Shared Buffer Implementation}, language=C++, label={sharedbufferclass}] 
 class SharedBuffer {
     private: 
         unique_ptr<task*[]> data;
@@ -1385,7 +1380,7 @@ class SharedBuffer {
 };
 \end{lstlisting}
 
-This class was implemented specifically for this scheduler to be as simple and fast as possible, avoiding the complex locking mechanisms usually found in standard libraries.
+This class (see Listing \ref{sharedbufferclass}) was implemented specifically for this scheduler to be as simple and fast as possible, avoiding the complex locking mechanisms usually found in standard libraries.
 
 The logic is based on a circular buffer managed by two counters: \texttt{write\_i} (where to put new data) and \texttt{read\_i} (where to take data) and by using atomic variables, the threads can update these counters without interfering with each other.
 
@@ -1407,8 +1402,8 @@ The Performance Map is a specialized data structure utilized by the Coordinator 
 
 As explained in the previous section the raw data is acquired through automated benchmark routines (see Sec. \ref{implbenchmark}). However, reading from CSV files isn't an option latency wise, therefore, the PerformanceMap class loads this data into an optimized in-memory structure at startup. 
 
-The class definition and its global variables are presented below:
-\begin{lstlisting}[caption={}, language=C++] 
+The class definition and its global variables are presented in Listing \ref{performancemapclass}
+\begin{lstlisting}[caption={PerformanceMap Class}, language=C++, label={performancemapclass}] 
 class PerformanceMap {
 
     struct map_struct {
@@ -1452,7 +1447,7 @@ The public interface is minimal: besides the constructor that loads the data fro
 
 To index the 3D matrix dimensions efficiently within a hash map, a bit-packing strategy was chosen over using complex objects or tuples as keys. This approach minimizes hashing overhead and ensures fast lookups.
 
-\begin{lstlisting}[caption={Get key Implementation}, language=C++] 
+\begin{lstlisting}[caption={Get key Implementation}, language=C++ , label={getkey}] 
 /* return the successor of val in our step_size */
 long long round_up(long long val) {
     if (val == 0) return STEP_SIZE;
@@ -1470,13 +1465,13 @@ unsigned long long get_key(long long M, long long N, long long K) {
 }
 \end{lstlisting}
 
-The \texttt{get\_key} function first rounds up the dimensions to the nearest \texttt{STEP\_SIZE} (the interval used during benchmarking) to ensure that arbitrary task sizes map to the nearest available data point. Then, it packs the three task dimensions into a single 64 bit integer by shifting bits: M the high 20 bits, N the middle, and K the low bits. This creates a unique integer identifier for any matrix configuration.
+The \texttt{get\_key}  (see Listing \ref{getkey}) function first rounds up the dimensions to the nearest \texttt{STEP\_SIZE} (the interval used during benchmarking) to ensure that arbitrary task sizes map to the nearest available data point. Then, it packs the three task dimensions into a single 64 bit integer by shifting bits: M the high 20 bits, N the middle, and K the low bits. This creates a unique integer identifier for any matrix configuration.
+
+The query function is the main part of this component, it takes the matrix dimensions, the data type, and a boolean flag \texttt{add\_jit}, part of the code is shown in Listing \ref{query}:
 
 \clearpage 
 
-The query function is the main part of this component, it takes the matrix dimensions, the data type, and a boolean flag \texttt{add\_jit}, part of the code is shown below:
-
-\begin{lstlisting}[caption={Query Implementation}, language=C++] 
+\begin{lstlisting}[caption={Query Implementation}, language=C++, label={query}] 
 /* return the time, add_jit true = populate the jit cache */
 double query(long long M, long long N, 
              long long K, Type type, bool add_jit) {
@@ -1568,50 +1563,42 @@ The class provides a simple interface to start and stop counters for various met
 See Listing \ref{sched11} for a simplified view of the class structure and its key components:
 
 \begin{lstlisting}[caption={Profiler Class Structure}, language=C++,label={sched11}] 
-
-/* Consumption stats */
-struct EnergyConsumption {}; 
-/* Coordinator stats */
-struct Metric {};
-/* Workers stats */
-struct WokerMetric {};
+struct EnergyConsumption {};  /* Consumption stats */
+struct Metric {};             /* Coordinator stats */
+struct WokerMetric {};        /* Workers stats */
 
 class Profiler { 
 public: 
 
-/* power monitor helpers */
-void start_power_monitor() {
-    #ifdef ENABLE_INTEL_POWER_PROFILE
-    /* read RAPL files */
-    #endif
-
-    #ifdef ENABLE_CUDA
-    /* call NVML library */
-    #endif
-}
-void stop_power_monitor();
-
-/* scheduler logic monitor helpers */
-void start_fetch();
-void start_logic();
-void start_dispatch();
-void stop_fetch();
-void stop_logic();
-void stop_dispatch();
-void init_last_work();
-void start_worker();
-void end_worker();
-void record_sample();
-
-void print_stats();
-void save_to_csv();
-
+    /* power monitor helpers */
+    void start_power_monitor() {
+        #ifdef ENABLE_INTEL_POWER_PROFILE
+        /* read RAPL files */
+        #endif
+    
+        #ifdef ENABLE_CUDA
+        /* call NVML library */
+        #endif
+    }
+    void stop_power_monitor();
+    
+    /* scheduler logic monitor helpers */
+    void start_fetch();
+    void start_logic();
+    void start_dispatch();
+    void stop_fetch();
+    void stop_logic();
+    void stop_dispatch();
+    void init_last_work();
+    void start_worker();
+    void end_worker();
+    void record_sample();
+    void print_stats();
+    void save_to_csv();
 }; 
 \end{lstlisting}
 
 For the NVIDIA GPU, collecting data was straightforward thanks to the NVML library, the function \texttt{nvmlDeviceGetTotalEnergyConsumption} provides a monotonic counter of the total energy consumed by the board in millijoules since the driver started. By reading this counter before and after the workload, the exact consumption is derived.
-
-%%TODO Citazione????
 
 For the Intel hardware the system relies on RAPL. On Linux systems these hardware counters are exposed as standard text files in \texttt{/sys/class/powercap/}, the Profiler reads the energy values in microjoules directly from these files. While RAPL allows for fine grained domains (like DRAM or specific cores), monitoring the entire CPU Package was deemed sufficient for our goals, as we are interested in the total system efficiency gain, furthermore the GPU and NPU are also included in the CPU package.
 
@@ -1630,9 +1617,9 @@ Just like the worker threads, the Coordinator operates within a continuous while
 \subsubsection{Baseline: CUDA only and Round Robin}
 To validate the internal architecture and establish a performance baseline, two simple strategies were implemented first.
 
-\texttt{CODA\_ONLY} is the most basic logic simply bypasses the heterogeneity of the system and dispatch all the tasks to the fastest accelerator. This serves as the primary baseline: any strategy must outperform this single device execution at least to be considered effective. 
+\texttt{CUDA\_ONLY} is the most basic logic simply bypasses the heterogeneity of the system and dispatch all the tasks to the fastest accelerator. This serves as the primary baseline: any strategy must outperform this single device execution at least to be considered effective. 
 
-\begin{lstlisting}[caption={CUDA Only Logic}, language=C++] 
+\begin{lstlisting}[caption={CUDA Only Logic}, language=C++, label={cudaonly}] 
 case Logic::CUDA_ONLY:
 
 PROF(profiler.start_power_monitor());
@@ -1653,11 +1640,11 @@ PROF(profiler.stop_power_monitor());
 break;
 \end{lstlisting}
 
-The code is straightforward, it fetches a task from the input buffer and immediately pushes it into the CUDA worker's buffer. The PROF macros are used to trigger the start and stop of the monitoring tools within the Profiler, and thanks to this macro, can be turned off for minimizing the overhead simply by not defining \texttt{ENABLE\_PROFILING}.
+The code is straightforward (see Listing \ref{cudaonly}), it fetches a task from the input buffer and immediately pushes it into the CUDA worker's buffer. The PROF macros are used to trigger the start and stop of the monitoring tools within the Profiler, and thanks to this macro, can be turned off for minimizing the overhead simply by not defining \texttt{ENABLE\_PROFILING}.
 
 To verify the system's ability to manage multiple accelerators concurrently, a Round Robin logic was implemented.
 
-\begin{lstlisting}[caption={Round Robin Logic}, language=C++] 
+\begin{lstlisting}[caption={Round Robin Logic}, language=C++, label={robin}] 
 case Logic::ROUND_ROBIN: 
 
 while (threads_keep_running) { 
@@ -1671,7 +1658,7 @@ while (threads_keep_running) {
 break;
 \end{lstlisting}
 
-This logic distributes tasks equally among all available workers in a cyclic manner, while effective for validating, this strategy is definitely not performance oriented.
+This logic (see Listing \ref{robin}) distributes tasks equally among all available workers in a cyclic manner, while effective for validating, this strategy is definitely not performance oriented.
 
 \subsection{Static Partitioning}
 \label{implstaticlogic}
@@ -1786,9 +1773,7 @@ To decide who receives this unassigned task, the scheduler looks at the decimal 
 Finally, the calculated number of tasks in \texttt{n\_acc\_task[j]} is dispatched to the corresponding worker buffers.
 
 \begin{lstlisting}[caption={Static Partitioning: Dispatch}, language=C++] 
-
     /* .... */
-
     PROF(profiler.start_dispatch());
 
     /* send task to the accelerators */
@@ -1832,14 +1817,12 @@ while (threads_keep_running) {
 
     double curr_speeds[bts_len];
     int rows[bts_len];
-
     int rest = single_task->M % bts_len;
     int base = single_task->M / bts_len;
 
     /* equal row initially */
     for (int j=0; j<bts_len; j++) 
         rows[j] = base + (j < rest ? 1 : 0);
-
     /* .... */
 \end{lstlisting}
 
@@ -1871,7 +1854,6 @@ for (int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
 
         /* single row speed, number of rows / ms */
         double speed = (double)r / (ms + 1e-9);
-
         curr_speeds[j] = speed;
         total_speed += speed;
     }
@@ -1883,12 +1865,10 @@ for (int i = 0; i < SPLIT_MATRIX_ITERATION; i++) {
 
         /* new rows from the ratio */
         int target_rows = (int)(ratio * single_task->M);
-
         rows[j] = target_rows;
         rows_distributed += rows[j];
     }
 }
-
 PROF(profiler.stop_logic());
 /* .... */
 \end{lstlisting}

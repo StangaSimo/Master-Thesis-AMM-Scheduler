@@ -24,22 +24,22 @@
 \contentsline {section}{\numberline {4.2}Accelerators Abstraction Layers}{36}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Cuda}{36}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}OpenVINO}{41}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}SYCL}{46}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}OpenBLAS}{49}{subsection.4.2.4}%
-\contentsline {section}{\numberline {4.3}AMM Scheduler}{52}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{54}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Workers}{55}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{57}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Tasks}{61}{subsection.4.3.4}%
-\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{64}{subsection.4.3.5}%
-\contentsline {subsection}{\numberline {4.3.6}Performance Map}{66}{subsection.4.3.6}%
-\contentsline {subsection}{\numberline {4.3.7}Profiler}{70}{subsection.4.3.7}%
-\contentsline {subsection}{\numberline {4.3.8}Coordinator}{72}{subsection.4.3.8}%
-\contentsline {subsubsection}{Baseline: CUDA only and Round Robin}{72}{section*.2}%
-\contentsline {subsection}{\numberline {4.3.9}Static Partitioning}{73}{subsection.4.3.9}%
-\contentsline {subsection}{\numberline {4.3.10}Large Matrix Split}{76}{subsection.4.3.10}%
-\contentsline {subsection}{\numberline {4.3.11}Static Hetero Partitioning}{80}{subsection.4.3.11}%
-\contentsline {subsection}{\numberline {4.3.12}Dynamic}{81}{subsection.4.3.12}%
+\contentsline {subsection}{\numberline {4.2.3}SYCL}{45}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}OpenBLAS}{48}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}AMM Scheduler}{51}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Thread Initialization}{53}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Workers}{54}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Benchmarks Routines}{56}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Tasks}{60}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}SharedBuffer}{63}{subsection.4.3.5}%
+\contentsline {subsection}{\numberline {4.3.6}Performance Map}{65}{subsection.4.3.6}%
+\contentsline {subsection}{\numberline {4.3.7}Profiler}{69}{subsection.4.3.7}%
+\contentsline {subsection}{\numberline {4.3.8}Coordinator}{71}{subsection.4.3.8}%
+\contentsline {subsubsection}{Baseline: CUDA only and Round Robin}{71}{section*.2}%
+\contentsline {subsection}{\numberline {4.3.9}Static Partitioning}{72}{subsection.4.3.9}%
+\contentsline {subsection}{\numberline {4.3.10}Large Matrix Split}{75}{subsection.4.3.10}%
+\contentsline {subsection}{\numberline {4.3.11}Static Hetero Partitioning}{79}{subsection.4.3.11}%
+\contentsline {subsection}{\numberline {4.3.12}Dynamic}{80}{subsection.4.3.12}%
 \contentsline {chapter}{\numberline {5}Results}{83}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Homogeneous Workloads}{84}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}Matrix: 1024x1024}{85}{subsection.5.1.1}%
@@ -64,8 +64,6 @@
 \contentsline {subsection}{\numberline {A.1.5}Backend: OpenVINO}{169}{subsection.A.1.5}%
 \contentsline {subsubsection}{OpenCV test}{173}{section*.3}%
 \contentsline {section}{\numberline {A.2}Benchmarks}{176}{section.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}GPU Benchmark (CUDA)}{176}{subsection.A.2.1}%
-\contentsline {subsubsection}{Runners}{177}{section*.4}%
-\contentsline {subsubsection}{Utilities}{186}{section*.5}%
-\contentsline {subsection}{\numberline {A.2.2}NPU Benchmark (OpenVINO)}{186}{subsection.A.2.2}%
-\contentsline {subsection}{\numberline {A.2.3}SYCL Benchmark}{192}{subsection.A.2.3}%
+\contentsline {subsection}{\numberline {A.2.1}CUDA Benchmark}{176}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}OpenVINO Benchmark}{190}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}SYCL Benchmark}{196}{subsection.A.2.3}%
