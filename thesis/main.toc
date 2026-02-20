@@ -41,7 +41,7 @@
 \contentsline {subsection}{\numberline {4.3.11}Static Hetero Partitioning}{79}{subsection.4.3.11}%
 \contentsline {subsection}{\numberline {4.3.12}Dynamic}{80}{subsection.4.3.12}%
 \contentsline {chapter}{\numberline {5}Results}{83}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Homogeneous Workloads}{84}{section.5.1}%
+\contentsline {section}{\numberline {5.1}Homogeneous Workloads}{85}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}Matrix: 1024x1024}{85}{subsection.5.1.1}%
 \contentsline {subsection}{\numberline {5.1.2}Matrix: 2048x2048}{88}{subsection.5.1.2}%
 \contentsline {subsection}{\numberline {5.1.3}Matrix: 4096x4096}{90}{subsection.5.1.3}%

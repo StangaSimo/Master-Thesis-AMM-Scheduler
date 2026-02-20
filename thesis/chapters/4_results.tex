@@ -1,7 +1,9 @@
 \chapter{Results}
 \label{results}
 
-This chapter, discusses the performance of the AMM Scheduler. The objective of the discussed tests is the validation of the effectiveness of the proposed scheduling logics (Static, Static Hetero, and Dynamic) and to analyze how the workload is distributed among the available accelerators in a real-world heterogeneous environment.
+This chapter, discusses the performance of the AMM Scheduler. The objective of the discussed tests is the validation of the effectiveness of the proposed scheduling logics (Static, Static Hetero, Dynamic and Large Matrix split) and to analyze how the workload is distributed among the available accelerators in a real-world heterogeneous environment.
+
+It is worth noting that all matrices in the following results are in a 32-bit format. This choice was made for the sake of simplicity and because it is the most widely supported format across all available accelerators.
 
 All the experiments were conducted as already described in the Tool chapter (see Chap. \ref{tools}), on a modern high performance laptop, specifically the Lenovo Yoga Pro 9. 
 
@@ -66,12 +68,12 @@ total work time: 8382.58 ms,  Avg work time:   1676516.11 us
 total time:        8396.62 ms
 \end{lstlisting}
 
+\clearpage 
+
 \section{Homogeneous Workloads}
 The first set of tests are on homogeneous workloads, where the scheduler process batch of identical matrix multiplication tasks, we analyzed three different matrix sizes: 1024x1024, 2048x2048, and 4096x4096, all the data used are with 32 bit precision.
 
 In this case, we compare the Static Partitioning logic against the Dynamic logic and for the baseline the CUDA only logic will be used. 
-
-\clearpage
 
 \subsection{Matrix: 1024x1024}
 In this case, we are dealing with small matrices, where the biggest overhead is certainly the latency of moving data between memories. The results of the logic execution are presented below:

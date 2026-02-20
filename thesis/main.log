@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  20 FEB 2026 11:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  20 FEB 2026 11:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1705,11 +1705,11 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 ]
 Chapter 5.
-(/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+[83] (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
-) [83]
+)
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1721,13 +1721,16 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/compare_time_s1024.png, id=2385, 1011.78pt x 650.43pt>
 File: images/results/compare_time_s1024.png Graphic file (type png)
 <use images/results/compare_time_s1024.png>
-Package pdftex.def Info: images/results/compare_time_s1024.png  used on input line 81.
+Package pdftex.def Info: images/results/compare_time_s1024.png  used on input line 83.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
 <images/results/compare_energy_s1024.png, id=2386, 1011.78pt x 650.43pt>
 File: images/results/compare_energy_s1024.png Graphic file (type png)
 <use images/results/compare_energy_s1024.png>
-Package pdftex.def Info: images/results/compare_energy_s1024.png  used on input line 88.
+Package pdftex.def Info: images/results/compare_energy_s1024.png  used on input line 90.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
@@ -1738,26 +1741,21 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 
 [85
 
- <./images/results/compare_time_S1024.png> <./images/results/compare_energy_S1024.png>]
-<images/results/distrib_tasks_s1024.png, id=2399, 1144.9977pt x 534.0753pt>
+ <./images/results/compare_time_S1024.png>]
+<images/results/distrib_tasks_s1024.png, id=2398, 1144.9977pt x 534.0753pt>
 File: images/results/distrib_tasks_s1024.png Graphic file (type png)
 <use images/results/distrib_tasks_s1024.png>
-Package pdftex.def Info: images/results/distrib_tasks_s1024.png  used on input line 105.
+Package pdftex.def Info: images/results/distrib_tasks_s1024.png  used on input line 107.
 (pdftex.def)             Requested size: 343.50195pt x 160.22382pt.
-<images/results/distrib_time_s1024.png, id=2400, 1146.9249pt x 533.1117pt>
+<images/results/distrib_time_s1024.png, id=2399, 1146.9249pt x 533.1117pt>
 File: images/results/distrib_time_s1024.png Graphic file (type png)
 <use images/results/distrib_time_s1024.png>
-Package pdftex.def Info: images/results/distrib_time_s1024.png  used on input line 112.
+Package pdftex.def Info: images/results/distrib_time_s1024.png  used on input line 114.
 (pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
 
 
-Package fancyhdr Warning: \headheight is too small (12.5pt): 
-(fancyhdr)                Make it at least 15.59995pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.59995pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[86 <./images/results/distrib_tasks_S1024.png> <./images/results/distrib_time_S1024.png>]
 
 Package fancyhdr Warning: \headheight is too small (12.5pt): 
 (fancyhdr)                Make it at least 15.59995pt, for example:
@@ -1765,16 +1763,24 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
-[87]
+[86 <./images/results/compare_energy_S1024.png> <./images/results/distrib_tasks_S1024.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.5pt): 
+(fancyhdr)                Make it at least 15.59995pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.59995pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
+
+[87 <./images/results/distrib_time_S1024.png>]
 <images/results/compare_time_s2048.png, id=2418, 1011.78pt x 650.43pt>
 File: images/results/compare_time_s2048.png Graphic file (type png)
 <use images/results/compare_time_s2048.png>
-Package pdftex.def Info: images/results/compare_time_s2048.png  used on input line 124.
+Package pdftex.def Info: images/results/compare_time_s2048.png  used on input line 126.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
 <images/results/compare_energy_s2048.png, id=2419, 1011.78pt x 650.43pt>
 File: images/results/compare_energy_s2048.png Graphic file (type png)
 <use images/results/compare_energy_s2048.png>
-Package pdftex.def Info: images/results/compare_energy_s2048.png  used on input line 126.
+Package pdftex.def Info: images/results/compare_energy_s2048.png  used on input line 128.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
 
 
@@ -1790,12 +1796,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/distrib_tasks_s2048.png, id=2430, 1146.9249pt x 534.0753pt>
 File: images/results/distrib_tasks_s2048.png Graphic file (type png)
 <use images/results/distrib_tasks_s2048.png>
-Package pdftex.def Info: images/results/distrib_tasks_s2048.png  used on input line 139.
+Package pdftex.def Info: images/results/distrib_tasks_s2048.png  used on input line 141.
 (pdftex.def)             Requested size: 344.08012pt x 160.22382pt.
 <images/results/distrib_time_s2048.png, id=2431, 1146.9249pt x 533.1117pt>
 File: images/results/distrib_time_s2048.png Graphic file (type png)
 <use images/results/distrib_time_s2048.png>
-Package pdftex.def Info: images/results/distrib_time_s2048.png  used on input line 141.
+Package pdftex.def Info: images/results/distrib_time_s2048.png  used on input line 143.
 (pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
 
 
@@ -1809,12 +1815,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/compare_time_s4096.png, id=2444, 1011.78pt x 650.43pt>
 File: images/results/compare_time_s4096.png Graphic file (type png)
 <use images/results/compare_time_s4096.png>
-Package pdftex.def Info: images/results/compare_time_s4096.png  used on input line 150.
+Package pdftex.def Info: images/results/compare_time_s4096.png  used on input line 152.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
 <images/results/compare_energy_s4096.png, id=2445, 1011.78pt x 650.43pt>
 File: images/results/compare_energy_s4096.png Graphic file (type png)
 <use images/results/compare_energy_s4096.png>
-Package pdftex.def Info: images/results/compare_energy_s4096.png  used on input line 152.
+Package pdftex.def Info: images/results/compare_energy_s4096.png  used on input line 154.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
 
 
@@ -1828,12 +1834,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/distrib_tasks_s4096.png, id=2456, 1146.9249pt x 534.0753pt>
 File: images/results/distrib_tasks_s4096.png Graphic file (type png)
 <use images/results/distrib_tasks_s4096.png>
-Package pdftex.def Info: images/results/distrib_tasks_s4096.png  used on input line 164.
+Package pdftex.def Info: images/results/distrib_tasks_s4096.png  used on input line 166.
 (pdftex.def)             Requested size: 298.19344pt x 138.8563pt.
 <images/results/distrib_time_s4096.png, id=2457, 1146.2022pt x 533.1117pt>
 File: images/results/distrib_time_s4096.png Graphic file (type png)
 <use images/results/distrib_time_s4096.png>
-Package pdftex.def Info: images/results/distrib_time_s4096.png  used on input line 165.
+Package pdftex.def Info: images/results/distrib_time_s4096.png  used on input line 167.
 (pdftex.def)             Requested size: 298.00554pt x 138.60576pt.
 
 
@@ -1855,17 +1861,17 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/analysis_batch_S1024.png, id=2473, 1011.78pt x 650.43pt>
 File: images/results/analysis_batch_S1024.png Graphic file (type png)
 <use images/results/analysis_batch_S1024.png>
-Package pdftex.def Info: images/results/analysis_batch_S1024.png  used on input line 177.
+Package pdftex.def Info: images/results/analysis_batch_S1024.png  used on input line 179.
 (pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
 <images/results/analysis_batch_S2048.png, id=2474, 1011.78pt x 650.43pt>
 File: images/results/analysis_batch_S2048.png Graphic file (type png)
 <use images/results/analysis_batch_S2048.png>
-Package pdftex.def Info: images/results/analysis_batch_S2048.png  used on input line 178.
+Package pdftex.def Info: images/results/analysis_batch_S2048.png  used on input line 180.
 (pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
 <images/results/analysis_batch_S4096.png, id=2475, 1011.78pt x 650.43pt>
 File: images/results/analysis_batch_S4096.png Graphic file (type png)
 <use images/results/analysis_batch_S4096.png>
-Package pdftex.def Info: images/results/analysis_batch_S4096.png  used on input line 179.
+Package pdftex.def Info: images/results/analysis_batch_S4096.png  used on input line 181.
 (pdftex.def)             Requested size: 202.35242pt x 130.0837pt.
 
 
@@ -1881,12 +1887,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/compare_time_Hetero.png, id=2487, 1011.78pt x 650.43pt>
 File: images/results/compare_time_Hetero.png Graphic file (type png)
 <use images/results/compare_time_Hetero.png>
-Package pdftex.def Info: images/results/compare_time_Hetero.png  used on input line 196.
+Package pdftex.def Info: images/results/compare_time_Hetero.png  used on input line 198.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
 <images/results/compare_energy_Hetero.png, id=2488, 1011.78pt x 650.43pt>
 File: images/results/compare_energy_Hetero.png Graphic file (type png)
 <use images/results/compare_energy_Hetero.png>
-Package pdftex.def Info: images/results/compare_energy_Hetero.png  used on input line 203.
+Package pdftex.def Info: images/results/compare_energy_Hetero.png  used on input line 205.
 (pdftex.def)             Requested size: 303.53633pt x 195.1305pt.
 
 
@@ -1902,12 +1908,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/distrib_tasks_Hetero.png, id=2501, 1146.9249pt x 534.0753pt>
 File: images/results/distrib_tasks_Hetero.png Graphic file (type png)
 <use images/results/distrib_tasks_Hetero.png>
-Package pdftex.def Info: images/results/distrib_tasks_Hetero.png  used on input line 222.
+Package pdftex.def Info: images/results/distrib_tasks_Hetero.png  used on input line 224.
 (pdftex.def)             Requested size: 344.08012pt x 160.22382pt.
 <images/results/distrib_time_Hetero.png, id=2502, 1146.9249pt x 533.1117pt>
 File: images/results/distrib_time_Hetero.png Graphic file (type png)
 <use images/results/distrib_time_Hetero.png>
-Package pdftex.def Info: images/results/distrib_time_Hetero.png  used on input line 229.
+Package pdftex.def Info: images/results/distrib_time_Hetero.png  used on input line 231.
 (pdftex.def)             Requested size: 344.08012pt x 159.93474pt.
 
 
@@ -1921,7 +1927,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.09995pt}.
 
 [95 <./images/results/distrib_tasks_Hetero.png>]
-Overfull \hbox (3.61041pt too wide) in paragraph at lines 240--241
+Overfull \hbox (3.61041pt too wide) in paragraph at lines 242--243
 []\T1/cmr/m/n/12 This re-sult con-clu-sively proves that for het-ero-ge-neous streams of tasks, smart schedul-
  []
 
@@ -1936,7 +1942,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/analysis_batch_hetero.png, id=2518, 1011.78pt x 650.43pt>
 File: images/results/analysis_batch_hetero.png Graphic file (type png)
 <use images/results/analysis_batch_hetero.png>
-Package pdftex.def Info: images/results/analysis_batch_hetero.png  used on input line 249.
+Package pdftex.def Info: images/results/analysis_batch_hetero.png  used on input line 251.
 (pdftex.def)             Requested size: 404.70483pt x 260.16739pt.
 
 
@@ -1952,7 +1958,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/large_matrix_time_energy.png, id=2529, 1156.32pt x 505.89pt>
 File: images/results/large_matrix_time_energy.png Graphic file (type png)
 <use images/results/large_matrix_time_energy.png>
-Package pdftex.def Info: images/results/large_matrix_time_energy.png  used on input line 268.
+Package pdftex.def Info: images/results/large_matrix_time_energy.png  used on input line 270.
 (pdftex.def)             Requested size: 404.71806pt x 177.06415pt.
 
 
@@ -1966,7 +1972,7 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/results/large_matrix_chunks.png, id=2538, 1011.78pt x 578.16pt>
 File: images/results/large_matrix_chunks.png Graphic file (type png)
 <use images/results/large_matrix_chunks.png>
-Package pdftex.def Info: images/results/large_matrix_chunks.png  used on input line 281.
+Package pdftex.def Info: images/results/large_matrix_chunks.png  used on input line 283.
 (pdftex.def)             Requested size: 404.70483pt x 231.2599pt.
 
 
@@ -1990,12 +1996,12 @@ Package fancyhdr Warning: \headheight is too small (12.5pt):
 <images/frame_originale.jpg, id=2581, 722.7pt x 1284.8pt>
 File: images/frame_originale.jpg Graphic file (type jpg)
 <use images/frame_originale.jpg>
-Package pdftex.def Info: images/frame_originale.jpg  used on input line 364.
+Package pdftex.def Info: images/frame_originale.jpg  used on input line 366.
 (pdftex.def)             Requested size: 202.35461pt x 359.74155pt.
 <images/frame_edge.jpg, id=2582, 720.6925pt x 1282.7925pt>
 File: images/frame_edge.jpg Graphic file (type jpg)
 <use images/frame_edge.jpg>
-Package pdftex.def Info: images/frame_edge.jpg  used on input line 371.
+Package pdftex.def Info: images/frame_edge.jpg  used on input line 373.
 (pdftex.def)             Requested size: 201.79253pt x 359.17944pt.
 
 
@@ -2948,7 +2954,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  108i,12n,108p,1342b,2211s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (204 pages, 9400833 bytes).
+Output written on main.pdf (204 pages, 9401094 bytes).
 PDF statistics:
  9731 PDF objects out of 10688 (max. 8388607)
  9300 compressed objects within 93 object streams
