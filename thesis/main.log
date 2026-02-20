@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  20 FEB 2026 10:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.11.26)  20 FEB 2026 11:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -2853,57 +2853,62 @@ Overfull \hbox (27.73198pt too wide) in paragraph at lines 14--17
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 23--26
+Underfull \hbox (badness 10000) in paragraph at lines 19--22
+[]\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 In-tel's Neu-ral Pro-cess-ing Unit\T1/cmr/m/n/12 , 2024.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--27
 []\T1/cmr/m/n/12 Intel Cor-po-ra-tion.  \T1/cmr/m/it/12 Open-vino Doc-u-men-ta-tion\T1/cmr/m/n/12 , 2025.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 33--36
+Underfull \hbox (badness 10000) in paragraph at lines 34--37
 []\T1/cmr/m/n/12 Kitware, Inc.  \T1/cmr/m/it/12 CMake Doc-u-men-ta-tion\T1/cmr/m/n/12 , 2025.
  []
 
 
-Underfull \hbox (badness 1400) in paragraph at lines 38--41
+Underfull \hbox (badness 1400) in paragraph at lines 39--42
 []\T1/cmr/m/n/12 Klaus Hinum.  \T1/cmr/m/it/12 NVIDIA GeForce RTX 4060 Lap-top GPU Spec\T1/cmr/m/n/12 , 2022.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--41
+Underfull \hbox (badness 10000) in paragraph at lines 39--42
 \T1/cmr/m/n/12 https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4060-Laptop-GPU-
  []
 
 
-Overfull \hbox (36.20584pt too wide) in paragraph at lines 43--46
+Overfull \hbox (36.20584pt too wide) in paragraph at lines 44--47
 []\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 Cublas\T1/cmr/m/n/12 , 2025.  https://docs.nvidia.com/cuda/cublas/index.html. 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 48--51
+Underfull \hbox (badness 10000) in paragraph at lines 49--52
 []\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 CUDA C++ Pro-gram-ming Guide\T1/cmr/m/n/12 , 2025.
  []
 
 
-Underfull \hbox (badness 2922) in paragraph at lines 53--56
+Underfull \hbox (badness 2922) in paragraph at lines 54--57
 []\T1/cmr/m/n/12 NVIDIA Cor-po-ra-tion.  \T1/cmr/m/it/12 NVIDIA Man-age-ment Li-brary (NVML)\T1/cmr/m/n/12 , 2026.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--61
+Underfull \hbox (badness 10000) in paragraph at lines 59--62
 []\T1/cmr/m/n/12 OpenBLAS Team.  Open-blas github, 2024.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--66
+Underfull \hbox (badness 10000) in paragraph at lines 64--67
 []\T1/cmr/m/n/12 Steve Ren-nich.  \T1/cmr/m/it/12 CUDA C++ Streams and Con-cur-rency\T1/cmr/m/n/12 , 2024.
  []
 
 
-Overfull \hbox (84.58885pt too wide) in paragraph at lines 63--66
+Overfull \hbox (84.58885pt too wide) in paragraph at lines 64--67
 \T1/cmr/m/n/12 https://developer.download.nvidia.com/CUDA/training/StreamsAndConcurrencyWebinar.pdf. 
  []
 
 [203]
-Underfull \hbox (badness 10000) in paragraph at lines 73--76
+Underfull \hbox (badness 10000) in paragraph at lines 74--77
 []\T1/cmr/m/n/12 The Khronos Group.  Sycl overview and spec-i-fi-ca-tion, 2024.
  []
 
@@ -2943,7 +2948,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  108i,12n,108p,1342b,2211s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2986.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm2074.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on main.pdf (204 pages, 9400783 bytes).
+Output written on main.pdf (204 pages, 9400833 bytes).
 PDF statistics:
  9731 PDF objects out of 10688 (max. 8388607)
  9300 compressed objects within 93 object streams

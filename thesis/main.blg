@@ -14,16 +14,16 @@ The style file: plain.bst
 Database file #1: chapters/Bibliografia.bib
 You've used 16 entries,
             2118 wiz_defined-function locations,
-            570 strings with 5879 characters,
-and the built_in function-call counts, 3277 in all, are:
-= -- 305
+            571 strings with 5942 characters,
+and the built_in function-call counts, 3286 in all, are:
+= -- 307
 > -- 118
 < -- 0
 + -- 52
 - -- 34
 * -- 126
-:= -- 577
-add.period$ -- 47
+:= -- 579
+add.period$ -- 48
 call.type$ -- 16
 change.case$ -- 53
 chr.to.int$ -- 0
@@ -31,13 +31,13 @@ cite$ -- 16
 duplicate$ -- 142
 empty$ -- 313
 format.name$ -- 34
-if$ -- 678
+if$ -- 680
 int.to.chr$ -- 0
 int.to.str$ -- 16
 missing$ -- 4
-newline$ -- 82
+newline$ -- 83
 num.names$ -- 32
-pop$ -- 94
+pop$ -- 93
 preamble$ -- 1
 purify$ -- 49
 quote$ -- 0
@@ -52,4 +52,4 @@ type$ -- 60
 warning$ -- 0
 while$ -- 32
 width$ -- 18
-write$ -- 160
+write$ -- 162

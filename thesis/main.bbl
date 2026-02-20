@@ -18,6 +18,7 @@
 \bibitem{intel_npu}
 {Intel Corporation}.
 \newblock {\em Intel’s Neural Processing Unit}, 2024.
+\newblock https://intel.github.io/intel-npu-acceleration-library/npu.html.
 
 \bibitem{openvino}
 {Intel Corporation}.
