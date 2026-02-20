@@ -10,7 +10,7 @@ def merge_json_files():
     
     combined_commands = []
     
-    print(f"[LSP SETUP] total of {len(files)} command file")
+    print(f"[LSP] {len(files)} command file")
 
     for fpath in files:
         if os.path.abspath(fpath) == os.path.abspath(OUTPUT_FILE):
@@ -27,7 +27,7 @@ def merge_json_files():
     with open(OUTPUT_FILE, 'w') as f:
         json.dump(combined_commands, f, indent=4)
     
-    print(f"[LSP SETUP] Create {OUTPUT_FILE} with {len(combined_commands)} total commands")
+    print(f"[LSP] Create {OUTPUT_FILE} with {len(combined_commands)} commands ")
 
 if __name__ == "__main__":
     merge_json_files()

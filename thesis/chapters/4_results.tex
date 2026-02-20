@@ -90,12 +90,12 @@ In this case, we are dealing with small matrices, where the biggest overhead is 
     \label{energy1024}
 \end{figure}
 
-As we can see from Figure \ref{time1024}, with these small tasks, the static logic and the dynamic logic perform almost in the same way, both clearly outperform the single CUDA card by using multiple accelerators in parallel. An average speedup of 2\% was observed for the static logic, and 2.10\% for the dynamic logic, compared to the CUDA logic. The graph in Figure \ref{energy1024} is very interesting, where we can clearly see how the two strategy manage to stay below the total consumption of the CUDA logic (for energy metrics, see Sec. \ref{implprofiler}). This is a very significant result because it shows how these different accelerators, even if they are not as fast as the CUDA card, can still be efficient; and if used in parallel, they lead to an increase in the total system efficiency. In this case, the metric efficiency was calculated as Tasks per Joule, and we obtained:
+As we can see from Figure \ref{time1024}, with these small tasks, the static logic and the dynamic logic perform almost in the same way, both clearly outperform the single CUDA card by using multiple accelerators in parallel. An average speedup of 1.9\% was observed for the static logic, and 2\% for the dynamic logic, compared to the CUDA logic. The graph in Figure \ref{energy1024} is very interesting, where we can clearly see how the two strategy manage to stay below the total consumption of the CUDA logic (for energy metrics, see Sec. \ref{implprofiler}). This is a very significant result because it shows how these different accelerators, even if they are not as fast as the CUDA card, can still be efficient; and if used in parallel, they lead to an increase in the total system efficiency. The metrics shows an average of 231.8 J for the dynamic logic and  236.2 J for the static, both outperforms the  405.5 J for the CUDA only. In this case, the metric efficiency was calculated as Tasks per Joule, and we obtained:
 
 \begin{itemize}
     \item Cuda only: 2.62 Tasks/J
     \item Dynamic: 4.46 Tasks/J
-    \item Static: 4.24 Tasks/J
+    \item Static: 4.37 Tasks/J
 \end{itemize}
 
 Furthermore, to investigate the performance of the two logics, graphs were made to see how the tasks are distributed among the various accelerators, and how much time the accelerators actually work during the whole makespan.
@@ -125,9 +125,9 @@ In this scenario, the workload increases significantly. The matrix size is large
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_energy_s2048.png} \caption{Energy Comparison Matrix 2048} \label{energy2048} \end{figure}
 
-As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this kind of workload. However, a clear different appears between the two logics. The dynamic strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the static strategy lags slightly behind with an average speedup of 1.90x. This indicates that the dynamic logic is 14\% faster on average for this specific workload. 
+As shown in Figure \ref{time2048}, both strategies continue to outperform the single CUDA baseline, validating the benefit of parallel execution even in this kind of workload. However, a clear different appears between the two logics. The dynamic strategy achieves an average speedup of 2.21x (peaking at 2.71x), while the static strategy lags slightly behind with an average speedup of 1.82x. This indicates that the dynamic logic is 20\% faster on average for this specific workload. 
 
-Regarding energy efficiency (Figure \ref{energy2048}) the heterogeneous execution significantly reduces the total energy consumption compared to the CUDA only approach, thanks to the reduction in total execution time. The dynamic strategy proves to be the most efficient, consuming only 218 J on average per batch, compared to 430 J for CUDA Only.
+Regarding energy efficiency (Figure \ref{energy2048}) the heterogeneous execution significantly reduces the total energy consumption compared to the CUDA only approach, thanks to the reduction in total execution time. The dynamic strategy proves to be the most efficient, consuming only 218 J on average, compared to 407 J for CUDA Only. The static logic consume on average 251.01 J.
 
 The efficiency metric show this gain: 
 \begin{itemize} 
@@ -151,13 +151,13 @@ This scenario expose a heavy workload on the scheduler, the computational cost n
 
 \begin{figure}[h!] \centering \includegraphics[scale=0.3]{images/results/compare_energy_s4096.png} \caption{Energy Comparison 4096} \label{energy4096} \end{figure}
 
-As shown in Figure \ref{time4096} both strategies still significantly outperform the single CUDA baseline. However, the static strategy show its superiority in this specific scenario, achieving an average speedup of 2.00x (peaking max at 2.90x) and the dynamic strategy follows with an average speedup of 1.78x (peaking at 2.67x). Ultimately, the static logic proves to be 12.5\% faster on average compared to the Dynamic one.
+As shown in Figure \ref{time4096} both strategies still significantly outperform the single CUDA baseline. However, the static strategy show its superiority in this specific scenario, achieving an average speedup of 1.91x (peaking max at 2.16x) and the dynamic strategy follows with an average speedup of 1.78x (peaking at 2.67x). Ultimately, the static logic proves to be 10\% faster on average compared to the Dynamic one.
 
-Regarding efficiency (Figure \ref{energy4096}), the results still shows that despite activating all available accelerators, the parallel execution reduces the total energy consumed, the CUDA-only execution consumes on average 568.70 J, while the heterogeneous strategies drop this to roughly 330-340 J.
+Regarding efficiency (Figure \ref{energy4096}), the results still shows that despite activating all available accelerators, the parallel execution reduces the total energy consumed, the CUDA-only execution consumes on average 568.70 J, while the heterogeneous strategies drop this to roughly 330-300 J.
 
-\begin{itemize} \item \textbf{CUDA Only}: 0.11 Tasks/J \item \textbf{Dynamic}: 0.18 Tasks/J \item \textbf{Static}: 0.18 Tasks/J \end{itemize}
+\begin{itemize} \item \textbf{CUDA Only}: 0.11 Tasks/J \item \textbf{Dynamic}: 0.18 Tasks/J \item \textbf{Static}: 0.21 Tasks/J \end{itemize}
 
-This represents a +61\% efficiency gain for the static strategy over the baseline: using the CPU and NPU alongside the GPU for heavy tasks actually saves energy because the entire system finishes the job much faster.
+This represents a 40\% efficiency gain for the static strategy over the baseline: using the CPU and NPU alongside the GPU for heavy tasks actually saves energy because the entire system finishes the job much faster.
 
 To understand why the Static logic outperforms the Dynamic one here, we analyze the task distribution:
 
@@ -165,7 +165,7 @@ To understand why the Static logic outperforms the Dynamic one here, we analyze 
 \begin{figure}[h!] \centering \includegraphics[scale=0.26]{images/results/distrib_time_s4096.png} \caption{Time Distribution 4096} \label{timedistr4096} \end{figure}
 
 
-Figure \ref{distrib4096} shows that the static strategy assigns the vast majority of tasks to the powerful CUDA GPU and SYCL, minimizing the load on slower devices, however, the dynamic logic, due to its greedy nature, assigns a slightly larger portion of tasks to the CPU and OpenVINO (as seen in Figure \ref{timedistr4096}). For very large matrices, the time difference between the GPU, NPU and mostly CPU is massive, so if the dynamic logic assigns the last few tasks to a slow device while the GPU finishes early, the entire makespan is delayed waiting for that slow device to complete. The static strategy with all the logics and heuristcs avoids this by predicting the velocity of the accelerators and restricting the slow devices to a more smaller amount of work, achieving the highest speedup. This clearly shows how the static approach have his benefit in a lot of workload in this heterogeneous scenario.
+Figure \ref{distrib4096} shows that the static strategy assigns the vast majority of tasks to the powerful CUDA GPU and SYCL, minimizing the load on slower devices, however, the dynamic logic, due to its greedy nature, assigns a slightly larger portion of tasks to the CPU and OpenVINO (as seen in Figure \ref{timedistr4096}). For very large matrices, the time difference between the GPU, NPU and mostly CPU is massive, so if the dynamic logic assigns the last few tasks to a slow device while the GPU finishes early, the entire makespan is delayed waiting for that slow device to complete. The static strategy with all the logics and heuristcs avoids this by predicting the velocity of the accelerators and restricting the slow devices to a more smaller amount of work, achieving the highest speedup. This clearly shows how the static approach have his benefit in a lot of workload in this heterogeneous scenario. It is worth noting that the dynamic strategy can occasionally outperform the static logic during specific "lucky runs". If the greedy assignment happens to align perfectly by chance, it can squeeze slightly higher utilization out of the accelerators. However, as the overall results shows, the latency issues outweigh these occasional marginal gains in average.
 
 \clearpage
 
@@ -205,13 +205,13 @@ The results of the execution are presented in Fig. \ref{timehetero} and Fig. \re
 \label{energyhetero}
 \end{figure}
 
-As shown in Fig. \ref{timehetero}, the difference between the strategies in this case is drastic. The static hetero strategy as the red line proves to be extremely robust, consistently outperforming the single CUDA baseline as the green line. It achieves an average speedup of 1.65x (peaking at 1.85x), demonstrating how this logic achieves a consistent speedup increase while orchestrating the diverse accelerators to handle the heterogeneous workload.
+As shown in Fig. \ref{timehetero}, the difference between the strategies in this case is drastic. The static hetero strategy as the red line proves to be extremely robust, consistently outperforming the single CUDA baseline as the green line. It achieves an average speedup of 1.59x (peaking at 1.85x), demonstrating how this logic achieves a consistent speedup increase while orchestrating the diverse accelerators to handle the heterogeneous workload.
 
-In contrast, the dynamic strategy as the blue line fails to maintain consistent execution times this type of workload. With an average speedup of only 0.42x, it is significantly slower than using the discrete GPU alone. This failure is due to its greedy nature: without looking ahead, it treats a 512×512 matrix and a 4096×4096 matrix as identical tasks, and consistently fails to distribute them efficiently to achieve maximum performance.
+In contrast, the dynamic strategy as the blue line fails to maintain consistent execution times this type of workload. With an average speedup of only 0.42x (75\% slower than the static), it is significantly slower than using the discrete GPU alone. This failure is due to its greedy nature: without looking ahead, it treats a 512×512 matrix and a 4096×4096 matrix as identical tasks, and consistently fails to distribute them efficiently to achieve maximum performance.
 
 The energy analysis in Fig. \ref{energyhetero} mirrors the performance gap already observed:
 \begin{itemize}
-\item \textbf{Static Strategy}: Consumes on average 112 J, achieving a -17\% energy saving compared to the average CUDA baseline (136 J).
+\item \textbf{Static Strategy}: Consumes on average 94 J, achieving a -30\% energy saving compared to the average CUDA baseline (136 J).
 \item \textbf{Dynamic Strategy}: Due to the extremely long execution times, the energy consumption skyrockets to an average of 805 J, with a +490\% increase over the baseline.
 \end{itemize}
 
