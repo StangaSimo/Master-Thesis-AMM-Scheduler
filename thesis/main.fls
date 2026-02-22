@@ -337,6 +337,9 @@ INPUT chapters/5_conclusions.aux
 INPUT ./chapters/AppendiceA.aux
 INPUT ./chapters/AppendiceA.aux
 INPUT chapters/AppendiceA.aux
+INPUT ./chapters/ringraziamenti.aux
+INPUT ./chapters/ringraziamenti.aux
+INPUT chapters/ringraziamenti.aux
 OUTPUT main.aux
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/babelbib/english.bdf
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/babelbib/english.bdf
@@ -769,6 +772,11 @@ INPUT listings/appendice/sycl_benchmark/Makefile
 INPUT ./main.bbl
 INPUT ./main.bbl
 INPUT main.bbl
+INPUT ./chapters/ringraziamenti.tex
+OUTPUT chapters/ringraziamenti.aux
+INPUT ./chapters/ringraziamenti.tex
+INPUT ./chapters/ringraziamenti.tex
+INPUT chapters/ringraziamenti.tex
 INPUT main.aux
 INPUT ./chapters/Frontespizio.aux
 INPUT ./chapters/Frontespizio.aux
@@ -797,6 +805,9 @@ INPUT chapters/5_conclusions.aux
 INPUT ./chapters/AppendiceA.aux
 INPUT ./chapters/AppendiceA.aux
 INPUT chapters/AppendiceA.aux
+INPUT ./chapters/ringraziamenti.aux
+INPUT ./chapters/ringraziamenti.aux
+INPUT chapters/ringraziamenti.aux
 INPUT ./main.out
 INPUT ./main.out
 INPUT /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb
